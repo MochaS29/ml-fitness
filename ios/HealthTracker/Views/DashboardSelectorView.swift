@@ -2,11 +2,12 @@ import SwiftUI
 
 struct DashboardSelectorView: View {
     @AppStorage("selectedDashboard") private var selectedDashboard = 1
-    @State private var showingPreview = false
+    @AppStorage("hasSelectedDashboard") private var hasSelectedDashboard = false
+    @State private var showingSelector = false
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
+            ZStack {
                 // Preview of selected dashboard
                 Group {
                     switch selectedDashboard {
@@ -19,81 +20,133 @@ struct DashboardSelectorView: View {
                     case 4:
                         DashboardOption4View()
                     default:
-                        ProfessionalDashboardView()
+                        DashboardOption1View()
                     }
                 }
-                .frame(maxHeight: .infinity)
                 
-                // Dashboard selector
-                VStack(spacing: 16) {
-                    Text("Choose Your Dashboard Style")
-                        .font(.headline)
-                        .padding(.top)
-                    
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
-                            DashboardOption(
-                                number: 1,
-                                title: "Minimalist",
-                                description: "Clean card-based design with quick actions",
-                                icon: "square.grid.2x2",
-                                color: .orange,
-                                isSelected: selectedDashboard == 1
-                            ) {
-                                selectedDashboard = 1
+                // Floating button to show selector
+                if hasSelectedDashboard && !showingSelector {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                withAnimation(.spring()) {
+                                    showingSelector = true
+                                }
+                            }) {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "square.grid.2x2")
+                                    Text("Change Style")
+                                }
+                                .font(.caption)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color(UIColor.systemBackground))
+                                .cornerRadius(20)
+                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
                             }
-                            
-                            DashboardOption(
-                                number: 2,
-                                title: "Health Rings",
-                                description: "Apple Health inspired activity rings",
-                                icon: "circle.circle",
-                                color: .green,
-                                isSelected: selectedDashboard == 2
-                            ) {
-                                selectedDashboard = 2
-                            }
-                            
-                            DashboardOption(
-                                number: 3,
-                                title: "Data Focus",
-                                description: "Detailed stats and analytics view",
-                                icon: "chart.bar.fill",
-                                color: .blue,
-                                isSelected: selectedDashboard == 3
-                            ) {
-                                selectedDashboard = 3
-                            }
-                            
-                            DashboardOption(
-                                number: 4,
-                                title: "AI Insights",
-                                description: "Personalized recommendations and insights",
-                                icon: "brain",
-                                color: .purple,
-                                isSelected: selectedDashboard == 4
-                            ) {
-                                selectedDashboard = 4
-                            }
-                            
-                            DashboardOption(
-                                number: 0,
-                                title: "Original",
-                                description: "Professional fitness app style",
-                                icon: "sparkles",
-                                color: Color(red: 139/255, green: 69/255, blue: 19/255),
-                                isSelected: selectedDashboard == 0
-                            ) {
-                                selectedDashboard = 0
-                            }
+                            .padding()
                         }
-                        .padding(.horizontal)
                     }
-                    .padding(.bottom)
                 }
-                .background(Color(UIColor.systemGroupedBackground))
+                
+                // Dashboard selector overlay
+                if !hasSelectedDashboard || showingSelector {
+                    VStack {
+                        Spacer()
+                        
+                        VStack(spacing: 16) {
+                            HStack {
+                                Text("Choose Your Dashboard Style")
+                                    .font(.headline)
+                                
+                                Spacer()
+                                
+                                if showingSelector && hasSelectedDashboard {
+                                    Button("Done") {
+                                        withAnimation(.spring()) {
+                                            showingSelector = false
+                                        }
+                                    }
+                                    .font(.subheadline)
+                                    .foregroundColor(.blue)
+                                }
+                            }
+                            .padding(.horizontal)
+                            .padding(.top)
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 16) {
+                                    DashboardOption(
+                                        number: 1,
+                                        title: "Minimalist",
+                                        description: "Clean card-based design with quick actions",
+                                        icon: "square.grid.2x2",
+                                        color: .orange,
+                                        isSelected: selectedDashboard == 1
+                                    ) {
+                                        selectDashboard(1)
+                                    }
+                                    
+                                    DashboardOption(
+                                        number: 2,
+                                        title: "Health Rings",
+                                        description: "Apple Health inspired activity rings",
+                                        icon: "circle.circle",
+                                        color: .green,
+                                        isSelected: selectedDashboard == 2
+                                    ) {
+                                        selectDashboard(2)
+                                    }
+                                    
+                                    DashboardOption(
+                                        number: 3,
+                                        title: "Data Focus",
+                                        description: "Detailed stats and analytics view",
+                                        icon: "chart.bar.fill",
+                                        color: .blue,
+                                        isSelected: selectedDashboard == 3
+                                    ) {
+                                        selectDashboard(3)
+                                    }
+                                    
+                                    DashboardOption(
+                                        number: 4,
+                                        title: "AI Insights",
+                                        description: "Personalized recommendations and insights",
+                                        icon: "brain",
+                                        color: .purple,
+                                        isSelected: selectedDashboard == 4
+                                    ) {
+                                        selectDashboard(4)
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                            .padding(.bottom)
+                        }
+                        .background(Color(UIColor.systemGroupedBackground))
+                        .cornerRadius(20, corners: [.topLeft, .topRight])
+                        .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
+                        .transition(.move(edge: .bottom))
+                    }
+                    .animation(.spring(), value: showingSelector)
+                }
             }
             .navigationBarHidden(true)
+        }
+    }
+    
+    private func selectDashboard(_ number: Int) {
+        selectedDashboard = number
+        if !hasSelectedDashboard {
+            hasSelectedDashboard = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                withAnimation(.spring()) {
+                    showingSelector = false
+                }
+            }
         }
     }
 }
@@ -137,6 +190,23 @@ struct DashboardOption: View {
                     .stroke(isSelected ? color : Color.clear, lineWidth: 3)
             )
         }
+    }
+}
+
+// Extension for corner radius on specific corners
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
     }
 }
 
