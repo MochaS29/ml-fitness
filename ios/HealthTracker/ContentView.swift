@@ -8,7 +8,7 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
-                ProfessionalDashboardView()
+                DashboardSelectorView()
                     .tabItem {
                         Label("Dashboard", systemImage: "square.grid.2x2.fill")
                     }
