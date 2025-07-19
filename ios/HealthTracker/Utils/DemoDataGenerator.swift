@@ -298,17 +298,15 @@ class DemoDataGenerator {
         
         // Only create if no profile exists
         if userProfileManager.currentProfile == nil {
-            let demoProfile = UserProfile(
+            var demoProfile = UserProfile(
                 name: "Alex Johnson",
                 gender: .male,
-                birthDate: Calendar.current.date(byAdding: .year, value: -30, to: Date()) ?? Date(),
-                activityLevel: .moderatelyActive,
-                dietaryRestrictions: [.vegetarian],
-                healthConditions: [],
-                isPregnant: false,
-                pregnancyTrimester: .first,
-                isBreastfeeding: false
+                birthDate: Calendar.current.date(byAdding: .year, value: -30, to: Date()) ?? Date()
             )
+            
+            // Set additional properties
+            demoProfile.activityLevel = .moderatelyActive
+            demoProfile.dietaryRestrictions = [DietaryRestriction.vegetarian]
             
             userProfileManager.currentProfile = demoProfile
             userProfileManager.hasCompletedOnboarding = true

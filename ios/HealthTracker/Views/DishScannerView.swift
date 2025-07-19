@@ -139,7 +139,7 @@ struct DishScannerView: View {
     }
     
     private func analyzeDish() {
-        guard let image = capturedImage else { return }
+        guard capturedImage != nil else { return }
         
         isProcessing = true
         
