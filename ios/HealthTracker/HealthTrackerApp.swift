@@ -31,13 +31,21 @@ struct HealthTrackerApp: App {
     
     func importSampleDataIfNeeded() {
         let hasImportedKey = "hasImportedSampleData"
+        let hasImportedOpenRecipesKey = "hasImportedOpenRecipes"
         let userDefaults = UserDefaults.standard
         
+        let context = persistenceController.container.viewContext
+        
         if !userDefaults.bool(forKey: hasImportedKey) {
-            let context = persistenceController.container.viewContext
             SampleDataImporter.importSampleUSDAFoods(context: context)
             SampleDataImporter.importSampleUserRecipes(context: context)
             userDefaults.set(true, forKey: hasImportedKey)
+        }
+        
+        // Import open recipes if not already done
+        if !userDefaults.bool(forKey: hasImportedOpenRecipesKey) {
+            OpenRecipeImporter.importOpenRecipes(context: context)
+            userDefaults.set(true, forKey: hasImportedOpenRecipesKey)
         }
     }
     

@@ -415,6 +415,12 @@ struct RecipeLibraryView: View {
     @State private var selectedCategory: RecipeCategory? = nil
     @State private var searchText = ""
     
+    // Fetch imported recipes from Core Data
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \CustomRecipe.name, ascending: true)],
+        predicate: NSPredicate(format: "isUserCreated == false")
+    ) private var importedRecipes: FetchedResults<CustomRecipe>
+    
     var body: some View {
         VStack {
             searchBarView
@@ -472,8 +478,51 @@ struct RecipeLibraryView: View {
     }
     
     private var filteredRecipes: [Recipe] {
+        // Combine built-in recipes with imported recipes
         var recipes = RecipeDatabase.shared.recipes
         
+        // Convert imported CustomRecipe entities to Recipe structs
+        let convertedImportedRecipes = importedRecipes.compactMap { customRecipe -> Recipe? in
+            guard let name = customRecipe.name,
+                  let categoryString = customRecipe.category,
+                  let category = RecipeCategory(rawValue: categoryString) else {
+                return nil
+            }
+            
+            // Parse ingredients from string array
+            let ingredients: [Ingredient] = (customRecipe.ingredients ?? []).map { ingredientString in
+                // Simple parsing - in real app would be more sophisticated
+                Ingredient(name: ingredientString, amount: 1, unit: .piece)
+            }
+            
+            return Recipe(
+                id: customRecipe.id ?? UUID(),
+                name: name,
+                category: category,
+                prepTime: Int(customRecipe.prepTime),
+                cookTime: Int(customRecipe.cookTime),
+                servings: Int(customRecipe.servings),
+                ingredients: ingredients,
+                instructions: customRecipe.instructions ?? [],
+                nutrition: NutritionInfo(
+                    calories: customRecipe.calories,
+                    protein: customRecipe.protein,
+                    carbs: customRecipe.carbs,
+                    fat: customRecipe.fat,
+                    fiber: customRecipe.fiber,
+                    sugar: customRecipe.sugar,
+                    sodium: customRecipe.sodium
+                ),
+                source: customRecipe.source,
+                tags: customRecipe.tags ?? [],
+                isFavorite: customRecipe.isFavorite
+            )
+        }
+        
+        // Combine all recipes
+        recipes.append(contentsOf: convertedImportedRecipes)
+        
+        // Apply filters
         if let category = selectedCategory {
             recipes = recipes.filter { $0.category == category }
         }
