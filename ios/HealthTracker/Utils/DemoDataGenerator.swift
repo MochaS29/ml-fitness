@@ -305,7 +305,7 @@ class DemoDataGenerator {
             )
             
             // Set additional properties
-            demoProfile.activityLevel = .moderatelyActive
+            demoProfile.activityLevel = .moderate
             demoProfile.dietaryRestrictions = [DietaryRestriction.vegetarian]
             
             userProfileManager.currentProfile = demoProfile
