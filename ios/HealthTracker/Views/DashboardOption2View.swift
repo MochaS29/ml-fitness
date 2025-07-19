@@ -211,21 +211,21 @@ struct DashboardOption2View: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    InsightCard(
+                    SimpleInsightCard(
                         icon: "arrow.up.circle.fill",
                         title: "Great Start!",
                         message: "You're 40% toward your calorie goal",
                         color: .orange
                     )
                     
-                    InsightCard(
+                    SimpleInsightCard(
                         icon: "clock.fill",
                         title: "Time to Move",
                         message: "A 15-min walk would complete your exercise ring",
                         color: .green
                     )
                     
-                    InsightCard(
+                    SimpleInsightCard(
                         icon: "star.fill",
                         title: "Streak: 5 days",
                         message: "Keep up the great work!",
@@ -413,7 +413,7 @@ struct ProgressRow: View {
     }
 }
 
-struct InsightCard: View {
+struct SimpleInsightCard: View {
     let icon: String
     let title: String
     let message: String
