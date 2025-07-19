@@ -4,6 +4,7 @@ import SwiftUI
 struct HealthTrackerApp: App {
     let persistenceController = PersistenceController.shared
     @StateObject private var userProfileManager = UserProfileManager()
+    @AppStorage("hasDemoData") private var hasDemoData = false
     
     var body: some Scene {
         WindowGroup {
@@ -14,6 +15,11 @@ struct HealthTrackerApp: App {
                     .accentColor(Color.mochaBrown)
                     .onAppear {
                         importSampleDataIfNeeded()
+                        
+                        // Check if we should generate demo data
+                        if CommandLine.arguments.contains("--demo") || ProcessInfo.processInfo.environment["GENERATE_DEMO_DATA"] == "true" {
+                            generateDemoData()
+                        }
                     }
             } else {
                 OnboardingView()
@@ -32,6 +38,15 @@ struct HealthTrackerApp: App {
             SampleDataImporter.importSampleUSDAFoods(context: context)
             SampleDataImporter.importSampleUserRecipes(context: context)
             userDefaults.set(true, forKey: hasImportedKey)
+        }
+    }
+    
+    func generateDemoData() {
+        if !hasDemoData {
+            let context = persistenceController.container.viewContext
+            DemoDataGenerator.generateDemoData(context: context)
+            hasDemoData = true
+            print("Demo data generated successfully!")
         }
     }
 }

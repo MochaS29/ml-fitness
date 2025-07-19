@@ -12,6 +12,8 @@ struct MoreView: View {
     @State private var showingSettings = false
     @State private var showingHelp = false
     @State private var showingUSDAImport = false
+    @State private var showingDemoDataAlert = false
+    @AppStorage("hasDemoData") private var hasDemoData = false
     
     var body: some View {
         NavigationView {
@@ -208,6 +210,24 @@ struct MoreView: View {
                     }
                 }
                 
+                // Developer Tools
+                Section("Developer Tools") {
+                    Button(action: { showingDemoDataAlert = true }) {
+                        HStack {
+                            Image(systemName: "wand.and.stars")
+                                .foregroundColor(.blue)
+                            Text("Generate Demo Data")
+                                .foregroundColor(.primary)
+                            Spacer()
+                            if hasDemoData {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                            }
+                        }
+                    }
+                    .disabled(hasDemoData)
+                }
+                
                 // App Info
                 Section {
                     HStack {
@@ -247,7 +267,21 @@ struct MoreView: View {
             .sheet(isPresented: $showingUSDAImport) {
                 USDAImportView()
             }
+            .alert("Generate Demo Data?", isPresented: $showingDemoDataAlert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Generate") {
+                    generateDemoData()
+                }
+            } message: {
+                Text("This will create sample food, exercise, weight, and supplement entries for the past 30 days. This helps you see how the app looks with data.")
+            }
         }
+    }
+    
+    private func generateDemoData() {
+        let context = PersistenceController.shared.container.viewContext
+        DemoDataGenerator.generateDemoData(context: context)
+        hasDemoData = true
     }
 }
 
