@@ -239,7 +239,7 @@ class DemoDataGenerator {
                 entry.id = UUID()
                 entry.name = supplement.0
                 entry.brand = supplement.1
-                entry.nutrients = supplement.2 as NSObject
+                entry.nutrients = supplement.2
                 entry.timestamp = date
                 entry.date = date
                 entry.servingSize = "1"
@@ -254,7 +254,6 @@ class DemoDataGenerator {
         // Add some demo achievements
         let achievements = [
             Achievement(
-                id: UUID(),
                 type: .weightLoss,
                 title: "5 lbs Down!",
                 description: "You've lost 5 pounds!",
@@ -262,7 +261,6 @@ class DemoDataGenerator {
                 value: "5 lbs"
             ),
             Achievement(
-                id: UUID(),
                 type: .exerciseStreak,
                 title: "7 Day Streak",
                 description: "Exercised for 7 days in a row!",
@@ -270,7 +268,6 @@ class DemoDataGenerator {
                 value: "7 days"
             ),
             Achievement(
-                id: UUID(),
                 type: .calorieGoal,
                 title: "Calorie Champion",
                 description: "Met your calorie goal for 14 days!",
@@ -278,7 +275,6 @@ class DemoDataGenerator {
                 value: "14 days"
             ),
             Achievement(
-                id: UUID(),
                 type: .waterIntake,
                 title: "Hydration Hero",
                 description: "Drank 8 glasses of water daily for a week!",
@@ -294,8 +290,7 @@ class DemoDataGenerator {
             }
         }
         
-        // Save to UserDefaults
-        achievementManager.saveAchievements()
+        // AchievementManager automatically saves when achievements are added
     }
     
     private static func createDemoUserProfile() {
@@ -307,11 +302,11 @@ class DemoDataGenerator {
                 name: "Alex Johnson",
                 gender: .male,
                 birthDate: Calendar.current.date(byAdding: .year, value: -30, to: Date()) ?? Date(),
-                activityLevel: .moderate,
+                activityLevel: .moderatelyActive,
                 dietaryRestrictions: [.vegetarian],
                 healthConditions: [],
                 isPregnant: false,
-                pregnancyTrimester: nil,
+                pregnancyTrimester: .first,
                 isBreastfeeding: false
             )
             
@@ -326,57 +321,56 @@ class DemoDataGenerator {
         let today = Date()
         
         // Create a week of meal plans
-        var mealPlans: [[MealPlan]] = []
+        var plannedMeals: [PlannedMeal] = []
         
         for dayOffset in 0..<7 {
             guard let date = calendar.date(byAdding: .day, value: dayOffset, to: today) else { continue }
             
-            var dayPlans: [MealPlan] = []
-            
             // Breakfast
             let breakfastRecipes = RecipeDatabase.shared.recipes.filter { $0.category == .breakfast }
             if let breakfast = breakfastRecipes.randomElement() {
-                dayPlans.append(MealPlan(
-                    id: UUID(),
+                plannedMeals.append(PlannedMeal(
                     date: date,
                     mealType: .breakfast,
-                    recipeId: breakfast.id,
-                    recipeName: breakfast.name,
-                    servings: 1
+                    recipe: breakfast,
+                    servingsMultiplier: 1.0
                 ))
             }
             
             // Lunch
             let lunchRecipes = RecipeDatabase.shared.recipes.filter { $0.category == .lunch }
             if let lunch = lunchRecipes.randomElement() {
-                dayPlans.append(MealPlan(
-                    id: UUID(),
+                plannedMeals.append(PlannedMeal(
                     date: date,
                     mealType: .lunch,
-                    recipeId: lunch.id,
-                    recipeName: lunch.name,
-                    servings: 1
+                    recipe: lunch,
+                    servingsMultiplier: 1.0
                 ))
             }
             
             // Dinner
             let dinnerRecipes = RecipeDatabase.shared.recipes.filter { $0.category == .dinner }
             if let dinner = dinnerRecipes.randomElement() {
-                dayPlans.append(MealPlan(
-                    id: UUID(),
+                plannedMeals.append(PlannedMeal(
                     date: date,
                     mealType: .dinner,
-                    recipeId: dinner.id,
-                    recipeName: dinner.name,
-                    servings: 2
+                    recipe: dinner,
+                    servingsMultiplier: 2.0
                 ))
             }
-            
-            mealPlans.append(dayPlans)
         }
         
-        // Save meal plans
-        if let encoded = try? JSONEncoder().encode(mealPlans.flatMap { $0 }) {
+        // Create a meal plan for the week
+        let endDate = calendar.date(byAdding: .day, value: 6, to: today) ?? today
+        let mealPlan = MealPlan(
+            name: "Week of \(DateFormatter.localizedString(from: today, dateStyle: .medium, timeStyle: .none))",
+            startDate: today,
+            endDate: endDate,
+            meals: plannedMeals
+        )
+        
+        // Save meal plan
+        if let encoded = try? JSONEncoder().encode([mealPlan]) {
             userDefaults.set(encoded, forKey: "savedMealPlans")
         }
     }

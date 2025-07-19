@@ -430,7 +430,7 @@ struct CustomRecipeDetailView: View {
                 sodium: customRecipe.sodium
             ),
             source: customRecipe.source,
-            tags: customRecipe.tags as? [String] ?? [],
+            tags: (customRecipe.tags as? [String]) ?? [],
             isFavorite: customRecipe.isFavorite
         )
     }
