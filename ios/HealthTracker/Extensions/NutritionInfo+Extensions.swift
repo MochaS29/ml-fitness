@@ -26,14 +26,12 @@ extension NutritionInfo {
     // MARK: - Convenience Initializers
     
     init(calories: Double, protein: Double, carbs: Double, fat: Double, fiber: Double, sugar: Double, sodium: Double) {
-        self.init(
-            calories: calories,
-            protein: protein,
-            carbs: carbs,
-            fat: fat,
-            fiber: fiber,
-            sugar: sugar,
-            sodium: sodium
-        )
+        self.calories = calories
+        self.protein = protein
+        self.carbs = carbs
+        self.fat = fat
+        self.fiber = fiber
+        self.sugar = sugar
+        self.sodium = sodium
     }
 }
