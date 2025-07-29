@@ -250,6 +250,15 @@ struct MoreView: View {
                         }
                     }
                     .disabled(hasDemoData)
+                    
+                    NavigationLink(destination: AppIconPreview()) {
+                        HStack {
+                            Image(systemName: "app.badge")
+                                .foregroundColor(.purple)
+                            Text("App Icon Generator")
+                                .foregroundColor(.primary)
+                        }
+                    }
                 }
                 
                 // App Info
