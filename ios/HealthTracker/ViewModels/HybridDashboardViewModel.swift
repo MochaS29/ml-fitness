@@ -34,22 +34,24 @@ class DashboardViewModel: ObservableObject {
     }
     
     var healthSummary: String {
-        return "Your nutrition balance improved by 12% this week. Keep focusing on protein intake!"
+        return "You've lost 1.7 lbs this week! Your consistent exercise routine is paying off."
     }
     
     // Today's Metrics
     @Published var todayCalories = 1650
     @Published var calorieGoal = 2200
-    @Published var todayProtein = 85
-    @Published var proteinGoal = 120
+    @Published var currentWeight = 165.5
+    @Published var targetWeight = 160.0
     @Published var todayExercise = 45
     @Published var exerciseSessions = 2
     @Published var todayWater = 6
     @Published var waterGoal = 8
     
     // Calculated Properties
-    var proteinPercentage: Int {
-        Int((Double(todayProtein) / Double(proteinGoal)) * 100)
+    var weightProgress: Double {
+        let totalToLose = 170.0 - targetWeight // Assuming starting weight was 170
+        let currentLost = 170.0 - currentWeight
+        return (currentLost / totalToLose) * 100
     }
     
     var waterPercentage: Int {
@@ -59,14 +61,14 @@ class DashboardViewModel: ObservableObject {
     // Trends
     var calorieTrend: MetricCardWithTrend.Trend = .up
     var calorieTrendPercent = 8
-    var proteinTrend: MetricCardWithTrend.Trend = .down
-    var proteinTrendPercent = -5
+    var weightTrend: MetricCardWithTrend.Trend = .down
+    var weightTrendPercent = -2  // Lost 2% this week
     var waterTrend: MetricCardWithTrend.Trend = .neutral
     var waterTrendPercent = 0
     
     // Sparkline Data (last 7 days)
     var calorieSparkline: [Double] = [1850, 2100, 1950, 2200, 1900, 2050, 1650]
-    var proteinSparkline: [Double] = [95, 110, 102, 98, 88, 92, 85]
+    var weightSparkline: [Double] = [167.2, 167.0, 166.8, 166.5, 166.2, 165.8, 165.5]
     var exerciseSparkline: [Double] = [30, 0, 45, 60, 0, 30, 45]
     var waterSparkline: [Double] = [7, 8, 6, 8, 7, 5, 6]
     

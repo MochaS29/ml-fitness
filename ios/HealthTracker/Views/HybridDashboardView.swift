@@ -186,14 +186,14 @@ struct HybridDashboardView: View {
             )
             
             MetricCardWithTrend(
-                title: "Protein",
-                value: "\(viewModel.todayProtein)g",
-                subtitle: "\(viewModel.proteinPercentage)% of goal",
-                trend: viewModel.proteinTrend,
-                trendValue: "\(viewModel.proteinTrendPercent)%",
-                icon: "fish.fill",
+                title: "Weight",
+                value: String(format: "%.1f lbs", viewModel.currentWeight),
+                subtitle: String(format: "%.1f lbs to goal", viewModel.currentWeight - viewModel.targetWeight),
+                trend: viewModel.weightTrend,
+                trendValue: "\(viewModel.weightTrendPercent)%",
+                icon: "scalemass.fill",
                 color: .blue,
-                sparklineData: viewModel.proteinSparkline
+                sparklineData: viewModel.weightSparkline
             )
             
             MetricCardWithTrend(
@@ -291,9 +291,9 @@ struct HybridDashboardView: View {
                     // Metric Selector
                     Menu {
                         Button("Calories") { }
-                        Button("Protein") { }
-                        Button("Exercise") { }
                         Button("Weight") { }
+                        Button("Exercise") { }
+                        Button("Water") { }
                     } label: {
                         Label("Calories", systemImage: "chevron.down")
                             .font(.caption)
