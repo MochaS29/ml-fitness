@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if canImport(UIKit)
+import UIKit
+#endif
 @testable import HealthTracker
 
 /// Test configuration and constants
@@ -16,21 +19,19 @@ struct TestConfiguration {
     struct MockUsers {
         static let defaultUser = UserProfile(
             name: "Test User",
-            age: 30,
             gender: .male,
-            isPregnant: false,
-            isLactating: false,
-            healthConditions: []
+            birthDate: Calendar.current.date(byAdding: .year, value: -30, to: Date())!
         )
         
-        static let pregnantUser = UserProfile(
-            name: "Test Pregnant User",
-            age: 28,
-            gender: .female,
-            isPregnant: true,
-            isLactating: false,
-            healthConditions: []
-        )
+        static let pregnantUser: UserProfile = {
+            var user = UserProfile(
+                name: "Test Pregnant User",
+                gender: .female,
+                birthDate: Calendar.current.date(byAdding: .year, value: -28, to: Date())!
+            )
+            user.isPregnant = true
+            return user
+        }()
     }
     
     struct MockFoods {
@@ -73,21 +74,21 @@ struct TestConfiguration {
             name: "Running",
             type: .cardio,
             caloriesPerMinute: 10,
-            defaultDuration: 30
+            category: "Outdoor"
         )
         
         static let weightLifting = ExerciseTemplate(
             name: "Weight Lifting",
             type: .strength,
             caloriesPerMinute: 6,
-            defaultDuration: 45
+            category: "Gym"
         )
         
         static let yoga = ExerciseTemplate(
             name: "Yoga",
             type: .flexibility,
             caloriesPerMinute: 3,
-            defaultDuration: 60
+            category: "Home"
         )
     }
     
@@ -110,10 +111,12 @@ struct TestConfiguration {
         // Set up any test-specific configurations
         if isRunningTests {
             // Disable animations for faster UI tests
+            #if canImport(UIKit)
             UIView.setAnimationsEnabled(false)
+            #endif
             
-            // Use mock API responses
-            ProcessInfo.processInfo.environment["USE_MOCK_DATA"] = "true"
+            // Use mock API responses - Note: environment is read-only at runtime
+            // This would need to be set in the scheme's environment variables
         }
     }
     

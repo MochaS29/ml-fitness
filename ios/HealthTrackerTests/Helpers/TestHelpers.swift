@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import XCTest
 @testable import HealthTracker
 
 class TestHelpers {
@@ -121,17 +122,7 @@ class TestHelpers {
         line: UInt = #line,
         test: @escaping () async throws -> Void
     ) async throws {
-        let expectation = XCTestExpectation(description: "Async operation")
-        
-        Task {
-            do {
-                try await test()
-                expectation.fulfill()
-            } catch {
-                XCTFail("Async test failed: \(error)", file: file, line: line)
-            }
-        }
-        
-        await fulfillment(of: [expectation], timeout: timeout)
+        // For async tests, we can use Task and await directly
+        try await test()
     }
 }

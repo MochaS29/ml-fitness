@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import SwiftUI
 @testable import HealthTracker
 
 final class HealthTrackerTests: XCTestCase {
@@ -40,10 +41,10 @@ final class HealthTrackerTests: XCTestCase {
     // MARK: - Color Extension Tests
     
     func testCustomColors() {
-        XCTAssertNotNil(UIColor.wellnessGreen)
-        XCTAssertNotNil(UIColor.mindfulTeal)
-        XCTAssertNotNil(UIColor.deepCharcoal)
-        XCTAssertNotNil(UIColor.softCream)
+        XCTAssertNotNil(Color.wellnessGreen)
+        XCTAssertNotNil(Color.mindfulTeal)
+        XCTAssertNotNil(Color.deepCharcoal)
+        XCTAssertNotNil(Color.softCream)
     }
     
     // MARK: - Validation Tests
@@ -62,8 +63,8 @@ final class HealthTrackerTests: XCTestCase {
     }
     
     func testWeightValidation() {
-        let validWeights = [0.1, 50, 100, 500, 1000]
-        let invalidWeights = [-10, 0, 2000]
+        let validWeights = [0.1, 50.0, 100.0, 500.0, 1000.0]
+        let invalidWeights = [-10.0, 0.0, 2000.0]
         
         for weight in validWeights {
             XCTAssertTrue(isValidWeight(weight))
