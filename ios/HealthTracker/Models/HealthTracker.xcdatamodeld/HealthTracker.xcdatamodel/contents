@@ -12,6 +12,7 @@
         <attribute name="type" optional="YES" attributeType="String"/>
     </entity>
     <entity name="FoodEntry" representedClassName="FoodEntry" syncable="YES" codeGenerationType="class">
+        <attribute name="barcode" optional="YES" attributeType="String"/>
         <attribute name="brand" optional="YES" attributeType="String"/>
         <attribute name="calories" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="carbs" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -22,8 +23,11 @@
         <attribute name="mealType" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="protein" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="servingCount" optional="YES" attributeType="Double" defaultValueString="1.0" usesScalarValueType="YES"/>
         <attribute name="servingSize" optional="YES" attributeType="String"/>
         <attribute name="servingUnit" optional="YES" attributeType="String"/>
+        <attribute name="sodium" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="sugar" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <entity name="SupplementEntry" representedClassName="SupplementEntry" syncable="YES" codeGenerationType="class">
@@ -102,5 +106,27 @@
         <attribute name="recipeName" optional="YES" attributeType="String"/>
         <attribute name="servings" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="source" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="WaterEntry" representedClassName="WaterEntry" syncable="YES" codeGenerationType="class">
+        <attribute name="amount" optional="YES" attributeType="Double" defaultValueString="8" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="unit" optional="YES" attributeType="String" defaultValueString="oz"/>
+    </entity>
+    <entity name="MealPlan" representedClassName="MealPlan" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="mealType" optional="YES" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="recipeId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="recipeName" optional="YES" attributeType="String"/>
+        <attribute name="servings" optional="YES" attributeType="Integer 32" defaultValueString="1" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="GroceryList" representedClassName="GroceryList" syncable="YES" codeGenerationType="class">
+        <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isCompleted" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="items" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[String]"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
     </entity>
 </model>

@@ -570,44 +570,6 @@ struct WaterTrackingRow: View {
     }
 }
 
-struct AddMenuView: View {
-    let selectedDate: Date
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        NavigationView {
-            List {
-                Section {
-                    NavigationLink(destination: EnhancedFoodSearchView { foodItem in
-                        // Handle food selection
-                    }) {
-                        Label("Add Food", systemImage: "fork.knife")
-                    }
-                    
-                    NavigationLink(destination: DishScannerView()) {
-                        Label("Scan Dish", systemImage: "camera.fill")
-                    }
-                    
-                    NavigationLink(destination: Text("Exercise Search")) {
-                        Label("Add Exercise", systemImage: "figure.run")
-                    }
-                    
-                    NavigationLink(destination: WeightEntryView(date: selectedDate)) {
-                        Label("Add Weight", systemImage: "scalemass")
-                    }
-                    
-                    NavigationLink(destination: SupplementTrackingView()) {
-                        Label("Add Supplement", systemImage: "pills")
-                    }
-                }
-            }
-            .navigationTitle("Add Entry")
-            .navigationBarItems(trailing: Button("Cancel") {
-                presentationMode.wrappedValue.dismiss()
-            })
-        }
-    }
-}
 
 struct WeightEntryView: View {
     let date: Date

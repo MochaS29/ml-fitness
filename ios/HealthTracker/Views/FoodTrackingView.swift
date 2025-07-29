@@ -338,6 +338,10 @@ struct AddFoodView: View {
         
         do {
             try viewContext.save()
+            
+            // Update goals based on the new food entry
+            GoalsManager.shared.updateGoalsFromFoodEntry(newFood)
+            
             presentationMode.wrappedValue.dismiss()
         } catch {
             print("Error saving food: \(error)")

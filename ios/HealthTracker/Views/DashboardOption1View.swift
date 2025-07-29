@@ -7,6 +7,11 @@ struct DashboardOption1View: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var greeting = ""
     @State private var selectedPeriod = "Today"
+    @State private var showingAddMenu = false
+    @State private var showingDishScanner = false
+    @State private var showingFastingTimer = false
+    @State private var showingSupplements = false
+    @State private var showingBarcodeScanner = false
     
     // Fetch today's data
     @FetchRequest(
@@ -22,6 +27,13 @@ struct DashboardOption1View: View {
                              Calendar.current.startOfDay(for: Date()) as NSDate,
                              Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))! as NSDate)
     ) private var todaysExerciseEntries: FetchedResults<ExerciseEntry>
+    
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \WaterEntry.timestamp, ascending: false)],
+        predicate: NSPredicate(format: "timestamp >= %@ AND timestamp < %@",
+                             Calendar.current.startOfDay(for: Date()) as NSDate,
+                             Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))! as NSDate)
+    ) private var todaysWaterEntries: FetchedResults<WaterEntry>
     
     var body: some View {
         NavigationView {
@@ -46,6 +58,27 @@ struct DashboardOption1View: View {
             .onAppear {
                 updateGreeting()
             }
+        }
+        .sheet(isPresented: $showingAddMenu) {
+            AddMenuView(selectedDate: Date())
+        }
+        .sheet(isPresented: $showingDishScanner) {
+            NavigationView {
+                DishScannerView()
+            }
+        }
+        .sheet(isPresented: $showingFastingTimer) {
+            NavigationView {
+                IntermittentFastingView()
+            }
+        }
+        .sheet(isPresented: $showingSupplements) {
+            NavigationView {
+                SupplementTrackingView()
+            }
+        }
+        .sheet(isPresented: $showingBarcodeScanner) {
+            BarcodeScannerView(selectedDate: Date(), mealType: .snack)
         }
     }
     
@@ -91,13 +124,15 @@ struct DashboardOption1View: View {
                     color: Color(red: 0/255, green: 122/255, blue: 255/255)
                 )
                 
-                MetricCard(
-                    title: "Water",
-                    value: "5",
-                    goal: "8 cups",
-                    icon: "drop.fill",
-                    color: Color(red: 88/255, green: 86/255, blue: 214/255)
-                )
+                NavigationLink(destination: WaterTrackingView()) {
+                    MetricCard(
+                        title: "Water",
+                        value: "\(Int(todaysWaterEntries.reduce(0) { $0 + $1.amount } / 8))",
+                        goal: "8 cups",
+                        icon: "drop.fill",
+                        color: .blue
+                    )
+                }
             }
         }
     }
@@ -108,38 +143,49 @@ struct DashboardOption1View: View {
                 .font(.headline)
                 .padding(.bottom, 4)
             
-            HStack(spacing: 12) {
-                QuickActionButton(
-                    icon: "plus.circle.fill",
-                    title: "Log Food",
-                    color: Color(red: 255/255, green: 149/255, blue: 0/255)
-                ) {
-                    // Navigate to food logging
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    QuickActionButton(
+                        icon: "plus.circle.fill",
+                        title: "Log Food",
+                        color: Color(red: 255/255, green: 149/255, blue: 0/255)
+                    ) {
+                        showingAddMenu = true
+                    }
+                    
+                    QuickActionButton(
+                        icon: "barcode.viewfinder",
+                        title: "Scan Barcode",
+                        color: Color(red: 147/255, green: 112/255, blue: 219/255)
+                    ) {
+                        showingBarcodeScanner = true
+                    }
+                    
+                    QuickActionButton(
+                        icon: "camera.fill",
+                        title: "Scan Dish",
+                        color: Color(red: 52/255, green: 199/255, blue: 89/255)
+                    ) {
+                        showingDishScanner = true
+                    }
+                    
+                    QuickActionButton(
+                        icon: "timer",
+                        title: "Fasting",
+                        color: Color(red: 0/255, green: 122/255, blue: 255/255)
+                    ) {
+                        showingFastingTimer = true
+                    }
+                    
+                    QuickActionButton(
+                        icon: "pills.fill",
+                        title: "Supplements",
+                        color: Color(red: 88/255, green: 86/255, blue: 214/255)
+                    ) {
+                        showingSupplements = true
+                    }
                 }
-                
-                QuickActionButton(
-                    icon: "camera.fill",
-                    title: "Scan Dish",
-                    color: Color(red: 52/255, green: 199/255, blue: 89/255)
-                ) {
-                    // Navigate to dish scanner
-                }
-                
-                QuickActionButton(
-                    icon: "timer",
-                    title: "Fasting",
-                    color: Color(red: 0/255, green: 122/255, blue: 255/255)
-                ) {
-                    // Navigate to fasting timer
-                }
-                
-                QuickActionButton(
-                    icon: "pills.fill",
-                    title: "Supplements",
-                    color: Color(red: 88/255, green: 86/255, blue: 214/255)
-                ) {
-                    // Navigate to supplements
-                }
+                .padding(.horizontal, 4)
             }
         }
     }
@@ -257,9 +303,9 @@ struct QuickActionButton: View {
                 Text(title)
                     .font(.caption)
                     .foregroundColor(.primary)
+                    .multilineTextAlignment(.center)
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
+            .frame(width: 90, height: 90)
             .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(12)
         }

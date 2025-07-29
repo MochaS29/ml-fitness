@@ -145,78 +145,8 @@ struct NutritionInfo: Codable {
     var sodium: Double?
 }
 
-// Meal Plan Models
-struct MealPlan: Identifiable, Codable {
-    let id: UUID
-    var name: String
-    var startDate: Date
-    var endDate: Date
-    var meals: [PlannedMeal]
-    
-    init(id: UUID = UUID(), name: String, startDate: Date, endDate: Date, meals: [PlannedMeal] = []) {
-        self.id = id
-        self.name = name
-        self.startDate = startDate
-        self.endDate = endDate
-        self.meals = meals
-    }
-    
-    var dateRange: String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return "\(formatter.string(from: startDate)) - \(formatter.string(from: endDate))"
-    }
-}
-
-struct PlannedMeal: Identifiable, Codable {
-    let id: UUID
-    var date: Date
-    var mealType: MealType
-    var recipe: Recipe
-    var servingsMultiplier: Double = 1.0
-    
-    init(id: UUID = UUID(), date: Date, mealType: MealType, recipe: Recipe, servingsMultiplier: Double = 1.0) {
-        self.id = id
-        self.date = date
-        self.mealType = mealType
-        self.recipe = recipe
-        self.servingsMultiplier = servingsMultiplier
-    }
-}
+// Meal Plan Models - Now using Core Data entities instead
+// struct MealPlan and struct PlannedMeal have been replaced with Core Data entities
 
 // Grocery List Models
-struct GroceryList: Identifiable, Codable {
-    let id: UUID
-    var name: String
-    var items: [GroceryItem]
-    var createdDate: Date
-    var isCompleted: Bool = false
-    
-    init(id: UUID = UUID(), name: String, items: [GroceryItem] = [], createdDate: Date = Date(), isCompleted: Bool = false) {
-        self.id = id
-        self.name = name
-        self.items = items
-        self.createdDate = createdDate
-        self.isCompleted = isCompleted
-    }
-}
-
-struct GroceryItem: Identifiable, Codable {
-    let id: UUID
-    var ingredient: Ingredient
-    var isChecked: Bool = false
-    var quantity: Double
-    var notes: String?
-    
-    init(id: UUID = UUID(), ingredient: Ingredient, isChecked: Bool = false, quantity: Double, notes: String? = nil) {
-        self.id = id
-        self.ingredient = ingredient
-        self.isChecked = isChecked
-        self.quantity = quantity
-        self.notes = notes
-    }
-    
-    var displayText: String {
-        "\(ingredient.displayAmount) \(ingredient.unit.displayName(amount: ingredient.amount)) \(ingredient.name)"
-    }
-}
+// GroceryList and GroceryItem structs have been replaced with Core Data entity and custom class

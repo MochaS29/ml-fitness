@@ -255,8 +255,11 @@ struct AddExerciseView: View {
     @State private var notes = ""
     @State private var showingSuggestions = false
     @State private var suggestions: [ExerciseTemplate] = []
+    @State private var smartSuggestions: [ExerciseAutofillService.ExerciseSuggestion] = []
+    @State private var selectedDate = Date()
     
     private let exerciseDatabase = ExerciseDatabase.shared
+    private let autofillService = ExerciseAutofillService.shared
     
     var body: some View {
         NavigationView {
@@ -265,36 +268,73 @@ struct AddExerciseView: View {
                     VStack(alignment: .leading) {
                         TextField("Exercise Name", text: $exerciseName)
                             .onChange(of: exerciseName) { _, newValue in
+                                // Get both smart suggestions and regular search
+                                smartSuggestions = autofillService.getSuggestions(
+                                    for: newValue,
+                                    at: selectedDate,
+                                    context: viewContext
+                                )
                                 suggestions = exerciseDatabase.searchExercises(newValue)
-                                showingSuggestions = !suggestions.isEmpty && !newValue.isEmpty
+                                showingSuggestions = !smartSuggestions.isEmpty || (!suggestions.isEmpty && !newValue.isEmpty)
                             }
                         
                         if showingSuggestions {
-                            VStack(alignment: .leading, spacing: 0) {
-                                ForEach(suggestions.prefix(5), id: \.name) { suggestion in
-                                    Button(action: {
-                                        selectExercise(suggestion)
-                                    }) {
-                                        HStack {
-                                            Text(suggestion.name)
-                                                .foregroundColor(.primary)
-                                            Spacer()
-                                            Text(suggestion.type.rawValue)
-                                                .font(.caption)
-                                                .foregroundColor(.secondary)
-                                        }
-                                        .padding(.vertical, 8)
+                            VStack(alignment: .leading, spacing: 8) {
+                                // Smart suggestions section
+                                if !smartSuggestions.isEmpty {
+                                    Text("Suggested for you")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
                                         .padding(.horizontal, 4)
-                                    }
-                                    .buttonStyle(.plain)
                                     
-                                    if suggestion.name != suggestions.prefix(5).last?.name {
+                                    ForEach(smartSuggestions.prefix(3), id: \.exercise.name) { suggestion in
+                                        SmartSuggestionRow(
+                                            suggestion: suggestion,
+                                            onSelect: { selectSmartSuggestion(suggestion) }
+                                        )
+                                        
+                                        if suggestion.exercise.name != smartSuggestions.prefix(3).last?.exercise.name {
+                                            Divider()
+                                        }
+                                    }
+                                }
+                                
+                                // Regular search results
+                                if !suggestions.isEmpty && !exerciseName.isEmpty {
+                                    if !smartSuggestions.isEmpty {
                                         Divider()
+                                        Text("All exercises")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                            .padding(.horizontal, 4)
+                                            .padding(.top, 4)
+                                    }
+                                    
+                                    ForEach(suggestions.prefix(5), id: \.name) { suggestion in
+                                        Button(action: {
+                                            selectExercise(suggestion)
+                                        }) {
+                                            HStack {
+                                                Text(suggestion.name)
+                                                    .foregroundColor(.primary)
+                                                Spacer()
+                                                Text(suggestion.type.rawValue)
+                                                    .font(.caption)
+                                                    .foregroundColor(.secondary)
+                                            }
+                                            .padding(.vertical, 8)
+                                            .padding(.horizontal, 4)
+                                        }
+                                        .buttonStyle(.plain)
+                                        
+                                        if suggestion.name != suggestions.prefix(5).last?.name {
+                                            Divider()
+                                        }
                                     }
                                 }
                             }
                             .padding(8)
-                            .background(Color.lightGray.opacity(0.1))
+                            .background(Color(UIColor.secondarySystemGroupedBackground))
                             .cornerRadius(8)
                         }
                     }
@@ -346,6 +386,13 @@ struct AddExerciseView: View {
             }
             .onAppear {
                 caloriesBurned = Double(estimatedCalories())
+                // Load initial smart suggestions
+                smartSuggestions = autofillService.getSuggestions(
+                    for: "",
+                    at: selectedDate,
+                    context: viewContext
+                )
+                showingSuggestions = !smartSuggestions.isEmpty
             }
             .onChange(of: duration) { _, _ in
                 caloriesBurned = Double(estimatedCalories())
@@ -366,6 +413,25 @@ struct AddExerciseView: View {
         
         // Update calories based on selected exercise
         caloriesBurned = template.caloriesPerMinute * Double(duration)
+    }
+    
+    func selectSmartSuggestion(_ suggestion: ExerciseAutofillService.ExerciseSuggestion) {
+        exerciseName = suggestion.exercise.name
+        exerciseType = ExerciseType(rawValue: suggestion.exercise.type.rawValue) ?? .other
+        
+        // Use typical duration if available
+        if let typicalDuration = suggestion.typicalDuration {
+            duration = typicalDuration
+        }
+        
+        // Use typical calories if available
+        if let typicalCalories = suggestion.typicalCalories {
+            caloriesBurned = Double(typicalCalories)
+        } else {
+            caloriesBurned = suggestion.exercise.caloriesPerMinute * Double(duration)
+        }
+        
+        showingSuggestions = false
     }
     
     func estimatedCalories() -> Int {
@@ -400,6 +466,10 @@ struct AddExerciseView: View {
         
         do {
             try viewContext.save()
+            
+            // Update goals based on the new exercise entry
+            GoalsManager.shared.updateGoalsFromExerciseEntry(newExercise)
+            
             presentationMode.wrappedValue.dismiss()
         } catch {
             print("Error saving exercise: \(error)")
@@ -413,4 +483,106 @@ enum ExerciseType: String, CaseIterable {
     case flexibility = "Flexibility"
     case sports = "Sports"
     case other = "Other"
+}
+
+struct SmartSuggestionRow: View {
+    let suggestion: ExerciseAutofillService.ExerciseSuggestion
+    let onSelect: () -> Void
+    
+    var body: some View {
+        Button(action: onSelect) {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(suggestion.exercise.name)
+                        .foregroundColor(.primary)
+                        .fontWeight(.medium)
+                    
+                    Spacer()
+                    
+                    // Reason indicator
+                    Image(systemName: reasonIcon)
+                        .font(.caption)
+                        .foregroundColor(reasonColor)
+                }
+                
+                HStack {
+                    // Confidence indicator
+                    HStack(spacing: 2) {
+                        ForEach(0..<5) { index in
+                            Image(systemName: "circle.fill")
+                                .font(.system(size: 4))
+                                .foregroundColor(
+                                    Double(index) / 5.0 <= suggestion.confidence
+                                    ? Color(red: 127/255, green: 176/255, blue: 105/255)
+                                    : Color(UIColor.systemGray4)
+                                )
+                        }
+                    }
+                    
+                    Text("•")
+                        .foregroundColor(.secondary)
+                    
+                    // Additional info
+                    if let duration = suggestion.typicalDuration {
+                        Text("\(duration) min")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    if let lastPerformed = suggestion.lastPerformed {
+                        Text("•")
+                            .foregroundColor(.secondary)
+                        Text(relativeTimeString(from: lastPerformed))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                }
+            }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 4)
+        }
+        .buttonStyle(.plain)
+    }
+    
+    private var reasonIcon: String {
+        switch suggestion.reason {
+        case .frequentlyUsed:
+            return "star.fill"
+        case .timeOfDay:
+            return "clock.fill"
+        case .dayOfWeek:
+            return "calendar"
+        case .recentlyUsed:
+            return "arrow.clockwise"
+        case .similarToInput:
+            return "magnifyingglass"
+        case .followsPattern:
+            return "chart.line.uptrend.xyaxis"
+        }
+    }
+    
+    private var reasonColor: Color {
+        switch suggestion.reason {
+        case .frequentlyUsed:
+            return .yellow
+        case .timeOfDay:
+            return .blue
+        case .dayOfWeek:
+            return .purple
+        case .recentlyUsed:
+            return .orange
+        case .similarToInput:
+            return .green
+        case .followsPattern:
+            return Color(red: 74/255, green: 155/255, blue: 155/255)
+        }
+    }
+    
+    private func relativeTimeString(from date: Date) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .abbreviated
+        return formatter.localizedString(for: date, relativeTo: Date())
+    }
 }

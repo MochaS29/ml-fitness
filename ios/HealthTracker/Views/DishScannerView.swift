@@ -139,62 +139,27 @@ struct DishScannerView: View {
     }
     
     private func analyzeDish() {
-        guard capturedImage != nil else { return }
+        guard let image = capturedImage else { return }
         
         isProcessing = true
         
-        // In a real app, this would call a food recognition API
-        // For demo purposes, we'll simulate the analysis
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            // Simulated results
-            self.scanResults = FoodScanResult(
-                id: UUID(),
-                timestamp: Date(),
-                identifiedFoods: [
-                    IdentifiedFood(
-                        name: "Grilled Chicken Breast",
-                        confidence: 0.92,
-                        estimatedWeight: 150,
-                        calories: 250,
-                        protein: 46,
-                        carbs: 0,
-                        fat: 5.5,
-                        category: .protein
-                    ),
-                    IdentifiedFood(
-                        name: "Brown Rice",
-                        confidence: 0.88,
-                        estimatedWeight: 100,
-                        calories: 110,
-                        protein: 2.5,
-                        carbs: 23,
-                        fat: 0.9,
-                        category: .grains
-                    ),
-                    IdentifiedFood(
-                        name: "Steamed Broccoli",
-                        confidence: 0.95,
-                        estimatedWeight: 80,
-                        calories: 27,
-                        protein: 2.2,
-                        carbs: 5.5,
-                        fat: 0.3,
-                        category: .vegetables
-                    )
-                ],
-                totalNutrition: NutritionInfo(
-                    calories: 387,
-                    protein: 50.7,
-                    carbs: 28.5,
-                    fat: 6.7,
-                    fiber: 3.5,
-                    sugar: 2.1,
-                    sodium: 125
-                )
-            )
-            
-            self.isProcessing = false
-            self.showingResults = true
+        Task {
+            do {
+                // Use the food recognition service
+                let results = try await FoodRecognitionService.shared.analyzeDish(from: image)
+                
+                await MainActor.run {
+                    self.scanResults = results
+                    self.isProcessing = false
+                    self.showingResults = true
+                }
+            } catch {
+                await MainActor.run {
+                    self.errorMessage = error.localizedDescription
+                    self.showingError = true
+                    self.isProcessing = false
+                }
+            }
         }
     }
 }

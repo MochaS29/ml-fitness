@@ -107,6 +107,14 @@ struct MoreView: View {
                         )
                     }
                     
+                    NavigationLink(destination: WaterTrackingView()) {
+                        MoreMenuItem(
+                            icon: "drop.fill",
+                            title: "Water Tracking",
+                            color: .blue
+                        )
+                    }
+                    
                     Button(action: { showingGoals = true }) {
                         MoreMenuItem(
                             icon: "target",
@@ -139,6 +147,14 @@ struct MoreView: View {
                             icon: "book.fill",
                             title: "Recipe Library",
                             color: Color(red: 127/255, green: 176/255, blue: 105/255)
+                        )
+                    }
+                    
+                    NavigationLink(destination: MealPlanningView()) {
+                        MoreMenuItem(
+                            icon: "calendar",
+                            title: "Meal Planning",
+                            color: .indigo
                         )
                     }
                     
@@ -443,14 +459,14 @@ struct RecipeLibraryView: View {
     private var categoryFilterView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                CategoryChip(
+                RecipeCategoryChip(
                     title: "All",
                     isSelected: selectedCategory == nil,
                     action: { selectedCategory = nil }
                 )
                 
                 ForEach(RecipeCategory.allCases, id: \.self) { category in
-                    CategoryChip(
+                    RecipeCategoryChip(
                         title: category.rawValue,
                         isSelected: selectedCategory == category,
                         action: { selectedCategory = category }
@@ -492,7 +508,7 @@ struct RecipeLibraryView: View {
             // Parse ingredients from string array
             let ingredients: [Ingredient] = (customRecipe.ingredients ?? []).map { ingredientString in
                 // Simple parsing - in real app would be more sophisticated
-                Ingredient(name: ingredientString, amount: 1, unit: .piece)
+                Ingredient(name: ingredientString, amount: 1, unit: .piece, category: .other)
             }
             
             return Recipe(
@@ -535,6 +551,26 @@ struct RecipeLibraryView: View {
         }
         
         return recipes
+    }
+}
+
+struct RecipeCategoryChip: View {
+    let title: String
+    let isSelected: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(isSelected ? .semibold : .regular)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(isSelected ? Color.wellnessGreen : Color.gray.opacity(0.2))
+                .foregroundColor(isSelected ? .white : .primary)
+                .cornerRadius(20)
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -644,24 +680,9 @@ struct HealthKitSettingsView: View {
     }
 }
 
-// Placeholder views for sheets
-struct GoalsView: View {
-    var body: some View {
-        NavigationView {
-            Text("Goals Settings")
-                .navigationTitle("Goals")
-        }
-    }
-}
+// Import the actual GoalsView from Goals folder
+// GoalsView is now defined in Views/Goals/GoalsView.swift
 
-struct RemindersView: View {
-    var body: some View {
-        NavigationView {
-            Text("Reminder Settings")
-                .navigationTitle("Reminders")
-        }
-    }
-}
 
 struct ExportDataView: View {
     var body: some View {

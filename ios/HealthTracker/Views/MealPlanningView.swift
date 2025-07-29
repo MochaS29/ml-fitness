@@ -1,166 +1,149 @@
 import SwiftUI
+import CoreData
 
 struct MealPlanningView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @State private var selectedTab = 0
-    @State private var currentMealPlan: MealPlan?
-    @State private var showingRecipeLibrary = false
+    @State private var selectedDate = Date()
+    @State private var showingAddMeal = false
     @State private var showingGroceryList = false
-    @StateObject private var mealPlanManager = MealPlanManager()
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 0) {
                 // Tab selector
                 Picker("View", selection: $selectedTab) {
-                    Text("Weekly Plan").tag(0)
-                    Text("Recipes").tag(1)
-                    Text("Grocery List").tag(2)
+                    Text("Week").tag(0)
+                    Text("Month").tag(1)
                 }
                 .pickerStyle(.segmented)
                 .padding()
                 
-                // Content based on selected tab
-                switch selectedTab {
-                case 0:
-                    WeeklyMealPlanView(
-                        mealPlan: $currentMealPlan,
-                        showingRecipeLibrary: $showingRecipeLibrary
-                    )
-                case 1:
-                    MealPlanningRecipeLibraryView()
-                case 2:
-                    GroceryListView(mealPlan: currentMealPlan)
-                default:
-                    EmptyView()
+                // Content
+                if selectedTab == 0 {
+                    WeeklyMealPlanView(selectedDate: $selectedDate)
+                } else {
+                    MonthlyMealCalendarView(selectedDate: $selectedDate)
                 }
             }
             .navigationTitle("Meal Planning")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showingRecipeLibrary = true }) {
-                        Image(systemName: "plus")
+                    Menu {
+                        Button(action: { showingAddMeal = true }) {
+                            Label("Add Meal", systemImage: "plus.circle")
+                        }
+                        
+                        Button(action: { showingGroceryList = true }) {
+                            Label("Grocery List", systemImage: "cart")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
                     }
                 }
             }
-            .sheet(isPresented: $showingRecipeLibrary) {
-                RecipeSelectionView { recipe in
-                    // Add recipe to meal plan
-                    if currentMealPlan == nil {
-                        createNewMealPlan()
-                    }
-                    addRecipeToMealPlan(recipe)
-                }
+            .sheet(isPresented: $showingAddMeal) {
+                AddMealPlanView(selectedDate: selectedDate)
             }
-            .onAppear {
-                loadCurrentMealPlan()
+            .sheet(isPresented: $showingGroceryList) {
+                GroceryListGeneratorView()
             }
         }
-    }
-    
-    func createNewMealPlan() {
-        let startDate = Date()
-        let endDate = Calendar.current.date(byAdding: .day, value: 6, to: startDate)!
-        currentMealPlan = MealPlan(
-            name: "Weekly Plan",
-            startDate: startDate,
-            endDate: endDate,
-            meals: []
-        )
-    }
-    
-    func loadCurrentMealPlan() {
-        // Load from UserDefaults or Core Data
-        currentMealPlan = mealPlanManager.getCurrentMealPlan()
-    }
-    
-    func addRecipeToMealPlan(_ recipe: Recipe) {
-        // Implementation to add recipe to current meal plan
     }
 }
 
+// Weekly meal plan view
 struct WeeklyMealPlanView: View {
-    @Binding var mealPlan: MealPlan?
-    @Binding var showingRecipeLibrary: Bool
-    @State private var selectedDate = Date()
+    @Environment(\.managedObjectContext) private var viewContext
+    @Binding var selectedDate: Date
+    @State private var weekOffset = 0
     
-    var weekDays: [Date] {
-        guard let firstDay = Calendar.current.dateInterval(of: .weekOfYear, for: Date())?.start else {
-            return []
-        }
+    var weekDates: [Date] {
+        let calendar = Calendar.current
+        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: selectedDate)?.start ?? selectedDate
         return (0..<7).compactMap { dayOffset in
-            Calendar.current.date(byAdding: .day, value: dayOffset, to: firstDay)
+            calendar.date(byAdding: .day, value: dayOffset, to: startOfWeek)
         }
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                // Week selector
-                HStack {
-                    Button(action: previousWeek) {
-                        Image(systemName: "chevron.left")
-                    }
-                    
-                    Text(weekDateRange)
-                        .font(.headline)
-                    
-                    Button(action: nextWeek) {
-                        Image(systemName: "chevron.right")
-                    }
+        VStack(spacing: 0) {
+            // Week navigation
+            HStack {
+                Button(action: { changeWeek(-1) }) {
+                    Image(systemName: "chevron.left")
+                        .font(.title3)
                 }
-                .padding()
                 
-                // Days of the week
-                ForEach(weekDays, id: \.self) { date in
-                    DayMealPlanCard(
-                        date: date,
-                        meals: mealsForDate(date),
-                        onAddMeal: { mealType in
-                            // Add meal for this date and type
-                            showingRecipeLibrary = true
-                        }
-                    )
-                    .cardStyle()
+                Spacer()
+                
+                Text(weekRangeText)
+                    .font(.headline)
+                
+                Spacer()
+                
+                Button(action: { changeWeek(1) }) {
+                    Image(systemName: "chevron.right")
+                        .font(.title3)
                 }
             }
             .padding()
+            .background(Color(UIColor.systemBackground))
+            
+            // Weekly view
+            ScrollView {
+                VStack(spacing: 16) {
+                    ForEach(weekDates, id: \.self) { date in
+                        DayMealPlanCard(date: date)
+                    }
+                }
+                .padding()
+            }
         }
     }
     
-    var weekDateRange: String {
+    private var weekRangeText: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d"
-        let start = weekDays.first ?? Date()
-        let end = weekDays.last ?? Date()
-        return "\(formatter.string(from: start)) - \(formatter.string(from: end))"
+        
+        if let first = weekDates.first, let last = weekDates.last {
+            return "\(formatter.string(from: first)) - \(formatter.string(from: last))"
+        }
+        return ""
     }
     
-    func previousWeek() {
-        selectedDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: selectedDate) ?? selectedDate
-    }
-    
-    func nextWeek() {
-        selectedDate = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: selectedDate) ?? selectedDate
-    }
-    
-    func mealsForDate(_ date: Date) -> [PlannedMeal] {
-        guard let plan = mealPlan else { return [] }
-        return plan.meals.filter { Calendar.current.isDate($0.date, inSameDayAs: date) }
+    private func changeWeek(_ direction: Int) {
+        withAnimation {
+            if let newDate = Calendar.current.date(byAdding: .weekOfYear, value: direction, to: selectedDate) {
+                selectedDate = newDate
+            }
+        }
     }
 }
 
+// Day meal plan card
 struct DayMealPlanCard: View {
+    @Environment(\.managedObjectContext) private var viewContext
     let date: Date
-    let meals: [PlannedMeal]
-    let onAddMeal: (MealType) -> Void
+    @State private var showingAddMeal = false
+    @State private var selectedMealType: MealType = .breakfast
     
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMM d"
-        return formatter
+    @FetchRequest private var mealPlans: FetchedResults<MealPlan>
+    
+    init(date: Date) {
+        self.date = date
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        _mealPlans = FetchRequest(
+            sortDescriptors: [NSSortDescriptor(keyPath: \MealPlan.mealType, ascending: true)],
+            predicate: NSPredicate(format: "date >= %@ AND date < %@", startOfDay as NSDate, endOfDay as NSDate)
+        )
     }
     
-    var isToday: Bool {
+    private var isToday: Bool {
         Calendar.current.isDateInToday(date)
     }
     
@@ -168,238 +151,411 @@ struct DayMealPlanCard: View {
         VStack(alignment: .leading, spacing: 12) {
             // Date header
             HStack {
-                Text(dateFormatter.string(from: date))
-                    .font(.headline)
-                    .foregroundColor(isToday ? .mochaBrown : .primary)
-                
-                if isToday {
-                    Text("Today")
-                        .font(.caption)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 2)
-                        .background(Color.mochaBrown)
-                        .foregroundColor(.white)
-                        .cornerRadius(4)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(date, format: .dateTime.weekday(.wide))
+                        .font(.headline)
+                        .foregroundColor(isToday ? .wellnessGreen : .primary)
+                    
+                    Text(date, format: .dateTime.day().month())
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
                 
                 Spacer()
+                
+                if isToday {
+                    Text("TODAY")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.wellnessGreen)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.wellnessGreen.opacity(0.2))
+                        .cornerRadius(4)
+                }
             }
             
-            // Meal slots
-            ForEach(MealType.allCases, id: \.self) { mealType in
-                MealSlotView(
-                    mealType: mealType,
-                    plannedMeal: meals.first { $0.mealType == mealType },
-                    onAdd: { onAddMeal(mealType) }
-                )
+            // Meals
+            if mealPlans.isEmpty {
+                Text("No meals planned")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .italic()
+                    .padding(.vertical, 8)
+            } else {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(MealType.allCases, id: \.self) { mealType in
+                        if let mealPlan = mealPlans.first(where: { $0.mealType == mealType.rawValue }) {
+                            MealPlanRow(mealPlan: mealPlan, mealType: mealType)
+                        }
+                    }
+                }
+            }
+            
+            // Quick add button
+            Button(action: {
+                showingAddMeal = true
+            }) {
+                Label("Add Meal", systemImage: "plus.circle")
+                    .font(.subheadline)
+                    .foregroundColor(.wellnessGreen)
             }
         }
         .padding()
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .cornerRadius(12)
+        .sheet(isPresented: $showingAddMeal) {
+            AddMealPlanView(selectedDate: date)
+        }
     }
 }
 
-struct MealSlotView: View {
+// Meal plan row
+struct MealPlanRow: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    let mealPlan: MealPlan
     let mealType: MealType
-    let plannedMeal: PlannedMeal?
-    let onAdd: () -> Void
     
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
+        HStack(spacing: 12) {
+            // Meal type icon
+            Image(systemName: mealTypeIcon)
+                .font(.body)
+                .foregroundColor(.secondary)
+                .frame(width: 24)
+            
+            VStack(alignment: .leading, spacing: 2) {
                 Text(mealType.rawValue)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                
-                if let meal = plannedMeal {
-                    Text(meal.recipe.name)
-                        .font(.body)
-                        .lineLimit(1)
-                    
-                    HStack(spacing: 8) {
-                        Label("\(meal.recipe.totalTime) min", systemImage: "clock")
-                        Label("\(Int(meal.recipe.nutrition?.calories ?? 0)) cal", systemImage: "flame")
-                    }
                     .font(.caption)
                     .foregroundColor(.secondary)
-                } else {
-                    Button(action: onAdd) {
-                        Label("Add meal", systemImage: "plus.circle")
-                            .font(.caption)
-                            .foregroundColor(.mindfulTeal)
-                    }
+                
+                Text(mealPlan.recipeName ?? "Unknown")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                
+                if let notes = mealPlan.notes, !notes.isEmpty {
+                    Text(notes)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
                 }
             }
             
             Spacer()
             
-            if plannedMeal != nil {
-                Menu {
-                    Button("Change Recipe", action: onAdd)
-                    Button("Remove", role: .destructive) {
-                        // Remove meal
-                    }
+            if mealPlan.servings > 1 {
+                Text("\(mealPlan.servings) servings")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Menu {
+                Button(action: {
+                    // Edit meal
+                }) {
+                    Label("Edit", systemImage: "pencil")
+                }
+                
+                Button(role: .destructive) {
+                    viewContext.delete(mealPlan)
+                    try? viewContext.save()
                 } label: {
-                    Image(systemName: "ellipsis")
+                    Label("Remove", systemImage: "trash")
+                }
+            } label: {
+                Image(systemName: "ellipsis.circle")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+    
+    private var mealTypeIcon: String {
+        switch mealType {
+        case .breakfast: return "sunrise.fill"
+        case .lunch: return "sun.max.fill"
+        case .dinner: return "moon.fill"
+        case .snack: return "leaf.fill"
+        }
+    }
+}
+
+// Monthly calendar view
+struct MonthlyMealCalendarView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    @Binding var selectedDate: Date
+    @State private var selectedMonth = Date()
+    
+    @FetchRequest private var monthlyMealPlans: FetchedResults<MealPlan>
+    
+    init(selectedDate: Binding<Date>) {
+        self._selectedDate = selectedDate
+        
+        let calendar = Calendar.current
+        let startOfMonth = calendar.dateInterval(of: .month, for: Date())?.start ?? Date()
+        let endOfMonth = calendar.dateInterval(of: .month, for: Date())?.end ?? Date()
+        
+        _monthlyMealPlans = FetchRequest(
+            sortDescriptors: [NSSortDescriptor(keyPath: \MealPlan.date, ascending: true)],
+            predicate: NSPredicate(format: "date >= %@ AND date < %@", startOfMonth as NSDate, endOfMonth as NSDate)
+        )
+    }
+    
+    private let calendar = Calendar.current
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+        return formatter
+    }()
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            // Month navigation
+            HStack {
+                Button(action: { changeMonth(-1) }) {
+                    Image(systemName: "chevron.left")
+                        .font(.title3)
+                }
+                
+                Spacer()
+                
+                Text(dateFormatter.string(from: selectedMonth))
+                    .font(.headline)
+                
+                Spacer()
+                
+                Button(action: { changeMonth(1) }) {
+                    Image(systemName: "chevron.right")
+                        .font(.title3)
+                }
+            }
+            .padding()
+            .background(Color(UIColor.systemBackground))
+            
+            // Calendar grid
+            ScrollView {
+                VStack(spacing: 8) {
+                    // Weekday headers
+                    HStack(spacing: 0) {
+                        ForEach(calendar.shortWeekdaySymbols, id: \.self) { weekday in
+                            Text(weekday)
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                                .frame(maxWidth: .infinity)
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    // Calendar grid
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 7), spacing: 8) {
+                        ForEach(monthDays, id: \.self) { date in
+                            if let date = date {
+                                CalendarDayView(
+                                    date: date,
+                                    hasMeals: hasMeals(on: date),
+                                    isSelected: calendar.isDate(date, inSameDayAs: selectedDate)
+                                )
+                                .onTapGesture {
+                                    selectedDate = date
+                                }
+                            } else {
+                                Color.clear
+                                    .frame(height: 44)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    // Selected date details
+                    if calendar.isDate(selectedDate, equalTo: selectedMonth, toGranularity: .month) {
+                        SelectedDateMealsView(date: selectedDate)
+                            .padding()
+                    }
+                }
+                .padding(.bottom)
+            }
+        }
+        .onAppear {
+            selectedMonth = selectedDate
+        }
+    }
+    
+    private var monthDays: [Date?] {
+        guard let monthInterval = calendar.dateInterval(of: .month, for: selectedMonth) else {
+            return []
+        }
+        
+        let firstWeekday = calendar.component(.weekday, from: monthInterval.start)
+        let numberOfDays = calendar.range(of: .day, in: .month, for: selectedMonth)?.count ?? 0
+        
+        var days: [Date?] = []
+        
+        // Add empty days for the first week
+        for _ in 1..<firstWeekday {
+            days.append(nil)
+        }
+        
+        // Add days of the month
+        for dayOffset in 0..<numberOfDays {
+            if let date = calendar.date(byAdding: .day, value: dayOffset, to: monthInterval.start) {
+                days.append(date)
+            }
+        }
+        
+        return days
+    }
+    
+    private func hasMeals(on date: Date) -> Bool {
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        return monthlyMealPlans.contains { mealPlan in
+            if let mealDate = mealPlan.date {
+                return mealDate >= startOfDay && mealDate < endOfDay
+            }
+            return false
+        }
+    }
+    
+    private func changeMonth(_ direction: Int) {
+        withAnimation {
+            if let newMonth = calendar.date(byAdding: .month, value: direction, to: selectedMonth) {
+                selectedMonth = newMonth
+                updateFetchRequest()
+            }
+        }
+    }
+    
+    private func updateFetchRequest() {
+        let startOfMonth = calendar.dateInterval(of: .month, for: selectedMonth)?.start ?? selectedMonth
+        let endOfMonth = calendar.dateInterval(of: .month, for: selectedMonth)?.end ?? selectedMonth
+        
+        monthlyMealPlans.nsPredicate = NSPredicate(
+            format: "date >= %@ AND date < %@",
+            startOfMonth as NSDate,
+            endOfMonth as NSDate
+        )
+    }
+}
+
+// Calendar day view with circle indicator
+struct CalendarDayView: View {
+    let date: Date
+    let hasMeals: Bool
+    let isSelected: Bool
+    
+    private var isToday: Bool {
+        Calendar.current.isDateInToday(date)
+    }
+    
+    var body: some View {
+        ZStack {
+            // Background
+            RoundedRectangle(cornerRadius: 8)
+                .fill(isSelected ? Color.wellnessGreen.opacity(0.2) : Color(UIColor.secondarySystemGroupedBackground))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(isToday ? Color.wellnessGreen : Color.clear, lineWidth: 2)
+                )
+            
+            VStack(spacing: 4) {
+                Text("\(Calendar.current.component(.day, from: date))")
+                    .font(.system(size: 16, weight: isToday ? .semibold : .regular))
+                    .foregroundColor(isToday ? .wellnessGreen : .primary)
+                
+                // Meal indicator circle
+                if hasMeals {
+                    Circle()
+                        .fill(Color.wellnessGreen)
+                        .frame(width: 6, height: 6)
+                }
+            }
+        }
+        .frame(height: 44)
+    }
+}
+
+// Selected date meals view
+struct SelectedDateMealsView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    let date: Date
+    @State private var showingAddMeal = false
+    
+    @FetchRequest private var mealPlans: FetchedResults<MealPlan>
+    
+    init(date: Date) {
+        self.date = date
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        
+        _mealPlans = FetchRequest(
+            sortDescriptors: [NSSortDescriptor(keyPath: \MealPlan.mealType, ascending: true)],
+            predicate: NSPredicate(format: "date >= %@ AND date < %@", startOfDay as NSDate, endOfDay as NSDate)
+        )
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(date, format: .dateTime.weekday(.wide).day().month())
+                        .font(.headline)
+                    
+                    Text("\(mealPlans.count) meals planned")
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
+                
+                Spacer()
+                
+                Button(action: { showingAddMeal = true }) {
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundColor(.wellnessGreen)
+                }
             }
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color.lightGray.opacity(0.1))
-        .cornerRadius(8)
-    }
-}
-
-struct MealPlanningRecipeLibraryView: View {
-    @State private var searchText = ""
-    @State private var selectedCategory: RecipeCategory?
-    @State private var showingRecipeDetail = false
-    @State private var selectedRecipe: Recipe?
-    
-    private let recipeDatabase = RecipeDatabase.shared
-    
-    var filteredRecipes: [Recipe] {
-        var recipes = recipeDatabase.searchRecipes(searchText)
-        if let category = selectedCategory {
-            recipes = recipes.filter { $0.category == category }
-        }
-        return recipes
-    }
-    
-    var body: some View {
-        VStack {
-            // Search bar
-            HStack {
-                Image(systemName: "magnifyingglass")
+            
+            if mealPlans.isEmpty {
+                Text("No meals planned for this day")
+                    .font(.subheadline)
                     .foregroundColor(.secondary)
-                TextField("Search recipes...", text: $searchText)
-            }
-            .padding(8)
-            .background(Color.lightGray.opacity(0.2))
-            .cornerRadius(8)
-            .padding(.horizontal)
-            
-            // Category filter
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    CategoryChip(
-                        title: "All",
-                        isSelected: selectedCategory == nil,
-                        action: { selectedCategory = nil }
-                    )
-                    
-                    ForEach(RecipeCategory.allCases, id: \.self) { category in
-                        CategoryChip(
-                            title: category.rawValue,
-                            isSelected: selectedCategory == category,
-                            action: { selectedCategory = category }
-                        )
-                    }
-                }
-                .padding(.horizontal)
-            }
-            
-            // Recipe list
-            List(filteredRecipes) { recipe in
-                RecipeRow(recipe: recipe) {
-                    selectedRecipe = recipe
-                    showingRecipeDetail = true
-                }
-            }
-        }
-        .sheet(isPresented: $showingRecipeDetail) {
-            if let recipe = selectedRecipe {
-                RecipeDetailView(recipe: recipe)
-            }
-        }
-    }
-}
-
-struct RecipeRow: View {
-    let recipe: Recipe
-    let onTap: () -> Void
-    
-    var body: some View {
-        Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text(recipe.name)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    
-                    Spacer()
-                    
-                    if recipe.isFavorite {
-                        Image(systemName: "heart.fill")
-                            .foregroundColor(.red)
-                    }
-                }
-                
-                HStack(spacing: 15) {
-                    Label("\(recipe.totalTime) min", systemImage: "clock")
-                    Label("\(recipe.servings) servings", systemImage: "person.2")
-                    if let calories = recipe.nutrition?.calories {
-                        Label("\(Int(calories)) cal", systemImage: "flame")
-                    }
-                }
-                .font(.caption)
-                .foregroundColor(.secondary)
-                
-                // Tags
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 6) {
-                        ForEach(recipe.tags, id: \.self) { tag in
-                            Text(tag)
-                                .font(.caption2)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 2)
-                                .background(Color.mindfulTeal.opacity(0.2))
-                                .foregroundColor(.mindfulTeal)
-                                .cornerRadius(4)
+                    .italic()
+                    .padding(.vertical, 8)
+            } else {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(mealPlans) { mealPlan in
+                        HStack {
+                            Text(mealPlan.mealType ?? "")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .frame(width: 80, alignment: .leading)
+                            
+                            Text(mealPlan.recipeName ?? "Unknown")
+                                .font(.subheadline)
+                            
+                            Spacer()
+                            
+                            if mealPlan.servings > 1 {
+                                Text("\(mealPlan.servings) servings")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                 }
             }
-            .padding(.vertical, 4)
         }
-        .buttonStyle(.plain)
-    }
-}
-
-struct RecipeSelectionView: View {
-    @Environment(\.presentationMode) var presentationMode
-    let onSelect: (Recipe) -> Void
-    
-    var body: some View {
-        NavigationView {
-            MealPlanningRecipeLibraryView()
-                .navigationTitle("Select Recipe")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel") {
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    }
-                }
+        .padding()
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .cornerRadius(12)
+        .sheet(isPresented: $showingAddMeal) {
+            AddMealPlanView(selectedDate: date)
         }
     }
 }
 
-// Meal Plan Manager
-class MealPlanManager: ObservableObject {
-    @Published var mealPlans: [MealPlan] = []
-    
-    func getCurrentMealPlan() -> MealPlan? {
-        // Return the current week's meal plan
-        let today = Date()
-        return mealPlans.first { plan in
-            plan.startDate <= today && plan.endDate >= today
-        }
-    }
-    
-    func saveMealPlan(_ mealPlan: MealPlan) {
-        // Save to UserDefaults or Core Data
-    }
+#Preview {
+    MealPlanningView()
+        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

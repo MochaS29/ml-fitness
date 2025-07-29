@@ -41,7 +41,7 @@ struct FoodSearchView: View {
                 // Category Filter
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
-                        CategoryChip(
+                        FoodCategoryChip(
                             title: "All",
                             isSelected: selectedCategory == nil,
                             action: {
@@ -51,7 +51,7 @@ struct FoodSearchView: View {
                         )
                         
                         ForEach(FoodCategory.allCases, id: \.self) { category in
-                            CategoryChip(
+                            FoodCategoryChip(
                                 title: category.rawValue,
                                 isSelected: selectedCategory == category,
                                 action: {
@@ -203,7 +203,7 @@ struct MacroTag: View {
     }
 }
 
-struct CategoryChip: View {
+struct FoodCategoryChip: View {
     let title: String
     let isSelected: Bool
     let action: () -> Void

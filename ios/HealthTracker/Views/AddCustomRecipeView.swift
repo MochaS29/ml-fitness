@@ -33,6 +33,9 @@ struct AddCustomRecipeView: View {
     // Image
     @State private var selectedImage: PhotosPickerItem?
     @State private var recipeImage: UIImage?
+    @State private var showingImagePicker = false
+    @State private var showingCamera = false
+    @State private var imageSourceType: UIImagePickerController.SourceType = .photoLibrary
     
     var isValid: Bool {
         !name.isEmpty && !ingredients.isEmpty && instructions.contains(where: { !$0.isEmpty })
@@ -40,63 +43,129 @@ struct AddCustomRecipeView: View {
     
     var body: some View {
         NavigationView {
-            Form {
-                Section("Recipe Information") {
-                    TextField("Recipe Name", text: $name)
-                    
-                    Picker("Category", selection: $category) {
-                        ForEach(RecipeCategory.allCases, id: \.self) { category in
-                            Text(category.rawValue).tag(category)
-                        }
+            formContent
+                .navigationTitle("Add Recipe")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarItems(
+                    leading: Button("Cancel") {
+                        presentationMode.wrappedValue.dismiss()
+                    },
+                    trailing: Button("Save") {
+                        saveRecipe()
+                    }
+                    .disabled(!isValid)
+                )
+        }
+        .sheet(isPresented: $showingIngredientPicker) {
+            IngredientPickerView { ingredient in
+                ingredients.append(ingredient)
+                calculateNutrition()
+            }
+        }
+        .sheet(isPresented: $showingCamera) {
+            CameraImagePicker(selectedImage: $recipeImage, sourceType: imageSourceType)
+        }
+        .confirmationDialog("Choose Image Source", isPresented: $showingImagePicker) {
+            Button("Photo Library") {
+                imageSourceType = .photoLibrary
+                showingCamera = true
+            }
+            Button("Camera") {
+                imageSourceType = .camera
+                showingCamera = true
+            }
+            Button("Cancel", role: .cancel) {}
+        }
+    }
+    
+    private var formContent: some View {
+        Form {
+            recipeInfoSection
+            recipePhotoSection
+            ingredientsSection
+            instructionsSection
+            tagsSection
+            nutritionSection
+        }
+    }
+    
+    private var recipeInfoSection: some View {
+        Section("Recipe Information") {
+            TextField("Recipe Name", text: $name)
+            
+            Picker("Category", selection: $category) {
+                ForEach(RecipeCategory.allCases, id: \.self) { category in
+                    Text(category.rawValue).tag(category)
+                }
+            }
+            
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Prep Time")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Stepper("\(prepTime) min", value: $prepTime, in: 0...300, step: 5)
+                }
+                
+                VStack(alignment: .leading) {
+                    Text("Cook Time")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Stepper("\(cookTime) min", value: $cookTime, in: 0...300, step: 5)
+                }
+            }
+            
+            Stepper("Servings: \(servings)", value: $servings, in: 1...20)
+        }
+    }
+    
+    private var recipePhotoSection: some View {
+        Section("Recipe Photo") {
+                    if let image = recipeImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 200)
+                            .clipped()
+                            .cornerRadius(10)
+                            .onTapGesture {
+                                showingImagePicker = true
+                            }
                     }
                     
                     HStack {
-                        VStack(alignment: .leading) {
-                            Text("Prep Time")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Stepper("\(prepTime) min", value: $prepTime, in: 0...300, step: 5)
+                        // Photo Library
+                        PhotosPicker(selection: $selectedImage, matching: .images) {
+                            Label("Choose Photo", systemImage: "photo")
+                                .frame(maxWidth: .infinity)
                         }
+                        .buttonStyle(.bordered)
+                        .tint(.mindfulTeal)
                         
-                        VStack(alignment: .leading) {
-                            Text("Cook Time")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Stepper("\(cookTime) min", value: $cookTime, in: 0...300, step: 5)
+                        // Camera
+                        Button(action: {
+                            imageSourceType = .camera
+                            showingCamera = true
+                        }) {
+                            Label("Take Photo", systemImage: "camera")
+                                .frame(maxWidth: .infinity)
                         }
-                    }
-                    
-                    Stepper("Servings: \(servings)", value: $servings, in: 1...20)
-                }
-                
-                Section("Recipe Photo") {
-                    PhotosPicker(selection: $selectedImage, matching: .images) {
-                        if let image = recipeImage {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(height: 200)
-                                .clipped()
-                                .cornerRadius(10)
-                        } else {
-                            HStack {
-                                Image(systemName: "camera")
-                                Text("Add Photo")
-                            }
-                            .foregroundColor(.mindfulTeal)
-                        }
-                    }
-                    .onChange(of: selectedImage) { _, _ in
-                        Task {
-                            if let data = try? await selectedImage?.loadTransferable(type: Data.self),
-                               let image = UIImage(data: data) {
-                                recipeImage = image
-                            }
-                        }
+                        .buttonStyle(.bordered)
+                        .tint(.mindfulTeal)
+            }
+            .onChange(of: selectedImage) { _, _ in
+                Task {
+                    if let data = try? await selectedImage?.loadTransferable(type: Data.self),
+                       let image = UIImage(data: data) {
+                        recipeImage = image
                     }
                 }
-                
-                Section("Ingredients") {
+            }
+        }
+    }
+    
+    private var ingredientsSection: some View {
+        Section("Ingredients") {
                     ForEach(ingredients) { ingredient in
                         HStack {
                             VStack(alignment: .leading) {
@@ -114,13 +183,15 @@ struct AddCustomRecipeView: View {
                     }
                     .onDelete(perform: deleteIngredient)
                     
-                    Button(action: { showingIngredientPicker = true }) {
-                        Label("Add Ingredient", systemImage: "plus.circle")
-                            .foregroundColor(.mindfulTeal)
-                    }
-                }
-                
-                Section("Instructions") {
+            Button(action: { showingIngredientPicker = true }) {
+                Label("Add Ingredient", systemImage: "plus.circle")
+                    .foregroundColor(.mindfulTeal)
+            }
+        }
+    }
+    
+    private var instructionsSection: some View {
+        Section("Instructions") {
                     ForEach(instructions.indices, id: \.self) { index in
                         HStack(alignment: .top) {
                             Text("\(index + 1).")
@@ -134,13 +205,15 @@ struct AddCustomRecipeView: View {
                     }
                     .onDelete(perform: deleteInstruction)
                     
-                    Button(action: addInstruction) {
-                        Label("Add Step", systemImage: "plus.circle")
-                            .foregroundColor(.mindfulTeal)
-                    }
-                }
-                
-                Section("Tags") {
+            Button(action: addInstruction) {
+                Label("Add Step", systemImage: "plus.circle")
+                    .foregroundColor(.mindfulTeal)
+            }
+        }
+    }
+    
+    private var tagsSection: some View {
+        Section("Tags") {
                     FlowLayout(items: tags) { tag in
                         TagChip(text: tag) {
                             tags.removeAll { $0 == tag }
@@ -156,11 +229,13 @@ struct AddCustomRecipeView: View {
                                 currentTag = ""
                             }
                         }
-                        .disabled(currentTag.isEmpty)
-                    }
-                }
-                
-                Section("Nutrition (Calculated)") {
+                .disabled(currentTag.isEmpty)
+            }
+        }
+    }
+    
+    private var nutritionSection: some View {
+        Section("Nutrition (Calculated)") {
                     HStack {
                         NutritionLabel(value: Int(calculatedNutrition.calories), label: "Calories")
                         NutritionLabel(value: Int(calculatedNutrition.protein), label: "Protein", unit: "g")
@@ -179,33 +254,9 @@ struct AddCustomRecipeView: View {
                         }
                     }
                     
-                    Text("Per serving")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-            .navigationTitle("Add Recipe")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        saveRecipe()
-                    }
-                    .disabled(!isValid)
-                }
-            }
-        }
-        .sheet(isPresented: $showingIngredientPicker) {
-            IngredientPickerView { ingredient in
-                ingredients.append(ingredient)
-                calculateNutrition()
-            }
+            Text("Per serving")
+                .font(.caption)
+                .foregroundColor(.secondary)
         }
     }
     
@@ -284,9 +335,9 @@ struct AddCustomRecipeView: View {
         customRecipe.instructions = instructions.filter { !$0.isEmpty }
         
         // Save image if available
-        if let image = recipeImage,
-           let imageData = image.jpegData(compressionQuality: 0.8) {
-            customRecipe.imageData = imageData
+        if let image = recipeImage {
+            // Compress image to reduce storage size
+            customRecipe.imageData = image.jpegData(compressionQuality: 0.8)
         }
         
         do {

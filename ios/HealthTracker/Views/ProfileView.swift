@@ -50,6 +50,12 @@ struct ProfileView: View {
                         }
                     }
                     
+                    Section("Health & Dietary") {
+                        NavigationLink(destination: FoodPreferencesView()) {
+                            Label("Food Preferences", systemImage: "fork.knife")
+                        }
+                    }
+                    
                     Section("Settings") {
                         Button(action: { showingEditProfile = true }) {
                             Label("Edit Profile", systemImage: "pencil")

@@ -5,6 +5,7 @@ struct HealthTrackerApp: App {
     let persistenceController = PersistenceController.shared
     @StateObject private var userProfileManager = UserProfileManager()
     @AppStorage("hasDemoData") private var hasDemoData = false
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
         WindowGroup {

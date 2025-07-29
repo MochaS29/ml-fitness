@@ -10,7 +10,6 @@ class DemoDataGenerator {
         clearExistingDemoData(context: context)
         
         // Generate data for the past 30 days
-        let calendar = Calendar.current
         let today = Date()
         
         // Generate food entries
@@ -314,62 +313,7 @@ class DemoDataGenerator {
     }
     
     private static func generateMealPlans() {
-        let userDefaults = UserDefaults.standard
-        let calendar = Calendar.current
-        let today = Date()
-        
-        // Create a week of meal plans
-        var plannedMeals: [PlannedMeal] = []
-        
-        for dayOffset in 0..<7 {
-            guard let date = calendar.date(byAdding: .day, value: dayOffset, to: today) else { continue }
-            
-            // Breakfast
-            let breakfastRecipes = RecipeDatabase.shared.recipes.filter { $0.category == .breakfast }
-            if let breakfast = breakfastRecipes.randomElement() {
-                plannedMeals.append(PlannedMeal(
-                    date: date,
-                    mealType: .breakfast,
-                    recipe: breakfast,
-                    servingsMultiplier: 1.0
-                ))
-            }
-            
-            // Lunch
-            let lunchRecipes = RecipeDatabase.shared.recipes.filter { $0.category == .lunch }
-            if let lunch = lunchRecipes.randomElement() {
-                plannedMeals.append(PlannedMeal(
-                    date: date,
-                    mealType: .lunch,
-                    recipe: lunch,
-                    servingsMultiplier: 1.0
-                ))
-            }
-            
-            // Dinner
-            let dinnerRecipes = RecipeDatabase.shared.recipes.filter { $0.category == .dinner }
-            if let dinner = dinnerRecipes.randomElement() {
-                plannedMeals.append(PlannedMeal(
-                    date: date,
-                    mealType: .dinner,
-                    recipe: dinner,
-                    servingsMultiplier: 2.0
-                ))
-            }
-        }
-        
-        // Create a meal plan for the week
-        let endDate = calendar.date(byAdding: .day, value: 6, to: today) ?? today
-        let mealPlan = MealPlan(
-            name: "Week of \(DateFormatter.localizedString(from: today, dateStyle: .medium, timeStyle: .none))",
-            startDate: today,
-            endDate: endDate,
-            meals: plannedMeals
-        )
-        
-        // Save meal plan
-        if let encoded = try? JSONEncoder().encode([mealPlan]) {
-            userDefaults.set(encoded, forKey: "savedMealPlans")
-        }
+        // Meal plans are now stored in Core Data, not UserDefaults
+        // This function is no longer needed for demo data
     }
 }

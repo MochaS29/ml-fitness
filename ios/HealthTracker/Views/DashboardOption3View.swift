@@ -344,9 +344,14 @@ struct DashboardOption3View: View {
         case "Today":
             startDate = calendar.startOfDay(for: now)
         case "Week":
-            startDate = calendar.date(byAdding: .day, value: -7, to: now) ?? now
+            // Get the start of the current week
+            let weekday = calendar.component(.weekday, from: now)
+            let daysToSubtract = weekday - calendar.firstWeekday
+            startDate = calendar.date(byAdding: .day, value: -daysToSubtract, to: calendar.startOfDay(for: now)) ?? now
         case "Month":
-            startDate = calendar.date(byAdding: .day, value: -30, to: now) ?? now
+            // Get the start of the current month
+            let components = calendar.dateComponents([.year, .month], from: now)
+            startDate = calendar.date(from: components) ?? now
         default:
             startDate = calendar.startOfDay(for: now)
         }

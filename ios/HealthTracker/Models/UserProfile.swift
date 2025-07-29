@@ -8,6 +8,7 @@ struct UserProfile: Codable {
     var activityLevel: ActivityLevel
     var dietaryRestrictions: [DietaryRestriction]
     var healthConditions: [HealthCondition]
+    var foodPreferences: UserFoodPreferences
     var isPregnant: Bool
     var pregnancyTrimester: PregnancyTrimester?
     var isBreastfeeding: Bool
@@ -22,6 +23,7 @@ struct UserProfile: Codable {
         self.activityLevel = .moderate
         self.dietaryRestrictions = []
         self.healthConditions = []
+        self.foodPreferences = UserFoodPreferences()
         self.isPregnant = false
         self.pregnancyTrimester = nil
         self.isBreastfeeding = false

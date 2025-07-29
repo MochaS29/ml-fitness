@@ -25,13 +25,13 @@ class OpenRecipeImporter {
                     recipe.prepTime = Int32(recipeData.prepTime)
                     recipe.cookTime = Int32(recipeData.cookTime)
                     recipe.servings = Int32(recipeData.servings)
-                    recipe.calories = recipeData.nutrition.calories
-                    recipe.protein = recipeData.nutrition.protein
-                    recipe.carbs = recipeData.nutrition.carbs
-                    recipe.fat = recipeData.nutrition.fat
-                    recipe.fiber = recipeData.nutrition.fiber ?? 0
-                    recipe.sugar = recipeData.nutrition.sugar ?? 0
-                    recipe.sodium = recipeData.nutrition.sodium ?? 0
+                    recipe.calories = recipeData.nutrition?.calories ?? 0
+                    recipe.protein = recipeData.nutrition?.protein ?? 0
+                    recipe.carbs = recipeData.nutrition?.carbs ?? 0
+                    recipe.fat = recipeData.nutrition?.fat ?? 0
+                    recipe.fiber = recipeData.nutrition?.fiber ?? 0
+                    recipe.sugar = recipeData.nutrition?.sugar ?? 0
+                    recipe.sodium = recipeData.nutrition?.sodium ?? 0
                     recipe.instructions = recipeData.instructions
                     recipe.ingredients = recipeData.ingredients.map { "\($0.amount) \($0.unit.rawValue) \($0.name)" }
                     recipe.tags = recipeData.tags
@@ -70,12 +70,12 @@ class OpenRecipeImporter {
                 cookTime: 0,
                 servings: 1,
                 ingredients: [
-                    Ingredient(name: "rolled oats", amount: 0.5, unit: .cup),
-                    Ingredient(name: "almond milk", amount: 0.5, unit: .cup),
-                    Ingredient(name: "Greek yogurt", amount: 0.25, unit: .cup),
-                    Ingredient(name: "mixed berries", amount: 0.5, unit: .cup),
-                    Ingredient(name: "honey", amount: 1, unit: .tablespoon),
-                    Ingredient(name: "chia seeds", amount: 1, unit: .tablespoon)
+                    Ingredient(name: "rolled oats", amount: 0.5, unit: .cup, category: .pantry),
+                    Ingredient(name: "almond milk", amount: 0.5, unit: .cup, category: .dairy),
+                    Ingredient(name: "Greek yogurt", amount: 0.25, unit: .cup, category: .dairy),
+                    Ingredient(name: "mixed berries", amount: 0.5, unit: .cup, category: .produce),
+                    Ingredient(name: "honey", amount: 1, unit: .tablespoon, category: .pantry),
+                    Ingredient(name: "chia seeds", amount: 1, unit: .tablespoon, category: .pantry)
                 ],
                 instructions: [
                     "In a jar or container, combine oats, almond milk, Greek yogurt, and chia seeds",
@@ -85,8 +85,8 @@ class OpenRecipeImporter {
                     "In the morning, top with fresh berries and enjoy"
                 ],
                 nutrition: NutritionInfo(calories: 310, protein: 12, carbs: 48, fat: 9, fiber: 8, sugar: 18, sodium: 95),
-                tags: ["healthy", "make-ahead", "high-fiber", "vegetarian"],
-                source: "OpenRecipes Database"
+                source: "OpenRecipes Database",
+                tags: ["healthy", "make-ahead", "high-fiber", "vegetarian"]
             ),
             
             Recipe(
@@ -96,13 +96,13 @@ class OpenRecipeImporter {
                 cookTime: 10,
                 servings: 2,
                 ingredients: [
-                    Ingredient(name: "eggs", amount: 4, unit: .piece),
-                    Ingredient(name: "bell pepper", amount: 0.5, unit: .cup, notes: "diced"),
-                    Ingredient(name: "spinach", amount: 1, unit: .cup),
-                    Ingredient(name: "mushrooms", amount: 0.5, unit: .cup, notes: "sliced"),
-                    Ingredient(name: "olive oil", amount: 1, unit: .tablespoon),
-                    Ingredient(name: "salt", amount: 0.25, unit: .teaspoon),
-                    Ingredient(name: "black pepper", amount: 0.25, unit: .teaspoon)
+                    Ingredient(name: "eggs", amount: 4, unit: .piece, category: .dairy),
+                    Ingredient(name: "bell pepper", amount: 0.5, unit: .cup, notes: "diced", category: .produce),
+                    Ingredient(name: "spinach", amount: 1, unit: .cup, category: .produce),
+                    Ingredient(name: "mushrooms", amount: 0.5, unit: .cup, notes: "sliced", category: .produce),
+                    Ingredient(name: "olive oil", amount: 1, unit: .tablespoon, category: .condiments),
+                    Ingredient(name: "salt", amount: 0.25, unit: .teaspoon, category: .spices),
+                    Ingredient(name: "black pepper", amount: 0.25, unit: .teaspoon, category: .spices)
                 ],
                 instructions: [
                     "Heat olive oil in a non-stick pan over medium heat",
@@ -113,8 +113,8 @@ class OpenRecipeImporter {
                     "Cook until eggs are set but still creamy"
                 ],
                 nutrition: NutritionInfo(calories: 180, protein: 14, carbs: 6, fat: 12, fiber: 2, sugar: 3, sodium: 320),
-                tags: ["high-protein", "low-carb", "gluten-free", "vegetarian"],
-                source: "OpenRecipes Database"
+                source: "OpenRecipes Database",
+                tags: ["high-protein", "low-carb", "gluten-free", "vegetarian"]
             )
         ])
         
@@ -127,14 +127,14 @@ class OpenRecipeImporter {
                 cookTime: 20,
                 servings: 2,
                 ingredients: [
-                    Ingredient(name: "quinoa", amount: 1, unit: .cup, notes: "cooked"),
-                    Ingredient(name: "chickpeas", amount: 1, unit: .cup, notes: "cooked"),
-                    Ingredient(name: "sweet potato", amount: 1, unit: .piece, notes: "medium, cubed"),
-                    Ingredient(name: "kale", amount: 2, unit: .cup, notes: "chopped"),
-                    Ingredient(name: "avocado", amount: 1, unit: .piece),
-                    Ingredient(name: "tahini", amount: 2, unit: .tablespoon),
-                    Ingredient(name: "lemon juice", amount: 1, unit: .tablespoon),
-                    Ingredient(name: "olive oil", amount: 1, unit: .tablespoon)
+                    Ingredient(name: "quinoa", amount: 1, unit: .cup, notes: "cooked", category: .pantry),
+                    Ingredient(name: "chickpeas", amount: 1, unit: .cup, notes: "cooked", category: .pantry),
+                    Ingredient(name: "sweet potato", amount: 1, unit: .piece, notes: "medium, cubed", category: .produce),
+                    Ingredient(name: "kale", amount: 2, unit: .cup, notes: "chopped", category: .produce),
+                    Ingredient(name: "avocado", amount: 1, unit: .piece, category: .produce),
+                    Ingredient(name: "tahini", amount: 2, unit: .tablespoon, category: .condiments),
+                    Ingredient(name: "lemon juice", amount: 1, unit: .tablespoon, category: .produce),
+                    Ingredient(name: "olive oil", amount: 1, unit: .tablespoon, category: .condiments)
                 ],
                 instructions: [
                     "Preheat oven to 400°F (200°C)",
@@ -146,8 +146,8 @@ class OpenRecipeImporter {
                     "Drizzle with tahini dressing"
                 ],
                 nutrition: NutritionInfo(calories: 485, protein: 16, carbs: 65, fat: 20, fiber: 14, sugar: 8, sodium: 280),
-                tags: ["vegan", "high-fiber", "meal-prep", "gluten-free"],
-                source: "OpenRecipes Database"
+                source: "OpenRecipes Database",
+                tags: ["vegan", "high-fiber", "meal-prep", "gluten-free"]
             ),
             
             Recipe(
@@ -157,14 +157,14 @@ class OpenRecipeImporter {
                 cookTime: 15,
                 servings: 2,
                 ingredients: [
-                    Ingredient(name: "chicken breast", amount: 8, unit: .ounce, notes: "grilled, sliced"),
-                    Ingredient(name: "whole wheat tortilla", amount: 2, unit: .piece),
-                    Ingredient(name: "cucumber", amount: 0.5, unit: .cup, notes: "diced"),
-                    Ingredient(name: "tomatoes", amount: 0.5, unit: .cup, notes: "diced"),
-                    Ingredient(name: "red onion", amount: 0.25, unit: .cup, notes: "sliced"),
-                    Ingredient(name: "hummus", amount: 4, unit: .tablespoon),
-                    Ingredient(name: "Greek yogurt", amount: 2, unit: .tablespoon),
-                    Ingredient(name: "mixed greens", amount: 1, unit: .cup)
+                    Ingredient(name: "chicken breast", amount: 8, unit: .ounce, category: .meat),
+                    Ingredient(name: "whole wheat tortilla", amount: 2, unit: .piece, category: .bakery),
+                    Ingredient(name: "cucumber", amount: 0.5, unit: .cup, notes: "diced", category: .produce),
+                    Ingredient(name: "tomatoes", amount: 0.5, unit: .cup, notes: "diced", category: .produce),
+                    Ingredient(name: "red onion", amount: 0.25, unit: .cup, notes: "sliced", category: .produce),
+                    Ingredient(name: "hummus", amount: 4, unit: .tablespoon, category: .condiments),
+                    Ingredient(name: "Greek yogurt", amount: 2, unit: .tablespoon, category: .dairy),
+                    Ingredient(name: "mixed greens", amount: 1, unit: .cup, category: .produce)
                 ],
                 instructions: [
                     "Season and grill chicken breast until cooked through",
@@ -176,8 +176,8 @@ class OpenRecipeImporter {
                     "Roll tightly and cut in half"
                 ],
                 nutrition: NutritionInfo(calories: 380, protein: 35, carbs: 38, fat: 10, fiber: 8, sugar: 6, sodium: 580),
-                tags: ["high-protein", "mediterranean", "meal-prep"],
-                source: "OpenRecipes Database"
+                source: "OpenRecipes Database",
+                tags: ["high-protein", "mediterranean", "meal-prep"]
             )
         ])
         
@@ -190,14 +190,14 @@ class OpenRecipeImporter {
                 cookTime: 25,
                 servings: 4,
                 ingredients: [
-                    Ingredient(name: "salmon fillet", amount: 1.5, unit: .pound),
-                    Ingredient(name: "broccoli florets", amount: 2, unit: .cup),
-                    Ingredient(name: "cherry tomatoes", amount: 1, unit: .cup),
-                    Ingredient(name: "asparagus", amount: 1, unit: .pound),
-                    Ingredient(name: "olive oil", amount: 3, unit: .tablespoon),
-                    Ingredient(name: "garlic", amount: 3, unit: .piece, notes: "cloves, minced"),
-                    Ingredient(name: "lemon", amount: 1, unit: .piece),
-                    Ingredient(name: "fresh herbs", amount: 2, unit: .tablespoon, notes: "dill or parsley")
+                    Ingredient(name: "salmon fillet", amount: 1.5, unit: .pound, category: .meat),
+                    Ingredient(name: "broccoli florets", amount: 2, unit: .cup, category: .produce),
+                    Ingredient(name: "cherry tomatoes", amount: 1, unit: .cup, category: .produce),
+                    Ingredient(name: "asparagus", amount: 1, unit: .pound, category: .produce),
+                    Ingredient(name: "olive oil", amount: 3, unit: .tablespoon, category: .condiments),
+                    Ingredient(name: "garlic", amount: 3, unit: .piece, category: .produce),
+                    Ingredient(name: "lemon", amount: 1, unit: .piece, category: .produce),
+                    Ingredient(name: "fresh herbs", amount: 2, unit: .tablespoon, notes: "dill or parsley", category: .produce)
                 ],
                 instructions: [
                     "Preheat oven to 425°F (220°C)",
@@ -210,8 +210,8 @@ class OpenRecipeImporter {
                     "Garnish with fresh herbs before serving"
                 ],
                 nutrition: NutritionInfo(calories: 420, protein: 38, carbs: 18, fat: 24, fiber: 6, sugar: 5, sodium: 380),
-                tags: ["omega-3", "low-carb", "gluten-free", "heart-healthy"],
-                source: "OpenRecipes Database"
+                source: "OpenRecipes Database",
+                tags: ["omega-3", "low-carb", "gluten-free", "heart-healthy"]
             ),
             
             Recipe(
@@ -221,15 +221,15 @@ class OpenRecipeImporter {
                 cookTime: 40,
                 servings: 6,
                 ingredients: [
-                    Ingredient(name: "black beans", amount: 2, unit: .cup, notes: "cooked"),
-                    Ingredient(name: "kidney beans", amount: 2, unit: .cup, notes: "cooked"),
-                    Ingredient(name: "diced tomatoes", amount: 28, unit: .ounce, notes: "canned"),
-                    Ingredient(name: "bell peppers", amount: 2, unit: .piece, notes: "diced"),
-                    Ingredient(name: "onion", amount: 1, unit: .piece, notes: "large, diced"),
-                    Ingredient(name: "corn", amount: 1, unit: .cup),
-                    Ingredient(name: "chili powder", amount: 2, unit: .tablespoon),
-                    Ingredient(name: "cumin", amount: 1, unit: .tablespoon),
-                    Ingredient(name: "vegetable broth", amount: 2, unit: .cup)
+                    Ingredient(name: "black beans", amount: 2, unit: .cup, notes: "cooked", category: .pantry),
+                    Ingredient(name: "kidney beans", amount: 2, unit: .cup, notes: "cooked", category: .pantry),
+                    Ingredient(name: "diced tomatoes", amount: 28, unit: .ounce, notes: "canned", category: .pantry),
+                    Ingredient(name: "bell peppers", amount: 2, unit: .piece, notes: "diced", category: .produce),
+                    Ingredient(name: "onion", amount: 1, unit: .piece, category: .produce),
+                    Ingredient(name: "corn", amount: 1, unit: .cup, category: .produce),
+                    Ingredient(name: "chili powder", amount: 2, unit: .tablespoon, category: .spices),
+                    Ingredient(name: "cumin", amount: 1, unit: .tablespoon, category: .spices),
+                    Ingredient(name: "vegetable broth", amount: 2, unit: .cup, category: .pantry)
                 ],
                 instructions: [
                     "In a large pot, sauté onion and peppers until softened",
@@ -241,8 +241,8 @@ class OpenRecipeImporter {
                     "Serve hot with desired toppings"
                 ],
                 nutrition: NutritionInfo(calories: 295, protein: 16, carbs: 52, fat: 3, fiber: 18, sugar: 9, sodium: 480),
-                tags: ["vegan", "high-fiber", "meal-prep", "gluten-free", "budget-friendly"],
-                source: "OpenRecipes Database"
+                source: "OpenRecipes Database",
+                tags: ["vegan", "high-fiber", "meal-prep", "gluten-free", "budget-friendly"]
             )
         ])
         
@@ -255,13 +255,13 @@ class OpenRecipeImporter {
                 cookTime: 0,
                 servings: 12,
                 ingredients: [
-                    Ingredient(name: "dates", amount: 1, unit: .cup, notes: "pitted"),
-                    Ingredient(name: "almonds", amount: 0.5, unit: .cup),
-                    Ingredient(name: "rolled oats", amount: 0.5, unit: .cup),
-                    Ingredient(name: "chia seeds", amount: 2, unit: .tablespoon),
-                    Ingredient(name: "cocoa powder", amount: 2, unit: .tablespoon),
-                    Ingredient(name: "vanilla extract", amount: 1, unit: .teaspoon),
-                    Ingredient(name: "sea salt", amount: 0.25, unit: .teaspoon)
+                    Ingredient(name: "dates", amount: 1, unit: .cup, notes: "pitted", category: .produce),
+                    Ingredient(name: "almonds", amount: 0.5, unit: .cup, category: .pantry),
+                    Ingredient(name: "rolled oats", amount: 0.5, unit: .cup, category: .pantry),
+                    Ingredient(name: "chia seeds", amount: 2, unit: .tablespoon, category: .pantry),
+                    Ingredient(name: "cocoa powder", amount: 2, unit: .tablespoon, category: .pantry),
+                    Ingredient(name: "vanilla extract", amount: 1, unit: .teaspoon, category: .pantry),
+                    Ingredient(name: "sea salt", amount: 0.25, unit: .teaspoon, category: .spices)
                 ],
                 instructions: [
                     "Soak dates in warm water for 10 minutes if very dry",
@@ -273,8 +273,8 @@ class OpenRecipeImporter {
                     "Store in an airtight container in the fridge"
                 ],
                 nutrition: NutritionInfo(calories: 85, protein: 2, carbs: 14, fat: 3, fiber: 3, sugar: 10, sodium: 50),
-                tags: ["vegan", "no-bake", "gluten-free", "energy-boost"],
-                source: "OpenRecipes Database"
+                source: "OpenRecipes Database",
+                tags: ["vegan", "no-bake", "gluten-free", "energy-boost"]
             ),
             
             Recipe(
@@ -284,14 +284,14 @@ class OpenRecipeImporter {
                 cookTime: 0,
                 servings: 4,
                 ingredients: [
-                    Ingredient(name: "chickpeas", amount: 15, unit: .ounce, notes: "canned, drained"),
-                    Ingredient(name: "tahini", amount: 0.25, unit: .cup),
-                    Ingredient(name: "lemon juice", amount: 3, unit: .tablespoon),
-                    Ingredient(name: "garlic", amount: 2, unit: .piece, notes: "cloves"),
-                    Ingredient(name: "olive oil", amount: 2, unit: .tablespoon),
-                    Ingredient(name: "carrots", amount: 2, unit: .piece, notes: "cut into sticks"),
-                    Ingredient(name: "celery", amount: 3, unit: .piece, notes: "stalks, cut into sticks"),
-                    Ingredient(name: "bell pepper", amount: 1, unit: .piece, notes: "cut into strips")
+                    Ingredient(name: "chickpeas", amount: 15, unit: .ounce, category: .pantry),
+                    Ingredient(name: "tahini", amount: 0.25, unit: .cup, category: .condiments),
+                    Ingredient(name: "lemon juice", amount: 3, unit: .tablespoon, category: .produce),
+                    Ingredient(name: "garlic", amount: 2, unit: .piece, notes: "cloves", category: .produce),
+                    Ingredient(name: "olive oil", amount: 2, unit: .tablespoon, category: .condiments),
+                    Ingredient(name: "carrots", amount: 2, unit: .piece, notes: "cut into sticks", category: .produce),
+                    Ingredient(name: "celery", amount: 3, unit: .piece, category: .produce),
+                    Ingredient(name: "bell pepper", amount: 1, unit: .piece, notes: "cut into strips", category: .produce)
                 ],
                 instructions: [
                     "In a food processor, combine chickpeas, tahini, lemon juice, and garlic",
@@ -303,8 +303,8 @@ class OpenRecipeImporter {
                     "Drizzle with extra olive oil and serve"
                 ],
                 nutrition: NutritionInfo(calories: 180, protein: 7, carbs: 22, fat: 8, fiber: 6, sugar: 4, sodium: 240),
-                tags: ["vegan", "high-fiber", "mediterranean", "gluten-free"],
-                source: "OpenRecipes Database"
+                source: "OpenRecipes Database",
+                tags: ["vegan", "high-fiber", "mediterranean", "gluten-free"]
             )
         ])
         

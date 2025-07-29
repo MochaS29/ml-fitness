@@ -1,10 +1,15 @@
 import SwiftUI
+import CoreData
 
 struct RecipeDetailView: View {
     let recipe: Recipe
+    var customRecipe: CustomRecipe? = nil
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.managedObjectContext) private var viewContext
     @State private var servingsMultiplier: Double = 1.0
     @State private var showingAddToMealPlan = false
+    @State private var showingGroceryListSelector = false
+    @State private var selectedIngredient: Ingredient?
     
     var adjustedIngredients: [Ingredient] {
         recipe.ingredients.map { ingredient in
@@ -31,6 +36,36 @@ struct RecipeDetailView: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
+                    // Recipe Image
+                    if let imageData = customRecipe?.imageData, let uiImage = UIImage(data: imageData) {
+                        // Core Data image
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 250)
+                            .clipped()
+                            .cornerRadius(15)
+                            .padding(.horizontal)
+                    } else if let imageURL = recipe.imageURL, let url = URL(string: imageURL) {
+                        // Web image
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(height: 250)
+                                .clipped()
+                        } placeholder: {
+                            Rectangle()
+                                .fill(Color.lightGray.opacity(0.3))
+                                .frame(height: 250)
+                                .overlay(
+                                    ProgressView()
+                                )
+                        }
+                        .cornerRadius(15)
+                        .padding(.horizontal)
+                    }
+                    
                     // Recipe Header
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
@@ -140,8 +175,21 @@ struct RecipeDetailView: View {
                     
                     // Ingredients
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Ingredients")
-                            .font(.headline)
+                        HStack {
+                            Text("Ingredients")
+                                .font(.headline)
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                selectedIngredient = nil // nil means add all
+                                showingGroceryListSelector = true
+                            }) {
+                                Label("Add All", systemImage: "cart.badge.plus")
+                                    .font(.caption)
+                                    .foregroundColor(.wellnessGreen)
+                            }
+                        }
                         
                         ForEach(adjustedIngredients) { ingredient in
                             HStack(alignment: .top) {
@@ -161,6 +209,16 @@ struct RecipeDetailView: View {
                                 }
                                 
                                 Spacer()
+                                
+                                Button(action: {
+                                    selectedIngredient = ingredient
+                                    showingGroceryListSelector = true
+                                }) {
+                                    Image(systemName: "cart.badge.plus")
+                                        .font(.system(size: 18))
+                                        .foregroundColor(.wellnessGreen)
+                                }
+                                .buttonStyle(PlainButtonStyle())
                             }
                         }
                     }
@@ -234,6 +292,12 @@ struct RecipeDetailView: View {
         }
         .sheet(isPresented: $showingAddToMealPlan) {
             AddToMealPlanView(recipe: recipe, servingsMultiplier: servingsMultiplier)
+        }
+        .sheet(isPresented: $showingGroceryListSelector) {
+            GroceryListSelectorView(
+                ingredients: selectedIngredient != nil ? [selectedIngredient!] : adjustedIngredients,
+                context: viewContext
+            )
         }
     }
     
@@ -320,5 +384,204 @@ struct AddToMealPlanView: View {
                 }
             }
         }
+    }
+}
+
+struct GroceryListSelectorView: View {
+    let ingredients: [Ingredient]
+    let context: NSManagedObjectContext
+    @Environment(\.presentationMode) var presentationMode
+    @State private var selectedList: GroceryList?
+    @State private var createNewList = false
+    @State private var newListName = ""
+    
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \GroceryList.createdDate, ascending: false)]
+    ) private var availableLists: FetchedResults<GroceryList>
+    
+    private var createNewListView: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("New Grocery List")
+                .font(.headline)
+            
+            TextField("List Name", text: $newListName)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            
+            HStack {
+                Button("Cancel") {
+                    createNewList = false
+                    newListName = ""
+                }
+                .secondaryButton()
+                
+                Spacer()
+                
+                Button("Create & Add") {
+                    createNewListAndAddIngredients()
+                }
+                .primaryButton()
+                .disabled(newListName.isEmpty)
+            }
+        }
+        .padding()
+    }
+    
+    private var selectExistingListView: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Add to Grocery List")
+                .font(.headline)
+            
+            Text("Adding \(ingredients.count) ingredient\(ingredients.count == 1 ? "" : "s")")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            
+            ScrollView {
+                VStack(spacing: 12) {
+                    createNewListButton
+                    existingListsView
+                }
+            }
+        }
+        .padding()
+    }
+    
+    private var createNewListButton: some View {
+        Button(action: {
+            createNewList = true
+        }) {
+            HStack {
+                Image(systemName: "plus.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(.wellnessGreen)
+                
+                Text("Create New List")
+                    .font(.body)
+                    .foregroundColor(.primary)
+                
+                Spacer()
+            }
+            .padding()
+            .background(Color.lightGray.opacity(0.1))
+            .cornerRadius(10)
+        }
+    }
+    
+    private var existingListsView: some View {
+        ForEach(availableLists) { list in
+            Button(action: {
+                selectedList = list
+                addToExistingList(list)
+            }) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(list.name ?? "Untitled")
+                            .font(.body)
+                            .foregroundColor(.primary)
+                        
+                        Text("\((list.items ?? []).count) items")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                    
+                    if !list.isCompleted {
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text("Completed")
+                            .font(.caption)
+                            .foregroundColor(.wellnessGreen)
+                    }
+                }
+                .padding()
+                .background(Color.lightGray.opacity(0.1))
+                .cornerRadius(10)
+            }
+        }
+    }
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                if createNewList {
+                    createNewListView
+                } else {
+                    selectExistingListView
+                }
+                
+                Spacer()
+            }
+            .navigationTitle("Add to Grocery List")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Cancel") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
+            .onAppear {
+                loadGroceryLists()
+            }
+        }
+    }
+    
+    private func loadGroceryLists() {
+        // This is now handled by the @FetchRequest property wrapper
+        // The availableLists are automatically loaded from Core Data
+    }
+    
+    private func createNewListAndAddIngredients() {
+        // Create new grocery list in Core Data
+        let context = PersistenceController.shared.container.viewContext
+        let newList = GroceryList(context: context)
+        newList.id = UUID()
+        newList.name = newListName
+        newList.createdDate = Date()
+        
+        // Create grocery items as string array
+        var items: [String] = []
+        for ingredient in ingredients {
+            let itemString = "\(ingredient.name)|\(ingredient.amount)|\(ingredient.unit.rawValue)|\(ingredient.category.rawValue)"
+            items.append(itemString)
+        }
+        
+        newList.items = items
+        
+        // Save context
+        do {
+            try context.save()
+        } catch {
+            print("Error saving grocery list: \(error)")
+        }
+        
+        presentationMode.wrappedValue.dismiss()
+    }
+    
+    private func addToExistingList(_ list: GroceryList) {
+        let context = PersistenceController.shared.container.viewContext
+        
+        // Get existing items
+        var items = list.items ?? []
+        
+        // Add new ingredients
+        for ingredient in ingredients {
+            let itemString = "\(ingredient.name)|\(ingredient.amount)|\(ingredient.unit.rawValue)|\(ingredient.category.rawValue)"
+            items.append(itemString)
+        }
+        
+        // Save updated items
+        list.items = items
+        
+        // Save context
+        do {
+            try context.save()
+        } catch {
+            print("Error updating grocery list: \(error)")
+        }
+        
+        presentationMode.wrappedValue.dismiss()
     }
 }

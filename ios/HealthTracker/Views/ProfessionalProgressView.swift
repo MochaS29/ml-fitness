@@ -195,7 +195,7 @@ struct ProfessionalProgressView: View {
                     ForEach(progressData.recentEntries) { entry in
                         ProgressEntryRow(entry: entry)
                         
-                        if entry != progressData.recentEntries.last {
+                        if entry.id != progressData.recentEntries.last?.id {
                             Divider()
                                 .padding(.leading, 16)
                         }
@@ -331,10 +331,10 @@ struct ProfessionalProgressView: View {
         // Recent entries
         let recentData = data.suffix(7).reversed()
         progressData.recentEntries = recentData.map { entry in
-            ProgressEntry(
+            ProgressRecentEntry(
                 id: UUID(),
                 date: entry.date,
-                value: Int(entry.value),
+                value: Int(entry.value.rounded()),
                 unit: unit,
                 dayOfWeek: formatDayOfWeek(entry.date)
             )
@@ -415,7 +415,7 @@ struct ProgressData {
     var chartData: [Double] = []
     var chartLabels: [String] = []
     var chartMax: Double = 0
-    var recentEntries: [ProgressEntry] = []
+    var recentEntries: [ProgressRecentEntry] = []
     
     var bestDateFormatted: String {
         let formatter = DateFormatter()
@@ -424,7 +424,7 @@ struct ProgressData {
     }
 }
 
-struct ProgressEntry: Identifiable, Equatable {
+struct ProgressRecentEntry: Identifiable, Equatable {
     let id: UUID
     let date: Date
     let value: Int
@@ -439,7 +439,7 @@ struct ProgressEntry: Identifiable, Equatable {
 }
 
 struct ProgressEntryRow: View {
-    let entry: ProgressEntry
+    let entry: ProgressRecentEntry
     
     var body: some View {
         HStack {

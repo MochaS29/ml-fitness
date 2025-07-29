@@ -283,9 +283,14 @@ struct ProfessionalDashboardView: View {
         case .today:
             startDate = calendar.startOfDay(for: endDate)
         case .week:
-            startDate = calendar.date(byAdding: .day, value: -7, to: endDate) ?? endDate
+            // Get the start of the current week
+            let weekday = calendar.component(.weekday, from: endDate)
+            let daysToSubtract = weekday - calendar.firstWeekday
+            startDate = calendar.date(byAdding: .day, value: -daysToSubtract, to: calendar.startOfDay(for: endDate)) ?? endDate
         case .month:
-            startDate = calendar.date(byAdding: .day, value: -30, to: endDate) ?? endDate
+            // Get the start of the current month
+            let components = calendar.dateComponents([.year, .month], from: endDate)
+            startDate = calendar.date(from: components) ?? endDate
         }
         
         // Filter entries within date range
@@ -328,16 +333,24 @@ struct ProfessionalDashboardView: View {
         let endDate = Date()
         let startDate: Date
         
+        let calendar = Calendar.current
+        
         switch selectedTimeRange {
         case .today:
             formatter.dateFormat = "MMMM d, yyyy"
             return formatter.string(from: endDate)
         case .week:
-            startDate = Calendar.current.date(byAdding: .day, value: -7, to: endDate) ?? endDate
+            // Get the start of the current week
+            let weekday = calendar.component(.weekday, from: endDate)
+            let daysToSubtract = weekday - calendar.firstWeekday
+            startDate = calendar.date(byAdding: .day, value: -daysToSubtract, to: calendar.startOfDay(for: endDate)) ?? endDate
             return "\(formatter.string(from: startDate)) - \(formatter.string(from: endDate))"
         case .month:
-            startDate = Calendar.current.date(byAdding: .day, value: -30, to: endDate) ?? endDate
-            return "\(formatter.string(from: startDate)) - \(formatter.string(from: endDate))"
+            // Get the start of the current month
+            let components = calendar.dateComponents([.year, .month], from: endDate)
+            startDate = calendar.date(from: components) ?? endDate
+            formatter.dateFormat = "MMMM yyyy"
+            return formatter.string(from: endDate)
         }
     }
     

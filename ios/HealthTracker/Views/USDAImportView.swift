@@ -153,8 +153,12 @@ struct USDAImportView: View {
         
         Task {
             do {
-                let basePath = "/Users/mocha/HealthTracker/Resources/Databases/FoodData_Central_csv_2023-10-26"
+                // For now, show an alert that USDA import is not available on device
+                throw NSError(domain: "USDAImport", code: 1, userInfo: [NSLocalizedDescriptionKey: "USDA database import is currently only available when running from Xcode. Please use the built-in food database."])
                 
+                // The following code is unreachable but left for future implementation
+                /*
+                let basePath = "/Users/mocha/HealthTracker/Resources/Databases/FoodData_Central_csv_2023-10-26"
                 try await USDACSVImporter.importUSDADatabase(
                     from: basePath,
                     context: importContext,
@@ -174,6 +178,7 @@ struct USDAImportView: View {
                         self.importComplete = true
                     }
                 }
+                */
             } catch {
                 DispatchQueue.main.async {
                     self.isImporting = false

@@ -6,6 +6,7 @@ struct MyRecipeBookView: View {
     @State private var selectedTab = 0
     @State private var searchText = ""
     @State private var showingAddRecipe = false
+    @State private var showingImportRecipe = false
     @State private var selectedCategory: RecipeCategory? = nil
     
     // Fetch favorite recipes from Core Data
@@ -51,12 +52,22 @@ struct MyRecipeBookView: View {
             }
             .navigationTitle("My Recipe Book")
             .navigationBarItems(
-                trailing: Button(action: { showingAddRecipe = true }) {
-                    Image(systemName: "plus")
+                trailing: HStack(spacing: 16) {
+                    Button(action: { showingImportRecipe = true }) {
+                        Image(systemName: "link")
+                    }
+                    
+                    Button(action: { showingAddRecipe = true }) {
+                        Image(systemName: "plus")
+                    }
                 }
             )
             .sheet(isPresented: $showingAddRecipe) {
                 AddCustomRecipeView()
+                    .environment(\.managedObjectContext, viewContext)
+            }
+            .sheet(isPresented: $showingImportRecipe) {
+                ImportRecipeView()
                     .environment(\.managedObjectContext, viewContext)
             }
         }
@@ -154,14 +165,34 @@ struct MyRecipeBookView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
             
-            Button(action: { showingAddRecipe = true }) {
-                Text("Create Recipe")
+            HStack(spacing: 16) {
+                Button(action: { showingImportRecipe = true }) {
+                    HStack {
+                        Image(systemName: "link")
+                        Text("Import")
+                    }
+                    .font(.headline)
+                    .foregroundColor(Color(red: 127/255, green: 176/255, blue: 105/255))
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 25)
+                            .stroke(Color(red: 127/255, green: 176/255, blue: 105/255), lineWidth: 2)
+                    )
+                }
+                
+                Button(action: { showingAddRecipe = true }) {
+                    HStack {
+                        Image(systemName: "plus")
+                        Text("Create")
+                    }
                     .font(.headline)
                     .foregroundColor(.white)
-                    .padding(.horizontal, 30)
+                    .padding(.horizontal, 20)
                     .padding(.vertical, 12)
                     .background(Color(red: 127/255, green: 176/255, blue: 105/255))
                     .cornerRadius(25)
+                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -409,7 +440,7 @@ struct CustomRecipeDetailView: View {
         
         // Convert stored arrays to proper types
         let ingredients: [Ingredient] = [] // Would need to parse from customRecipe.ingredients
-        let instructions: [String] = (customRecipe.instructions as? [String]) ?? []
+        let instructions: [String] = customRecipe.instructions ?? []
         
         return Recipe(
             id: customRecipe.id ?? UUID(),

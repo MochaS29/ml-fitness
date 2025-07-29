@@ -179,9 +179,14 @@ struct SummaryCard: View {
         case .today:
             startDate = calendar.startOfDay(for: endDate)
         case .week:
-            startDate = calendar.date(byAdding: .day, value: -7, to: endDate) ?? endDate
+            // Get the start of the current week (Sunday or Monday based on locale)
+            let weekday = calendar.component(.weekday, from: endDate)
+            let daysToSubtract = weekday - calendar.firstWeekday
+            startDate = calendar.date(byAdding: .day, value: -daysToSubtract, to: calendar.startOfDay(for: endDate)) ?? endDate
         case .month:
-            startDate = calendar.date(byAdding: .day, value: -30, to: endDate) ?? endDate
+            // Get the start of the current month
+            let components = calendar.dateComponents([.year, .month], from: endDate)
+            startDate = calendar.date(from: components) ?? endDate
         }
         
         // Fetch food entries
