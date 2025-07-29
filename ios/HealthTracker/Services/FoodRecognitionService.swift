@@ -249,13 +249,13 @@ class FoodRecognitionService: FoodRecognitionServiceProtocol {
     // MARK: - API Integration Methods (Ready for production)
     
     private func callFoodRecognitionAPI(imageData: Data) async throws -> FoodAPIResponse {
-        guard !apiKey.isEmpty else {
+        guard !spoonacularApiKey.isEmpty else {
             throw FoodRecognitionError.missingAPIKey
         }
         
         var request = URLRequest(url: URL(string: "\(baseURL)/analyze")!)
         request.httpMethod = "POST"
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(spoonacularApiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let payload = FoodAPIRequest(
