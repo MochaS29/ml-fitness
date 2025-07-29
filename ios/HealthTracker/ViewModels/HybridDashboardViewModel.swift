@@ -71,11 +71,11 @@ class DashboardViewModel: ObservableObject {
     var waterSparkline: [Double] = [7, 8, 6, 8, 7, 5, 6]
     
     // Nutrition Distribution
-    var nutritionData: [NutritionItem] {
+    var nutritionData: [HybridNutritionItem] {
         [
-            NutritionItem(name: "Carbs", value: 45, percentage: 45, color: .orange),
-            NutritionItem(name: "Protein", value: 30, percentage: 30, color: .blue),
-            NutritionItem(name: "Fat", value: 25, percentage: 25, color: .purple)
+            HybridNutritionItem(name: "Carbs", value: 45, percentage: 45, color: .orange),
+            HybridNutritionItem(name: "Protein", value: 30, percentage: 30, color: .blue),
+            HybridNutritionItem(name: "Fat", value: 25, percentage: 25, color: .purple)
         ]
     }
     
@@ -183,7 +183,7 @@ class DashboardViewModel: ObservableObject {
 
 // MARK: - Data Models
 
-struct NutritionItem: Identifiable {
+struct HybridNutritionItem: Identifiable {
     let id = UUID()
     let name: String
     let value: Double

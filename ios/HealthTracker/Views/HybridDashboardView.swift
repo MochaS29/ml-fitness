@@ -371,7 +371,7 @@ struct HybridDashboardView: View {
             
             VStack(spacing: 12) {
                 ForEach(viewModel.recommendations) { recommendation in
-                    RecommendationRow(recommendation: recommendation)
+                    HybridRecommendationRow(recommendation: recommendation)
                 }
             }
             .padding()
@@ -418,7 +418,7 @@ struct HybridDashboardView: View {
                 
                 // Rows
                 ForEach(viewModel.nutrientBreakdown) { nutrient in
-                    NutrientRow(nutrient: nutrient)
+                    HybridNutrientRow(nutrient: nutrient)
                     Divider()
                 }
             }
@@ -580,7 +580,7 @@ struct MetricCardWithTrend: View {
     }
 }
 
-struct RecommendationRow: View {
+struct HybridRecommendationRow: View {
     let recommendation: AIRecommendation
     @State private var isCompleted = false
     
@@ -628,7 +628,7 @@ struct RecommendationRow: View {
     }
 }
 
-struct NutrientRow: View {
+struct HybridNutrientRow: View {
     let nutrient: NutrientBreakdown
     
     var body: some View {
