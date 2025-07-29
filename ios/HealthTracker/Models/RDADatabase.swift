@@ -37,7 +37,7 @@ class RDADatabase {
     private var nutrients: [String: NutrientRDA] = [:]
     
     init() {
-        loadRDAData()
+        loadCompleteRDAData()
     }
     
     private func loadRDAData() {

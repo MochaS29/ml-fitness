@@ -34,6 +34,9 @@ struct HybridDashboardView: View {
                 // Key Metrics Cards with Trends (from Option 3)
                 metricsOverview
                 
+                // Supplement Stats Widget
+                SupplementStatsWidget()
+                
                 // Interactive Charts Section (from Option 3)
                 chartsSection
                 

@@ -80,7 +80,7 @@ struct MoreView: View {
                         )
                     }
                     
-                    NavigationLink(destination: SupplementTrackingView()) {
+                    NavigationLink(destination: EnhancedSupplementTrackingView()) {
                         MoreMenuItem(
                             icon: "pills",
                             title: "Supplements",
@@ -93,6 +93,14 @@ struct MoreView: View {
                             icon: "timer",
                             title: "Fasting Timer",
                             color: Color(red: 74/255, green: 155/255, blue: 155/255)
+                        )
+                    }
+                    
+                    NavigationLink(destination: EnhancedMacroTrackingView()) {
+                        MoreMenuItem(
+                            icon: "chart.pie.fill",
+                            title: "Nutrition Overview",
+                            color: .indigo
                         )
                     }
                 }

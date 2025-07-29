@@ -1,4 +1,4 @@
-# HealthTracker
+# MindLabs Health
 
 A comprehensive iOS health and nutrition tracking app built with SwiftUI and Core Data.
 
