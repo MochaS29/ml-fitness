@@ -19,6 +19,8 @@ struct DashboardSelectorView: View {
                         DashboardOption3View()
                     case 4:
                         DashboardOption4View()
+                    case 5:
+                        HybridDashboardView()
                     default:
                         DashboardOption1View()
                     }
@@ -120,6 +122,17 @@ struct DashboardSelectorView: View {
                                         isSelected: selectedDashboard == 4
                                     ) {
                                         selectDashboard(4)
+                                    }
+                                    
+                                    DashboardOption(
+                                        number: 5,
+                                        title: "Hybrid Pro",
+                                        description: "Best of data analytics + AI insights",
+                                        icon: "sparkles.rectangle.stack",
+                                        color: .indigo,
+                                        isSelected: selectedDashboard == 5
+                                    ) {
+                                        selectDashboard(5)
                                     }
                                 }
                                 .padding(.horizontal)

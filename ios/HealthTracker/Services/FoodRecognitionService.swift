@@ -13,21 +13,22 @@ protocol FoodRecognitionServiceProtocol {
 class FoodRecognitionService: FoodRecognitionServiceProtocol {
     static let shared = FoodRecognitionService()
     
-    private let apiKey = ProcessInfo.processInfo.environment["FOOD_API_KEY"] ?? ""
-    private let baseURL = "https://api.foodrecognition.com/v1" // Example API endpoint
+    private let spoonacularApiKey = ProcessInfo.processInfo.environment["SPOONACULAR_API_KEY"] ?? ""
+    private let baseURL = APIConfiguration.Spoonacular.baseURL
     
     private init() {}
     
     // MARK: - Public Methods
     
     func analyzeDish(from image: UIImage) async throws -> FoodScanResult {
-        // In production, this would:
-        // 1. Convert image to base64 or upload to cloud storage
-        // 2. Call food recognition API
-        // 3. Parse and return results
-        
-        // For now, we'll use enhanced simulation with Vision framework
-        return try await analyzeWithVisionFramework(image: image)
+        // Check if API key is configured
+        if !spoonacularApiKey.isEmpty && spoonacularApiKey != "DEMO" {
+            // Use real Spoonacular API
+            return try await analyzeWithSpoonacularAPI(image: image)
+        } else {
+            // Fall back to simulation
+            return try await analyzeWithVisionFramework(image: image)
+        }
     }
     
     func searchFood(query: String) async throws -> [RecognizedFoodItem] {
@@ -138,6 +139,111 @@ class FoodRecognitionService: FoodRecognitionServiceProtocol {
             sugar: sugar,
             sodium: sodium
         )
+    }
+    
+    // MARK: - Spoonacular API Integration
+    
+    private func analyzeWithSpoonacularAPI(image: UIImage) async throws -> FoodScanResult {
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            throw FoodRecognitionError.invalidImage
+        }
+        
+        // Spoonacular image analysis endpoint
+        let url = URL(string: "\(baseURL)/food/images/analyze")!
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        // Create multipart form data
+        let boundary = "Boundary-\(UUID().uuidString)"
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        var body = Data()
+        
+        // Add API key
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"apiKey\"\r\n\r\n".data(using: .utf8)!)
+        body.append("\(spoonacularApiKey)\r\n".data(using: .utf8)!)
+        
+        // Add image
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        body.append(imageData)
+        body.append("\r\n".data(using: .utf8)!)
+        
+        // Add parameters
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"includeNutrition\"\r\n\r\n".data(using: .utf8)!)
+        body.append("true\r\n".data(using: .utf8)!)
+        
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        
+        request.httpBody = body
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw FoodRecognitionError.apiError
+        }
+        
+        // Parse Spoonacular response
+        let spoonacularResponse = try JSONDecoder().decode(SpoonacularImageAnalysisResponse.self, from: data)
+        return convertSpoonacularToFoodScanResult(spoonacularResponse)
+    }
+    
+    private func convertSpoonacularToFoodScanResult(_ response: SpoonacularImageAnalysisResponse) -> FoodScanResult {
+        var identifiedFoods: [IdentifiedFood] = []
+        
+        // Process category results
+        if let category = response.category {
+            identifiedFoods.append(IdentifiedFood(
+                name: category.name,
+                confidence: category.probability,
+                estimatedWeight: 150, // Default estimate
+                calories: response.nutrition?.calories?.value ?? 0,
+                protein: response.nutrition?.protein?.value ?? 0,
+                carbs: response.nutrition?.carbs?.value ?? 0,
+                fat: response.nutrition?.fat?.value ?? 0,
+                category: mapSpoonacularCategory(category.name)
+            ))
+        }
+        
+        // Process recipe results
+        for recipe in response.recipes ?? [] {
+            identifiedFoods.append(IdentifiedFood(
+                name: recipe.title,
+                confidence: 0.8, // Spoonacular doesn't provide confidence for recipes
+                estimatedWeight: 200,
+                calories: Double(recipe.nutrition?.nutrients?.first(where: { $0.name == "Calories" })?.amount ?? 0),
+                protein: Double(recipe.nutrition?.nutrients?.first(where: { $0.name == "Protein" })?.amount ?? 0),
+                carbs: Double(recipe.nutrition?.nutrients?.first(where: { $0.name == "Carbohydrates" })?.amount ?? 0),
+                fat: Double(recipe.nutrition?.nutrients?.first(where: { $0.name == "Fat" })?.amount ?? 0),
+                category: .meals
+            ))
+        }
+        
+        let totalNutrition = calculateTotalNutrition(from: identifiedFoods)
+        
+        return FoodScanResult(
+            id: UUID(),
+            timestamp: Date(),
+            identifiedFoods: identifiedFoods,
+            totalNutrition: totalNutrition
+        )
+    }
+    
+    private func mapSpoonacularCategory(_ category: String) -> FoodCategory {
+        switch category.lowercased() {
+        case let cat where cat.contains("fruit"): return .fruits
+        case let cat where cat.contains("vegetable"): return .vegetables
+        case let cat where cat.contains("meat") || cat.contains("protein"): return .protein
+        case let cat where cat.contains("grain") || cat.contains("bread"): return .grains
+        case let cat where cat.contains("dairy"): return .dairy
+        case let cat where cat.contains("dessert") || cat.contains("sweet"): return .desserts
+        default: return .other
+        }
     }
     
     // MARK: - API Integration Methods (Ready for production)
@@ -425,4 +531,47 @@ class FoodItemDatabase {
         
         return allFoods
     }
+}
+
+// MARK: - Spoonacular Response Models
+
+struct SpoonacularImageAnalysisResponse: Codable {
+    let category: SpoonacularCategory?
+    let recipes: [SpoonacularRecipe]?
+    let nutrition: SpoonacularNutrition?
+}
+
+struct SpoonacularCategory: Codable {
+    let name: String
+    let probability: Double
+}
+
+struct SpoonacularRecipe: Codable {
+    let id: Int
+    let title: String
+    let imageType: String?
+    let nutrition: SpoonacularRecipeNutrition?
+}
+
+struct SpoonacularNutrition: Codable {
+    let recipesUsed: Int?
+    let calories: SpoonacularNutrientInfo?
+    let fat: SpoonacularNutrientInfo?
+    let protein: SpoonacularNutrientInfo?
+    let carbs: SpoonacularNutrientInfo?
+}
+
+struct SpoonacularNutrientInfo: Codable {
+    let value: Double
+    let unit: String
+}
+
+struct SpoonacularRecipeNutrition: Codable {
+    let nutrients: [SpoonacularNutrient]?
+}
+
+struct SpoonacularNutrient: Codable {
+    let name: String
+    let amount: Float
+    let unit: String
 }

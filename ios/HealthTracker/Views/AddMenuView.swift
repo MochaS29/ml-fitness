@@ -376,7 +376,7 @@ struct ExerciseSearchView: View {
         newExercise.id = UUID()
         newExercise.name = exercise.name
         newExercise.type = exercise.type.rawValue
-        newExercise.duration = duration
+        newExercise.duration = Int32(duration)
         newExercise.caloriesBurned = exercise.caloriesPerMinute * duration
         newExercise.date = selectedDate
         newExercise.timestamp = Date()
