@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add">Add</string>
+    <string name="app_name">ML Fitness</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="diary">Diary</string>
+    <string name="more">More</string>
+    <string name="plan">Plan</string>
+    <style name="Theme.MLFitness" parent="android:Theme.Material.Light.NoActionBar"/>
+</resources>
