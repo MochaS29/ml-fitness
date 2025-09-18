@@ -40,7 +40,7 @@ struct AddMenuView: View {
             ExerciseSearchView(selectedDate: selectedDate)
         }
         .sheet(isPresented: $showingSupplementAdd) {
-            AddSupplementView(selectedDate: selectedDate)
+            ManualSupplementEntryView()
         }
         .sheet(isPresented: $showingWeightEntry) {
             QuickWeightAddView(selectedDate: selectedDate)
@@ -295,14 +295,14 @@ struct ExerciseSearchView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
     @State private var searchText = ""
-    @State private var selectedExercise: ExerciseTemplate?
+    @State private var selectedExercise: ExerciseTemplateModel?
     @State private var duration: String = "30"
     @State private var showingAddForm = false
     
     let selectedDate: Date
     private let exerciseDB = ExerciseDatabase.shared
     
-    var searchResults: [ExerciseTemplate] {
+    var searchResults: [ExerciseTemplateModel] {
         if searchText.isEmpty {
             return exerciseDB.exercises
         } else {
@@ -371,7 +371,7 @@ struct ExerciseSearchView: View {
         }
     }
     
-    private func saveExercise(_ exercise: ExerciseTemplate, duration: Double) {
+    private func saveExercise(_ exercise: ExerciseTemplateModel, duration: Double) {
         let newExercise = ExerciseEntry(context: viewContext)
         newExercise.id = UUID()
         newExercise.name = exercise.name
@@ -391,7 +391,7 @@ struct ExerciseSearchView: View {
 }
 
 struct ExerciseEntryForm: View {
-    let exercise: ExerciseTemplate
+    let exercise: ExerciseTemplateModel
     let selectedDate: Date
     let onSave: (Double) -> Void
     
@@ -462,26 +462,7 @@ struct ExerciseEntryForm: View {
     }
 }
 
-// Add supplement view placeholder
-struct AddSupplementView: View {
-    @Environment(\.dismiss) private var dismiss
-    let selectedDate: Date
-    
-    var body: some View {
-        NavigationView {
-            Text("Supplement Tracking Coming Soon")
-                .navigationTitle("Add Supplement")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel") {
-                            dismiss()
-                        }
-                    }
-                }
-        }
-    }
-}
+// This placeholder has been replaced - the sheet now calls ManualSupplementEntryView directly
 
 #Preview {
     AddMenuView(selectedDate: Date())

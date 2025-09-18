@@ -4,17 +4,39 @@ struct ManualSupplementEntryView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var profileManager: UserProfileManager
-    
+
     @State private var supplementName = ""
     @State private var brand = ""
     @State private var servingSize = "1 tablet"
     @State private var nutrients: [ManualNutrientEntry] = []
     @State private var showingNutrientPicker = false
+    @State private var showingSupplementSelection = false
+    @State private var selectedSupplement: Supplement?
     
     var body: some View {
         NavigationView {
             Form {
-                Section("Basic Information") {
+                Section("Select Supplement") {
+                    Button(action: { showingSupplementSelection = true }) {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(selectedSupplement?.name ?? "Choose from database")
+                                    .foregroundColor(selectedSupplement != nil ? .primary : .blue)
+                                if let supplement = selectedSupplement {
+                                    Text("\(supplement.brand) • \(supplement.servingSize)")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                Section("Or Enter Manually") {
                     TextField("Supplement Name", text: $supplementName)
                     TextField("Brand (Optional)", text: $brand)
                     TextField("Serving Size", text: $servingSize)
@@ -69,6 +91,75 @@ struct ManualSupplementEntryView: View {
                     ))
                 }
             }
+            .sheet(isPresented: $showingSupplementSelection) {
+                SupplementSelectionView(
+                    onSelect: { supplement in
+                        selectedSupplement = supplement
+                        supplementName = supplement.name
+                        brand = supplement.brand
+                        servingSize = supplement.servingSize
+                        // Convert supplement nutrients to manual entries
+                        loadNutrientsFromSupplement(supplement)
+                        showingSupplementSelection = false
+                    },
+                    onCreateNew: { name in
+                        supplementName = name
+                        brand = ""
+                        servingSize = "1 tablet"
+                        showingSupplementSelection = false
+                    }
+                )
+            }
+        }
+    }
+
+    func loadNutrientsFromSupplement(_ supplement: Supplement) {
+        nutrients = []
+
+        // Add vitamins
+        if let vitA = supplement.vitamins.vitaminA {
+            nutrients.append(ManualNutrientEntry(id: "vitaminA", name: "Vitamin A", amount: vitA.amount, unit: .mcg))
+        }
+        if let vitC = supplement.vitamins.vitaminC {
+            nutrients.append(ManualNutrientEntry(id: "vitaminC", name: "Vitamin C", amount: vitC.amount, unit: .mg))
+        }
+        if let vitD = supplement.vitamins.vitaminD {
+            nutrients.append(ManualNutrientEntry(id: "vitaminD", name: "Vitamin D", amount: vitD.amount, unit: .mcg))
+        }
+        if let vitE = supplement.vitamins.vitaminE {
+            nutrients.append(ManualNutrientEntry(id: "vitaminE", name: "Vitamin E", amount: vitE.amount, unit: .mg))
+        }
+        if let b1 = supplement.vitamins.vitaminB1_thiamine {
+            nutrients.append(ManualNutrientEntry(id: "thiamine", name: "Thiamine", amount: b1.amount, unit: .mg))
+        }
+        if let b2 = supplement.vitamins.vitaminB2_riboflavin {
+            nutrients.append(ManualNutrientEntry(id: "riboflavin", name: "Riboflavin", amount: b2.amount, unit: .mg))
+        }
+        if let b3 = supplement.vitamins.vitaminB3_niacin {
+            nutrients.append(ManualNutrientEntry(id: "niacin", name: "Niacin", amount: b3.amount, unit: .mg))
+        }
+        if let b6 = supplement.vitamins.vitaminB6 {
+            nutrients.append(ManualNutrientEntry(id: "vitaminB6", name: "Vitamin B6", amount: b6.amount, unit: .mg))
+        }
+        if let b9 = supplement.vitamins.vitaminB9_folate {
+            nutrients.append(ManualNutrientEntry(id: "folate", name: "Folate", amount: b9.amount, unit: .mcg))
+        }
+        if let b12 = supplement.vitamins.vitaminB12 {
+            nutrients.append(ManualNutrientEntry(id: "vitaminB12", name: "Vitamin B12", amount: b12.amount, unit: .mcg))
+        }
+
+        // Add minerals
+        if let calcium = supplement.minerals.calcium {
+            nutrients.append(ManualNutrientEntry(id: "calcium", name: "Calcium", amount: calcium.amount, unit: .mg))
+        }
+        if let iron = supplement.minerals.iron {
+            nutrients.append(ManualNutrientEntry(id: "iron", name: "Iron", amount: iron.amount, unit: .mg))
+        }
+        if let magnesium = supplement.minerals.magnesium {
+            nutrients.append(ManualNutrientEntry(id: "magnesium", name: "Magnesium", amount: magnesium.amount, unit: .mg))
+        }
+        if let zinc = supplement.minerals.zinc {
+            nutrients.append(ManualNutrientEntry(id: "zinc", name: "Zinc", amount: zinc.amount, unit: .mg))
         }
     }
     

@@ -3,23 +3,23 @@ import Foundation
 class RecipeDatabase {
     static let shared = RecipeDatabase()
     
-    let recipes: [Recipe] = [
+    let recipes: [RecipeModel] = [
         // Breakfast Recipes
-        Recipe(
+        RecipeModel(
             name: "Overnight Oats with Berries",
             category: .breakfast,
             prepTime: 10,
             cookTime: 0,
             servings: 2,
             ingredients: [
-                Ingredient(name: "rolled oats", amount: 1, unit: .cup, notes: nil, category: .pantry),
-                Ingredient(name: "almond milk", amount: 1, unit: .cup, notes: nil, category: .dairy),
-                Ingredient(name: "Greek yogurt", amount: 0.5, unit: .cup, notes: nil, category: .dairy),
-                Ingredient(name: "blueberries", amount: 0.5, unit: .cup, notes: "fresh or frozen", category: .produce),
-                Ingredient(name: "strawberries", amount: 0.5, unit: .cup, notes: "sliced", category: .produce),
-                Ingredient(name: "honey", amount: 2, unit: .tablespoon, notes: nil, category: .pantry),
-                Ingredient(name: "chia seeds", amount: 1, unit: .tablespoon, notes: nil, category: .pantry),
-                Ingredient(name: "vanilla extract", amount: 1, unit: .teaspoon, notes: nil, category: .pantry)
+                IngredientModel(name: "rolled oats", amount: 1, unit: .cup, notes: nil, category: .pantry),
+                IngredientModel(name: "almond milk", amount: 1, unit: .cup, notes: nil, category: .dairy),
+                IngredientModel(name: "Greek yogurt", amount: 0.5, unit: .cup, notes: nil, category: .dairy),
+                IngredientModel(name: "blueberries", amount: 0.5, unit: .cup, notes: "fresh or frozen", category: .produce),
+                IngredientModel(name: "strawberries", amount: 0.5, unit: .cup, notes: "sliced", category: .produce),
+                IngredientModel(name: "honey", amount: 2, unit: .tablespoon, notes: nil, category: .pantry),
+                IngredientModel(name: "chia seeds", amount: 1, unit: .tablespoon, notes: nil, category: .pantry),
+                IngredientModel(name: "vanilla extract", amount: 1, unit: .teaspoon, notes: nil, category: .pantry)
             ],
             instructions: [
                 "In a jar or container, combine oats, almond milk, Greek yogurt, honey, chia seeds, and vanilla extract.",
@@ -37,21 +37,21 @@ class RecipeDatabase {
             rating: 0
         ),
         
-        Recipe(
+        RecipeModel(
             name: "Veggie Scrambled Eggs",
             category: .breakfast,
             prepTime: 10,
             cookTime: 10,
             servings: 2,
             ingredients: [
-                Ingredient(name: "eggs", amount: 4, unit: .piece, notes: "large", category: .dairy),
-                Ingredient(name: "spinach", amount: 1, unit: .cup, notes: "fresh", category: .produce),
-                Ingredient(name: "cherry tomatoes", amount: 0.5, unit: .cup, notes: "halved", category: .produce),
-                Ingredient(name: "mushrooms", amount: 0.5, unit: .cup, notes: "sliced", category: .produce),
-                Ingredient(name: "cheddar cheese", amount: 0.25, unit: .cup, notes: "shredded", category: .dairy),
-                Ingredient(name: "olive oil", amount: 1, unit: .tablespoon, notes: nil, category: .pantry),
-                Ingredient(name: "salt", amount: 1, unit: .pinch, notes: "to taste", category: .spices),
-                Ingredient(name: "black pepper", amount: 1, unit: .pinch, notes: "to taste", category: .spices)
+                IngredientModel(name: "eggs", amount: 4, unit: .piece, notes: "large", category: .dairy),
+                IngredientModel(name: "spinach", amount: 1, unit: .cup, notes: "fresh", category: .produce),
+                IngredientModel(name: "cherry tomatoes", amount: 0.5, unit: .cup, notes: "halved", category: .produce),
+                IngredientModel(name: "mushrooms", amount: 0.5, unit: .cup, notes: "sliced", category: .produce),
+                IngredientModel(name: "cheddar cheese", amount: 0.25, unit: .cup, notes: "shredded", category: .dairy),
+                IngredientModel(name: "olive oil", amount: 1, unit: .tablespoon, notes: nil, category: .pantry),
+                IngredientModel(name: "salt", amount: 1, unit: .pinch, notes: "to taste", category: .spices),
+                IngredientModel(name: "black pepper", amount: 1, unit: .pinch, notes: "to taste", category: .spices)
             ],
             instructions: [
                 "Heat olive oil in a non-stick pan over medium heat.",
@@ -72,24 +72,24 @@ class RecipeDatabase {
         ),
         
         // Lunch Recipes
-        Recipe(
+        RecipeModel(
             name: "Grilled Chicken Salad",
             category: .lunch,
             prepTime: 15,
             cookTime: 15,
             servings: 2,
             ingredients: [
-                Ingredient(name: "chicken breast", amount: 8, unit: .ounce, notes: "boneless, skinless", category: .meat),
-                Ingredient(name: "mixed greens", amount: 4, unit: .cup, notes: nil, category: .produce),
-                Ingredient(name: "cherry tomatoes", amount: 1, unit: .cup, notes: nil, category: .produce),
-                Ingredient(name: "cucumber", amount: 1, unit: .piece, notes: "diced", category: .produce),
-                Ingredient(name: "red onion", amount: 0.25, unit: .piece, notes: "thinly sliced", category: .produce),
-                Ingredient(name: "avocado", amount: 1, unit: .piece, notes: "sliced", category: .produce),
-                Ingredient(name: "olive oil", amount: 3, unit: .tablespoon, notes: nil, category: .pantry),
-                Ingredient(name: "lemon juice", amount: 2, unit: .tablespoon, notes: "fresh", category: .produce),
-                Ingredient(name: "garlic", amount: 1, unit: .clove, notes: "minced", category: .produce),
-                Ingredient(name: "salt", amount: 1, unit: .pinch, notes: nil, category: .spices),
-                Ingredient(name: "pepper", amount: 1, unit: .pinch, notes: nil, category: .spices)
+                IngredientModel(name: "chicken breast", amount: 8, unit: .ounce, notes: "boneless, skinless", category: .meat),
+                IngredientModel(name: "mixed greens", amount: 4, unit: .cup, notes: nil, category: .produce),
+                IngredientModel(name: "cherry tomatoes", amount: 1, unit: .cup, notes: nil, category: .produce),
+                IngredientModel(name: "cucumber", amount: 1, unit: .piece, notes: "diced", category: .produce),
+                IngredientModel(name: "red onion", amount: 0.25, unit: .piece, notes: "thinly sliced", category: .produce),
+                IngredientModel(name: "avocado", amount: 1, unit: .piece, notes: "sliced", category: .produce),
+                IngredientModel(name: "olive oil", amount: 3, unit: .tablespoon, notes: nil, category: .pantry),
+                IngredientModel(name: "lemon juice", amount: 2, unit: .tablespoon, notes: "fresh", category: .produce),
+                IngredientModel(name: "garlic", amount: 1, unit: .clove, notes: "minced", category: .produce),
+                IngredientModel(name: "salt", amount: 1, unit: .pinch, notes: nil, category: .spices),
+                IngredientModel(name: "pepper", amount: 1, unit: .pinch, notes: nil, category: .spices)
             ],
             instructions: [
                 "Season chicken breasts with salt and pepper.",
@@ -109,23 +109,23 @@ class RecipeDatabase {
             rating: 0
         ),
         
-        Recipe(
+        RecipeModel(
             name: "Quinoa Buddha Bowl",
             category: .lunch,
             prepTime: 20,
             cookTime: 20,
             servings: 2,
             ingredients: [
-                Ingredient(name: "quinoa", amount: 1, unit: .cup, notes: "uncooked", category: .pantry),
-                Ingredient(name: "chickpeas", amount: 1, unit: .can, notes: "15 oz, drained", category: .pantry),
-                Ingredient(name: "sweet potato", amount: 1, unit: .piece, notes: "medium, cubed", category: .produce),
-                Ingredient(name: "broccoli", amount: 2, unit: .cup, notes: "florets", category: .produce),
-                Ingredient(name: "red cabbage", amount: 1, unit: .cup, notes: "shredded", category: .produce),
-                Ingredient(name: "tahini", amount: 0.25, unit: .cup, notes: nil, category: .condiments),
-                Ingredient(name: "lemon juice", amount: 2, unit: .tablespoon, notes: nil, category: .produce),
-                Ingredient(name: "olive oil", amount: 2, unit: .tablespoon, notes: nil, category: .pantry),
-                Ingredient(name: "cumin", amount: 1, unit: .teaspoon, notes: nil, category: .spices),
-                Ingredient(name: "paprika", amount: 1, unit: .teaspoon, notes: nil, category: .spices)
+                IngredientModel(name: "quinoa", amount: 1, unit: .cup, notes: "uncooked", category: .pantry),
+                IngredientModel(name: "chickpeas", amount: 1, unit: .can, notes: "15 oz, drained", category: .pantry),
+                IngredientModel(name: "sweet potato", amount: 1, unit: .piece, notes: "medium, cubed", category: .produce),
+                IngredientModel(name: "broccoli", amount: 2, unit: .cup, notes: "florets", category: .produce),
+                IngredientModel(name: "red cabbage", amount: 1, unit: .cup, notes: "shredded", category: .produce),
+                IngredientModel(name: "tahini", amount: 0.25, unit: .cup, notes: nil, category: .condiments),
+                IngredientModel(name: "lemon juice", amount: 2, unit: .tablespoon, notes: nil, category: .produce),
+                IngredientModel(name: "olive oil", amount: 2, unit: .tablespoon, notes: nil, category: .pantry),
+                IngredientModel(name: "cumin", amount: 1, unit: .teaspoon, notes: nil, category: .spices),
+                IngredientModel(name: "paprika", amount: 1, unit: .teaspoon, notes: nil, category: .spices)
             ],
             instructions: [
                 "Cook quinoa according to package directions.",
@@ -147,21 +147,21 @@ class RecipeDatabase {
         ),
         
         // Dinner Recipes
-        Recipe(
+        RecipeModel(
             name: "Baked Salmon with Asparagus",
             category: .dinner,
             prepTime: 10,
             cookTime: 20,
             servings: 4,
             ingredients: [
-                Ingredient(name: "salmon fillets", amount: 1.5, unit: .pound, notes: "4 fillets", category: .meat),
-                Ingredient(name: "asparagus", amount: 1, unit: .pound, notes: "trimmed", category: .produce),
-                Ingredient(name: "lemon", amount: 1, unit: .piece, notes: "sliced", category: .produce),
-                Ingredient(name: "garlic", amount: 3, unit: .clove, notes: "minced", category: .produce),
-                Ingredient(name: "olive oil", amount: 3, unit: .tablespoon, notes: nil, category: .pantry),
-                Ingredient(name: "dill", amount: 2, unit: .tablespoon, notes: "fresh, chopped", category: .produce),
-                Ingredient(name: "salt", amount: 1, unit: .teaspoon, notes: nil, category: .spices),
-                Ingredient(name: "black pepper", amount: 0.5, unit: .teaspoon, notes: nil, category: .spices)
+                IngredientModel(name: "salmon fillets", amount: 1.5, unit: .pound, notes: "4 fillets", category: .meat),
+                IngredientModel(name: "asparagus", amount: 1, unit: .pound, notes: "trimmed", category: .produce),
+                IngredientModel(name: "lemon", amount: 1, unit: .piece, notes: "sliced", category: .produce),
+                IngredientModel(name: "garlic", amount: 3, unit: .clove, notes: "minced", category: .produce),
+                IngredientModel(name: "olive oil", amount: 3, unit: .tablespoon, notes: nil, category: .pantry),
+                IngredientModel(name: "dill", amount: 2, unit: .tablespoon, notes: "fresh, chopped", category: .produce),
+                IngredientModel(name: "salt", amount: 1, unit: .teaspoon, notes: nil, category: .spices),
+                IngredientModel(name: "black pepper", amount: 0.5, unit: .teaspoon, notes: nil, category: .spices)
             ],
             instructions: [
                 "Preheat oven to 400°F (200°C).",
@@ -182,24 +182,24 @@ class RecipeDatabase {
             rating: 0
         ),
         
-        Recipe(
+        RecipeModel(
             name: "Vegetarian Chili",
             category: .dinner,
             prepTime: 15,
             cookTime: 30,
             servings: 6,
             ingredients: [
-                Ingredient(name: "black beans", amount: 2, unit: .can, notes: "15 oz each", category: .pantry),
-                Ingredient(name: "kidney beans", amount: 1, unit: .can, notes: "15 oz", category: .pantry),
-                Ingredient(name: "diced tomatoes", amount: 2, unit: .can, notes: "14.5 oz each", category: .pantry),
-                Ingredient(name: "tomato paste", amount: 2, unit: .tablespoon, notes: nil, category: .pantry),
-                Ingredient(name: "onion", amount: 1, unit: .piece, notes: "large, diced", category: .produce),
-                Ingredient(name: "bell pepper", amount: 2, unit: .piece, notes: "any color, diced", category: .produce),
-                Ingredient(name: "corn", amount: 1, unit: .cup, notes: "frozen or fresh", category: .frozen),
-                Ingredient(name: "vegetable broth", amount: 2, unit: .cup, notes: nil, category: .pantry),
-                Ingredient(name: "chili powder", amount: 2, unit: .tablespoon, notes: nil, category: .spices),
-                Ingredient(name: "cumin", amount: 1, unit: .tablespoon, notes: nil, category: .spices),
-                Ingredient(name: "paprika", amount: 1, unit: .teaspoon, notes: nil, category: .spices)
+                IngredientModel(name: "black beans", amount: 2, unit: .can, notes: "15 oz each", category: .pantry),
+                IngredientModel(name: "kidney beans", amount: 1, unit: .can, notes: "15 oz", category: .pantry),
+                IngredientModel(name: "diced tomatoes", amount: 2, unit: .can, notes: "14.5 oz each", category: .pantry),
+                IngredientModel(name: "tomato paste", amount: 2, unit: .tablespoon, notes: nil, category: .pantry),
+                IngredientModel(name: "onion", amount: 1, unit: .piece, notes: "large, diced", category: .produce),
+                IngredientModel(name: "bell pepper", amount: 2, unit: .piece, notes: "any color, diced", category: .produce),
+                IngredientModel(name: "corn", amount: 1, unit: .cup, notes: "frozen or fresh", category: .frozen),
+                IngredientModel(name: "vegetable broth", amount: 2, unit: .cup, notes: nil, category: .pantry),
+                IngredientModel(name: "chili powder", amount: 2, unit: .tablespoon, notes: nil, category: .spices),
+                IngredientModel(name: "cumin", amount: 1, unit: .tablespoon, notes: nil, category: .spices),
+                IngredientModel(name: "paprika", amount: 1, unit: .teaspoon, notes: nil, category: .spices)
             ],
             instructions: [
                 "Heat oil in a large pot over medium heat.",
@@ -221,24 +221,24 @@ class RecipeDatabase {
             rating: 0
         ),
         
-        Recipe(
+        RecipeModel(
             name: "Chicken Stir-Fry",
             category: .dinner,
             prepTime: 20,
             cookTime: 15,
             servings: 4,
             ingredients: [
-                Ingredient(name: "chicken breast", amount: 1, unit: .pound, notes: "cut into strips", category: .meat),
-                Ingredient(name: "broccoli", amount: 2, unit: .cup, notes: "florets", category: .produce),
-                Ingredient(name: "bell pepper", amount: 1, unit: .piece, notes: "sliced", category: .produce),
-                Ingredient(name: "snap peas", amount: 1, unit: .cup, notes: nil, category: .produce),
-                Ingredient(name: "carrots", amount: 2, unit: .piece, notes: "julienned", category: .produce),
-                Ingredient(name: "soy sauce", amount: 3, unit: .tablespoon, notes: "low sodium", category: .condiments),
-                Ingredient(name: "sesame oil", amount: 1, unit: .tablespoon, notes: nil, category: .pantry),
-                Ingredient(name: "ginger", amount: 1, unit: .tablespoon, notes: "fresh, grated", category: .produce),
-                Ingredient(name: "garlic", amount: 2, unit: .clove, notes: "minced", category: .produce),
-                Ingredient(name: "cornstarch", amount: 1, unit: .tablespoon, notes: nil, category: .pantry),
-                Ingredient(name: "vegetable oil", amount: 2, unit: .tablespoon, notes: nil, category: .pantry)
+                IngredientModel(name: "chicken breast", amount: 1, unit: .pound, notes: "cut into strips", category: .meat),
+                IngredientModel(name: "broccoli", amount: 2, unit: .cup, notes: "florets", category: .produce),
+                IngredientModel(name: "bell pepper", amount: 1, unit: .piece, notes: "sliced", category: .produce),
+                IngredientModel(name: "snap peas", amount: 1, unit: .cup, notes: nil, category: .produce),
+                IngredientModel(name: "carrots", amount: 2, unit: .piece, notes: "julienned", category: .produce),
+                IngredientModel(name: "soy sauce", amount: 3, unit: .tablespoon, notes: "low sodium", category: .condiments),
+                IngredientModel(name: "sesame oil", amount: 1, unit: .tablespoon, notes: nil, category: .pantry),
+                IngredientModel(name: "ginger", amount: 1, unit: .tablespoon, notes: "fresh, grated", category: .produce),
+                IngredientModel(name: "garlic", amount: 2, unit: .clove, notes: "minced", category: .produce),
+                IngredientModel(name: "cornstarch", amount: 1, unit: .tablespoon, notes: nil, category: .pantry),
+                IngredientModel(name: "vegetable oil", amount: 2, unit: .tablespoon, notes: nil, category: .pantry)
             ],
             instructions: [
                 "Mix soy sauce, sesame oil, and cornstarch for sauce. Set aside.",
@@ -261,7 +261,7 @@ class RecipeDatabase {
         )
     ]
     
-    func searchRecipes(_ query: String) -> [Recipe] {
+    func searchRecipes(_ query: String) -> [RecipeModel] {
         guard !query.isEmpty else { return recipes }
         
         let searchQuery = query.lowercased()
@@ -273,11 +273,11 @@ class RecipeDatabase {
         }
     }
     
-    func getRecipesByCategory(_ category: RecipeCategory) -> [Recipe] {
+    func getRecipesByCategory(_ category: RecipeCategory) -> [RecipeModel] {
         return recipes.filter { $0.category == category }
     }
     
-    func getQuickRecipes(maxTime: Int = 30) -> [Recipe] {
+    func getQuickRecipes(maxTime: Int = 30) -> [RecipeModel] {
         return recipes.filter { $0.totalTime <= maxTime }
     }
 }

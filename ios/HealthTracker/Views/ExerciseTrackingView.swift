@@ -254,7 +254,7 @@ struct AddExerciseView: View {
     @State private var caloriesBurned: Double = 0
     @State private var notes = ""
     @State private var showingSuggestions = false
-    @State private var suggestions: [ExerciseTemplate] = []
+    @State private var suggestions: [ExerciseTemplateModel] = []
     @State private var smartSuggestions: [ExerciseAutofillService.ExerciseSuggestion] = []
     @State private var selectedDate = Date()
     
@@ -406,7 +406,7 @@ struct AddExerciseView: View {
         }
     }
     
-    func selectExercise(_ template: ExerciseTemplate) {
+    func selectExercise(_ template: ExerciseTemplateModel) {
         exerciseName = template.name
         exerciseType = template.type
         showingSuggestions = false

@@ -1,13 +1,13 @@
 import Foundation
 
-struct Recipe: Identifiable, Codable {
+struct RecipeModel: Identifiable, Codable {
     let id: UUID
     var name: String
     var category: RecipeCategory
     var prepTime: Int // minutes
     var cookTime: Int // minutes
     var servings: Int
-    var ingredients: [Ingredient]
+    var ingredients: [IngredientModel]
     var instructions: [String]
     var nutrition: NutritionInfo?
     var imageURL: String?
@@ -16,7 +16,7 @@ struct Recipe: Identifiable, Codable {
     var isFavorite: Bool = false
     var rating: Int = 0
     
-    init(id: UUID = UUID(), name: String, category: RecipeCategory, prepTime: Int, cookTime: Int, servings: Int, ingredients: [Ingredient], instructions: [String], nutrition: NutritionInfo? = nil, imageURL: String? = nil, source: String? = nil, tags: [String] = [], isFavorite: Bool = false, rating: Int = 0) {
+    init(id: UUID = UUID(), name: String, category: RecipeCategory, prepTime: Int, cookTime: Int, servings: Int, ingredients: [IngredientModel], instructions: [String], nutrition: NutritionInfo? = nil, imageURL: String? = nil, source: String? = nil, tags: [String] = [], isFavorite: Bool = false, rating: Int = 0) {
         self.id = id
         self.name = name
         self.category = category
@@ -38,7 +38,7 @@ struct Recipe: Identifiable, Codable {
     }
 }
 
-struct Ingredient: Identifiable, Codable {
+struct IngredientModel: Identifiable, Codable {
     let id: UUID
     var name: String
     var amount: Double
@@ -143,6 +143,40 @@ struct NutritionInfo: Codable {
     var fiber: Double?
     var sugar: Double?
     var sodium: Double?
+
+    // Vitamins
+    var vitaminA: Double?
+    var vitaminC: Double?
+    var vitaminD: Double?
+    var vitaminE: Double?
+    var vitaminK: Double?
+    var thiamin: Double? // B1
+    var riboflavin: Double? // B2
+    var niacin: Double? // B3
+    var vitaminB6: Double?
+    var folate: Double?
+    var vitaminB12: Double?
+    var biotin: Double?
+    var pantothenicAcid: Double? // B5
+    var choline: Double?
+
+    // Minerals
+    var calcium: Double?
+    var iron: Double?
+    var magnesium: Double?
+    var phosphorus: Double?
+    var potassium: Double?
+    var zinc: Double?
+    var copper: Double?
+    var manganese: Double?
+    var selenium: Double?
+    var chromium: Double?
+    var molybdenum: Double?
+    var iodine: Double?
+
+    // Special nutrients
+    var omega3: Double?
+    var omega6: Double?
 }
 
 // Meal Plan Models - Now using Core Data entities instead

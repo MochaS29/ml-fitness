@@ -221,7 +221,7 @@ struct MyRecipeBookView: View {
         }
     }
     
-    private func getRecipeFromFavorite(_ favorite: FavoriteRecipe) -> Recipe? {
+    private func getRecipeFromFavorite(_ favorite: FavoriteRecipe) -> RecipeModel? {
         // In a real app, this would fetch the recipe from the database
         // For now, we'll create a Recipe from the FavoriteRecipe data
         guard let id = favorite.recipeId,
@@ -231,7 +231,7 @@ struct MyRecipeBookView: View {
             return nil
         }
         
-        return Recipe(
+        return RecipeModel(
             id: UUID(uuidString: id) ?? UUID(),
             name: name,
             category: category,
@@ -249,7 +249,7 @@ struct MyRecipeBookView: View {
 
 // Favorite Recipe Card
 struct FavoriteRecipeCard: View {
-    let recipe: Recipe
+    let recipe: RecipeModel
     let favorite: FavoriteRecipe
     @Environment(\.managedObjectContext) private var viewContext
     @State private var showingUnfavoriteAlert = false
@@ -380,10 +380,10 @@ struct CustomRecipeCard: View {
                 
                 // Nutrition preview
                 HStack(spacing: 8) {
-                    NutritionBadge(value: Int(customRecipe.calories), label: "cal")
-                    NutritionBadge(value: Int(customRecipe.protein), label: "g P")
-                    NutritionBadge(value: Int(customRecipe.carbs), label: "g C")
-                    NutritionBadge(value: Int(customRecipe.fat), label: "g F")
+                    NutritionBadge(value: Int(customRecipe.calories), unit: "cal", color: .orange)
+                    NutritionBadge(value: Int(customRecipe.protein), unit: "g P", color: .red)
+                    NutritionBadge(value: Int(customRecipe.carbs), unit: "g C", color: .blue)
+                    NutritionBadge(value: Int(customRecipe.fat), unit: "g F", color: .green)
                 }
             }
             .padding(.horizontal, 8)
@@ -395,19 +395,7 @@ struct CustomRecipeCard: View {
     }
 }
 
-struct NutritionBadge: View {
-    let value: Int
-    let label: String
-    
-    var body: some View {
-        Text("\(value)\(label)")
-            .font(.caption2)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background(Color(UIColor.secondarySystemGroupedBackground))
-            .cornerRadius(4)
-    }
-}
+// Removed duplicate - use NutritionBadge from EnhancedMealPlanningView
 
 // Custom Recipe Detail View
 struct CustomRecipeDetailView: View {
@@ -431,7 +419,7 @@ struct CustomRecipeDetailView: View {
         }
     }
     
-    private func convertToRecipe(_ customRecipe: CustomRecipe) -> Recipe? {
+    private func convertToRecipe(_ customRecipe: CustomRecipe) -> RecipeModel? {
         guard let name = customRecipe.name,
               let categoryString = customRecipe.category,
               let category = RecipeCategory(rawValue: categoryString) else {
@@ -439,10 +427,10 @@ struct CustomRecipeDetailView: View {
         }
         
         // Convert stored arrays to proper types
-        let ingredients: [Ingredient] = [] // Would need to parse from customRecipe.ingredients
+        let ingredients: [IngredientModel] = [] // Would need to parse from customRecipe.ingredients
         let instructions: [String] = customRecipe.instructions ?? []
         
-        return Recipe(
+        return RecipeModel(
             id: customRecipe.id ?? UUID(),
             name: name,
             category: category,

@@ -2,16 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDisplayName</key>
-	<string>MindLabs Health</string>
 	<key>CFBundleGetInfoString</key>
 	<string></string>
 	<key>CFBundleSignature</key>
 	<string></string>
-	<key>NSCameraUsageDescription</key>
-	<string>This app needs camera access to scan supplement labels and food items</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs photo library access to select images of supplements and food</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

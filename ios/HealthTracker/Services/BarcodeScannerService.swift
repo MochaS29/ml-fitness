@@ -118,12 +118,12 @@ class BarcodeScannerService: NSObject, ObservableObject {
     func lookupBarcode(_ barcode: String) async throws -> FoodProduct {
         // Simulate network delay
         try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
-        
+
         // Check mock database first
         if let product = mockFoodDatabase[barcode] {
             return product
         }
-        
+
         // In production, make API call here
         // For now, try to extract info from barcode if not in database
         if barcode.count >= 12 {
@@ -142,8 +142,24 @@ class BarcodeScannerService: NSObject, ObservableObject {
                 sodium: 150
             )
         }
-        
+
         throw ScanError.lookupFailed("Product not found in database")
+    }
+
+    func lookupSupplementBarcode(_ barcode: String) async throws -> Supplement? {
+        // First check if it's a supplement by barcode
+        if let supplement = SupplementDatabase.shared.searchByBarcode(barcode) {
+            return supplement
+        }
+
+        // Check by DPN if it's a Canadian format (8 digits)
+        if barcode.count == 8, let supplement = SupplementDatabase.shared.searchByDPN(barcode) {
+            return supplement
+        }
+
+        // In production, make API call to supplement databases
+        // For now, return nil if not found
+        return nil
     }
     
     func processBarcode(_ barcode: String) {

@@ -54,7 +54,7 @@ class AllergenDetectionService: ObservableObject {
         return checkFoodForAllergens(foodEntry.name ?? "", ingredients: nil, userProfile: userProfile)
     }
     
-    func checkRecipe(_ recipe: Recipe, userProfile: UserProfile) -> [AllergenInfo] {
+    func checkRecipe(_ recipe: RecipeModel, userProfile: UserProfile) -> [AllergenInfo] {
         var allergens: [AllergenInfo] = []
         let userAllergies = userProfile.foodPreferences.allergies
         

@@ -293,7 +293,7 @@ struct RecipeImportSuccessView: View {
         }
     }
     
-    private func convertToRecipe(_ customRecipe: CustomRecipe) -> Recipe? {
+    private func convertToRecipe(_ customRecipe: CustomRecipe) -> RecipeModel? {
         guard let name = customRecipe.name,
               let categoryString = customRecipe.category,
               let category = RecipeCategory(rawValue: categoryString) else {
@@ -301,7 +301,7 @@ struct RecipeImportSuccessView: View {
         }
         
         // Parse ingredients from string array
-        let ingredients: [Ingredient] = (customRecipe.ingredients ?? []).map { ingredientString in
+        let ingredients: [IngredientModel] = (customRecipe.ingredients ?? []).map { ingredientString in
             // Simple parsing - in real app would be more sophisticated
             let components = ingredientString.components(separatedBy: " ")
             var amount = 1.0
@@ -321,10 +321,10 @@ struct RecipeImportSuccessView: View {
                 }
             }
             
-            return Ingredient(name: name, amount: amount, unit: unit, category: .other)
+            return IngredientModel(name: name, amount: amount, unit: unit, notes: nil, category: .other)
         }
         
-        return Recipe(
+        return RecipeModel(
             id: customRecipe.id ?? UUID(),
             name: name,
             category: category,

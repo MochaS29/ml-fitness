@@ -7,6 +7,11 @@ struct HybridDashboardView: View {
     @State private var showingAIInsightDetail = false
     @State private var selectedInsight: AIInsight?
     @State private var animateCharts = false
+    @State private var showingCalorieDetail = false
+    @State private var showingWeightDetail = false
+    @State private var showingExerciseDetail = false
+    @State private var showingWaterDetail = false
+    @State private var showingSupplementDetail = false
     
     enum TimeRange: String, CaseIterable {
         case day = "Day"
@@ -35,7 +40,7 @@ struct HybridDashboardView: View {
                 metricsOverview
                 
                 // Supplement Stats Widget
-                SupplementStatsWidget()
+                SupplementStatsWidget(showingDetail: $showingSupplementDetail)
                 
                 // Interactive Charts Section (from Option 3)
                 chartsSection
@@ -58,6 +63,21 @@ struct HybridDashboardView: View {
         }
         .sheet(item: $selectedInsight) { insight in
             AIInsightDetailView(insight: insight)
+        }
+        .sheet(isPresented: $showingCalorieDetail) {
+            FoodTrackingView()
+        }
+        .sheet(isPresented: $showingWeightDetail) {
+            WeightTrackingView()
+        }
+        .sheet(isPresented: $showingExerciseDetail) {
+            ExerciseTrackingView()
+        }
+        .sheet(isPresented: $showingWaterDetail) {
+            WaterTrackingView()
+        }
+        .sheet(isPresented: $showingSupplementDetail) {
+            EnhancedSupplementTrackingView()
         }
     }
     
@@ -88,6 +108,9 @@ struct HybridDashboardView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .frame(width: 200)
+                .onChange(of: selectedTimeRange) { oldValue, newValue in
+                    viewModel.updateTimeRange(newValue)
+                }
             }
             
             // Overall Health Score with AI Analysis
@@ -187,6 +210,9 @@ struct HybridDashboardView: View {
                 color: .orange,
                 sparklineData: viewModel.calorieSparkline
             )
+            .onTapGesture {
+                showingCalorieDetail = true
+            }
             
             MetricCardWithTrend(
                 title: "Weight",
@@ -198,6 +224,9 @@ struct HybridDashboardView: View {
                 color: .blue,
                 sparklineData: viewModel.weightSparkline
             )
+            .onTapGesture {
+                showingWeightDetail = true
+            }
             
             MetricCardWithTrend(
                 title: "Exercise",
@@ -209,6 +238,9 @@ struct HybridDashboardView: View {
                 color: .green,
                 sparklineData: viewModel.exerciseSparkline
             )
+            .onTapGesture {
+                showingExerciseDetail = true
+            }
             
             MetricCardWithTrend(
                 title: "Water",
@@ -220,13 +252,112 @@ struct HybridDashboardView: View {
                 color: .cyan,
                 sparklineData: viewModel.waterSparkline
             )
+            .onTapGesture {
+                showingWaterDetail = true
+            }
         }
     }
     
     // MARK: - Charts Section (from Option 3)
-    
+
     private var chartsSection: some View {
         VStack(spacing: 20) {
+            // Calories Chart with Time Range
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("Calories")
+                        .font(.headline)
+                        .foregroundColor(.deepCharcoal)
+                    Spacer()
+                    Picker("", selection: $selectedTimeRange) {
+                        Text("Day").tag(TimeRange.day)
+                        Text("Week").tag(TimeRange.week)
+                        Text("Month").tag(TimeRange.month)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .frame(width: 180)
+                }
+
+                Chart(viewModel.getCaloriesData(for: selectedTimeRange)) { dataPoint in
+                    BarMark(
+                        x: .value("Date", dataPoint.date),
+                        y: .value("Calories", dataPoint.value)
+                    )
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.orange.opacity(0.8), .red.opacity(0.6)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .cornerRadius(4)
+                }
+                .frame(height: 200)
+                .chartYAxis {
+                    AxisMarks(position: .leading)
+                }
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+
+            // Weight Chart
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Weight Trend")
+                    .font(.headline)
+                    .foregroundColor(.deepCharcoal)
+
+                Chart(viewModel.getWeightData(for: selectedTimeRange)) { dataPoint in
+                    LineMark(
+                        x: .value("Date", dataPoint.date),
+                        y: .value("Weight", dataPoint.value)
+                    )
+                    .foregroundStyle(Color.blue)
+                    .lineStyle(StrokeStyle(lineWidth: 2))
+
+                    PointMark(
+                        x: .value("Date", dataPoint.date),
+                        y: .value("Weight", dataPoint.value)
+                    )
+                    .foregroundStyle(Color.blue)
+                    .symbolSize(50)
+                }
+                .frame(height: 150)
+                .chartYScale(domain: viewModel.getWeightRange(for: selectedTimeRange))
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+
+            // Exercise Minutes Chart
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Exercise Minutes")
+                    .font(.headline)
+                    .foregroundColor(.deepCharcoal)
+
+                Chart(viewModel.getExerciseData(for: selectedTimeRange)) { dataPoint in
+                    BarMark(
+                        x: .value("Date", dataPoint.date),
+                        y: .value("Minutes", dataPoint.value)
+                    )
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.green, .mint],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .cornerRadius(4)
+                }
+                .frame(height: 150)
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+
             // Nutrition Distribution Chart
             VStack(alignment: .leading, spacing: 12) {
                 Text("Nutrition Distribution")

@@ -1,6 +1,15 @@
 import SwiftUI
 import Charts
 
+// MARK: - Nutrient Intake Status
+enum NutrientIntakeStatus {
+    case deficient
+    case low
+    case optimal
+    case high
+    case excessive
+}
+
 struct EnhancedSupplementTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var profileManager: UserProfileManager
@@ -185,15 +194,15 @@ struct NutrientProgress: Identifiable {
     
     var status: NutrientStatus {
         if percentage < 50 {
-            return .low
+            return .deficient(severity: .moderate)
         } else if percentage < 90 {
-            return .moderate
+            return .deficient(severity: .mild)
+        } else if let limit = upperLimit, consumed > limit * 1.5 {
+            return .potentiallyHarmful
         } else if let limit = upperLimit, consumed > limit {
-            return .excessive
-        } else if percentage > 110 {
-            return .high
+            return .excessive(concern: .slightlyHigh)
         } else {
-            return .optimal
+            return .adequate
         }
     }
 }
@@ -203,11 +212,10 @@ struct NutrientProgressBar: View {
     
     var progressColor: Color {
         switch progress.status {
-        case .low: return .red
-        case .moderate: return .orange
-        case .optimal: return .green
-        case .high: return .blue
-        case .excessive: return .purple
+        case .deficient: return .red
+        case .adequate: return .green
+        case .excessive: return .orange
+        case .potentiallyHarmful: return .purple
         }
     }
     
@@ -254,7 +262,7 @@ struct NutrientProgressBar: View {
                     .font(.caption2)
                     .foregroundColor(progressColor)
                 
-                if progress.status == .excessive {
+                if case .excessive = progress.status {
                     Text("• Exceeds safe upper limit")
                         .font(.caption2)
                         .foregroundColor(.red)
@@ -335,7 +343,7 @@ struct PresetSupplementsView: View {
         PresetSupplement(
             name: "Probiotic Complex",
             brand: "Gut Health",
-            nutrients: [] // Probiotics don't have RDA values
+            nutrients: [:] // Probiotics don't have RDA values
         )
     ]
     
@@ -499,13 +507,13 @@ struct RecommendationsView: View {
         }
     }
     
-    func backgroundColorForStatus(_ status: NutrientIntakeStatus) -> Color {
+    func backgroundColorForStatus(_ status: NutrientStatus) -> Color {
         switch status {
-        case .deficient, .excessive:
+        case .deficient, .potentiallyHarmful:
             return Color.red.opacity(0.1)
-        case .low, .high:
+        case .excessive:
             return Color.orange.opacity(0.1)
-        case .optimal:
+        case .adequate:
             return Color.green.opacity(0.1)
         }
     }

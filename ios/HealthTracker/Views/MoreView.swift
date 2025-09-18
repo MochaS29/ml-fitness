@@ -510,12 +510,12 @@ struct RecipeLibraryView: View {
         }
     }
     
-    private var filteredRecipes: [Recipe] {
+    private var filteredRecipes: [RecipeModel] {
         // Combine built-in recipes with imported recipes
         var recipes = RecipeDatabase.shared.recipes
-        
-        // Convert imported CustomRecipe entities to Recipe structs
-        let convertedImportedRecipes = importedRecipes.compactMap { customRecipe -> Recipe? in
+
+        // Convert imported CustomRecipe entities to RecipeModel structs
+        let convertedImportedRecipes = importedRecipes.compactMap { customRecipe -> RecipeModel? in
             guard let name = customRecipe.name,
                   let categoryString = customRecipe.category,
                   let category = RecipeCategory(rawValue: categoryString) else {
@@ -523,12 +523,12 @@ struct RecipeLibraryView: View {
             }
             
             // Parse ingredients from string array
-            let ingredients: [Ingredient] = (customRecipe.ingredients ?? []).map { ingredientString in
+            let ingredients: [IngredientModel] = (customRecipe.ingredients ?? []).map { ingredientString in
                 // Simple parsing - in real app would be more sophisticated
-                Ingredient(name: ingredientString, amount: 1, unit: .piece, category: .other)
+                IngredientModel(name: ingredientString, amount: 1, unit: .piece, notes: nil, category: .other)
             }
             
-            return Recipe(
+            return RecipeModel(
                 id: customRecipe.id ?? UUID(),
                 name: name,
                 category: category,
@@ -592,7 +592,7 @@ struct RecipeCategoryChip: View {
 }
 
 struct RecipeCard: View {
-    let recipe: Recipe
+    let recipe: RecipeModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

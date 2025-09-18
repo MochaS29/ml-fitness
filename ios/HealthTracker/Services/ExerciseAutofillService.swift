@@ -11,7 +11,7 @@ class ExerciseAutofillService {
     // MARK: - Suggestion Models
     
     struct ExerciseSuggestion {
-        let exercise: ExerciseTemplate
+        let exercise: ExerciseTemplateModel
         let confidence: Double
         let reason: SuggestionReason
         let typicalDuration: Int?
@@ -362,7 +362,7 @@ class ExerciseAutofillService {
 // MARK: - ExerciseDatabase Extension
 
 extension ExerciseDatabase {
-    func findExercise(by name: String) -> ExerciseTemplate? {
+    func findExercise(by name: String) -> ExerciseTemplateModel? {
         return exercises.first { $0.name.lowercased() == name.lowercased() }
     }
 }

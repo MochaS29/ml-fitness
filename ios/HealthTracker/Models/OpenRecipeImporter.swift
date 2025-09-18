@@ -58,24 +58,24 @@ class OpenRecipeImporter {
         }
     }
     
-    private static func getHealthyRecipes() -> [Recipe] {
-        var recipes: [Recipe] = []
+    private static func getHealthyRecipes() -> [RecipeModel] {
+        var recipes: [RecipeModel] = []
         
         // Breakfast Recipes
         recipes.append(contentsOf: [
-            Recipe(
+            RecipeModel(
                 name: "Overnight Oats with Berries",
                 category: .breakfast,
                 prepTime: 10,
                 cookTime: 0,
                 servings: 1,
                 ingredients: [
-                    Ingredient(name: "rolled oats", amount: 0.5, unit: .cup, category: .pantry),
-                    Ingredient(name: "almond milk", amount: 0.5, unit: .cup, category: .dairy),
-                    Ingredient(name: "Greek yogurt", amount: 0.25, unit: .cup, category: .dairy),
-                    Ingredient(name: "mixed berries", amount: 0.5, unit: .cup, category: .produce),
-                    Ingredient(name: "honey", amount: 1, unit: .tablespoon, category: .pantry),
-                    Ingredient(name: "chia seeds", amount: 1, unit: .tablespoon, category: .pantry)
+                    IngredientModel(name: "rolled oats", amount: 0.5, unit: .cup, category: .pantry),
+                    IngredientModel(name: "almond milk", amount: 0.5, unit: .cup, category: .dairy),
+                    IngredientModel(name: "Greek yogurt", amount: 0.25, unit: .cup, category: .dairy),
+                    IngredientModel(name: "mixed berries", amount: 0.5, unit: .cup, category: .produce),
+                    IngredientModel(name: "honey", amount: 1, unit: .tablespoon, category: .pantry),
+                    IngredientModel(name: "chia seeds", amount: 1, unit: .tablespoon, category: .pantry)
                 ],
                 instructions: [
                     "In a jar or container, combine oats, almond milk, Greek yogurt, and chia seeds",
@@ -89,20 +89,20 @@ class OpenRecipeImporter {
                 tags: ["healthy", "make-ahead", "high-fiber", "vegetarian"]
             ),
             
-            Recipe(
+            RecipeModel(
                 name: "Veggie Scrambled Eggs",
                 category: .breakfast,
                 prepTime: 10,
                 cookTime: 10,
                 servings: 2,
                 ingredients: [
-                    Ingredient(name: "eggs", amount: 4, unit: .piece, category: .dairy),
-                    Ingredient(name: "bell pepper", amount: 0.5, unit: .cup, notes: "diced", category: .produce),
-                    Ingredient(name: "spinach", amount: 1, unit: .cup, category: .produce),
-                    Ingredient(name: "mushrooms", amount: 0.5, unit: .cup, notes: "sliced", category: .produce),
-                    Ingredient(name: "olive oil", amount: 1, unit: .tablespoon, category: .condiments),
-                    Ingredient(name: "salt", amount: 0.25, unit: .teaspoon, category: .spices),
-                    Ingredient(name: "black pepper", amount: 0.25, unit: .teaspoon, category: .spices)
+                    IngredientModel(name: "eggs", amount: 4, unit: .piece, category: .dairy),
+                    IngredientModel(name: "bell pepper", amount: 0.5, unit: .cup, notes: "diced", category: .produce),
+                    IngredientModel(name: "spinach", amount: 1, unit: .cup, category: .produce),
+                    IngredientModel(name: "mushrooms", amount: 0.5, unit: .cup, notes: "sliced", category: .produce),
+                    IngredientModel(name: "olive oil", amount: 1, unit: .tablespoon, category: .condiments),
+                    IngredientModel(name: "salt", amount: 0.25, unit: .teaspoon, category: .spices),
+                    IngredientModel(name: "black pepper", amount: 0.25, unit: .teaspoon, category: .spices)
                 ],
                 instructions: [
                     "Heat olive oil in a non-stick pan over medium heat",
@@ -120,21 +120,21 @@ class OpenRecipeImporter {
         
         // Lunch Recipes
         recipes.append(contentsOf: [
-            Recipe(
+            RecipeModel(
                 name: "Quinoa Buddha Bowl",
                 category: .lunch,
                 prepTime: 15,
                 cookTime: 20,
                 servings: 2,
                 ingredients: [
-                    Ingredient(name: "quinoa", amount: 1, unit: .cup, notes: "cooked", category: .pantry),
-                    Ingredient(name: "chickpeas", amount: 1, unit: .cup, notes: "cooked", category: .pantry),
-                    Ingredient(name: "sweet potato", amount: 1, unit: .piece, notes: "medium, cubed", category: .produce),
-                    Ingredient(name: "kale", amount: 2, unit: .cup, notes: "chopped", category: .produce),
-                    Ingredient(name: "avocado", amount: 1, unit: .piece, category: .produce),
-                    Ingredient(name: "tahini", amount: 2, unit: .tablespoon, category: .condiments),
-                    Ingredient(name: "lemon juice", amount: 1, unit: .tablespoon, category: .produce),
-                    Ingredient(name: "olive oil", amount: 1, unit: .tablespoon, category: .condiments)
+                    IngredientModel(name: "quinoa", amount: 1, unit: .cup, notes: "cooked", category: .pantry),
+                    IngredientModel(name: "chickpeas", amount: 1, unit: .cup, notes: "cooked", category: .pantry),
+                    IngredientModel(name: "sweet potato", amount: 1, unit: .piece, notes: "medium, cubed", category: .produce),
+                    IngredientModel(name: "kale", amount: 2, unit: .cup, notes: "chopped", category: .produce),
+                    IngredientModel(name: "avocado", amount: 1, unit: .piece, category: .produce),
+                    IngredientModel(name: "tahini", amount: 2, unit: .tablespoon, category: .condiments),
+                    IngredientModel(name: "lemon juice", amount: 1, unit: .tablespoon, category: .produce),
+                    IngredientModel(name: "olive oil", amount: 1, unit: .tablespoon, category: .condiments)
                 ],
                 instructions: [
                     "Preheat oven to 400°F (200°C)",
@@ -150,21 +150,21 @@ class OpenRecipeImporter {
                 tags: ["vegan", "high-fiber", "meal-prep", "gluten-free"]
             ),
             
-            Recipe(
+            RecipeModel(
                 name: "Mediterranean Chicken Wrap",
                 category: .lunch,
                 prepTime: 15,
                 cookTime: 15,
                 servings: 2,
                 ingredients: [
-                    Ingredient(name: "chicken breast", amount: 8, unit: .ounce, category: .meat),
-                    Ingredient(name: "whole wheat tortilla", amount: 2, unit: .piece, category: .bakery),
-                    Ingredient(name: "cucumber", amount: 0.5, unit: .cup, notes: "diced", category: .produce),
-                    Ingredient(name: "tomatoes", amount: 0.5, unit: .cup, notes: "diced", category: .produce),
-                    Ingredient(name: "red onion", amount: 0.25, unit: .cup, notes: "sliced", category: .produce),
-                    Ingredient(name: "hummus", amount: 4, unit: .tablespoon, category: .condiments),
-                    Ingredient(name: "Greek yogurt", amount: 2, unit: .tablespoon, category: .dairy),
-                    Ingredient(name: "mixed greens", amount: 1, unit: .cup, category: .produce)
+                    IngredientModel(name: "chicken breast", amount: 8, unit: .ounce, category: .meat),
+                    IngredientModel(name: "whole wheat tortilla", amount: 2, unit: .piece, category: .bakery),
+                    IngredientModel(name: "cucumber", amount: 0.5, unit: .cup, notes: "diced", category: .produce),
+                    IngredientModel(name: "tomatoes", amount: 0.5, unit: .cup, notes: "diced", category: .produce),
+                    IngredientModel(name: "red onion", amount: 0.25, unit: .cup, notes: "sliced", category: .produce),
+                    IngredientModel(name: "hummus", amount: 4, unit: .tablespoon, category: .condiments),
+                    IngredientModel(name: "Greek yogurt", amount: 2, unit: .tablespoon, category: .dairy),
+                    IngredientModel(name: "mixed greens", amount: 1, unit: .cup, category: .produce)
                 ],
                 instructions: [
                     "Season and grill chicken breast until cooked through",
@@ -183,21 +183,21 @@ class OpenRecipeImporter {
         
         // Dinner Recipes
         recipes.append(contentsOf: [
-            Recipe(
+            RecipeModel(
                 name: "Baked Salmon with Vegetables",
                 category: .dinner,
                 prepTime: 15,
                 cookTime: 25,
                 servings: 4,
                 ingredients: [
-                    Ingredient(name: "salmon fillet", amount: 1.5, unit: .pound, category: .meat),
-                    Ingredient(name: "broccoli florets", amount: 2, unit: .cup, category: .produce),
-                    Ingredient(name: "cherry tomatoes", amount: 1, unit: .cup, category: .produce),
-                    Ingredient(name: "asparagus", amount: 1, unit: .pound, category: .produce),
-                    Ingredient(name: "olive oil", amount: 3, unit: .tablespoon, category: .condiments),
-                    Ingredient(name: "garlic", amount: 3, unit: .piece, category: .produce),
-                    Ingredient(name: "lemon", amount: 1, unit: .piece, category: .produce),
-                    Ingredient(name: "fresh herbs", amount: 2, unit: .tablespoon, notes: "dill or parsley", category: .produce)
+                    IngredientModel(name: "salmon fillet", amount: 1.5, unit: .pound, category: .meat),
+                    IngredientModel(name: "broccoli florets", amount: 2, unit: .cup, category: .produce),
+                    IngredientModel(name: "cherry tomatoes", amount: 1, unit: .cup, category: .produce),
+                    IngredientModel(name: "asparagus", amount: 1, unit: .pound, category: .produce),
+                    IngredientModel(name: "olive oil", amount: 3, unit: .tablespoon, category: .condiments),
+                    IngredientModel(name: "garlic", amount: 3, unit: .piece, category: .produce),
+                    IngredientModel(name: "lemon", amount: 1, unit: .piece, category: .produce),
+                    IngredientModel(name: "fresh herbs", amount: 2, unit: .tablespoon, notes: "dill or parsley", category: .produce)
                 ],
                 instructions: [
                     "Preheat oven to 425°F (220°C)",
@@ -214,22 +214,22 @@ class OpenRecipeImporter {
                 tags: ["omega-3", "low-carb", "gluten-free", "heart-healthy"]
             ),
             
-            Recipe(
+            RecipeModel(
                 name: "Vegetarian Chili",
                 category: .dinner,
                 prepTime: 20,
                 cookTime: 40,
                 servings: 6,
                 ingredients: [
-                    Ingredient(name: "black beans", amount: 2, unit: .cup, notes: "cooked", category: .pantry),
-                    Ingredient(name: "kidney beans", amount: 2, unit: .cup, notes: "cooked", category: .pantry),
-                    Ingredient(name: "diced tomatoes", amount: 28, unit: .ounce, notes: "canned", category: .pantry),
-                    Ingredient(name: "bell peppers", amount: 2, unit: .piece, notes: "diced", category: .produce),
-                    Ingredient(name: "onion", amount: 1, unit: .piece, category: .produce),
-                    Ingredient(name: "corn", amount: 1, unit: .cup, category: .produce),
-                    Ingredient(name: "chili powder", amount: 2, unit: .tablespoon, category: .spices),
-                    Ingredient(name: "cumin", amount: 1, unit: .tablespoon, category: .spices),
-                    Ingredient(name: "vegetable broth", amount: 2, unit: .cup, category: .pantry)
+                    IngredientModel(name: "black beans", amount: 2, unit: .cup, notes: "cooked", category: .pantry),
+                    IngredientModel(name: "kidney beans", amount: 2, unit: .cup, notes: "cooked", category: .pantry),
+                    IngredientModel(name: "diced tomatoes", amount: 28, unit: .ounce, notes: "canned", category: .pantry),
+                    IngredientModel(name: "bell peppers", amount: 2, unit: .piece, notes: "diced", category: .produce),
+                    IngredientModel(name: "onion", amount: 1, unit: .piece, category: .produce),
+                    IngredientModel(name: "corn", amount: 1, unit: .cup, category: .produce),
+                    IngredientModel(name: "chili powder", amount: 2, unit: .tablespoon, category: .spices),
+                    IngredientModel(name: "cumin", amount: 1, unit: .tablespoon, category: .spices),
+                    IngredientModel(name: "vegetable broth", amount: 2, unit: .cup, category: .pantry)
                 ],
                 instructions: [
                     "In a large pot, sauté onion and peppers until softened",
@@ -248,20 +248,20 @@ class OpenRecipeImporter {
         
         // Snack Recipes
         recipes.append(contentsOf: [
-            Recipe(
+            RecipeModel(
                 name: "Energy Balls",
                 category: .snack,
                 prepTime: 15,
                 cookTime: 0,
                 servings: 12,
                 ingredients: [
-                    Ingredient(name: "dates", amount: 1, unit: .cup, notes: "pitted", category: .produce),
-                    Ingredient(name: "almonds", amount: 0.5, unit: .cup, category: .pantry),
-                    Ingredient(name: "rolled oats", amount: 0.5, unit: .cup, category: .pantry),
-                    Ingredient(name: "chia seeds", amount: 2, unit: .tablespoon, category: .pantry),
-                    Ingredient(name: "cocoa powder", amount: 2, unit: .tablespoon, category: .pantry),
-                    Ingredient(name: "vanilla extract", amount: 1, unit: .teaspoon, category: .pantry),
-                    Ingredient(name: "sea salt", amount: 0.25, unit: .teaspoon, category: .spices)
+                    IngredientModel(name: "dates", amount: 1, unit: .cup, notes: "pitted", category: .produce),
+                    IngredientModel(name: "almonds", amount: 0.5, unit: .cup, category: .pantry),
+                    IngredientModel(name: "rolled oats", amount: 0.5, unit: .cup, category: .pantry),
+                    IngredientModel(name: "chia seeds", amount: 2, unit: .tablespoon, category: .pantry),
+                    IngredientModel(name: "cocoa powder", amount: 2, unit: .tablespoon, category: .pantry),
+                    IngredientModel(name: "vanilla extract", amount: 1, unit: .teaspoon, category: .pantry),
+                    IngredientModel(name: "sea salt", amount: 0.25, unit: .teaspoon, category: .spices)
                 ],
                 instructions: [
                     "Soak dates in warm water for 10 minutes if very dry",
@@ -277,21 +277,21 @@ class OpenRecipeImporter {
                 tags: ["vegan", "no-bake", "gluten-free", "energy-boost"]
             ),
             
-            Recipe(
+            RecipeModel(
                 name: "Hummus and Veggie Sticks",
                 category: .snack,
                 prepTime: 10,
                 cookTime: 0,
                 servings: 4,
                 ingredients: [
-                    Ingredient(name: "chickpeas", amount: 15, unit: .ounce, category: .pantry),
-                    Ingredient(name: "tahini", amount: 0.25, unit: .cup, category: .condiments),
-                    Ingredient(name: "lemon juice", amount: 3, unit: .tablespoon, category: .produce),
-                    Ingredient(name: "garlic", amount: 2, unit: .piece, notes: "cloves", category: .produce),
-                    Ingredient(name: "olive oil", amount: 2, unit: .tablespoon, category: .condiments),
-                    Ingredient(name: "carrots", amount: 2, unit: .piece, notes: "cut into sticks", category: .produce),
-                    Ingredient(name: "celery", amount: 3, unit: .piece, category: .produce),
-                    Ingredient(name: "bell pepper", amount: 1, unit: .piece, notes: "cut into strips", category: .produce)
+                    IngredientModel(name: "chickpeas", amount: 15, unit: .ounce, category: .pantry),
+                    IngredientModel(name: "tahini", amount: 0.25, unit: .cup, category: .condiments),
+                    IngredientModel(name: "lemon juice", amount: 3, unit: .tablespoon, category: .produce),
+                    IngredientModel(name: "garlic", amount: 2, unit: .piece, notes: "cloves", category: .produce),
+                    IngredientModel(name: "olive oil", amount: 2, unit: .tablespoon, category: .condiments),
+                    IngredientModel(name: "carrots", amount: 2, unit: .piece, notes: "cut into sticks", category: .produce),
+                    IngredientModel(name: "celery", amount: 3, unit: .piece, category: .produce),
+                    IngredientModel(name: "bell pepper", amount: 1, unit: .piece, notes: "cut into strips", category: .produce)
                 ],
                 instructions: [
                     "In a food processor, combine chickpeas, tahini, lemon juice, and garlic",

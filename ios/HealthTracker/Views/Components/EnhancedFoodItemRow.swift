@@ -164,7 +164,7 @@ struct EnhancedFoodItemRow: View {
 // MARK: - Enhanced Recipe Row
 
 struct EnhancedRecipeRow: View {
-    let recipe: Recipe
+    let recipe: RecipeModel
     let userProfile: UserProfile?
     let onSelect: () -> Void
     
@@ -272,7 +272,7 @@ struct EnhancedRecipeRow: View {
 
 struct RecipeAllergenDetails: View {
     @Environment(\.dismiss) private var dismiss
-    let recipe: Recipe
+    let recipe: RecipeModel
     let allergens: [AllergenInfo]
     
     var body: some View {

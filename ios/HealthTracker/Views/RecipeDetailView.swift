@@ -2,16 +2,16 @@ import SwiftUI
 import CoreData
 
 struct RecipeDetailView: View {
-    let recipe: Recipe
+    let recipe: RecipeModel
     var customRecipe: CustomRecipe? = nil
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) private var viewContext
     @State private var servingsMultiplier: Double = 1.0
     @State private var showingAddToMealPlan = false
     @State private var showingGroceryListSelector = false
-    @State private var selectedIngredient: Ingredient?
+    @State private var selectedIngredient: IngredientModel?
     
-    var adjustedIngredients: [Ingredient] {
+    var adjustedIngredients: [IngredientModel] {
         recipe.ingredients.map { ingredient in
             var adjusted = ingredient
             adjusted.amount = ingredient.amount * servingsMultiplier
@@ -328,7 +328,7 @@ struct NutritionItem: View {
 }
 
 struct AddToMealPlanView: View {
-    let recipe: Recipe
+    let recipe: RecipeModel
     let servingsMultiplier: Double
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedDate = Date()
@@ -388,7 +388,7 @@ struct AddToMealPlanView: View {
 }
 
 struct GroceryListSelectorView: View {
-    let ingredients: [Ingredient]
+    let ingredients: [IngredientModel]
     let context: NSManagedObjectContext
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedList: GroceryList?

@@ -27,7 +27,7 @@ struct ContentView: View {
                     }
                     .tag(2)
                 
-                MealPlanningView()
+                EnhancedMealPlanningView()
                     .tabItem {
                         Label("Plan", systemImage: "calendar")
                     }

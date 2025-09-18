@@ -1,5 +1,6 @@
 import SwiftUI
 import Charts
+import CoreData
 
 struct EnhancedMacroTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -428,21 +429,25 @@ class EnhancedMacroTrackingViewModel: ObservableObject {
             let foodEntries = try context.fetch(foodRequest)
             
             // Calculate food nutrition
-            var foodNutrition = NutritionInfo()
+            var foodNutrition = NutritionInfo(calories: 0, protein: 0, carbs: 0, fat: 0)
             foodSources = []
             
             for entry in foodEntries {
-                if let nutrition = entry.nutrition {
-                    foodNutrition = foodNutrition + nutrition
-                    foodSources.append((
-                        name: entry.name ?? "Unknown",
-                        calories: nutrition.calories,
-                        protein: nutrition.protein,
-                        carbs: nutrition.carbs,
-                        fat: nutrition.fat,
-                        time: entry.timestamp ?? Date()
-                    ))
-                }
+                let entryNutrition = NutritionInfo(
+                    calories: entry.calories,
+                    protein: entry.protein,
+                    carbs: entry.carbs,
+                    fat: entry.fat
+                )
+                foodNutrition = foodNutrition + entryNutrition
+                foodSources.append((
+                    name: entry.name ?? "Unknown",
+                    calories: entry.calories,
+                    protein: entry.protein,
+                    carbs: entry.carbs,
+                    fat: entry.fat,
+                    time: entry.timestamp ?? Date()
+                ))
             }
             
             // Calculate supplement nutrition
@@ -481,13 +486,21 @@ class EnhancedMacroTrackingViewModel: ObservableObject {
         ]
         
         // Calculate supplement contribution
-        let totalMicronutrients = (supplementNutrition.vitaminC ?? 0) + (supplementNutrition.iron ?? 0) +
-                                 (supplementNutrition.calcium ?? 0) + (supplementNutrition.vitaminD ?? 0)
-        let foodMicronutrients = (foodNutrition.vitaminC ?? 0) + (foodNutrition.iron ?? 0) +
-                                (foodNutrition.calcium ?? 0) + (foodNutrition.vitaminD ?? 0)
-        
-        if totalMicronutrients + foodMicronutrients > 0 {
-            supplementContribution = (totalMicronutrients / (totalMicronutrients + foodMicronutrients)) * 100
+        let supplementVitaminC = supplementNutrition.vitaminC ?? 0
+        let supplementIron = supplementNutrition.iron ?? 0
+        let supplementCalcium = supplementNutrition.calcium ?? 0
+        let supplementVitaminD = supplementNutrition.vitaminD ?? 0
+        let totalMicronutrients = supplementVitaminC + supplementIron + supplementCalcium + supplementVitaminD
+
+        let foodVitaminC = foodNutrition.vitaminC ?? 0
+        let foodIron = foodNutrition.iron ?? 0
+        let foodCalcium = foodNutrition.calcium ?? 0
+        let foodVitaminD = foodNutrition.vitaminD ?? 0
+        let foodMicronutrients = foodVitaminC + foodIron + foodCalcium + foodVitaminD
+
+        let totalNutrients = totalMicronutrients + foodMicronutrients
+        if totalNutrients > 0 {
+            supplementContribution = (totalMicronutrients / totalNutrients) * 100
         }
     }
     

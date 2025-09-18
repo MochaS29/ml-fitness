@@ -181,9 +181,126 @@ class DashboardViewModel: ObservableObject {
             NutrientBreakdown(name: "Vitamin D", current: "12μg", goal: "15μg", percentage: 80, color: .yellow)
         ]
     }
+
+    func updateTimeRange(_ range: HybridDashboardView.TimeRange) {
+        // Update data based on selected time range
+        switch range {
+        case .day:
+            // Load today's data
+            print("Loading day data")
+        case .week:
+            // Load week's data
+            print("Loading week data")
+        case .month:
+            // Load month's data
+            print("Loading month data")
+        }
+        // Trigger UI update
+        objectWillChange.send()
+    }
+
+    // MARK: - Chart Data Methods
+
+    func getCaloriesData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
+        switch range {
+        case .day:
+            // Hour-by-hour for today
+            let hours = stride(from: 0, to: 24, by: 4).map { hour in
+                ChartDataPoint(
+                    date: Calendar.current.date(byAdding: .hour, value: hour, to: Calendar.current.startOfDay(for: Date()))!,
+                    value: Double.random(in: 200...400)
+                )
+            }
+            return hours
+        case .week:
+            // Daily for past 7 days
+            return (0..<7).map { dayOffset in
+                ChartDataPoint(
+                    date: Calendar.current.date(byAdding: .day, value: -dayOffset, to: Date())!,
+                    value: Double([1850, 2100, 1950, 2200, 1900, 2050, 1650][dayOffset % 7])
+                )
+            }.reversed()
+        case .month:
+            // Weekly averages for past month
+            return (0..<4).map { weekOffset in
+                ChartDataPoint(
+                    date: Calendar.current.date(byAdding: .weekOfYear, value: -weekOffset, to: Date())!,
+                    value: Double.random(in: 1800...2200)
+                )
+            }.reversed()
+        }
+    }
+
+    func getWeightData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
+        switch range {
+        case .day:
+            // Single point for today
+            return [ChartDataPoint(date: Date(), value: currentWeight)]
+        case .week:
+            // Daily weights for past week
+            return (0..<7).map { dayOffset in
+                ChartDataPoint(
+                    date: Calendar.current.date(byAdding: .day, value: -dayOffset, to: Date())!,
+                    value: currentWeight + Double.random(in: -1...1)
+                )
+            }.reversed()
+        case .month:
+            // Weekly weights for past month
+            return (0..<4).map { weekOffset in
+                ChartDataPoint(
+                    date: Calendar.current.date(byAdding: .weekOfYear, value: -weekOffset, to: Date())!,
+                    value: currentWeight + Double(4 - weekOffset) * 0.5
+                )
+            }.reversed()
+        }
+    }
+
+    func getExerciseData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
+        switch range {
+        case .day:
+            // Sessions for today
+            return [
+                ChartDataPoint(date: Calendar.current.date(byAdding: .hour, value: -6, to: Date())!, value: 30),
+                ChartDataPoint(date: Calendar.current.date(byAdding: .hour, value: -2, to: Date())!, value: 15)
+            ]
+        case .week:
+            // Daily totals for past week
+            return (0..<7).map { dayOffset in
+                ChartDataPoint(
+                    date: Calendar.current.date(byAdding: .day, value: -dayOffset, to: Date())!,
+                    value: Double([30, 0, 45, 60, 0, 30, 45][dayOffset % 7])
+                )
+            }.reversed()
+        case .month:
+            // Weekly totals for past month
+            return (0..<4).map { weekOffset in
+                ChartDataPoint(
+                    date: Calendar.current.date(byAdding: .weekOfYear, value: -weekOffset, to: Date())!,
+                    value: Double.random(in: 150...300)
+                )
+            }.reversed()
+        }
+    }
+
+    func getWeightRange(for range: HybridDashboardView.TimeRange) -> ClosedRange<Double> {
+        switch range {
+        case .day:
+            return (currentWeight - 2)...(currentWeight + 2)
+        case .week:
+            return (currentWeight - 3)...(currentWeight + 3)
+        case .month:
+            return (currentWeight - 5)...(currentWeight + 5)
+        }
+    }
 }
 
 // MARK: - Data Models
+
+struct ChartDataPoint: Identifiable {
+    let id = UUID()
+    let date: Date
+    let value: Double
+}
 
 struct HybridNutritionItem: Identifiable {
     let id = UUID()

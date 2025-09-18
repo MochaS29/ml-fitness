@@ -8,7 +8,7 @@ struct AddMealPlanView: View {
     let selectedDate: Date
     
     @State private var selectedMealType: MealType = .breakfast
-    @State private var selectedRecipe: Recipe?
+    @State private var selectedRecipe: RecipeModel?
     @State private var selectedCustomRecipe: CustomRecipe?
     @State private var servings: Int = 1
     @State private var notes: String = ""
@@ -190,7 +190,7 @@ struct RecipeSelectorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
     
-    @Binding var selectedRecipe: Recipe?
+    @Binding var selectedRecipe: RecipeModel?
     @Binding var selectedCustomRecipe: CustomRecipe?
     @Binding var recipeSource: AddMealPlanView.RecipeSource
     
@@ -202,7 +202,7 @@ struct RecipeSelectorView: View {
         animation: .default
     ) private var customRecipes: FetchedResults<CustomRecipe>
     
-    var filteredLibraryRecipes: [Recipe] {
+    var filteredLibraryRecipes: [RecipeModel] {
         var recipes = RecipeDatabase.shared.recipes
         
         if !searchText.isEmpty {

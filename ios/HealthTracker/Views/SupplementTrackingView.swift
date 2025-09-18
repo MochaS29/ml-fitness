@@ -6,6 +6,7 @@ struct SupplementTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var profileManager: UserProfileManager
     @State private var showingScanner = false
+    @State private var showingBarcodeScanner = false
     @State private var showingManualEntry = false
     @State private var scannedImage: UIImage?
     @State private var extractedNutrients: [ExtractedNutrient] = []
@@ -27,14 +28,22 @@ struct SupplementTrackingView: View {
                 } else {
                     List {
                         Section {
-                            HStack {
-                                Button(action: { showingScanner = true }) {
-                                    Label("Scan Label", systemImage: "camera.viewfinder")
+                            VStack(spacing: 12) {
+                                HStack {
+                                    Button(action: { showingBarcodeScanner = true }) {
+                                        Label("Scan Barcode", systemImage: "barcode.viewfinder")
+                                    }
+                                    .buttonStyle(.borderedProminent)
+
+                                    Button(action: { showingScanner = true }) {
+                                        Label("Scan Label", systemImage: "camera.viewfinder")
+                                    }
+                                    .buttonStyle(.bordered)
                                 }
-                                .buttonStyle(.borderedProminent)
-                                
+
                                 Button(action: { showingManualEntry = true }) {
                                     Label("Manual Entry", systemImage: "plus.circle")
+                                        .frame(maxWidth: .infinity)
                                 }
                                 .buttonStyle(.bordered)
                             }
@@ -66,6 +75,9 @@ struct SupplementTrackingView: View {
                         // Show nutrient analysis
                     }
                 }
+            }
+            .sheet(isPresented: $showingBarcodeScanner) {
+                SupplementBarcodeScannerView()
             }
             .sheet(isPresented: $showingScanner) {
                 DocumentScannerView(scannedImage: $scannedImage)
@@ -132,31 +144,39 @@ struct SupplementTrackingView: View {
 struct EmptySupplementsView: View {
     @Binding var showingScanner: Bool
     @Binding var showingManualEntry: Bool
-    
+    @State private var showingBarcodeScanner = false
+
     var body: some View {
         VStack(spacing: 30) {
             Image(systemName: "pills")
                 .font(.system(size: 80))
                 .foregroundColor(.gray)
-            
+
             Text("No Supplements Tracked")
                 .font(.title2)
                 .fontWeight(.semibold)
-            
+
             Text("Start tracking your vitamins and supplements to monitor your nutrient intake")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
-            
+
             VStack(spacing: 15) {
-                Button(action: { showingScanner = true }) {
-                    Label("Scan Supplement Label", systemImage: "camera.viewfinder")
+                Button(action: { showingBarcodeScanner = true }) {
+                    Label("Scan Supplement Barcode", systemImage: "barcode.viewfinder")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
-                
+
+                Button(action: { showingScanner = true }) {
+                    Label("Scan Supplement Label", systemImage: "camera.viewfinder")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+
                 Button(action: { showingManualEntry = true }) {
                     Label("Manual Entry", systemImage: "plus.circle")
                         .frame(maxWidth: .infinity)
@@ -165,6 +185,9 @@ struct EmptySupplementsView: View {
                 .controlSize(.large)
             }
             .padding(.horizontal, 40)
+        }
+        .sheet(isPresented: $showingBarcodeScanner) {
+            SupplementBarcodeScannerView()
         }
     }
 }

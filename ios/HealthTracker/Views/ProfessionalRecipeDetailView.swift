@@ -3,7 +3,7 @@ import PhotosUI
 import CoreData
 
 struct ProfessionalRecipeDetailView: View {
-    let recipe: Recipe
+    let recipe: RecipeModel
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedTab = 0
     @State private var scale: Double = 1.0
@@ -148,14 +148,15 @@ struct ProfessionalRecipeDetailView: View {
                 TabView(selection: $selectedTab) {
                     IngredientsTab(recipe: recipe, scale: $scale, checkedIngredients: $checkedIngredients)
                         .tag(0)
-                    
+
                     StepsTab(recipe: recipe)
                         .tag(1)
-                    
+
                     RecipeInfoTab(recipe: recipe)
                         .tag(2)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
+                .frame(maxHeight: .infinity)
             }
             .navigationBarHidden(true)
             .overlay(
@@ -228,7 +229,7 @@ struct TabButton: View {
 }
 
 struct IngredientsTab: View {
-    let recipe: Recipe
+    let recipe: RecipeModel
     @Binding var scale: Double
     @Binding var checkedIngredients: Set<UUID>
     
@@ -318,7 +319,7 @@ struct IngredientsTab: View {
 }
 
 struct IngredientRow: View {
-    let ingredient: Ingredient
+    let ingredient: IngredientModel
     let scale: Double
     let isChecked: Bool
     let onToggle: () -> Void
@@ -365,7 +366,7 @@ struct IngredientRow: View {
 }
 
 struct StepsTab: View {
-    let recipe: Recipe
+    let recipe: RecipeModel
     
     var body: some View {
         ScrollView {
@@ -419,7 +420,7 @@ struct StepsTab: View {
 }
 
 struct RecipeInfoTab: View {
-    let recipe: Recipe
+    let recipe: RecipeModel
     
     var body: some View {
         ScrollView {
@@ -546,7 +547,7 @@ struct StarRatingView: View {
 }
 
 struct FavoriteButton: View {
-    let recipe: Recipe
+    let recipe: RecipeModel
     @Environment(\.managedObjectContext) private var viewContext
     @State private var isFavorite = false
     

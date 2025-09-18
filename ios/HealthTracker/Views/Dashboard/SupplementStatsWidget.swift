@@ -3,6 +3,7 @@ import SwiftUI
 struct SupplementStatsWidget: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var profileManager: UserProfileManager
+    @Binding var showingDetail: Bool
     
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \SupplementEntry.timestamp, ascending: false)],
@@ -44,7 +45,7 @@ struct SupplementStatsWidget: View {
                 Image(systemName: "pills.fill")
                     .font(.title2)
                     .foregroundColor(.purple)
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Supplements")
                         .font(.headline)
@@ -52,14 +53,16 @@ struct SupplementStatsWidget: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                
+
                 Spacer()
-                
-                NavigationLink(destination: EnhancedSupplementTrackingView()) {
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                showingDetail = true
             }
             
             if !topNutrients.isEmpty {
@@ -90,6 +93,10 @@ struct SupplementStatsWidget: View {
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
         .cornerRadius(12)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            showingDetail = true
+        }
     }
     
     func colorForPercentage(_ percentage: Int) -> Color {
@@ -106,6 +113,6 @@ struct SupplementStatsWidget: View {
 }
 
 #Preview {
-    SupplementStatsWidget()
+    SupplementStatsWidget(showingDetail: .constant(false))
         .environmentObject(UserProfileManager())
 }

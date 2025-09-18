@@ -176,28 +176,28 @@ struct DashboardOption3View: View {
             }
             
             HStack(spacing: 16) {
-                MacroCircle(
+                DashboardMacroCircle(
                     macro: "Protein",
                     value: averageProtein,
                     goal: 50,
                     color: Color(red: 255/255, green: 59/255, blue: 48/255)
                 )
                 
-                MacroCircle(
+                DashboardMacroCircle(
                     macro: "Carbs",
                     value: averageCarbs,
                     goal: 225,
                     color: Color(red: 255/255, green: 149/255, blue: 0/255)
                 )
                 
-                MacroCircle(
+                DashboardMacroCircle(
                     macro: "Fat",
                     value: averageFat,
                     goal: 65,
                     color: Color(red: 52/255, green: 199/255, blue: 89/255)
                 )
                 
-                MacroCircle(
+                DashboardMacroCircle(
                     macro: "Fiber",
                     value: averageFiber,
                     goal: 25,
@@ -500,7 +500,7 @@ struct TrendChart: View {
     }
 }
 
-struct MacroCircle: View {
+struct DashboardMacroCircle: View {
     let macro: String
     let value: Int
     let goal: Int

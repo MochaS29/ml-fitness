@@ -33,8 +33,8 @@ struct NutrientRDA: Codable {
 
 class RDADatabase {
     static let shared = RDADatabase()
-    
-    private var nutrients: [String: NutrientRDA] = [:]
+
+    var nutrients: [String: NutrientRDA] = [:]
     
     init() {
         loadCompleteRDAData()

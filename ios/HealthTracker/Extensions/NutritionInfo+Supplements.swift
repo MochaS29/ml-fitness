@@ -4,7 +4,7 @@ import CoreData
 extension NutritionInfo {
     // Create NutritionInfo from supplement nutrients
     static func fromSupplements(_ supplements: [SupplementEntry]) -> NutritionInfo {
-        var totalNutrition = NutritionInfo()
+        var totalNutrition = NutritionInfo(calories: 0, protein: 0, carbs: 0, fat: 0)
         
         for supplement in supplements {
             guard let nutrients = supplement.nutrients else { continue }
