@@ -15,6 +15,13 @@ struct MoreView: View {
     @State private var showingUSDAImport = false
     @State private var showingDemoDataAlert = false
     @AppStorage("hasDemoData") private var hasDemoData = false
+
+    // New state variables for unified tracking tools
+    @State private var showingFoodSearch = false
+    @State private var showingExerciseSearch = false
+    @State private var showingWeightEntry = false
+    @State private var showingSupplementEntry = false
+    @State private var showingWaterEntry = false
     
     var body: some View {
         NavigationView {
@@ -57,31 +64,31 @@ struct MoreView: View {
                 
                 // Tracking Tools
                 Section("Tracking Tools") {
-                    NavigationLink(destination: FoodTrackingView()) {
+                    Button(action: { showingFoodSearch = true }) {
                         MoreMenuItem(
                             icon: "fork.knife",
                             title: "Food Diary",
                             color: Color(red: 127/255, green: 176/255, blue: 105/255)
                         )
                     }
-                    
-                    NavigationLink(destination: ExerciseTrackingView()) {
+
+                    Button(action: { showingExerciseSearch = true }) {
                         MoreMenuItem(
                             icon: "figure.run",
                             title: "Exercise Log",
                             color: .orange
                         )
                     }
-                    
-                    NavigationLink(destination: WeightTrackingView()) {
+
+                    Button(action: { showingWeightEntry = true }) {
                         MoreMenuItem(
                             icon: "scalemass",
                             title: "Weight Tracker",
                             color: Color(red: 139/255, green: 69/255, blue: 19/255)
                         )
                     }
-                    
-                    NavigationLink(destination: EnhancedSupplementTrackingView()) {
+
+                    Button(action: { showingSupplementEntry = true }) {
                         MoreMenuItem(
                             icon: "pills",
                             title: "Supplements",
@@ -116,7 +123,7 @@ struct MoreView: View {
                         )
                     }
                     
-                    NavigationLink(destination: WaterTrackingView()) {
+                    Button(action: { showingWaterEntry = true }) {
                         MoreMenuItem(
                             icon: "drop.fill",
                             title: "Water Tracking",
@@ -300,6 +307,25 @@ struct MoreView: View {
             }
             .sheet(isPresented: $showingUSDAImport) {
                 USDAImportView()
+            }
+            // Unified tracking entry sheets
+            .sheet(isPresented: $showingFoodSearch) {
+                EnhancedFoodSearchView { foodItem in
+                    // Food will be saved within the view
+                    showingFoodSearch = false
+                }
+            }
+            .sheet(isPresented: $showingExerciseSearch) {
+                ExerciseSearchView(selectedDate: Date())
+            }
+            .sheet(isPresented: $showingWeightEntry) {
+                QuickWeightAddView(selectedDate: Date())
+            }
+            .sheet(isPresented: $showingSupplementEntry) {
+                ManualSupplementEntryView()
+            }
+            .sheet(isPresented: $showingWaterEntry) {
+                QuickWaterAddView(selectedDate: Date())
             }
             .alert("Generate Demo Data?", isPresented: $showingDemoDataAlert) {
                 Button("Cancel", role: .cancel) { }
