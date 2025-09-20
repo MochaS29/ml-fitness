@@ -385,16 +385,28 @@ struct PresetSupplementsView: View {
         let newSupplement = SupplementEntry(context: viewContext)
         newSupplement.id = UUID()
         newSupplement.name = preset.name
-        newSupplement.brand = preset.brand
-        newSupplement.servingSize = "1 serving"
+        newSupplement.brand = preset.brand.isEmpty ? nil : preset.brand
+        newSupplement.servingSize = "1"
+        newSupplement.servingUnit = "serving"
         newSupplement.timestamp = Date()
-        newSupplement.nutrients = preset.nutrients
-        
+        newSupplement.date = Date()
+
+        // Set nutrients dictionary directly - Core Data will handle the transformation
+        if !preset.nutrients.isEmpty {
+            newSupplement.nutrients = preset.nutrients
+        }
+
         do {
             try viewContext.save()
             presentationMode.wrappedValue.dismiss()
         } catch {
-            print("Error saving preset supplement: \(error)")
+            print("Error saving preset supplement: \(error.localizedDescription)")
+            // Show detailed error info for debugging
+            if let nsError = error as NSError? {
+                print("Core Data Error Code: \(nsError.code)")
+                print("Core Data Error Domain: \(nsError.domain)")
+                print("Core Data Error Info: \(nsError.userInfo)")
+            }
         }
     }
 }

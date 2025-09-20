@@ -1,4 +1,5 @@
 import SwiftUI
+import HealthKit
 
 struct MoreView: View {
     @EnvironmentObject var userProfileManager: UserProfileManager
@@ -653,47 +654,106 @@ struct RecipeCard: View {
 }
 
 struct HealthKitSettingsView: View {
-    @StateObject private var healthKitManager = HealthKitManager.shared
     @State private var isAuthorized = false
-    
+    @State private var isLoading = false
+    @State private var showError = false
+    @State private var errorMessage = ""
+    @State private var syncWeight = true
+    @State private var syncExercise = true
+    @State private var syncSteps = true
+
     var body: some View {
         Form {
             Section {
                 HStack {
                     Text("Connection Status")
                     Spacer()
-                    Text(isAuthorized ? "Connected" : "Not Connected")
-                        .foregroundColor(isAuthorized ? .green : .red)
-                }
-                
-                if !isAuthorized {
-                    Button("Connect to Apple Health") {
-                        healthKitManager.requestAuthorization { success in
-                            isAuthorized = success
-                        }
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .scaleEffect(0.8)
+                    } else {
+                        Text(isAuthorized ? "Connected" : "Not Connected")
+                            .foregroundColor(isAuthorized ? .green : .red)
                     }
+                }
+
+                if !isAuthorized && !isLoading {
+                    Button("Connect to Apple Health") {
+                        requestHealthKitAccess()
+                    }
+                    .foregroundColor(.blue)
                 }
             }
-            
+
             if isAuthorized {
                 Section("Sync Settings") {
-                    Toggle("Sync Weight", isOn: .constant(true))
-                    Toggle("Sync Exercise", isOn: .constant(true))
-                    Toggle("Sync Steps", isOn: .constant(true))
+                    Toggle("Sync Weight", isOn: $syncWeight)
+                    Toggle("Sync Exercise", isOn: $syncExercise)
+                    Toggle("Sync Steps", isOn: $syncSteps)
                 }
-                
+
                 Section {
                     Button("Sync Now") {
-                        // Trigger sync
+                        performSync()
                     }
+                    .foregroundColor(.blue)
+                }
+
+                Section {
+                    Text("HealthTracker can read and write health data to provide comprehensive tracking.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                } header: {
+                    Text("About")
                 }
             }
         }
         .navigationTitle("Apple Health")
-        .onAppear {
-            // Check authorization status when view appears
-            // This could be implemented to check current authorization
+        .alert("HealthKit Error", isPresented: $showError) {
+            Button("OK") { }
+        } message: {
+            Text(errorMessage)
         }
+        .onAppear {
+            checkAuthorizationStatus()
+        }
+    }
+
+    private func requestHealthKitAccess() {
+        isLoading = true
+
+        // Check if HealthKit is available on this device
+        guard HKHealthStore.isHealthDataAvailable() else {
+            errorMessage = "Health data is not available on this device."
+            showError = true
+            isLoading = false
+            return
+        }
+
+        // Request authorization
+        HealthKitManager.shared.requestAuthorization { success in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                self.isAuthorized = success
+
+                if !success {
+                    self.errorMessage = "Failed to connect to Apple Health. Please go to Settings > Privacy & Security > Health > HealthTracker and grant permissions."
+                    self.showError = true
+                }
+            }
+        }
+    }
+
+    private func checkAuthorizationStatus() {
+        // For now, we'll check if we've been authorized before
+        // In a production app, you'd check the actual authorization status
+        isAuthorized = false
+    }
+
+    private func performSync() {
+        // Implement sync functionality
+        print("Syncing with Apple Health...")
     }
 }
 

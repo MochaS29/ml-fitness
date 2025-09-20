@@ -169,23 +169,32 @@ struct ManualSupplementEntryView: View {
         newSupplement.name = supplementName
         newSupplement.brand = brand.isEmpty ? nil : brand
         newSupplement.servingSize = servingSize
+        newSupplement.servingUnit = "serving"
         newSupplement.timestamp = Date()
-        
+        newSupplement.date = Date()
+
         // Convert nutrients to dictionary
         var nutrientDict: [String: Double] = [:]
         for nutrient in nutrients {
             nutrientDict[nutrient.id] = nutrient.amount
         }
-        // Store as NSData for Core Data Transformable attribute
-        if let data = try? NSKeyedArchiver.archivedData(withRootObject: nutrientDict, requiringSecureCoding: false) {
-            newSupplement.setValue(data, forKey: "nutrients")
+
+        // Set nutrients directly - Core Data will handle the transformation
+        if !nutrientDict.isEmpty {
+            newSupplement.nutrients = nutrientDict
         }
-        
+
         do {
             try viewContext.save()
             presentationMode.wrappedValue.dismiss()
         } catch {
             print("Error saving supplement: \(error)")
+            // Show detailed error info
+            if let nsError = error as NSError? {
+                print("Core Data Error Code: \(nsError.code)")
+                print("Core Data Error Domain: \(nsError.domain)")
+                print("Core Data Error Info: \(nsError.userInfo)")
+            }
         }
     }
 }

@@ -134,8 +134,11 @@ struct SupplementBarcodeScannerView: View {
         let entry = SupplementEntry(context: viewContext)
         entry.id = UUID()
         entry.timestamp = Date()
+        entry.date = Date()
         entry.name = supplement.name
         entry.brand = supplement.brand
+        entry.servingSize = supplement.servingSize
+        entry.servingUnit = "serving"
         // barcode field doesn't exist on SupplementEntry
 
         // Convert supplement nutrients to dictionary for Core Data
@@ -171,12 +174,21 @@ struct SupplementBarcodeScannerView: View {
         if let mo = supplement.minerals.molybdenum, mo.amount > 0 { nutrients["Molybdenum"] = mo.amount }
         if let io = supplement.minerals.iodine, io.amount > 0 { nutrients["Iodine"] = io.amount }
 
-        entry.nutrients = nutrients
+        // Set nutrients directly if not empty
+        if !nutrients.isEmpty {
+            entry.nutrients = nutrients
+        }
 
         do {
             try viewContext.save()
         } catch {
             print("Error saving supplement: \(error)")
+            // Show detailed error info
+            if let nsError = error as NSError? {
+                print("Core Data Error Code: \(nsError.code)")
+                print("Core Data Error Domain: \(nsError.domain)")
+                print("Core Data Error Info: \(nsError.userInfo)")
+            }
         }
     }
 }
