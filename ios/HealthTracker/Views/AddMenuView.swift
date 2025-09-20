@@ -28,7 +28,7 @@ struct AddMenuView: View {
                 }
         }
         .sheet(isPresented: $showingFoodSearch) {
-            EnhancedFoodSearchView { foodItem in
+            AutocompleteFoodSearchView { foodItem in
                 addFoodEntry(foodItem: foodItem)
                 dismiss()
             }

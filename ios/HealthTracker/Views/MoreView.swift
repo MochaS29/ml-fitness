@@ -310,7 +310,7 @@ struct MoreView: View {
             }
             // Unified tracking entry sheets
             .sheet(isPresented: $showingFoodSearch) {
-                EnhancedFoodSearchView { foodItem in
+                AutocompleteFoodSearchView { foodItem in
                     // Food will be saved within the view
                     showingFoodSearch = false
                 }

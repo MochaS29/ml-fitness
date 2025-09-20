@@ -610,8 +610,17 @@ struct MonthlyOverviewView: View {
                                        monthInterval.start as NSDate,
                                        monthInterval.end as NSDate)
 
+        // Add fetch optimizations to prevent memory issues
+        request.fetchBatchSize = 20  // Load data in batches
+        request.returnsObjectsAsFaults = false  // Prevent faulting overhead
+        request.includesPropertyValues = true  // Include all properties to avoid faulting
+        request.relationshipKeyPathsForPrefetching = []  // No relationships to prefetch
+
         do {
-            foodEntries = try viewContext.fetch(request)
+            // Use autoreleasepool to manage memory during fetch
+            autoreleasepool {
+                foodEntries = try viewContext.fetch(request)
+            }
         } catch {
             print("Error fetching food entries: \(error)")
             foodEntries = []
@@ -708,19 +717,26 @@ struct CalendarGridView: View {
 
         var mealDots = MealDots()
 
+        // Use early exit to minimize processing
         for entry in foodEntries {
+            // Check all meal types are set before continuing
+            if mealDots.hasBreakfast && mealDots.hasLunch &&
+               mealDots.hasDinner && mealDots.hasSnack {
+                break  // All dots set, no need to continue
+            }
+
             guard let timestamp = entry.timestamp,
                   timestamp >= startOfDay && timestamp < endOfDay,
                   let mealType = entry.mealType else { continue }
 
             switch mealType.lowercased() {
-            case "breakfast":
+            case "breakfast" where !mealDots.hasBreakfast:
                 mealDots.hasBreakfast = true
-            case "lunch":
+            case "lunch" where !mealDots.hasLunch:
                 mealDots.hasLunch = true
-            case "dinner", "supper":
+            case "dinner", "supper" where !mealDots.hasDinner:
                 mealDots.hasDinner = true
-            case "snack", "snacks":
+            case "snack", "snacks" where !mealDots.hasSnack:
                 mealDots.hasSnack = true
             default:
                 break

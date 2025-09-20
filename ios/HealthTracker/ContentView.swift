@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @State private var selectedTab = 0
     @StateObject private var achievementManager = AchievementManager.shared
     @State private var showingAddMenu = false
@@ -60,6 +61,7 @@ struct ContentView: View {
             }
         }
         .environmentObject(achievementManager)
+        .withCelebrations(context: viewContext)  // Add celebration detection
         .sheet(isPresented: $showingAddMenu) {
             AddMenuView(selectedDate: Date())
         }
