@@ -2,12 +2,13 @@ import SwiftUI
 import CoreData
 
 struct DiaryView: View {
-    @Environment(\.managedObjectContext) private var viewContext
+    @StateObject private var dataManager = UnifiedDataManager.shared
     @State private var selectedDate = Date()
     @State private var showingAddMenu = false
     @State private var showingFoodSearch = false
     @State private var showingExerciseSearch = false
-    @State private var dailySummary = DailySummary()
+    @State private var showingWaterEntry = false
+    @State private var showingSupplementEntry = false
     @State private var selectedMealType: MealType = .breakfast
     
     // Fetch requests for selected date
@@ -87,13 +88,27 @@ struct DiaryView: View {
                 }
             }
             .sheet(isPresented: $showingAddMenu) {
-                AddMenuView(selectedDate: selectedDate)
+                QuickAddMenu(
+                    onFoodTap: {
+                        showingAddMenu = false
+                        showingFoodSearch = true
+                    },
+                    onExerciseTap: {
+                        showingAddMenu = false
+                        showingExerciseSearch = true
+                    },
+                    onWaterTap: {
+                        showingAddMenu = false
+                        showingWaterEntry = true
+                    },
+                    onSupplementTap: {
+                        showingAddMenu = false
+                        showingSupplementEntry = true
+                    }
+                )
             }
             .sheet(isPresented: $showingFoodSearch) {
-                EnhancedFoodSearchView { foodItem in
-                    // Add food to the selected meal
-                    addFoodEntry(foodItem: foodItem, mealType: selectedMealType)
-                }
+                UnifiedFoodSearchSheet(mealType: selectedMealType)
             }
             .sheet(isPresented: $showingExerciseSearch) {
                 // Exercise search functionality
