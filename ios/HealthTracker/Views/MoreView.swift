@@ -3,6 +3,7 @@ import HealthKit
 
 struct MoreView: View {
     @EnvironmentObject var userProfileManager: UserProfileManager
+    @StateObject private var dataManager = UnifiedDataManager.shared
     @State private var showingProfile = false
     @State private var showingProgress = false
     @State private var showingFoodDatabase = false
@@ -22,6 +23,7 @@ struct MoreView: View {
     @State private var showingWeightEntry = false
     @State private var showingSupplementEntry = false
     @State private var showingWaterEntry = false
+    @State private var selectedMealType: MealType = .snack
     
     var body: some View {
         NavigationView {
@@ -310,10 +312,7 @@ struct MoreView: View {
             }
             // Unified tracking entry sheets
             .sheet(isPresented: $showingFoodSearch) {
-                AutocompleteFoodSearchView { foodItem in
-                    // Food will be saved within the view
-                    showingFoodSearch = false
-                }
+                UnifiedFoodSearchSheet(mealType: selectedMealType)
             }
             .sheet(isPresented: $showingExerciseSearch) {
                 ExerciseSearchView(selectedDate: Date())
