@@ -101,7 +101,7 @@ struct WelcomeCard: View {
 struct SummaryCard: View {
     let timeRange: TimeRange
     @StateObject private var fastingManager = FastingManager()
-    @Environment(\.managedObjectContext) private var viewContext
+    @StateObject private var dataManager = UnifiedDataManager.shared
     @State private var totalCalories: Double = 0
     @State private var totalCaloriesBurned: Double = 0
     @State private var totalSteps: Int = 0
@@ -180,61 +180,69 @@ struct SummaryCard: View {
     }
     
     private func loadSummaryData() {
+        // Refresh data in UnifiedDataManager
+        dataManager.refreshAllData()
+
+        // Use data from UnifiedDataManager based on time range
+        switch timeRange {
+        case .today:
+            totalCalories = dataManager.todayCalories
+            totalCaloriesBurned = dataManager.todayCaloriesBurned
+            totalWater = dataManager.todayWater
+            totalSteps = dataManager.todaySteps
+        case .week, .month:
+            // For week/month, fetch historical data
+            fetchHistoricalData()
+        }
+    }
+
+    private func fetchHistoricalData() {
         let calendar = Calendar.current
         let endDate = Date()
         let startDate: Date
 
         switch timeRange {
         case .today:
-            startDate = calendar.startOfDay(for: endDate)
+            return // Handled above
         case .week:
-            // Get the start of the current week (Sunday or Monday based on locale)
-            let weekday = calendar.component(.weekday, from: endDate)
-            let daysToSubtract = weekday - calendar.firstWeekday
-            startDate = calendar.date(byAdding: .day, value: -daysToSubtract, to: calendar.startOfDay(for: endDate)) ?? endDate
+            startDate = calendar.date(byAdding: .day, value: -7, to: endDate) ?? endDate
         case .month:
-            // Get the start of the current month
-            let components = calendar.dateComponents([.year, .month], from: endDate)
-            startDate = calendar.date(from: components) ?? endDate
+            startDate = calendar.date(byAdding: .month, value: -1, to: endDate) ?? endDate
         }
 
-        // Fetch food entries
+        // Use UnifiedDataManager's context for consistency
+        let context = PersistenceController.shared.container.viewContext
+
+        // Fetch historical data
         let foodRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
         foodRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as CVarArg, endDate as CVarArg)
 
-        // Fetch exercise entries
         let exerciseRequest: NSFetchRequest<ExerciseEntry> = ExerciseEntry.fetchRequest()
         exerciseRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as CVarArg, endDate as CVarArg)
 
-        // Fetch water entries
         let waterRequest: NSFetchRequest<WaterEntry> = WaterEntry.fetchRequest()
         waterRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as CVarArg, endDate as CVarArg)
 
         do {
-            // Calculate calories consumed
-            let foodEntries = try viewContext.fetch(foodRequest)
+            let foodEntries = try context.fetch(foodRequest)
             totalCalories = foodEntries.reduce(0) { $0 + $1.calories }
 
-            // Calculate calories burned
-            let exerciseEntries = try viewContext.fetch(exerciseRequest)
+            let exerciseEntries = try context.fetch(exerciseRequest)
             totalCaloriesBurned = exerciseEntries.reduce(0) { $0 + $1.caloriesBurned }
 
-            // Calculate water intake
-            let waterEntries = try viewContext.fetch(waterRequest)
+            let waterEntries = try context.fetch(waterRequest)
             totalWater = waterEntries.reduce(0) { sum, entry in
-                // Convert ml to oz if needed
                 let amount = entry.unit == "ml" ? entry.amount / 29.5735 : entry.amount
                 return sum + amount
             }
 
-            // Get steps from HealthKit if available
             HealthKitManager.shared.fetchSteps(from: startDate, to: endDate) { steps in
                 DispatchQueue.main.async {
                     self.totalSteps = Int(steps)
                 }
             }
         } catch {
-            print("Error fetching data: \(error)")
+            print("Error fetching historical data: \(error)")
         }
     }
 }
