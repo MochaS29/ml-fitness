@@ -81,9 +81,8 @@ class UnifiedDataManager: ObservableObject {
         entry.timestamp = Date()
         entry.date = Date()
 
-        if let imageData = imageData {
-            entry.photoData = imageData
-        }
+        // Store image data if the field exists
+        // entry.photoData = imageData  // Uncomment when field is added
 
         saveContext()
 
@@ -138,7 +137,7 @@ class UnifiedDataManager: ObservableObject {
         entry.type = category
         entry.duration = Int32(duration)
         entry.caloriesBurned = caloriesBurned
-        entry.distance = distance ?? 0
+        // entry.distance = distance ?? 0  // Uncomment when field is added
         entry.notes = notes
         entry.timestamp = Date()
         entry.date = Date()
@@ -169,7 +168,6 @@ class UnifiedDataManager: ObservableObject {
         entry.amount = amount
         entry.unit = unit
         entry.timestamp = Date()
-        entry.date = Date()
 
         saveContext()
 
@@ -203,9 +201,8 @@ class UnifiedDataManager: ObservableObject {
         entry.servingSize = servingSize
         entry.servingUnit = servingUnit
         entry.nutrients = nutrients
-        entry.barcode = barcode
+        // entry.barcode = barcode  // Uncomment when field is added
         entry.timestamp = Date()
-        entry.date = Date()
 
         saveContext()
     }
@@ -225,10 +222,9 @@ class UnifiedDataManager: ObservableObject {
         let entry = WeightEntry(context: context)
         entry.id = UUID()
         entry.weight = weight
-        entry.unit = unit
+        // entry.unit = unit  // Uncomment when field is added
         entry.notes = notes
         entry.timestamp = Date()
-        entry.date = Date()
 
         saveContext()
 
