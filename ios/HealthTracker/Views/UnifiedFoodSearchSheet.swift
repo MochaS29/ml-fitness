@@ -60,7 +60,7 @@ struct UnifiedFoodSearchSheet: View {
                 // Meal Type Selector
                 Picker("Meal Type", selection: $selectedMealType) {
                     ForEach(MealType.allCases, id: \.self) { type in
-                        Text(type.displayName).tag(type)
+                        Text(type.rawValue).tag(type)
                     }
                 }
                 .pickerStyle(.segmented)
@@ -117,13 +117,7 @@ struct UnifiedFoodSearchSheet: View {
             }
             .navigationTitle("Add Food")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-            }
+            .navigationBarItems(leading: Button("Cancel") { dismiss() })
             .onAppear {
                 isSearchFocused = true
             }
@@ -146,9 +140,11 @@ struct UnifiedFoodSearchSheet: View {
             )
         }
         .sheet(isPresented: $showingBarcode) {
-            BarcodeScannerView { barcode in
-                // Handle barcode scan
-                searchText = barcode
+            BarcodeScannerView(
+                selectedDate: Date(),
+                mealType: selectedMealType
+            )
+            .onDisappear {
                 showingBarcode = false
             }
         }
@@ -199,9 +195,9 @@ struct FoodRowView: View {
                 }
 
                 HStack(spacing: 15) {
-                    MacroLabel(label: "P", value: food.protein, color: .red)
-                    MacroLabel(label: "C", value: food.carbs, color: .blue)
-                    MacroLabel(label: "F", value: food.fat, color: .green)
+                    MacroLabel(value: food.protein, label: "P", color: .red)
+                    MacroLabel(value: food.carbs, label: "C", color: .blue)
+                    MacroLabel(value: food.fat, label: "F", color: .green)
 
                     Spacer()
 
