@@ -10,11 +10,19 @@ struct AddMealPlanView: View {
     @State private var selectedMealType: MealType = .breakfast
     @State private var selectedRecipe: RecipeModel?
     @State private var selectedCustomRecipe: CustomRecipe?
+    @State private var selectedFoodItems: [FoodItem] = []
     @State private var servings: Int = 1
     @State private var notes: String = ""
     @State private var showingRecipeSelector = false
+    @State private var showingFoodSearch = false
+    @State private var mealSource: MealSource = .recipe
     @State private var recipeSource: RecipeSource = .library
-    
+
+    enum MealSource {
+        case recipe
+        case foods
+    }
+
     enum RecipeSource {
         case library
         case custom
@@ -31,39 +39,69 @@ struct AddMealPlanView: View {
                         Text(selectedDate, format: .dateTime.weekday(.wide).month().day())
                             .foregroundColor(.secondary)
                     }
-                    
+
                     // Meal type picker
                     Picker("Meal Type", selection: $selectedMealType) {
                         ForEach(MealType.allCases, id: \.self) { mealType in
                             Text(mealType.rawValue).tag(mealType)
                         }
                     }
-                    
-                    // Recipe selector
-                    HStack {
-                        Text("Recipe")
-                        Spacer()
-                        if let recipe = selectedRecipe {
-                            Text(recipe.name)
-                                .foregroundColor(.secondary)
-                        } else if let customRecipe = selectedCustomRecipe {
-                            Text(customRecipe.name ?? "Unknown")
-                                .foregroundColor(.secondary)
-                        } else {
-                            Text("Select Recipe")
+
+                    // Meal source picker
+                    Picker("Add From", selection: $mealSource) {
+                        Text("Recipe").tag(MealSource.recipe)
+                        Text("Food Items").tag(MealSource.foods)
+                    }
+                    .pickerStyle(.segmented)
+
+                    // Recipe or Foods selector
+                    if mealSource == .recipe {
+                        HStack {
+                            Text("Recipe")
+                            Spacer()
+                            if let recipe = selectedRecipe {
+                                Text(recipe.name)
+                                    .foregroundColor(.secondary)
+                            } else if let customRecipe = selectedCustomRecipe {
+                                Text(customRecipe.name ?? "Unknown")
+                                    .foregroundColor(.secondary)
+                            } else {
+                                Text("Select Recipe")
+                                    .foregroundColor(.secondary)
+                            }
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
                                 .foregroundColor(.secondary)
                         }
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        showingRecipeSelector = true
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            showingRecipeSelector = true
+                        }
+                    } else {
+                        HStack {
+                            Text("Foods")
+                            Spacer()
+                            if selectedFoodItems.isEmpty {
+                                Text("Add Foods")
+                                    .foregroundColor(.secondary)
+                            } else {
+                                Text("\(selectedFoodItems.count) items")
+                                    .foregroundColor(.secondary)
+                            }
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            showingFoodSearch = true
+                        }
                     }
                     
-                    // Servings
-                    Stepper("Servings: \(servings)", value: $servings, in: 1...10)
+                    // Servings (only for recipes)
+                    if mealSource == .recipe {
+                        Stepper("Servings: \(servings)", value: $servings, in: 1...10)
+                    }
                 }
                 
                 Section("Notes (Optional)") {
@@ -71,8 +109,32 @@ struct AddMealPlanView: View {
                         .lineLimit(3...6)
                 }
                 
+                // Selected Foods List (when adding foods)
+                if mealSource == .foods && !selectedFoodItems.isEmpty {
+                    Section("Selected Foods") {
+                        ForEach(selectedFoodItems, id: \.id) { food in
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(food.name)
+                                        .font(.headline)
+                                    Text("\(Int(food.calories)) cal")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Button(action: {
+                                    selectedFoodItems.removeAll { $0.id == food.id }
+                                }) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(.red.opacity(0.7))
+                                }
+                            }
+                        }
+                    }
+                }
+
                 // Nutrition preview
-                if selectedRecipe != nil || selectedCustomRecipe != nil {
+                if selectedRecipe != nil || selectedCustomRecipe != nil || !selectedFoodItems.isEmpty {
                     Section("Nutrition (Total)") {
                         HStack {
                             NutritionLabel(
@@ -111,7 +173,7 @@ struct AddMealPlanView: View {
                     Button("Save") {
                         saveMealPlan()
                     }
-                    .disabled(selectedRecipe == nil && selectedCustomRecipe == nil)
+                    .disabled(selectedRecipe == nil && selectedCustomRecipe == nil && selectedFoodItems.isEmpty)
                 }
             }
             .sheet(isPresented: $showingRecipeSelector) {
@@ -121,66 +183,98 @@ struct AddMealPlanView: View {
                     recipeSource: $recipeSource
                 )
             }
+            .sheet(isPresented: $showingFoodSearch) {
+                MealPlanFoodSelector(
+                    selectedFoodItems: $selectedFoodItems,
+                    mealType: selectedMealType
+                )
+            }
         }
     }
     
     private var totalCalories: Double {
-        if let recipe = selectedRecipe {
-            return (recipe.nutrition?.calories ?? 0) * Double(servings)
-        } else if let customRecipe = selectedCustomRecipe {
-            return customRecipe.calories * Double(servings) / Double(customRecipe.servings)
+        if mealSource == .recipe {
+            if let recipe = selectedRecipe {
+                return (recipe.nutrition?.calories ?? 0) * Double(servings)
+            } else if let customRecipe = selectedCustomRecipe {
+                return customRecipe.calories * Double(servings) / Double(customRecipe.servings)
+            }
+        } else {
+            return selectedFoodItems.reduce(0) { $0 + $1.calories }
         }
         return 0
     }
     
     private var totalProtein: Double {
-        if let recipe = selectedRecipe {
-            return (recipe.nutrition?.protein ?? 0) * Double(servings)
-        } else if let customRecipe = selectedCustomRecipe {
-            return customRecipe.protein * Double(servings) / Double(customRecipe.servings)
+        if mealSource == .recipe {
+            if let recipe = selectedRecipe {
+                return (recipe.nutrition?.protein ?? 0) * Double(servings)
+            } else if let customRecipe = selectedCustomRecipe {
+                return customRecipe.protein * Double(servings) / Double(customRecipe.servings)
+            }
+        } else {
+            return selectedFoodItems.reduce(0) { $0 + $1.protein }
         }
         return 0
     }
     
     private var totalCarbs: Double {
-        if let recipe = selectedRecipe {
-            return (recipe.nutrition?.carbs ?? 0) * Double(servings)
-        } else if let customRecipe = selectedCustomRecipe {
-            return customRecipe.carbs * Double(servings) / Double(customRecipe.servings)
+        if mealSource == .recipe {
+            if let recipe = selectedRecipe {
+                return (recipe.nutrition?.carbs ?? 0) * Double(servings)
+            } else if let customRecipe = selectedCustomRecipe {
+                return customRecipe.carbs * Double(servings) / Double(customRecipe.servings)
+            }
+        } else {
+            return selectedFoodItems.reduce(0) { $0 + $1.carbs }
         }
         return 0
     }
     
     private var totalFat: Double {
-        if let recipe = selectedRecipe {
-            return (recipe.nutrition?.fat ?? 0) * Double(servings)
-        } else if let customRecipe = selectedCustomRecipe {
-            return customRecipe.fat * Double(servings) / Double(customRecipe.servings)
+        if mealSource == .recipe {
+            if let recipe = selectedRecipe {
+                return (recipe.nutrition?.fat ?? 0) * Double(servings)
+            } else if let customRecipe = selectedCustomRecipe {
+                return customRecipe.fat * Double(servings) / Double(customRecipe.servings)
+            }
+        } else {
+            return selectedFoodItems.reduce(0) { $0 + $1.fat }
         }
         return 0
     }
     
     private func saveMealPlan() {
-        let mealPlan = MealPlan(context: viewContext)
-        mealPlan.id = UUID()
-        mealPlan.date = selectedDate
-        mealPlan.mealType = selectedMealType.rawValue
-        mealPlan.servings = Int32(servings)
-        mealPlan.notes = notes.isEmpty ? nil : notes
-        
-        if let recipe = selectedRecipe {
-            mealPlan.recipeName = recipe.name
-            mealPlan.recipeId = recipe.id
-        } else if let customRecipe = selectedCustomRecipe {
-            mealPlan.recipeName = customRecipe.name
-            mealPlan.recipeId = customRecipe.id
-        }
-        
-        do {
-            try viewContext.save()
+        if mealSource == .foods {
+            // When adding foods, save them directly as food entries
+            let dataManager = UnifiedDataManager.shared
+            for food in selectedFoodItems {
+                dataManager.addFoodFromDatabase(food, mealType: selectedMealType)
+            }
             dismiss()
-        } catch {
-            print("Error saving meal plan: \(error)")
+        } else {
+            // Save as meal plan with recipe
+            let mealPlan = MealPlan(context: viewContext)
+            mealPlan.id = UUID()
+            mealPlan.date = selectedDate
+            mealPlan.mealType = selectedMealType.rawValue
+            mealPlan.servings = Int32(servings)
+            mealPlan.notes = notes.isEmpty ? nil : notes
+
+            if let recipe = selectedRecipe {
+                mealPlan.recipeName = recipe.name
+                mealPlan.recipeId = recipe.id
+            } else if let customRecipe = selectedCustomRecipe {
+                mealPlan.recipeName = customRecipe.name
+                mealPlan.recipeId = customRecipe.id
+            }
+
+            do {
+                try viewContext.save()
+                dismiss()
+            } catch {
+                print("Error saving meal plan: \(error)")
+            }
         }
     }
 }
