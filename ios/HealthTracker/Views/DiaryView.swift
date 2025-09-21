@@ -3,6 +3,7 @@ import CoreData
 
 struct DiaryView: View {
     @StateObject private var dataManager = UnifiedDataManager.shared
+    @Environment(\.managedObjectContext) private var viewContext
     @State private var selectedDate = Date()
     @State private var showingAddMenu = false
     @State private var showingFoodSearch = false
@@ -10,6 +11,7 @@ struct DiaryView: View {
     @State private var showingWaterEntry = false
     @State private var showingSupplementEntry = false
     @State private var selectedMealType: MealType = .breakfast
+    @State private var dailySummary = DailySummary()
     
     // Fetch requests for selected date
     @FetchRequest private var foodEntries: FetchedResults<FoodEntry>
