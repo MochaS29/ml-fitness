@@ -84,7 +84,8 @@ class GoalsManager: ObservableObject {
                 title: "Goal Achieved! 🎯",
                 description: goal.title,
                 dateEarned: Date(),
-                value: "\(goal.progressPercentage)%"
+                value: Double(goal.progress),
+                target: Double(goal.targetValue)
             )
             AchievementManager.shared.celebrate(achievement)
             
@@ -220,7 +221,8 @@ class GoalsManager: ObservableObject {
                         title: "\(milestone.percentage)% Milestone!",
                         description: "\(goal.title): \(reward)",
                         dateEarned: Date(),
-                        value: "\(milestone.percentage)%"
+                        value: Double(goal.progress),
+                        target: Double(goal.targetValue)
                     )
                     AchievementManager.shared.celebrate(achievement)
                 }

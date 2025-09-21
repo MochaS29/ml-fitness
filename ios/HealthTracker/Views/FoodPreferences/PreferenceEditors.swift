@@ -264,11 +264,11 @@ struct FoodChip: View {
     }
 }
 
-#Preview {
-    VStack(spacing: 20) {
-        DislikedFoodsEditor()
-        AvoidedIngredientsEditor()
-        MealPreferencesEditor()
-    }
-    .environmentObject(UserProfileManager())
-}
+// #Preview {
+//     VStack(spacing: 20) {
+//         DislikedFoodsEditor()
+//         AvoidedIngredientsEditor()
+//         MealPreferencesEditor()
+//     }
+//     .environmentObject(UserProfileManager())
+// }

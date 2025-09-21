@@ -197,7 +197,8 @@ class FastingManager: ObservableObject {
                     title: "First Fast Complete! 🎉",
                     description: "You completed your first intermittent fast!",
                     dateEarned: Date(),
-                    value: session.fastingPlan.rawValue
+                    value: 1.0,
+                    target: nil
                 )
                 achievementManager.celebrate(achievement)
             }
@@ -214,7 +215,8 @@ class FastingManager: ObservableObject {
                     title: "Fasting Streak! 🔥",
                     description: "You've completed \(weeklyFasts.count) fasts this week!",
                     dateEarned: Date(),
-                    value: "\(weeklyFasts.count) fasts"
+                    value: Double(weeklyFasts.count),
+                    target: nil
                 )
                 achievementManager.celebrate(achievement)
             }

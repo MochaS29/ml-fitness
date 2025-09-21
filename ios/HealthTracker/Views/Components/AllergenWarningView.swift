@@ -272,20 +272,20 @@ struct DietaryViolationDetails: View {
     }
 }
 
-#Preview {
-    VStack {
-        AllergenWarningView(
-            warning: AllergenWarning(
-                allergens: [
-                    AllergenInfo(allergen: .peanuts, ingredientSource: "peanut butter", confidence: .certain),
-                    AllergenInfo(allergen: .milk, ingredientSource: "whey protein", confidence: .likely)
-                ],
-                severity: .moderate,
-                message: "This food contains allergens you've marked. Please review before consuming."
-            ),
-            isPresented: .constant(true),
-            onProceed: {},
-            onCancel: {}
-        )
-    }
-}
+// #Preview {
+//     VStack {
+//         AllergenWarningView(
+//             warning: AllergenWarning(
+//                 allergens: [
+//                     AllergenInfo(allergen: .peanuts, ingredientSource: "peanut butter", confidence: .certain),
+//                     AllergenInfo(allergen: .milk, ingredientSource: "whey protein", confidence: .likely)
+//                 ],
+//                 severity: .moderate,
+//                 message: "This food contains allergens you've marked. Please review before consuming."
+//             ),
+//             isPresented: .constant(true),
+//             onProceed: {},
+//             onCancel: {}
+//         )
+//     }
+// }

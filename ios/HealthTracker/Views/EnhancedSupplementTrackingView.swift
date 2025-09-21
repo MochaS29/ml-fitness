@@ -688,7 +688,7 @@ struct EnhancedSupplementRow: View {
     }
 }
 
-#Preview {
-    EnhancedSupplementTrackingView()
-        .environmentObject(UserProfileManager())
-}
+// #Preview {
+//     EnhancedSupplementTrackingView()
+//         .environmentObject(UserProfileManager())
+// }

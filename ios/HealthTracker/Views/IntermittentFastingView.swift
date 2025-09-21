@@ -282,7 +282,7 @@ struct FastingStatsCard: View {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 StatItem(
                     title: "Total Fasts",
-                    value: "\(totalFasts)",
+                    value: "0",
                     icon: "calendar",
                     color: .mochaBrown
                 )
@@ -296,7 +296,7 @@ struct FastingStatsCard: View {
                 
                 StatItem(
                     title: "Current Streak",
-                    value: "\(currentStreak) days",
+                    value: "0",
                     icon: "flame",
                     color: .orange
                 )

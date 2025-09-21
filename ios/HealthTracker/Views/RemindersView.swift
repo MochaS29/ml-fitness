@@ -345,6 +345,6 @@ struct AddReminderView: View {
     }
 }
 
-#Preview {
-    RemindersView()
-}
+// #Preview {
+//     RemindersView()
+// }

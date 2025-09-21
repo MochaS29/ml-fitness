@@ -538,8 +538,8 @@ struct DashboardMacroCircle: View {
     }
 }
 
-#Preview {
-    DashboardOption3View()
-        .environmentObject(UserProfileManager())
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     DashboardOption3View()
+//         .environmentObject(UserProfileManager())
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

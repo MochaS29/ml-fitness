@@ -393,7 +393,7 @@ struct AchievementsView: View {
                     Spacer()
                     
                     if let value = achievement.value {
-                        Text(value)
+                        Text(String(format: "%.0f", value))
                             .font(.headline)
                             .foregroundColor(.primary)
                     }
@@ -413,6 +413,11 @@ struct AchievementsView: View {
         case .nutritionBalance: return "leaf.fill"
         case .waterIntake: return "drop.fill"
         case .stepGoal: return "figure.walk"
+        case .supplementConsistency: return "pills.fill"
+        case .exerciseGoal: return "figure.run"
+        case .calorieTarget: return "flame.fill"
+        case .loggingStreak: return "calendar.badge.checkmark"
+        case .other: return "star.fill"
         case .supplementConsistency: return "pills.fill"
         case .other: return "star.fill"
         }
@@ -814,8 +819,8 @@ struct HelpView: View {
     }
 }
 
-#Preview {
-    MoreView()
-        .environmentObject(UserProfileManager())
-        .environmentObject(AchievementManager())
-}
+// #Preview {
+//     MoreView()
+//         .environmentObject(UserProfileManager())
+//         .environmentObject(AchievementManager())
+// }

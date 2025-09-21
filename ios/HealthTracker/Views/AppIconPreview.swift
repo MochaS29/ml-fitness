@@ -106,6 +106,6 @@ struct AppIconPreview: View {
     }
 }
 
-#Preview {
-    AppIconPreview()
-}
+// #Preview {
+//     AppIconPreview()
+// }

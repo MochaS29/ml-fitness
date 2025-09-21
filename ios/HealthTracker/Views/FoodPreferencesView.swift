@@ -380,7 +380,7 @@ struct EmptyStateView: View {
     }
 }
 
-#Preview {
-    FoodPreferencesView()
-        .environmentObject(UserProfileManager())
-}
+// #Preview {
+//     FoodPreferencesView()
+//         .environmentObject(UserProfileManager())
+// }

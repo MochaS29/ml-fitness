@@ -257,28 +257,32 @@ class DemoDataGenerator {
                 title: "5 lbs Down!",
                 description: "You've lost 5 pounds!",
                 dateEarned: Date().addingTimeInterval(-7 * 24 * 60 * 60), // 7 days ago
-                value: "5 lbs"
+                value: 5.0,
+                target: nil
             ),
             Achievement(
                 type: .exerciseStreak,
                 title: "7 Day Streak",
                 description: "Exercised for 7 days in a row!",
                 dateEarned: Date().addingTimeInterval(-2 * 24 * 60 * 60), // 2 days ago
-                value: "7 days"
+                value: 7.0,
+                target: nil
             ),
             Achievement(
                 type: .calorieGoal,
                 title: "Calorie Champion",
                 description: "Met your calorie goal for 14 days!",
                 dateEarned: Date().addingTimeInterval(-1 * 24 * 60 * 60), // Yesterday
-                value: "14 days"
+                value: 14.0,
+                target: nil
             ),
             Achievement(
                 type: .waterIntake,
                 title: "Hydration Hero",
                 description: "Drank 8 glasses of water daily for a week!",
                 dateEarned: Date().addingTimeInterval(-3 * 24 * 60 * 60), // 3 days ago
-                value: "7 days"
+                value: 8.0,
+                target: nil
             )
         ]
         

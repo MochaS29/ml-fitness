@@ -406,7 +406,7 @@ class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOutputObj
     }
 }
 
-#Preview {
-    BarcodeScannerView(selectedDate: Date(), mealType: .lunch)
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     BarcodeScannerView(selectedDate: Date(), mealType: .lunch)
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

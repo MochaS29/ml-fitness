@@ -455,7 +455,9 @@ struct CustomRecipeDetailView: View {
     }
 }
 
-#Preview {
-    MyRecipeBookView()
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+struct MyRecipeBookView_Previews: PreviewProvider {
+    static var previews: some View {
+        MyRecipeBookView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
 }

@@ -223,9 +223,9 @@ struct RoundedCorner: Shape {
     }
 }
 
-#Preview {
-    DashboardSelectorView()
-        .environmentObject(UserProfileManager())
-        .environmentObject(AchievementManager())
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     DashboardSelectorView()
+//         .environmentObject(UserProfileManager())
+//         .environmentObject(AchievementManager())
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

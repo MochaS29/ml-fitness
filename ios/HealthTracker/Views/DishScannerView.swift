@@ -269,7 +269,7 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
 }
 
-#Preview {
-    DishScannerView()
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     DishScannerView()
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

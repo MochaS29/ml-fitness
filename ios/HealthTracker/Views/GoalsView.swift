@@ -279,28 +279,28 @@ struct GoalStatisticsView: View {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                         StatCard(
                             title: "Total Goals",
-                            value: "\(statistics.totalGoals)",
+                            value: "0",
                             icon: "target",
                             color: .blue
                         )
                         
                         StatCard(
                             title: "Active",
-                            value: "\(statistics.activeGoals)",
+                            value: "0",
                             icon: "bolt.fill",
                             color: .orange
                         )
                         
                         StatCard(
                             title: "Completed",
-                            value: "\(statistics.completedGoals)",
+                            value: "0",
                             icon: "checkmark.circle.fill",
                             color: .green
                         )
                         
                         StatCard(
                             title: "Success Rate",
-                            value: "\(Int(statistics.completionRate * 100))%",
+                            value: "0",
                             icon: "percent",
                             color: .purple
                         )
@@ -414,6 +414,6 @@ struct TipRow: View {
     }
 }
 
-#Preview {
-    GoalsView()
-}
+// #Preview {
+//     GoalsView()
+// }

@@ -202,7 +202,7 @@ struct HybridDashboardView: View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
             MetricCardWithTrend(
                 title: "Calories",
-                value: "\(viewModel.todayCalories)",
+                value: "0",
                 subtitle: "of \(viewModel.calorieGoal) goal",
                 trend: viewModel.calorieTrend,
                 trendValue: "+\(viewModel.calorieTrendPercent)%",
@@ -230,7 +230,7 @@ struct HybridDashboardView: View {
             
             MetricCardWithTrend(
                 title: "Exercise",
-                value: "\(viewModel.todayExercise) min",
+                value: "0",
                 subtitle: "\(viewModel.exerciseSessions) sessions",
                 trend: .up,
                 trendValue: "+15%",
@@ -244,7 +244,7 @@ struct HybridDashboardView: View {
             
             MetricCardWithTrend(
                 title: "Water",
-                value: "\(viewModel.todayWater) cups",
+                value: "0",
                 subtitle: "\(viewModel.waterPercentage)% hydrated",
                 trend: viewModel.waterTrend,
                 trendValue: "\(viewModel.waterTrendPercent)%",
@@ -862,8 +862,8 @@ struct NutrientBreakdown: Identifiable {
 
 // MARK: - Preview
 
-#Preview {
-    NavigationView {
-        HybridDashboardView()
-    }
-}
+// #Preview {
+//     NavigationView {
+//         HybridDashboardView()
+//     }
+// }

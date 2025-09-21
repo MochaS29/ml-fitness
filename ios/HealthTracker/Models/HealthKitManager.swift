@@ -234,12 +234,33 @@ class HealthKitManager: ObservableObject {
     }
     
     // MARK: - Activity Data
-    
+
+    func fetchSteps(from startDate: Date, to endDate: Date, completion: @escaping (Double) -> Void) {
+        let stepsType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+
+        let query = HKStatisticsQuery(quantityType: stepsType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            guard let result = result, let sum = result.sumQuantity() else {
+                DispatchQueue.main.async {
+                    completion(0)
+                }
+                return
+            }
+
+            let stepCount = sum.doubleValue(for: HKUnit.count())
+            DispatchQueue.main.async {
+                completion(stepCount)
+            }
+        }
+
+        healthStore.execute(query)
+    }
+
     func fetchTodaySteps(completion: @escaping (Double?) -> Void) {
         let stepsType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let startOfDay = Calendar.current.startOfDay(for: Date())
         let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: Date(), options: .strictStartDate)
-        
+
         let query = HKStatisticsQuery(quantityType: stepsType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
             guard let result = result, let sum = result.sumQuantity() else {
                 DispatchQueue.main.async {

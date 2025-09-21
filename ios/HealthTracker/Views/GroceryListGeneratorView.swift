@@ -413,7 +413,7 @@ struct CreateGroceryListView: View {
     }
 }
 
-#Preview {
-    GroceryListGeneratorView()
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     GroceryListGeneratorView()
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

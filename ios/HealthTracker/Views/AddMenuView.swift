@@ -464,7 +464,7 @@ struct ExerciseEntryForm: View {
 
 // This placeholder has been replaced - the sheet now calls ManualSupplementEntryView directly
 
-#Preview {
-    AddMenuView(selectedDate: Date())
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     AddMenuView(selectedDate: Date())
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

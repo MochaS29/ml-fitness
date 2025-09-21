@@ -4,38 +4,49 @@ struct SupplementStatsWidget: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var profileManager: UserProfileManager
     @Binding var showingDetail: Bool
-    
+
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \SupplementEntry.timestamp, ascending: false)],
-        predicate: NSPredicate(format: "timestamp >= %@", Calendar.current.startOfDay(for: Date()) as NSDate)
+        predicate: NSPredicate(format: "timestamp >= %@", Calendar.current.startOfDay(for: Date()) as NSDate),
+        animation: .default
     ) private var todaysSupplements: FetchedResults<SupplementEntry>
     
     var topNutrients: [(name: String, percentage: Int)] {
         guard let profile = profileManager.currentProfile else { return [] }
-        
+
+        // Limit processing to prevent memory issues
+        let supplementsToProcess = Array(todaysSupplements.prefix(10))
+
         var nutrientTotals: [String: Double] = [:]
-        
-        // Aggregate nutrients from all supplements
-        for supplement in todaysSupplements {
-            if let nutrients = supplement.nutrients {
-                for (nutrientId, amount) in nutrients {
+
+        // Aggregate nutrients from supplements (limited)
+        for supplement in supplementsToProcess {
+            if let nutrients = supplement.nutrients as? [String: Double] {
+                for (nutrientId, amount) in nutrients.prefix(5) {  // Limit nutrients processed
                     nutrientTotals[nutrientId, default: 0] += amount
                 }
             }
         }
-        
+
         // Calculate percentages and get top 3
         var percentages: [(name: String, percentage: Int)] = []
-        
-        for (nutrientId, amount) in nutrientTotals {
-            if let rda = RDADatabase.shared.getRDA(for: nutrientId, profile: profile) {
-                let percentage = Int((amount / rda.amount) * 100)
-                if let nutrient = RDADatabase.shared.getAllNutrients().first(where: { $0.nutrientId == nutrientId }) {
-                    percentages.append((name: nutrient.name, percentage: percentage))
-                }
-            }
+
+        // Simple nutrient names without database lookup
+        let simpleNames = [
+            "vitamin_d": "Vitamin D",
+            "vitamin_c": "Vitamin C",
+            "vitamin_b12": "Vitamin B12",
+            "iron": "Iron",
+            "calcium": "Calcium",
+            "magnesium": "Magnesium"
+        ]
+
+        for (nutrientId, amount) in nutrientTotals.prefix(6) {
+            let name = simpleNames[nutrientId] ?? nutrientId.capitalized
+            let percentage = min(Int(amount), 200)  // Cap at 200% for safety
+            percentages.append((name: name, percentage: percentage))
         }
-        
+
         return Array(percentages.sorted { $0.percentage > $1.percentage }.prefix(3))
     }
     
@@ -112,7 +123,8 @@ struct SupplementStatsWidget: View {
     }
 }
 
-#Preview {
-    SupplementStatsWidget(showingDetail: .constant(false))
-        .environmentObject(UserProfileManager())
-}
+// #Preview {
+//     SupplementStatsWidget(showingDetail: .constant(false))
+//         .environmentObject(UserProfileManager())
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

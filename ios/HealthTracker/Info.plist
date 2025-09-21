@@ -10,9 +10,5 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
-	<key>NSHealthShareUsageDescription</key>
-	<string>HealthTracker needs access to read your health data to track your fitness progress.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>HealthTracker needs permission to save your tracked meals, exercises, and weight to Apple Health.</string>
 </dict>
 </plist>

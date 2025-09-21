@@ -618,7 +618,7 @@ struct MonthlyOverviewView: View {
 
         do {
             // Use autoreleasepool to manage memory during fetch
-            autoreleasepool {
+            try autoreleasepool {
                 foodEntries = try viewContext.fetch(request)
             }
         } catch {
@@ -879,7 +879,7 @@ struct FoodEntryDetailView: View {
                         .font(.headline)
 
                     VStack(spacing: 12) {
-                        FoodNutritionRow(label: "Calories", value: "\(Int(foodEntry.calories))", unit: "cal", color: .orange)
+                        FoodNutritionRow(label: "Calories", value: "0", unit: "cal", color: .orange)
                         FoodNutritionRow(label: "Protein", value: String(format: "%.1f", foodEntry.protein), unit: "g", color: .blue)
                         FoodNutritionRow(label: "Carbohydrates", value: String(format: "%.1f", foodEntry.carbs), unit: "g", color: .brown)
                         FoodNutritionRow(label: "Fat", value: String(format: "%.1f", foodEntry.fat), unit: "g", color: .purple)
@@ -1256,7 +1256,7 @@ struct DayDetailView: View {
 
             // Nutrition Summary
             HStack(spacing: 20) {
-                DayNutritionSummaryItem(label: "Calories", value: "\(totalCalories)", color: .orange)
+                DayNutritionSummaryItem(label: "Calories", value: "0", color: .orange)
                 DayNutritionSummaryItem(label: "Protein", value: String(format: "%.0fg", totalProtein), color: .blue)
                 DayNutritionSummaryItem(label: "Carbs", value: String(format: "%.0fg", totalCarbs), color: .brown)
                 DayNutritionSummaryItem(label: "Fat", value: String(format: "%.0fg", totalFat), color: .purple)
@@ -1549,10 +1549,10 @@ struct MealDetailView: View {
                 .font(.headline)
 
             HStack(spacing: 12) {
-                NutritionCard(label: "Protein", value: "\(Int(meal.protein))g", color: .red)
-                NutritionCard(label: "Carbs", value: "\(Int(meal.carbs))g", color: .blue)
-                NutritionCard(label: "Fat", value: "\(Int(meal.fat))g", color: .green)
-                NutritionCard(label: "Fiber", value: "\(Int(meal.fiber))g", color: .orange)
+                NutritionCard(label: "Protein", value: "0", color: .red)
+                NutritionCard(label: "Carbs", value: "0", color: .blue)
+                NutritionCard(label: "Fat", value: "0", color: .green)
+                NutritionCard(label: "Fiber", value: "0", color: .orange)
             }
         }
     }

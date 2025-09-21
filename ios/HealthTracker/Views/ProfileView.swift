@@ -13,7 +13,7 @@ struct ProfileView: View {
                     }
                     
                     Section("Personal Information") {
-                        ProfileInfoRow(label: "Age", value: "\(profile.age) years")
+                        ProfileInfoRow(label: "Age", value: "0")
                         ProfileInfoRow(label: "Gender", value: profile.gender.rawValue)
                         ProfileInfoRow(label: "Activity Level", value: profile.activityLevel.rawValue)
                         
@@ -22,7 +22,7 @@ struct ProfileView: View {
                         }
                         
                         if profile.isBreastfeeding {
-                            ProfileInfoRow(label: "Status", value: "Breastfeeding")
+                            ProfileInfoRow(label: "Status", value: "0")
                         }
                     }
                     

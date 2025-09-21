@@ -91,28 +91,28 @@ struct DashboardOption4View: View {
             HStack(spacing: 20) {
                 MiniMetric(
                     icon: "flame.fill",
-                    value: "\(todaysCalories)",
+                    value: "0",
                     label: "calories",
                     color: .orange
                 )
                 
                 MiniMetric(
                     icon: "figure.walk",
-                    value: "\(todaysSteps)",
+                    value: "0",
                     label: "steps",
                     color: .blue
                 )
                 
                 MiniMetric(
                     icon: "drop.fill",
-                    value: "\(todaysWater)",
+                    value: "0",
                     label: "cups",
                     color: .cyan
                 )
                 
                 MiniMetric(
                     icon: "bed.double.fill",
-                    value: "7.5",
+                    value: "0",
                     label: "hrs sleep",
                     color: .purple
                 )
@@ -634,8 +634,8 @@ struct ContextualActionButton: View {
     }
 }
 
-#Preview {
-    DashboardOption4View()
-        .environmentObject(UserProfileManager())
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     DashboardOption4View()
+//         .environmentObject(UserProfileManager())
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

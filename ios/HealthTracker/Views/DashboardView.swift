@@ -103,7 +103,9 @@ struct SummaryCard: View {
     @StateObject private var fastingManager = FastingManager()
     @Environment(\.managedObjectContext) private var viewContext
     @State private var totalCalories: Double = 0
+    @State private var totalCaloriesBurned: Double = 0
     @State private var totalSteps: Int = 0
+    @State private var totalWater: Double = 0
     
     var fastingStatus: String {
         if let session = fastingManager.currentSession {
@@ -136,24 +138,31 @@ struct SummaryCard: View {
                 .font(.headline)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            HStack(spacing: 20) {
+            HStack(spacing: 15) {
                 DashboardSummaryMetric(
                     icon: "flame",
                     value: "\(Int(totalCalories))",
                     label: "Calories",
                     color: .orange
                 )
-                
+
                 DashboardSummaryMetric(
-                    icon: "timer",
-                    value: fastingStatus,
-                    label: "Fasting",
-                    color: fastingColor
+                    icon: "flame.fill",
+                    value: "\(Int(totalCaloriesBurned))",
+                    label: "Burned",
+                    color: .red
                 )
-                
+
+                DashboardSummaryMetric(
+                    icon: "drop.fill",
+                    value: "\(Int(totalWater)) oz",
+                    label: "Water",
+                    color: .blue
+                )
+
                 DashboardSummaryMetric(
                     icon: "figure.walk",
-                    value: "\(totalSteps.formatted())",
+                    value: "\(totalSteps)",
                     label: "Steps",
                     color: .green
                 )
@@ -174,7 +183,7 @@ struct SummaryCard: View {
         let calendar = Calendar.current
         let endDate = Date()
         let startDate: Date
-        
+
         switch timeRange {
         case .today:
             startDate = calendar.startOfDay(for: endDate)
@@ -188,27 +197,44 @@ struct SummaryCard: View {
             let components = calendar.dateComponents([.year, .month], from: endDate)
             startDate = calendar.date(from: components) ?? endDate
         }
-        
+
         // Fetch food entries
         let foodRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
         foodRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as CVarArg, endDate as CVarArg)
-        
+
+        // Fetch exercise entries
+        let exerciseRequest: NSFetchRequest<ExerciseEntry> = ExerciseEntry.fetchRequest()
+        exerciseRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as CVarArg, endDate as CVarArg)
+
+        // Fetch water entries
+        let waterRequest: NSFetchRequest<WaterEntry> = WaterEntry.fetchRequest()
+        waterRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as CVarArg, endDate as CVarArg)
+
         do {
+            // Calculate calories consumed
             let foodEntries = try viewContext.fetch(foodRequest)
             totalCalories = foodEntries.reduce(0) { $0 + $1.calories }
-            
-            // For now, using sample step data
-            // In a real app, this would come from HealthKit or exercise entries
-            switch timeRange {
-            case .today:
-                totalSteps = Int.random(in: 5000...10000)
-            case .week:
-                totalSteps = Int.random(in: 35000...70000)
-            case .month:
-                totalSteps = Int.random(in: 150000...300000)
+
+            // Calculate calories burned
+            let exerciseEntries = try viewContext.fetch(exerciseRequest)
+            totalCaloriesBurned = exerciseEntries.reduce(0) { $0 + $1.caloriesBurned }
+
+            // Calculate water intake
+            let waterEntries = try viewContext.fetch(waterRequest)
+            totalWater = waterEntries.reduce(0) { sum, entry in
+                // Convert ml to oz if needed
+                let amount = entry.unit == "ml" ? entry.amount / 29.5735 : entry.amount
+                return sum + amount
+            }
+
+            // Get steps from HealthKit if available
+            HealthKitManager.shared.fetchSteps(from: startDate, to: endDate) { steps in
+                DispatchQueue.main.async {
+                    self.totalSteps = Int(steps)
+                }
             }
         } catch {
-            print("Error fetching food entries: \(error)")
+            print("Error fetching data: \(error)")
         }
     }
 }

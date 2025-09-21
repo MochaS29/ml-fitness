@@ -139,21 +139,21 @@ struct DashboardOption2View: View {
             HStack(spacing: 32) {
                 RingLabel(
                     title: "Move",
-                    value: "\(Int(totalCalories))",
+                    value: "0",
                     goal: "2000",
                     color: Color(red: 255/255, green: 45/255, blue: 85/255)
                 )
                 
                 RingLabel(
                     title: "Exercise",
-                    value: "\(totalExerciseMinutes)",
+                    value: "0",
                     goal: "30 min",
                     color: Color(red: 52/255, green: 199/255, blue: 89/255)
                 )
                 
                 RingLabel(
                     title: "Nutrition",
-                    value: "\(nutritionScore)%",
+                    value: "0",
                     goal: "100%",
                     color: Color(red: 0/255, green: 122/255, blue: 255/255)
                 )
@@ -473,8 +473,8 @@ struct QuickLogButton: View {
     }
 }
 
-#Preview {
-    DashboardOption2View()
-        .environmentObject(UserProfileManager())
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     DashboardOption2View()
+//         .environmentObject(UserProfileManager())
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

@@ -555,7 +555,7 @@ struct SelectedDateMealsView: View {
     }
 }
 
-#Preview {
-    MealPlanningView()
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     MealPlanningView()
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

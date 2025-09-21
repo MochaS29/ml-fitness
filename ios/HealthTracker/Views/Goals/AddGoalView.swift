@@ -334,7 +334,7 @@ struct CategoryChip: View {
     }
 }
 
-#Preview {
-    AddGoalView()
-        .environmentObject(UserProfileManager())
-}
+// #Preview {
+//     AddGoalView()
+//         .environmentObject(UserProfileManager())
+// }

@@ -134,21 +134,21 @@ struct ExerciseSummaryCard: View {
             
             HStack {
                 ExerciseSummaryMetric(
-                    value: "\(Int(totalCalories))",
+                    value: "0",
                     label: "Calories Burned",
                     icon: "flame.fill",
                     color: .orange
                 )
                 
                 ExerciseSummaryMetric(
-                    value: "\(totalDuration)",
+                    value: "0",
                     label: "Minutes",
                     icon: "clock.fill",
                     color: .blue
                 )
                 
                 ExerciseSummaryMetric(
-                    value: "\(totalActivities)",
+                    value: "0",
                     label: "Activities",
                     icon: "figure.run",
                     color: .green

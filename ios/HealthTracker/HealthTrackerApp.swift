@@ -16,11 +16,12 @@ struct HealthTrackerApp: App {
                     .accentColor(Color.mochaBrown)
                     .onAppear {
                         importSampleDataIfNeeded()
-                        
+
                         // Check if we should generate demo data
                         if CommandLine.arguments.contains("--demo") || ProcessInfo.processInfo.environment["GENERATE_DEMO_DATA"] == "true" {
                             generateDemoData()
                         }
+
                     }
             } else {
                 OnboardingView()

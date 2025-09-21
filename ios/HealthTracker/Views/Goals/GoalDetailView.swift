@@ -557,15 +557,15 @@ struct ProgressEntry: Identifiable {
     let value: Double
 }
 
-#Preview {
-    GoalDetailView(goal: Goal(
-        title: "Lose 10 Pounds",
-        description: "Achieve a healthy weight loss",
-        category: .weightLoss,
-        targetType: .reachTarget,
-        targetValue: 10,
-        targetUnit: "lbs",
-        targetDate: Date().addingTimeInterval(60 * 24 * 60 * 60),
-        frequency: .total
-    ))
-}
+// #Preview {
+//     GoalDetailView(goal: Goal(
+//         title: "Lose 10 Pounds",
+//         description: "Achieve a healthy weight loss",
+//         category: .weightLoss,
+//         targetType: .reachTarget,
+//         targetValue: 10,
+//         targetUnit: "lbs",
+//         targetDate: Date().addingTimeInterval(60 * 24 * 60 * 60),
+//         frequency: .total
+//     ))
+// }

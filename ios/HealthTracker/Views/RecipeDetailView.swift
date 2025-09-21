@@ -9,6 +9,7 @@ struct RecipeDetailView: View {
     @State private var servingsMultiplier: Double = 1.0
     @State private var showingAddToMealPlan = false
     @State private var showingGroceryListSelector = false
+    @State private var showingIngredientDetails = false
     @State private var selectedIngredient: IngredientModel?
     
     var adjustedIngredients: [IngredientModel] {
@@ -35,7 +36,27 @@ struct RecipeDetailView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                contentView
+            }
+            .navigationTitle(recipe.name)
+            .navigationBarTitleDisplayMode(.large)
+            .navigationBarItems(trailing: Button(action: {}) {
+                Image(systemName: "heart")
+            })
+        }
+        .sheet(isPresented: $showingAddToMealPlan) {
+            AddToMealPlanView(recipe: recipe, servingsMultiplier: servingsMultiplier)
+        }
+        .sheet(isPresented: $showingGroceryListSelector) {
+            GroceryListSelectorView(
+                ingredients: selectedIngredient != nil ? [selectedIngredient!] : adjustedIngredients,
+                context: viewContext
+            )
+        }
+    }
+
+    private var contentView: some View {
+        VStack(alignment: .leading, spacing: 20) {
                     // Recipe Image
                     if let imageData = customRecipe?.imageData, let uiImage = UIImage(data: imageData) {
                         // Core Data image
@@ -156,15 +177,15 @@ struct RecipeDetailView: View {
                                 .font(.headline)
                             
                             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                                NutritionItem(label: "Calories", value: "\(Int(nutrition.calories))", unit: "")
-                                NutritionItem(label: "Protein", value: "\(Int(nutrition.protein))", unit: "g")
-                                NutritionItem(label: "Carbs", value: "\(Int(nutrition.carbs))", unit: "g")
-                                NutritionItem(label: "Fat", value: "\(Int(nutrition.fat))", unit: "g")
+                                NutritionItem(label: "Calories", value: "0", unit: "")
+                                NutritionItem(label: "Protein", value: "0", unit: "g")
+                                NutritionItem(label: "Carbs", value: "0", unit: "g")
+                                NutritionItem(label: "Fat", value: "0", unit: "g")
                                 if let fiber = nutrition.fiber {
-                                    NutritionItem(label: "Fiber", value: "\(Int(fiber))", unit: "g")
+                                    NutritionItem(label: "Fiber", value: "0", unit: "g")
                                 }
                                 if let sodium = nutrition.sodium {
-                                    NutritionItem(label: "Sodium", value: "\(Int(sodium))", unit: "mg")
+                                    NutritionItem(label: "Sodium", value: "0", unit: "mg")
                                 }
                             }
                         }
@@ -281,28 +302,26 @@ struct RecipeDetailView: View {
                     .padding(.bottom)
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        presentationMode.wrappedValue.dismiss()
-                    }
+
+    private func shareRecipe() {
+        // Implementation for sharing recipe
+    }
+}
+
+struct IngredientsDetailView: View {
+    let ingredients: [IngredientModel]
+
+    var body: some View {
+        NavigationView {
+            List(ingredients) { ingredient in
+                HStack {
+                    Text(ingredient.name)
+                    Spacer()
+                    Text("\(ingredient.amount, specifier: "%.1f") \(ingredient.unit.rawValue)")
                 }
             }
+            .navigationTitle("Ingredients")
         }
-        .sheet(isPresented: $showingAddToMealPlan) {
-            AddToMealPlanView(recipe: recipe, servingsMultiplier: servingsMultiplier)
-        }
-        .sheet(isPresented: $showingGroceryListSelector) {
-            GroceryListSelectorView(
-                ingredients: selectedIngredient != nil ? [selectedIngredient!] : adjustedIngredients,
-                context: viewContext
-            )
-        }
-    }
-    
-    func shareRecipe() {
-        // Implementation for sharing recipe
     }
 }
 

@@ -354,7 +354,7 @@ struct AddDietaryPreferenceView: View {
     }
 }
 
-#Preview {
-    AddAllergyView()
-        .environmentObject(UserProfileManager())
-}
+// #Preview {
+//     AddAllergyView()
+//         .environmentObject(UserProfileManager())
+// }

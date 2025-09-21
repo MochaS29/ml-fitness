@@ -147,14 +147,14 @@ struct ProfessionalDashboardView: View {
             HStack(spacing: 16) {
                 QuickStatCard(
                     title: "Average",
-                    value: "\(Int(dashboardData.averageCalories))",
+                    value: "0",
                     unit: "cal",
                     color: Color(red: 127/255, green: 176/255, blue: 105/255)
                 )
                 
                 QuickStatCard(
                     title: "Best",
-                    value: "\(Int(dashboardData.bestCalories))",
+                    value: "0",
                     unit: "cal",
                     date: dashboardData.bestDate,
                     color: Color(red: 74/255, green: 155/255, blue: 155/255)
@@ -514,9 +514,9 @@ struct NotificationsView: View {
     }
 }
 
-#Preview {
-    ProfessionalDashboardView()
-        .environmentObject(UserProfileManager())
-        .environmentObject(AchievementManager())
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     ProfessionalDashboardView()
+//         .environmentObject(UserProfileManager())
+//         .environmentObject(AchievementManager())
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

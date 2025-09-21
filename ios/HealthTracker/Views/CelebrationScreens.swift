@@ -184,6 +184,22 @@ enum CelebrationAchievement {
             return .blue
         }
     }
+
+    // Helper to convert from Achievement model
+    static func from(_ achievement: Achievement) -> CelebrationAchievement {
+        switch achievement.type {
+        case .weightLoss:
+            return .weightLoss(pounds: achievement.value ?? 0)
+        case .exerciseGoal:
+            return .exerciseGoal(minutes: Int(achievement.value ?? 0), calories: 0)
+        case .calorieTarget:
+            return .calorieTarget(calories: Int(achievement.value ?? 0), target: Int(achievement.target ?? 0))
+        case .loggingStreak:
+            return .loggingStreak(days: Int(achievement.value ?? 0))
+        default:
+            return .loggingStreak(days: 1) // Default fallback
+        }
+    }
 }
 
 // MARK: - Celebration View

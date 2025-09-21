@@ -100,7 +100,7 @@ struct DashboardOption1View: View {
             HStack(spacing: 16) {
                 MetricCard(
                     title: "Calories",
-                    value: "\(Int(todaysFoodEntries.reduce(0) { $0 + $1.calories }))",
+                    value: "0",
                     goal: "2000",
                     icon: "flame.fill",
                     color: Color(red: 255/255, green: 149/255, blue: 0/255)
@@ -108,7 +108,7 @@ struct DashboardOption1View: View {
                 
                 MetricCard(
                     title: "Exercise",
-                    value: "\(todaysExerciseEntries.reduce(0) { $0 + Int($1.duration) })",
+                    value: "0",
                     goal: "30 min",
                     icon: "figure.run",
                     color: Color(red: 52/255, green: 199/255, blue: 89/255)
@@ -118,7 +118,7 @@ struct DashboardOption1View: View {
             HStack(spacing: 16) {
                 MetricCard(
                     title: "Protein",
-                    value: "\(Int(todaysFoodEntries.reduce(0) { $0 + $1.protein }))g",
+                    value: "0",
                     goal: "50g",
                     icon: "leaf.fill",
                     color: Color(red: 0/255, green: 122/255, blue: 255/255)
@@ -127,7 +127,7 @@ struct DashboardOption1View: View {
                 NavigationLink(destination: WaterTrackingView()) {
                     MetricCard(
                         title: "Water",
-                        value: "\(Int(todaysWaterEntries.reduce(0) { $0 + $1.amount } / 8))",
+                        value: "0",
                         goal: "8 cups",
                         icon: "drop.fill",
                         color: .blue
@@ -369,8 +369,8 @@ struct EmptyActivityCard: View {
     }
 }
 
-#Preview {
-    DashboardOption1View()
-        .environmentObject(UserProfileManager())
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     DashboardOption1View()
+//         .environmentObject(UserProfileManager())
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

@@ -53,8 +53,8 @@ struct ContentView: View {
             if achievementManager.showingCelebration,
                let achievement = achievementManager.currentCelebration {
                 CelebrationView(
-                    achievement: achievement,
-                    isShowing: $achievementManager.showingCelebration
+                    achievement: CelebrationAchievement.from(achievement),
+                    isPresented: $achievementManager.showingCelebration
                 )
                 .transition(.opacity.combined(with: .scale))
                 .zIndex(1)

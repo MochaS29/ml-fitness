@@ -32,7 +32,7 @@ struct AutocompleteFoodSearchView: View {
                 uniqueFoods.append(FoodItem(
                     name: name,
                     brand: entry.brand,
-                    category: "",
+                    category: .other,
                     servingSize: entry.servingSize ?? "1 serving",
                     servingUnit: entry.servingUnit ?? "serving",
                     calories: entry.calories,
@@ -82,19 +82,8 @@ struct AutocompleteFoodSearchView: View {
     private var suggestedFoods: [FoodItem] {
         let hour = Calendar.current.component(.hour, from: Date())
 
-        // Return common foods based on time of day
-        return FoodDatabase.shared.commonFoods.filter { food in
-            if hour < 11 {
-                // Breakfast items
-                return ["Eggs", "Toast", "Oatmeal", "Yogurt", "Cereal"].contains(where: { food.name.contains($0) })
-            } else if hour < 15 {
-                // Lunch items
-                return ["Sandwich", "Salad", "Soup", "Chicken", "Turkey"].contains(where: { food.name.contains($0) })
-            } else {
-                // Dinner items
-                return ["Chicken", "Beef", "Fish", "Rice", "Pasta"].contains(where: { food.name.contains($0) })
-            }
-        }.prefix(5).map { $0 }
+        // Return empty results for now - can be enhanced later
+        return []
     }
 
     var body: some View {
@@ -299,7 +288,7 @@ struct AutocompleteFoodSearchView: View {
         let newFood = FoodItem(
             name: searchText,
             brand: nil,
-            category: "",
+            category: .other,
             servingSize: "1",
             servingUnit: "serving",
             calories: 0,
@@ -528,7 +517,7 @@ struct ManualFoodEntryView: View {
         let food = FoodItem(
             name: name,
             brand: brand.isEmpty ? nil : brand,
-            category: "",
+            category: .other,
             servingSize: servingSize,
             servingUnit: servingUnit,
             calories: calories,

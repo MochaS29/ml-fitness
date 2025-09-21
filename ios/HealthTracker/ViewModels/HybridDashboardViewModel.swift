@@ -368,10 +368,10 @@ struct AIInsightDetailView: View {
                             .foregroundColor(.deepCharcoal)
                         
                         VStack(spacing: 12) {
-                            DataPointRow(label: "Confidence Level", value: "92%", icon: "checkmark.shield.fill")
-                            DataPointRow(label: "Data Points Analyzed", value: "1,247", icon: "chart.line.uptrend.xyaxis")
-                            DataPointRow(label: "Pattern Detected", value: "3 weeks ago", icon: "calendar")
-                            DataPointRow(label: "Similar Users", value: "78% saw improvement", icon: "person.3.fill")
+                            DataPointRow(label: "Confidence Level", value: "0%", icon: "checkmark.shield.fill")
+                            DataPointRow(label: "Data Points Analyzed", value: "0", icon: "chart.line.uptrend.xyaxis")
+                            DataPointRow(label: "Pattern Detected", value: "None", icon: "calendar")
+                            DataPointRow(label: "Similar Users", value: "0", icon: "person.3.fill")
                         }
                     }
                     .padding(.horizontal)

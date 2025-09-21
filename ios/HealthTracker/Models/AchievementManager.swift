@@ -3,6 +3,9 @@ import Combine
 
 enum AchievementType: String, CaseIterable {
     case weightLoss = "Weight Loss"
+    case exerciseGoal = "Exercise Goal"
+    case calorieTarget = "Calorie Target"
+    case loggingStreak = "Logging Streak"
     case calorieGoal = "Calorie Goal"
     case exerciseStreak = "Exercise Streak"
     case nutritionBalance = "Nutrition Balance"
@@ -15,6 +18,9 @@ enum AchievementType: String, CaseIterable {
     var icon: String {
         switch self {
         case .weightLoss: return "scalemass.fill"
+        case .exerciseGoal: return "figure.run"
+        case .calorieTarget: return "flame.fill"
+        case .loggingStreak: return "calendar"
         case .calorieGoal: return "flame.fill"
         case .exerciseStreak: return "figure.run"
         case .nutritionBalance: return "leaf.fill"
@@ -29,6 +35,9 @@ enum AchievementType: String, CaseIterable {
     var color: Color {
         switch self {
         case .weightLoss: return .mindfulTeal
+        case .exerciseGoal: return .wellnessGreen
+        case .calorieTarget: return .orange
+        case .loggingStreak: return .blue
         case .calorieGoal: return .orange
         case .exerciseStreak: return .wellnessGreen
         case .nutritionBalance: return .mochaBrown
@@ -47,7 +56,8 @@ struct Achievement: Identifiable {
     let title: String
     let description: String
     let dateEarned: Date
-    let value: String?
+    let value: Double?
+    let target: Double?
 }
 
 class AchievementManager: ObservableObject {
@@ -86,7 +96,8 @@ class AchievementManager: ObservableObject {
                     title: "Weight Loss Milestone! 🎉",
                     description: "You've lost \(String(format: "%.1f", weightLost)) lbs! Keep up the great work!",
                     dateEarned: Date(),
-                    value: "\(String(format: "%.1f", weightLost)) lbs"
+                    value: weightLost,
+                    target: nil
                 )
                 celebrate(achievement)
             }
@@ -98,7 +109,8 @@ class AchievementManager: ObservableObject {
                     title: "5 Pounds Down! 🌟",
                     description: "Amazing progress! You've lost 5 pounds!",
                     dateEarned: Date(),
-                    value: "5 lbs"
+                    value: 5.0,
+                    target: nil
                 )
                 celebrate(achievement)
             }
@@ -130,7 +142,8 @@ class AchievementManager: ObservableObject {
                         title: "3-Day Streak! 🔥",
                         description: "You've exercised for 3 days in a row!",
                         dateEarned: Date(),
-                        value: "3 days"
+                        value: 3,
+                        target: nil
                     )
                     celebrate(achievement)
                 } else if newStreak == 7 {
@@ -139,7 +152,8 @@ class AchievementManager: ObservableObject {
                         title: "Week Warrior! 💪",
                         description: "Incredible! 7 days of consistent exercise!",
                         dateEarned: Date(),
-                        value: "7 days"
+                        value: 7,
+                        target: nil
                     )
                     celebrate(achievement)
                 } else if newStreak % 7 == 0 && newStreak > 7 {
@@ -149,7 +163,8 @@ class AchievementManager: ObservableObject {
                         title: "\(weeks)-Week Streak! 🏆",
                         description: "You've maintained your exercise routine for \(weeks) weeks!",
                         dateEarned: Date(),
-                        value: "\(weeks) weeks"
+                        value: Double(weeks * 7),
+                        target: nil
                     )
                     celebrate(achievement)
                 }
@@ -168,7 +183,8 @@ class AchievementManager: ObservableObject {
                 title: "Calorie Crusher! 🔥",
                 description: "You burned \(Int(calories)) calories in one session!",
                 dateEarned: Date(),
-                value: "\(Int(calories)) cal"
+                value: calories,
+                target: nil
             )
             celebrate(achievement)
         }
@@ -185,7 +201,8 @@ class AchievementManager: ObservableObject {
                 title: "Perfect Balance! ⚖️",
                 description: "You hit your daily calorie target!",
                 dateEarned: Date(),
-                value: "\(Int(consumed)) cal"
+                value: consumed,
+                target: goal
             )
             celebrate(achievement)
         }
@@ -208,7 +225,8 @@ class AchievementManager: ObservableObject {
                 title: "Perfectly Balanced! 🥗",
                 description: "Your macronutrients are in ideal proportions!",
                 dateEarned: Date(),
-                value: "P:\(Int(proteinPercent))% C:\(Int(carbPercent))% F:\(Int(fatPercent))%"
+                value: 0,
+                target: nil
             )
             celebrate(achievement)
         }
@@ -262,7 +280,7 @@ class AchievementManager: ObservableObject {
 // Make Achievement Codable for persistence
 extension Achievement: Codable {
     enum CodingKeys: String, CodingKey {
-        case type, title, description, dateEarned, value
+        case type, title, description, dateEarned, value, target
     }
     
     init(from decoder: Decoder) throws {
@@ -272,7 +290,8 @@ extension Achievement: Codable {
         self.title = try container.decode(String.self, forKey: .title)
         self.description = try container.decode(String.self, forKey: .description)
         self.dateEarned = try container.decode(Date.self, forKey: .dateEarned)
-        self.value = try container.decodeIfPresent(String.self, forKey: .value)
+        self.value = try container.decodeIfPresent(Double.self, forKey: .value)
+        self.target = try container.decodeIfPresent(Double.self, forKey: .target)
     }
     
     func encode(to encoder: Encoder) throws {

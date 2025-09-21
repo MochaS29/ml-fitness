@@ -3,6 +3,7 @@ import CoreData
 
 struct ProfessionalProgressView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.presentationMode) var presentationMode
     @State private var selectedMetric = ProgressMetric.steps
     @State private var selectedTimeRange = ProgressTimeRange.sixMonths
     @State private var progressData = ProgressData()
@@ -22,12 +23,10 @@ struct ProfessionalProgressView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Header
-            headerView
-            
             // Metric Selector
             metricSelectorView
                 .padding(.vertical, 16)
+                .padding(.top, 16)
             
             // Stats Summary
             statsSummaryView
@@ -45,7 +44,7 @@ struct ProfessionalProgressView: View {
             Spacer()
         }
         .background(Color(UIColor.systemGroupedBackground))
-        .navigationBarHidden(true)
+        .navigationBarTitle("Progress", displayMode: .large)
         .onAppear {
             loadProgressData()
         }
@@ -60,7 +59,7 @@ struct ProfessionalProgressView: View {
     private var headerView: some View {
         ZStack {
             HStack {
-                Button(action: { /* Navigate back */ }) {
+                Button(action: { presentationMode.wrappedValue.dismiss() }) {
                     HStack(spacing: 4) {
                         Image(systemName: "chevron.left")
                         Text("Back")
@@ -501,9 +500,9 @@ struct BarChartView: View {
     }
 }
 
-#Preview {
-    NavigationView {
-        ProfessionalProgressView()
-            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
-}
+// #Preview {
+//     NavigationView {
+//         ProfessionalProgressView()
+//             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+//     }
+// }

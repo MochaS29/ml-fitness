@@ -147,28 +147,28 @@ struct DiaryView: View {
         HStack(spacing: 20) {
             SummaryMetric(
                 title: "Calories",
-                value: "\(Int(dailySummary.calories))",
+                value: "0",
                 subtitle: "/ \(Int(dailySummary.calorieGoal))",
                 color: Color(red: 127/255, green: 176/255, blue: 105/255)
             )
             
             SummaryMetric(
                 title: "Protein",
-                value: "\(Int(dailySummary.protein))g",
+                value: "0",
                 subtitle: "/ \(Int(dailySummary.proteinGoal))g",
                 color: Color(red: 74/255, green: 155/255, blue: 155/255)
             )
             
             SummaryMetric(
                 title: "Exercise",
-                value: "\(Int(dailySummary.exerciseMinutes))",
+                value: "0",
                 subtitle: "min",
                 color: .orange
             )
             
             SummaryMetric(
                 title: "Water",
-                value: "\(Int(dailySummary.waterOunces))",
+                value: "0",
                 subtitle: "oz",
                 color: .blue
             )
@@ -599,7 +599,7 @@ struct WeightEntryView: View {
     }
 }
 
-#Preview {
-    DiaryView()
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// #Preview {
+//     DiaryView()
+//         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+// }

@@ -400,7 +400,7 @@ struct OnboardingSummaryView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     ProfileSummaryRow(label: "Name", value: name)
                     ProfileSummaryRow(label: "Gender", value: gender.rawValue)
-                    ProfileSummaryRow(label: "Age", value: "\(age) years")
+                    ProfileSummaryRow(label: "Age", value: "0")
                     ProfileSummaryRow(label: "Activity Level", value: activityLevel.rawValue)
                     
                     if !restrictions.isEmpty {

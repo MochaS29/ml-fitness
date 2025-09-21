@@ -88,25 +88,25 @@ struct FoodScanResultsView: View {
                         HStack(spacing: 20) {
                             NutritionSummaryItem(
                                 label: "Calories",
-                                value: "\(Int(totalNutrition.calories))",
+                                value: "0",
                                 color: Color(red: 127/255, green: 176/255, blue: 105/255)
                             )
                             
                             NutritionSummaryItem(
                                 label: "Protein",
-                                value: "\(Int(totalNutrition.protein))g",
+                                value: "0",
                                 color: .blue
                             )
                             
                             NutritionSummaryItem(
                                 label: "Carbs",
-                                value: "\(Int(totalNutrition.carbs))g",
+                                value: "0",
                                 color: .orange
                             )
                             
                             NutritionSummaryItem(
                                 label: "Fat",
-                                value: "\(Int(totalNutrition.fat))g",
+                                value: "0",
                                 color: .purple
                             )
                         }
@@ -380,33 +380,33 @@ struct PortionAdjusterView: View {
     }
 }
 
-#Preview {
-    FoodScanResultsView(
-        scanResult: FoodScanResult(
-            id: UUID(),
-            timestamp: Date(),
-            identifiedFoods: [
-                IdentifiedFood(
-                    name: "Grilled Chicken",
-                    confidence: 0.92,
-                    estimatedWeight: 150,
-                    calories: 250,
-                    protein: 46,
-                    carbs: 0,
-                    fat: 5.5,
-                    category: .protein
-                )
-            ],
-            totalNutrition: NutritionInfo(
-                calories: 250,
-                protein: 46,
-                carbs: 0,
-                fat: 5.5,
-                fiber: 0,
-                sugar: 0,
-                sodium: 100
-            )
-        ),
-        capturedImage: nil
-    )
-}
+// #Preview {
+//     FoodScanResultsView(
+//         scanResult: FoodScanResult(
+//             id: UUID(),
+//             timestamp: Date(),
+//             identifiedFoods: [
+//                 IdentifiedFood(
+//                     name: "Grilled Chicken",
+//                     confidence: 0.92,
+//                     estimatedWeight: 150,
+//                     calories: 250,
+//                     protein: 46,
+//                     carbs: 0,
+//                     fat: 5.5,
+//                     category: .protein
+//                 )
+//             ],
+//             totalNutrition: NutritionInfo(
+//                 calories: 250,
+//                 protein: 46,
+//                 carbs: 0,
+//                 fat: 5.5,
+//                 fiber: 0,
+//                 sugar: 0,
+//                 sodium: 100
+//             )
+//         ),
+//         capturedImage: nil
+//     )
+// }
