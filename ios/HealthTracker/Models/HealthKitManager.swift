@@ -277,6 +277,43 @@ class HealthKitManager: ObservableObject {
         
         healthStore.execute(query)
     }
+
+    func fetchHourlySteps(from startDate: Date, to endDate: Date, completion: @escaping ([Double]) -> Void) {
+        let stepsType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        let calendar = Calendar.current
+        var hourlySteps: [Double] = []
+        let group = DispatchGroup()
+
+        // Calculate hours between start and end
+        let hours = calendar.dateComponents([.hour], from: startDate, to: endDate).hour ?? 0
+
+        for hour in 0...min(hours, 23) {
+            guard let hourStart = calendar.date(byAdding: .hour, value: hour, to: startDate),
+                  let hourEnd = calendar.date(byAdding: .hour, value: 1, to: hourStart) else {
+                continue
+            }
+
+            group.enter()
+            let predicate = HKQuery.predicateForSamples(withStart: hourStart, end: hourEnd, options: .strictStartDate)
+
+            let query = HKStatisticsQuery(quantityType: stepsType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+                defer { group.leave() }
+
+                if let result = result, let sum = result.sumQuantity() {
+                    let steps = sum.doubleValue(for: HKUnit.count())
+                    hourlySteps.append(steps)
+                } else {
+                    hourlySteps.append(0)
+                }
+            }
+
+            healthStore.execute(query)
+        }
+
+        group.notify(queue: .main) {
+            completion(hourlySteps)
+        }
+    }
 }
 
 struct HealthKitWeightEntry {

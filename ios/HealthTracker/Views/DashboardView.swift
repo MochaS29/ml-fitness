@@ -26,7 +26,10 @@ struct DashboardView: View {
                     
                     // Summary card
                     SummaryCard(timeRange: selectedTimeRange)
-                    
+
+                    // Step Chart
+                    StepChartCard(timeRange: selectedTimeRange)
+
                     // Nutrient status
                     NutrientStatusCard(analyses: nutrientAnalyses)
                     
@@ -422,14 +425,14 @@ struct ActivityRow: View {
     let subtitle: String
     let time: String
     let color: Color
-    
+
     var body: some View {
         HStack {
             Image(systemName: icon)
                 .font(.title3)
                 .foregroundColor(color)
                 .frame(width: 30)
-            
+
             VStack(alignment: .leading) {
                 Text(title)
                     .font(.subheadline)
@@ -438,13 +441,176 @@ struct ActivityRow: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
-            
+
             Text(time)
                 .font(.caption)
                 .foregroundColor(.secondary)
         }
     }
+}
+
+struct StepChartCard: View {
+    let timeRange: TimeRange
+    @State private var stepData: [StepDataPoint] = []
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            Text("Step Activity")
+                .font(.headline)
+
+            if stepData.isEmpty {
+                // Placeholder when no data
+                VStack {
+                    Image(systemName: "figure.walk")
+                        .font(.largeTitle)
+                        .foregroundColor(.gray.opacity(0.3))
+                    Text("No step data available")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .frame(height: 200)
+                .frame(maxWidth: .infinity)
+            } else {
+                Chart(stepData) { dataPoint in
+                    BarMark(
+                        x: .value("Date", dataPoint.date),
+                        y: .value("Steps", dataPoint.steps)
+                    )
+                    .foregroundStyle(Color.green.gradient)
+                    .cornerRadius(4)
+                }
+                .frame(height: 200)
+                .chartYAxisLabel("Steps", position: .leading)
+                .chartXAxis {
+                    AxisMarks(values: .automatic) { value in
+                        AxisValueLabel {
+                            if let date = value.as(Date.self) {
+                                Text(formatDateForChart(date))
+                            }
+                        }
+                        AxisGridLine()
+                        AxisTick()
+                    }
+                }
+                .chartYAxis {
+                    AxisMarks(position: .leading)
+                }
+            }
+        }
+        .padding()
+        .background(Color(UIColor.secondarySystemBackground))
+        .cornerRadius(10)
+        .onAppear {
+            loadStepData()
+        }
+        .onChange(of: timeRange) {
+            loadStepData()
+        }
+    }
+
+    private func loadStepData() {
+        let calendar = Calendar.current
+        let endDate = Date()
+        let startDate: Date
+        let interval: Calendar.Component
+
+        switch timeRange {
+        case .today:
+            // Hourly data for today
+            startDate = calendar.startOfDay(for: endDate)
+            interval = .hour
+
+            // Generate hourly data points for today
+            var hourlyData: [StepDataPoint] = []
+            for hour in 0..<24 {
+                if let hourDate = calendar.date(byAdding: .hour, value: hour, to: startDate),
+                   hourDate <= endDate {
+                    // For demo, generate some sample data
+                    let steps = Int.random(in: 0...500)
+                    hourlyData.append(StepDataPoint(date: hourDate, steps: steps))
+                }
+            }
+
+            // Fetch actual data from HealthKit
+            HealthKitManager.shared.fetchHourlySteps(from: startDate, to: endDate) { hourlySteps in
+                DispatchQueue.main.async {
+                    if !hourlySteps.isEmpty {
+                        self.stepData = hourlySteps.enumerated().map { index, steps in
+                            let date = calendar.date(byAdding: .hour, value: index, to: startDate) ?? startDate
+                            return StepDataPoint(date: date, steps: Int(steps))
+                        }
+                    } else {
+                        self.stepData = hourlyData
+                    }
+                }
+            }
+
+        case .week:
+            // Daily data for past week
+            startDate = calendar.date(byAdding: .day, value: -7, to: endDate) ?? endDate
+            interval = .day
+
+            var dailyData: [StepDataPoint] = []
+            for day in 0..<7 {
+                if let dayDate = calendar.date(byAdding: .day, value: day, to: startDate) {
+                    dailyData.append(StepDataPoint(date: dayDate, steps: 0))
+                }
+            }
+
+            // Fetch actual data from HealthKit
+            for (index, dataPoint) in dailyData.enumerated() {
+                let dayStart = dataPoint.date
+                let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart
+
+                HealthKitManager.shared.fetchSteps(from: dayStart, to: dayEnd) { steps in
+                    DispatchQueue.main.async {
+                        if index < self.stepData.count {
+                            self.stepData[index].steps = Int(steps)
+                        } else {
+                            dailyData[index].steps = Int(steps)
+                            self.stepData = dailyData
+                        }
+                    }
+                }
+            }
+
+        case .month:
+            // Weekly data for past month
+            startDate = calendar.date(byAdding: .month, value: -1, to: endDate) ?? endDate
+            interval = .weekOfYear
+
+            var weeklyData: [StepDataPoint] = []
+            for week in 0..<4 {
+                if let weekDate = calendar.date(byAdding: .weekOfYear, value: week, to: startDate) {
+                    weeklyData.append(StepDataPoint(date: weekDate, steps: 0))
+                }
+            }
+
+            self.stepData = weeklyData
+        }
+    }
+
+    private func formatDateForChart(_ date: Date) -> String {
+        let formatter = DateFormatter()
+
+        switch timeRange {
+        case .today:
+            formatter.dateFormat = "ha" // 12PM, 1PM, etc.
+        case .week:
+            formatter.dateFormat = "E" // Mon, Tue, etc.
+        case .month:
+            formatter.dateFormat = "MMM d" // Jan 1, etc.
+        }
+
+        return formatter.string(from: date)
+    }
+}
+
+struct StepDataPoint: Identifiable {
+    let id = UUID()
+    let date: Date
+    var steps: Int
 }
 
