@@ -3,6 +3,7 @@ import CoreData
 
 struct WaterTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \WaterEntry.timestamp, ascending: false)],
         predicate: NSPredicate(format: "timestamp >= %@ AND timestamp < %@",
@@ -24,13 +25,14 @@ struct WaterTrackingView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                // Header
-                VStack(spacing: 12) {
-                    Text("Water Intake")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Header
+                    VStack(spacing: 12) {
+                        Text("Water Intake")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
                     
                     Text("Stay hydrated throughout the day")
                         .font(.subheadline)
@@ -190,6 +192,15 @@ struct WaterTrackingView: View {
                 Spacer(minLength: 50)
             }
         }
+        .navigationTitle("Hydration")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Done") {
+                    dismiss()
+                }
+            }
+        }
         .alert("Add Custom Amount", isPresented: $showingAddCustom) {
             TextField("Amount (oz)", text: $customAmount)
                 .keyboardType(.decimalPad)
@@ -204,6 +215,7 @@ struct WaterTrackingView: View {
             }
         } message: {
             Text("Enter the amount of water in ounces")
+        }
         }
     }
     

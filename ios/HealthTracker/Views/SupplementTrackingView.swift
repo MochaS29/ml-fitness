@@ -4,6 +4,7 @@ import VisionKit
 
 struct SupplementTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var profileManager: UserProfileManager
     @State private var showingScanner = false
     @State private var showingBarcodeScanner = false
@@ -11,14 +12,14 @@ struct SupplementTrackingView: View {
     @State private var scannedImage: UIImage?
     @State private var extractedNutrients: [ExtractedNutrient] = []
     @State private var isProcessing = false
-    
+
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \SupplementEntry.timestamp, ascending: false)],
         animation: .default)
     private var supplements: FetchedResults<SupplementEntry>
-    
+
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 if supplements.isEmpty {
                     EmptySupplementsView(
@@ -70,6 +71,11 @@ struct SupplementTrackingView: View {
             }
             .navigationTitle("Supplements")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Analysis") {
                         // Show nutrient analysis

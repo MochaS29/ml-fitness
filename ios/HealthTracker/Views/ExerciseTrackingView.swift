@@ -2,15 +2,16 @@ import SwiftUI
 
 struct ExerciseTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
     @State private var showingAddExercise = false
-    
+
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \ExerciseEntry.timestamp, ascending: false)],
         animation: .default)
     private var exercises: FetchedResults<ExerciseEntry>
-    
+
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 if exercises.isEmpty {
                     EmptyExerciseView(showingAddExercise: $showingAddExercise)
@@ -40,6 +41,11 @@ struct ExerciseTrackingView: View {
             }
             .navigationTitle("Exercise")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showingAddExercise = true }) {
                         Image(systemName: "plus")

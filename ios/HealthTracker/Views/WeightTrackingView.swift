@@ -2,22 +2,23 @@ import SwiftUI
 
 struct WeightTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var profileManager: UserProfileManager
     @StateObject private var healthKitManager = HealthKitManager.shared
-    
+
     @State private var currentWeight: Double = 0
     @State private var showingAddWeight = false
     @State private var selectedTimeRange = TimeRange.week
     @State private var weightHistory: [WeightDataPoint] = []
     @State private var isHealthKitAuthorized = false
-    
+
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \WeightEntry.timestamp, ascending: false)],
         animation: .default)
     private var weights: FetchedResults<WeightEntry>
-    
+
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
                     // Current Weight Card
@@ -67,7 +68,13 @@ struct WeightTrackingView: View {
                 .padding()
             }
             .navigationTitle("Weight Tracking")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showingAddWeight = true }) {
                         Image(systemName: "plus")
@@ -78,7 +85,10 @@ struct WeightTrackingView: View {
                 AddWeightView()
             }
             .onAppear {
-                loadWeightHistory()
+                // Delay heavy operations to prevent UI blocking
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    loadWeightHistory()
+                }
             }
         }
     }
