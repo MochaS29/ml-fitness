@@ -1,6 +1,7 @@
 import SwiftUI
 import Charts
-import HealthKit
+import Combine
+import CoreMotion
 
 struct StepDetailsView: View {
     @Environment(\.dismiss) private var dismiss
@@ -353,11 +354,11 @@ struct StepDetailsView: View {
 
 // MARK: - View Model
 class StepDetailsViewModel: ObservableObject {
-    @Published var todaySteps = 8547
+    @Published var todaySteps = 0
     @Published var stepGoal = 10000
-    @Published var averageSteps = 7850
-    @Published var distanceInMiles = 3.8
-    @Published var activeTime = "1h 23m"
+    @Published var averageSteps = 0
+    @Published var distanceInMiles = 0.0
+    @Published var activeTime = "--"
 
     @Published var hourlySteps: [StepDetailDataPoint] = []
     @Published var weeklySteps: [StepDetailDataPoint] = []
@@ -366,7 +367,8 @@ class StepDetailsViewModel: ObservableObject {
     @Published var hourlyBreakdown: [HourlyBreakdownItem] = []
     @Published var dailyBreakdown: [DailyBreakdownItem] = []
 
-    private let healthStore = HKHealthStore()
+    private let stepCounter = StepCounterService.shared
+    private var cancellables = Set<AnyCancellable>()
 
     var trendIcon: String {
         todaySteps > averageSteps ? "arrow.up.right" : "arrow.down.right"
@@ -385,15 +387,84 @@ class StepDetailsViewModel: ObservableObject {
     }
 
     init() {
+        setupBindings()
         fetchStepData()
     }
 
+    private func setupBindings() {
+        // Bind to step counter service
+        stepCounter.$todaySteps
+            .sink { [weak self] steps in
+                self?.todaySteps = steps
+            }
+            .store(in: &cancellables)
+
+        stepCounter.$todayDistance
+            .sink { [weak self] distance in
+                self?.distanceInMiles = distance
+            }
+            .store(in: &cancellables)
+
+        stepCounter.$hourlySteps
+            .sink { [weak self] hourlyData in
+                self?.updateHourlySteps(hourlyData)
+            }
+            .store(in: &cancellables)
+
+        // Calculate active time based on steps
+        stepCounter.$todaySteps
+            .sink { [weak self] steps in
+                self?.activeTime = self?.calculateActiveTime(steps: steps) ?? "--"
+            }
+            .store(in: &cancellables)
+    }
+
+    private func calculateActiveTime(steps: Int) -> String {
+        // Estimate: 100 steps per minute while walking
+        let minutes = steps / 100
+        let hours = minutes / 60
+        let remainingMinutes = minutes % 60
+
+        if hours > 0 {
+            return "\(hours)h \(remainingMinutes)m"
+        } else {
+            return "\(remainingMinutes)m"
+        }
+    }
+
+    private func updateHourlySteps(_ hourlyData: [Int]) {
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfDay = calendar.startOfDay(for: now)
+        let currentHour = calendar.component(.hour, from: now)
+
+        hourlySteps = hourlyData.enumerated().map { index, stepCount in
+            let date = calendar.date(byAdding: .hour, value: index, to: startOfDay)!
+            let isCurrentHour = index == currentHour
+            return StepDetailDataPoint(date: date, value: Double(stepCount), isCurrentHour: isCurrentHour)
+        }
+    }
+
     func fetchStepData() {
+        // Start real-time step counting
+        stepCounter.startStepCounting()
+
+        // Fetch historical data
         fetchHourlySteps()
         fetchWeeklySteps()
         fetchMonthlySteps()
         generateHourlyBreakdown()
         generateDailyBreakdown()
+
+        // Calculate average
+        calculateAverageSteps()
+    }
+
+    private func calculateAverageSteps() {
+        stepCounter.queryWeeklySteps { [weak self] weeklyData in
+            let total = weeklyData.reduce(0, +)
+            self?.averageSteps = weeklyData.isEmpty ? 0 : total / weeklyData.count
+        }
     }
 
     private func fetchHourlySteps() {
@@ -407,6 +478,10 @@ class StepDetailsViewModel: ObservableObject {
             let isCurrentHour = hour == currentHour
             let isFuture = hour > currentHour
 
+            // TODO: Replace with real HealthKit data
+            // Mock data temporarily disabled - showing zeros
+            let steps: Double = 0
+            /*
             let steps: Double = {
                 if isFuture {
                     return 0
@@ -426,6 +501,7 @@ class StepDetailsViewModel: ObservableObject {
                     return Double.random(in: 50...200)
                 }
             }()
+            */
 
             return StepDetailDataPoint(date: date, value: steps, isCurrentHour: isCurrentHour)
         }
@@ -436,7 +512,9 @@ class StepDetailsViewModel: ObservableObject {
 
         weeklySteps = (0..<7).map { dayOffset in
             let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date())!
-            let steps = Double([8547, 9200, 7500, 10200, 8800, 9100, 7900][dayOffset % 7])
+            // TODO: Replace with real HealthKit data
+            // let steps = Double([8547, 9200, 7500, 10200, 8800, 9100, 7900][dayOffset % 7])
+            let steps = 0.0 // Mock data disabled
             return StepDetailDataPoint(date: date, value: steps, isCurrentHour: false)
         }.reversed()
     }
@@ -446,7 +524,9 @@ class StepDetailsViewModel: ObservableObject {
 
         monthlySteps = (0..<30).map { dayOffset in
             let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date())!
-            let steps = Double.random(in: 6000...12000)
+            // TODO: Replace with real HealthKit data
+            // let steps = Double.random(in: 6000...12000)
+            let steps = 0.0 // Mock data disabled
             return StepDetailDataPoint(date: date, value: steps, isCurrentHour: false)
         }.reversed()
     }

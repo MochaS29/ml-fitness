@@ -5,6 +5,7 @@ struct UserProfile: Codable {
     var name: String
     var gender: Gender
     var birthDate: Date
+    var startingWeight: Double?
     var activityLevel: ActivityLevel
     var dietaryRestrictions: [DietaryRestriction]
     var healthConditions: [HealthCondition]
@@ -20,6 +21,7 @@ struct UserProfile: Codable {
         self.name = name
         self.gender = gender
         self.birthDate = birthDate
+        self.startingWeight = nil
         self.activityLevel = .moderate
         self.dietaryRestrictions = []
         self.healthConditions = []

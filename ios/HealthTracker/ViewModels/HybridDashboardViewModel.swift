@@ -1,11 +1,39 @@
 import SwiftUI
 import Combine
+import CoreMotion
 
 class DashboardViewModel: ObservableObject {
     // User Info
     @Published var userName = "Mocha"
     @Published var healthScore: Double = 85
-    
+
+    // Services
+    private let stepCounter = StepCounterService.shared
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        setupStepCounterBindings()
+        stepCounter.startStepCounting()
+    }
+
+    private func setupStepCounterBindings() {
+        // Bind step counter data to dashboard
+        stepCounter.$todaySteps
+            .sink { [weak self] steps in
+                self?.todaySteps = steps
+            }
+            .store(in: &cancellables)
+
+        // Update sparkline with hourly data
+        stepCounter.$hourlySteps
+            .sink { [weak self] hourlyData in
+                // Convert to sparkline format (last 7 hours shown)
+                let recentHours = Array(hourlyData.suffix(7))
+                self?.stepsSparkline = recentHours.map { Double($0) }
+            }
+            .store(in: &cancellables)
+    }
+
     // AI Greetings and Analysis
     var aiGreeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
@@ -38,9 +66,10 @@ class DashboardViewModel: ObservableObject {
     }
     
     // Today's Metrics
-    @Published var todayCalories = 1650
+    // TODO: Replace with real data from HealthKit/Core Data
+    @Published var todayCalories = 0 // Mock: 1650
     @Published var calorieGoal = 2200
-    @Published var todaySteps = 8547
+    @Published var todaySteps = 0 // Mock: 8547 - Needs HealthKit integration
     @Published var stepGoal = 10000
     @Published var currentWeight = 165.5
     @Published var targetWeight = 160.0
@@ -71,11 +100,12 @@ class DashboardViewModel: ObservableObject {
     var waterTrendPercent = 0
 
     // Sparkline Data (last 7 days)
-    var calorieSparkline: [Double] = [1850, 2100, 1950, 2200, 1900, 2050, 1650]
-    var stepsSparkline: [Double] = [7500, 8200, 9100, 8800, 10200, 9500, 8547]
-    var weightSparkline: [Double] = [167.2, 167.0, 166.8, 166.5, 166.2, 165.8, 165.5]
-    var exerciseSparkline: [Double] = [30, 0, 45, 60, 0, 30, 45]
-    var waterSparkline: [Double] = [7, 8, 6, 8, 7, 5, 6]
+    // TODO: Replace with real historical data
+    var calorieSparkline: [Double] = [] // Mock: [1850, 2100, 1950, 2200, 1900, 2050, 1650]
+    var stepsSparkline: [Double] = [] // Mock: [7500, 8200, 9100, 8800, 10200, 9500, 8547]
+    var weightSparkline: [Double] = [] // Mock: [167.2, 167.0, 166.8, 166.5, 166.2, 165.8, 165.5]
+    var exerciseSparkline: [Double] = [] // Mock: [30, 0, 45, 60, 0, 30, 45]
+    var waterSparkline: [Double] = [] // Mock: [7, 8, 6, 8, 7, 5, 6]
     
     // Nutrition Distribution
     var nutritionData: [HybridNutritionItem] {
@@ -288,6 +318,11 @@ class DashboardViewModel: ObservableObject {
     }
 
     func getStepsData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
+        // TODO: Connect to HealthKit for real step data
+        // Mock data temporarily disabled
+        return []
+
+        /* Original mock data - commented out
         switch range {
         case .day:
             // Hourly steps for today (24 hours)
@@ -339,6 +374,7 @@ class DashboardViewModel: ObservableObject {
                 )
             }.reversed()
         }
+        */
     }
 
     func getWeightRange(for range: HybridDashboardView.TimeRange) -> ClosedRange<Double> {
