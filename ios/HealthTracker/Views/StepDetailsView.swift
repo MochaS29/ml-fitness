@@ -359,9 +359,9 @@ class StepDetailsViewModel: ObservableObject {
     @Published var distanceInMiles = 3.8
     @Published var activeTime = "1h 23m"
 
-    @Published var hourlySteps: [StepDataPoint] = []
-    @Published var weeklySteps: [StepDataPoint] = []
-    @Published var monthlySteps: [StepDataPoint] = []
+    @Published var hourlySteps: [StepDetailDataPoint] = []
+    @Published var weeklySteps: [StepDetailDataPoint] = []
+    @Published var monthlySteps: [StepDetailDataPoint] = []
 
     @Published var hourlyBreakdown: [HourlyBreakdownItem] = []
     @Published var dailyBreakdown: [DailyBreakdownItem] = []
@@ -427,7 +427,7 @@ class StepDetailsViewModel: ObservableObject {
                 }
             }()
 
-            return StepDataPoint(date: date, value: steps, isCurrentHour: isCurrentHour)
+            return StepDetailDataPoint(date: date, value: steps, isCurrentHour: isCurrentHour)
         }
     }
 
@@ -437,7 +437,7 @@ class StepDetailsViewModel: ObservableObject {
         weeklySteps = (0..<7).map { dayOffset in
             let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date())!
             let steps = Double([8547, 9200, 7500, 10200, 8800, 9100, 7900][dayOffset % 7])
-            return StepDataPoint(date: date, value: steps, isCurrentHour: false)
+            return StepDetailDataPoint(date: date, value: steps, isCurrentHour: false)
         }.reversed()
     }
 
@@ -447,7 +447,7 @@ class StepDetailsViewModel: ObservableObject {
         monthlySteps = (0..<30).map { dayOffset in
             let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date())!
             let steps = Double.random(in: 6000...12000)
-            return StepDataPoint(date: date, value: steps, isCurrentHour: false)
+            return StepDetailDataPoint(date: date, value: steps, isCurrentHour: false)
         }.reversed()
     }
 
@@ -503,7 +503,7 @@ class StepDetailsViewModel: ObservableObject {
 }
 
 // MARK: - Data Models
-struct StepDataPoint: Identifiable {
+struct StepDetailDataPoint: Identifiable {
     let id = UUID()
     let date: Date
     let value: Double

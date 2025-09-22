@@ -312,10 +312,11 @@ struct MealPlanRow: View {
 
     private func addToDiary() {
         // Create a food entry from the meal plan
-        let calories = mealPlan.calories > 0 ? mealPlan.calories : 300 // Default if not set
-        let protein = mealPlan.protein > 0 ? mealPlan.protein : 15
-        let carbs = mealPlan.carbohydrates > 0 ? mealPlan.carbohydrates : 30
-        let fat = mealPlan.fat > 0 ? mealPlan.fat : 10
+        // Use default nutritional values since MealPlan doesn't store them
+        let calories = 400.0 // Default calorie estimate
+        let protein = 20.0
+        let carbs = 45.0
+        let fat = 15.0
 
         dataManager.addFoodEntry(
             name: mealPlan.recipeName ?? "Meal",
@@ -327,7 +328,7 @@ struct MealPlanRow: View {
             sugar: 0,
             sodium: 0,
             servingSize: "\(mealPlan.servings) serving\(mealPlan.servings > 1 ? "s" : "")",
-            mealType: mealType.rawValue
+            mealType: mealType
         )
 
         // Show confirmation
@@ -868,12 +869,9 @@ struct GenerateMealSuggestionsView: View {
         mealPlan.date = date
         mealPlan.mealType = mealType.rawValue
         mealPlan.recipeName = name
-        mealPlan.calories = Int32(calories)
-        mealPlan.protein = protein
-        mealPlan.carbohydrates = carbs
-        mealPlan.fat = fat
         mealPlan.servings = 1
-        mealPlan.createdAt = Date()
+        // Note: MealPlan entity doesn't store nutritional info
+        // These would need to be stored separately or in notes
 
         // Add some variety to notes based on meal type
         switch mealType {
