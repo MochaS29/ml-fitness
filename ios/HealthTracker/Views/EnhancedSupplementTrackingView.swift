@@ -56,14 +56,15 @@ struct EnhancedSupplementTrackingView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
-                        Button(action: { showingScanner = true }) {
-                            Label("Scan Label", systemImage: "camera.viewfinder")
-                        }
-                        
+                        // Scan feature temporarily disabled
+                        // Button(action: { showingScanner = true }) {
+                        //     Label("Scan Label", systemImage: "camera.viewfinder")
+                        // }
+
                         Button(action: { showingManualEntry = true }) {
                             Label("Manual Entry", systemImage: "plus.circle")
                         }
-                        
+
                         Button(action: { showingPresetSupplements = true }) {
                             Label("Common Supplements", systemImage: "pills")
                         }
@@ -72,9 +73,9 @@ struct EnhancedSupplementTrackingView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingScanner) {
-                DocumentScannerView(scannedImage: .constant(nil))
-            }
+            // .sheet(isPresented: $showingScanner) {
+            //     DocumentScannerView(scannedImage: .constant(nil))
+            // }
             .sheet(isPresented: $showingManualEntry) {
                 ManualSupplementEntryView()
             }
@@ -623,12 +624,13 @@ struct EmptySupplementsPrompt: View {
                     Label("Choose from Common Supplements", systemImage: "list.bullet")
                 }
                 .buttonStyle(.borderedProminent)
-                
-                Button(action: { showingScanner = true }) {
-                    Label("Scan Supplement Label", systemImage: "camera")
-                }
-                .buttonStyle(.bordered)
-                
+
+                // Scan feature temporarily disabled
+                // Button(action: { showingScanner = true }) {
+                //     Label("Scan Supplement Label", systemImage: "camera")
+                // }
+                // .buttonStyle(.bordered)
+
                 Button(action: { showingManualEntry = true }) {
                     Label("Manual Entry", systemImage: "plus")
                 }
