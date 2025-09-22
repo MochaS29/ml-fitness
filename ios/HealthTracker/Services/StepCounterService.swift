@@ -94,21 +94,25 @@ class StepCounterService: ObservableObject {
                 return
             }
 
-            DispatchQueue.main.async {
+            // Don't start immediately - give the app time to stabilize
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 // Start real-time pedometer updates
                 self?.startPedometerUpdates()
 
                 // Start activity monitoring
                 self?.startActivityUpdates()
 
-                // Query today's accumulated steps
-                self?.queryTodaysSteps()
+                // Delay initial queries to reduce startup load
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    // Query today's accumulated steps
+                    self?.queryTodaysSteps()
 
-                // Set up hourly update timer
-                self?.setupHourlyTimer()
+                    // Set up hourly update timer
+                    self?.setupHourlyTimer()
 
-                // Query hourly breakdown
-                self?.queryHourlySteps()
+                    // Query hourly breakdown
+                    self?.queryHourlySteps()
+                }
             }
         }
     }

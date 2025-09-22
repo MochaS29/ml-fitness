@@ -12,9 +12,11 @@ class DashboardViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     init() {
+        // Don't start ANYTHING immediately - wait 5 minutes for app to stabilize
         setupStepCounterBindings()
-        // Delay step counting significantly to avoid blocking UI on startup
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+
+        // Delay ALL background services for 5 minutes (300 seconds)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 300.0) { [weak self] in
             self?.stepCounter.startStepCounting()
         }
     }

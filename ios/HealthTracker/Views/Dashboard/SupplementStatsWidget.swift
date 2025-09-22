@@ -8,7 +8,7 @@ struct SupplementStatsWidget: View {
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \SupplementEntry.timestamp, ascending: false)],
         predicate: NSPredicate(format: "timestamp >= %@", Calendar.current.startOfDay(for: Date()) as NSDate),
-        animation: .default
+        animation: nil  // Disable animation to prevent UI updates
     ) private var todaysSupplements: FetchedResults<SupplementEntry>
     
     var topNutrients: [(name: String, percentage: Int)] {

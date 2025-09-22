@@ -13,7 +13,8 @@ struct HybridDashboardView: View {
     @State private var showingWaterDetail = false
     @State private var showingSupplementDetail = false
     @State private var showingStepDetail = false
-    
+    @State private var widgetsEnabled = false
+
     enum TimeRange: String, CaseIterable {
         case day = "Day"
         case week = "Week"
@@ -34,23 +35,37 @@ struct HybridDashboardView: View {
                 // Header with Time Range Selector
                 headerSection
                 
-                // AI Insights Carousel (from Option 4)
-                aiInsightsSection
-                
-                // Key Metrics Cards with Trends (from Option 3)
-                metricsOverview
-                
-                // Supplement Stats Widget
-                SupplementStatsWidget(showingDetail: $showingSupplementDetail)
-                
-                // Interactive Charts Section (from Option 3)
-                chartsSection
-                
-                // AI Recommendations (from Option 4)
-                aiRecommendationsSection
-                
-                // Detailed Analytics (from Option 3)
-                detailedAnalyticsSection
+                // Delay loading heavy widgets
+                if widgetsEnabled {
+                    // AI Insights Carousel (from Option 4)
+                    aiInsightsSection
+
+                    // Key Metrics Cards with Trends (from Option 3)
+                    metricsOverview
+
+                    // Supplement Stats Widget
+                    SupplementStatsWidget(showingDetail: $showingSupplementDetail)
+
+                    // Interactive Charts Section (from Option 3)
+                    chartsSection
+
+                    // AI Recommendations (from Option 4)
+                    aiRecommendationsSection
+
+                    // Detailed Analytics (from Option 3)
+                    detailedAnalyticsSection
+                } else {
+                    // Show loading placeholder
+                    VStack(spacing: 20) {
+                        ProgressView("Loading Dashboard...")
+                            .padding()
+
+                        Text("Please wait while we prepare your health data")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(height: 200)
+                }
             }
             .padding()
         }
@@ -58,9 +73,16 @@ struct HybridDashboardView: View {
         .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
-            // Delay animations to prevent immediate UI blocking
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            // Enable widgets after a delay to prevent initial freezing
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 withAnimation(.easeOut(duration: 0.5)) {
+                    widgetsEnabled = true
+                }
+            }
+
+            // Further delay chart animations
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                withAnimation(.easeOut(duration: 0.3)) {
                     animateCharts = true
                 }
             }
