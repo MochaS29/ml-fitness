@@ -113,8 +113,13 @@ struct DiaryView: View {
                 UnifiedFoodSearchSheet(mealType: selectedMealType)
             }
             .sheet(isPresented: $showingExerciseSearch) {
-                // Exercise search functionality
-                Text("Exercise Search Coming Soon")
+                ExerciseEntrySheet()
+            }
+            .sheet(isPresented: $showingWaterEntry) {
+                WaterEntrySheet()
+            }
+            .sheet(isPresented: $showingSupplementEntry) {
+                SupplementEntrySheet()
             }
             .onChange(of: selectedDate) {
                 updateFetchRequests()
@@ -293,9 +298,9 @@ struct DiaryView: View {
                 
                 Spacer()
                 
-                Button(action: { /* Add supplement */ }) {
+                Button(action: { showingSupplementEntry = true }) {
                     Image(systemName: "plus.circle.fill")
-                        .foregroundColor(Color(red: 139/255, green: 69/255, blue: 19/255))
+                        .foregroundColor(.purple)
                 }
             }
             .padding()
@@ -332,9 +337,12 @@ struct DiaryView: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
-                Button(action: { /* Add water */ }) {
+                Button(action: {
+                    // Add 8oz of water
+                    dataManager.quickAddWater(8)
+                }) {
                     Image(systemName: "plus.circle.fill")
-                        .foregroundColor(Color(red: 139/255, green: 69/255, blue: 19/255))
+                        .foregroundColor(.blue)
                 }
             }
             .padding()
@@ -357,9 +365,12 @@ struct DiaryView: View {
                 
                 Spacer()
                 
-                Button(action: { /* Add note */ }) {
+                Button(action: {
+                    // For now, just show a note entry alert or do nothing
+                    // TODO: Add note entry functionality
+                }) {
                     Image(systemName: "plus.circle.fill")
-                        .foregroundColor(Color(red: 139/255, green: 69/255, blue: 19/255))
+                        .foregroundColor(.gray)
                 }
             }
             .padding()
@@ -571,17 +582,27 @@ struct SupplementEntryRow: View {
 struct WaterTrackingRow: View {
     let currentOunces: Int
     let glassSize: Int = 8
-    
+    @StateObject private var dataManager = UnifiedDataManager.shared
+
     var glasses: Int {
         currentOunces / glassSize
     }
-    
+
     var body: some View {
         HStack(spacing: 8) {
             ForEach(0..<8, id: \.self) { index in
-                Image(systemName: index < glasses ? "drop.fill" : "drop")
-                    .font(.title2)
-                    .foregroundColor(index < glasses ? .blue : .gray)
+                Button(action: {
+                    // Add water when tapping a drop
+                    let ouncesToAdd = Double((index + 1) * glassSize - currentOunces)
+                    if ouncesToAdd > 0 {
+                        dataManager.quickAddWater(ouncesToAdd)
+                    }
+                }) {
+                    Image(systemName: index < glasses ? "drop.fill" : "drop")
+                        .font(.title2)
+                        .foregroundColor(index < glasses ? .blue : .gray)
+                }
+                .buttonStyle(.plain)
             }
         }
     }
