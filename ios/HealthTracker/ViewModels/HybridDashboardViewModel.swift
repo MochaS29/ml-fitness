@@ -13,8 +13,8 @@ class DashboardViewModel: ObservableObject {
 
     init() {
         setupStepCounterBindings()
-        // Delay step counting to avoid blocking UI on startup
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+        // Delay step counting significantly to avoid blocking UI on startup
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
             self?.stepCounter.startStepCounting()
         }
     }

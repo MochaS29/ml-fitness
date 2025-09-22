@@ -147,11 +147,16 @@ class StepCounterService: ObservableObject {
         let startOfDay = Calendar.current.startOfDay(for: Date())
 
         pedometer.startUpdates(from: startOfDay) { [weak self] pedometerData, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self?.errorMessage = "Step counting error: \(error.localizedDescription)"
-                    return
-                }
+            // Process on background queue to avoid blocking UI
+            DispatchQueue.global(qos: .background).async {
+                guard let self = self else { return }
+
+                // Update on main queue only when needed
+                DispatchQueue.main.async { [weak self] in
+                    if let error = error {
+                        self?.errorMessage = "Step counting error: \(error.localizedDescription)"
+                        return
+                    }
 
                 guard let data = pedometerData else { return }
 
@@ -176,8 +181,9 @@ class StepCounterService: ObservableObject {
                 self?.currentPace = data.currentPace?.doubleValue
                 self?.currentCadence = data.currentCadence?.doubleValue
 
-                self?.lastUpdateTime = Date()
-                self?.errorMessage = nil
+                    self?.lastUpdateTime = Date()
+                    self?.errorMessage = nil
+                }
             }
         }
     }
@@ -313,10 +319,12 @@ class StepCounterService: ObservableObject {
     private func setupHourlyTimer() {
         updateTimer?.invalidate()
 
-        // Update every 5 minutes
-        updateTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { [weak self] _ in
-            self?.queryTodaysSteps()
-            self?.queryHourlySteps()
+        // Update every 15 minutes instead of 5 to reduce load
+        updateTimer = Timer.scheduledTimer(withTimeInterval: 900, repeats: true) { [weak self] _ in
+            DispatchQueue.global(qos: .background).async {
+                self?.queryTodaysSteps()
+                self?.queryHourlySteps()
+            }
         }
     }
 

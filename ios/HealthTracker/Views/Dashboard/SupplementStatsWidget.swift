@@ -15,14 +15,14 @@ struct SupplementStatsWidget: View {
         guard let profile = profileManager.currentProfile else { return [] }
 
         // Limit processing to prevent memory issues
-        let supplementsToProcess = Array(todaysSupplements.prefix(10))
+        let supplementsToProcess = Array(todaysSupplements.prefix(5))  // Reduced from 10
 
         var nutrientTotals: [String: Double] = [:]
 
         // Aggregate nutrients from supplements (limited)
         for supplement in supplementsToProcess {
             if let nutrients = supplement.nutrients as? [String: Double] {
-                for (nutrientId, amount) in nutrients.prefix(5) {  // Limit nutrients processed
+                for (nutrientId, amount) in nutrients.prefix(3) {  // Reduced from 5
                     nutrientTotals[nutrientId, default: 0] += amount
                 }
             }
@@ -41,7 +41,7 @@ struct SupplementStatsWidget: View {
             "magnesium": "Magnesium"
         ]
 
-        for (nutrientId, amount) in nutrientTotals.prefix(6) {
+        for (nutrientId, amount) in nutrientTotals.prefix(3) {  // Reduced from 6
             let name = simpleNames[nutrientId] ?? nutrientId.capitalized
             let percentage = min(Int(amount), 200)  // Cap at 200% for safety
             percentages.append((name: name, percentage: percentage))

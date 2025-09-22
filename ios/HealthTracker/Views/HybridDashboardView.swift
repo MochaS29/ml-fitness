@@ -58,8 +58,11 @@ struct HybridDashboardView: View {
         .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
-            withAnimation(.easeOut(duration: 0.8)) {
-                animateCharts = true
+            // Delay animations to prevent immediate UI blocking
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation(.easeOut(duration: 0.5)) {
+                    animateCharts = true
+                }
             }
         }
         .sheet(item: $selectedInsight) { insight in
