@@ -239,9 +239,10 @@ struct HybridDashboardView: View {
                 color: .green,
                 sparklineData: viewModel.stepsSparkline
             )
-            .onTapGesture {
-                showingStepDetail = true
-            }
+            // Temporarily disabled to prevent freezing
+            // .onTapGesture {
+            //     showingStepDetail = true
+            // }
             
             MetricCardWithTrend(
                 title: "Weight",

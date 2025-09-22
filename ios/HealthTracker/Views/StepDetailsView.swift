@@ -1,3 +1,4 @@
+
 import SwiftUI
 import Charts
 import Combine
@@ -10,7 +11,7 @@ struct StepDetailsView: View {
     @State private var selectedDate = Date()
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 0) {
                 // Tab selector
                 Picker("View", selection: $selectedTab) {
@@ -388,8 +389,11 @@ class StepDetailsViewModel: ObservableObject {
     }
 
     init() {
-        setupBindings()
-        fetchStepData()
+        // Delay initialization to prevent blocking UI
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.setupBindings()
+            self?.fetchStepData()
+        }
     }
 
     private func setupBindings() {
