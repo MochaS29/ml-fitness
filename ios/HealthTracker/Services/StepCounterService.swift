@@ -319,8 +319,8 @@ class StepCounterService: ObservableObject {
     private func setupHourlyTimer() {
         updateTimer?.invalidate()
 
-        // Update every 15 minutes instead of 5 to reduce load
-        updateTimer = Timer.scheduledTimer(withTimeInterval: 900, repeats: true) { [weak self] _ in
+        // Update every hour to minimize background processing
+        updateTimer = Timer.scheduledTimer(withTimeInterval: 3600, repeats: true) { [weak self] _ in
             DispatchQueue.global(qos: .background).async {
                 self?.queryTodaysSteps()
                 self?.queryHourlySteps()
