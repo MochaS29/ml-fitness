@@ -12,6 +12,7 @@ struct HybridDashboardView: View {
     @State private var showingExerciseDetail = false
     @State private var showingWaterDetail = false
     @State private var showingSupplementDetail = false
+    @State private var showingStepDetail = false
     
     enum TimeRange: String, CaseIterable {
         case day = "Day"
@@ -78,6 +79,9 @@ struct HybridDashboardView: View {
         }
         .sheet(isPresented: $showingSupplementDetail) {
             EnhancedSupplementTrackingView()
+        }
+        .sheet(isPresented: $showingStepDetail) {
+            StepDetailsView()
         }
     }
     
@@ -211,8 +215,7 @@ struct HybridDashboardView: View {
                 sparklineData: viewModel.stepsSparkline
             )
             .onTapGesture {
-                // Steps don't have a detail view, could show exercise detail instead
-                showingExerciseDetail = true
+                showingStepDetail = true
             }
             
             MetricCardWithTrend(
@@ -266,9 +269,14 @@ struct HybridDashboardView: View {
             // Steps Chart with Time Range
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Text("Steps")
-                        .font(.headline)
-                        .foregroundColor(.deepCharcoal)
+                    HStack(spacing: 8) {
+                        Image(systemName: "figure.walk")
+                            .font(.headline)
+                            .foregroundColor(.green)
+                        Text("Steps")
+                            .font(.headline)
+                            .foregroundColor(.deepCharcoal)
+                    }
                     Spacer()
                     Picker("", selection: $selectedTimeRange) {
                         Text("Day").tag(TimeRange.day)
@@ -318,9 +326,15 @@ struct HybridDashboardView: View {
 
             // Weight Chart
             VStack(alignment: .leading, spacing: 12) {
-                Text("Weight Trend")
-                    .font(.headline)
-                    .foregroundColor(.deepCharcoal)
+                HStack(spacing: 8) {
+                    Image(systemName: "scalemass")
+                        .font(.headline)
+                        .foregroundColor(.blue)
+                    Text("Weight Trend")
+                        .font(.headline)
+                        .foregroundColor(.deepCharcoal)
+                    Spacer()
+                }
 
                 Chart(viewModel.getWeightData(for: selectedTimeRange)) { dataPoint in
                     LineMark(
@@ -347,9 +361,16 @@ struct HybridDashboardView: View {
 
             // Exercise Minutes Chart
             VStack(alignment: .leading, spacing: 12) {
-                Text("Exercise Minutes")
-                    .font(.headline)
-                    .foregroundColor(.deepCharcoal)
+                HStack(spacing: 8) {
+                    Image(systemName: "figure.run")
+                        .font(.headline)
+                        .foregroundColor(.orange)
+                    Text("Exercise Minutes")
+                        .font(.headline)
+                        .foregroundColor(.deepCharcoal)
+                    Spacer()
+                }
+                .padding(.bottom, 4)
 
                 Chart(viewModel.getExerciseData(for: selectedTimeRange)) { dataPoint in
                     BarMark(
