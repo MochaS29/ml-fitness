@@ -201,17 +201,18 @@ struct HybridDashboardView: View {
     private var metricsOverview: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
             MetricCardWithTrend(
-                title: "Calories",
-                value: "0",
-                subtitle: "of \(viewModel.calorieGoal) goal",
-                trend: viewModel.calorieTrend,
-                trendValue: "+\(viewModel.calorieTrendPercent)%",
-                icon: "flame.fill",
-                color: .orange,
-                sparklineData: viewModel.calorieSparkline
+                title: "Steps",
+                value: "\(viewModel.todaySteps)",
+                subtitle: "of \(viewModel.stepGoal) goal",
+                trend: viewModel.stepsTrend,
+                trendValue: "+\(viewModel.stepsTrendPercent)%",
+                icon: "figure.walk",
+                color: .green,
+                sparklineData: viewModel.stepsSparkline
             )
             .onTapGesture {
-                showingCalorieDetail = true
+                // Steps don't have a detail view, could show exercise detail instead
+                showingExerciseDetail = true
             }
             
             MetricCardWithTrend(
@@ -262,10 +263,10 @@ struct HybridDashboardView: View {
 
     private var chartsSection: some View {
         VStack(spacing: 20) {
-            // Calories Chart with Time Range
+            // Steps Chart with Time Range
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Text("Calories")
+                    Text("Steps")
                         .font(.headline)
                         .foregroundColor(.deepCharcoal)
                     Spacer()
@@ -278,14 +279,14 @@ struct HybridDashboardView: View {
                     .frame(width: 180)
                 }
 
-                Chart(viewModel.getCaloriesData(for: selectedTimeRange)) { dataPoint in
+                Chart(viewModel.getStepsData(for: selectedTimeRange)) { dataPoint in
                     BarMark(
-                        x: .value("Date", dataPoint.date),
-                        y: .value("Calories", dataPoint.value)
+                        x: .value("Time", dataPoint.date),
+                        y: .value("Steps", dataPoint.value)
                     )
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.orange.opacity(0.8), .red.opacity(0.6)],
+                            colors: [.green.opacity(0.8), .mint.opacity(0.6)],
                             startPoint: .top,
                             endPoint: .bottom
                         )
@@ -295,6 +296,19 @@ struct HybridDashboardView: View {
                 .frame(height: 200)
                 .chartYAxis {
                     AxisMarks(position: .leading)
+                }
+                .chartXAxis {
+                    AxisMarks { value in
+                        if selectedTimeRange == .day {
+                            AxisValueLabel {
+                                if let date = value.as(Date.self) {
+                                    Text(date, format: .dateTime.hour())
+                                }
+                            }
+                        } else {
+                            AxisValueLabel()
+                        }
+                    }
                 }
             }
             .padding()

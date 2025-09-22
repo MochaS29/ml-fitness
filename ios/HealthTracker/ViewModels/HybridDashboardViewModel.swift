@@ -40,6 +40,8 @@ class DashboardViewModel: ObservableObject {
     // Today's Metrics
     @Published var todayCalories = 1650
     @Published var calorieGoal = 2200
+    @Published var todaySteps = 8547
+    @Published var stepGoal = 10000
     @Published var currentWeight = 165.5
     @Published var targetWeight = 160.0
     @Published var todayExercise = 45
@@ -61,13 +63,16 @@ class DashboardViewModel: ObservableObject {
     // Trends
     var calorieTrend: MetricCardWithTrend.Trend = .up
     var calorieTrendPercent = 8
+    var stepsTrend: MetricCardWithTrend.Trend = .up
+    var stepsTrendPercent = 15
     var weightTrend: MetricCardWithTrend.Trend = .down
     var weightTrendPercent = -2  // Lost 2% this week
     var waterTrend: MetricCardWithTrend.Trend = .neutral
     var waterTrendPercent = 0
-    
+
     // Sparkline Data (last 7 days)
     var calorieSparkline: [Double] = [1850, 2100, 1950, 2200, 1900, 2050, 1650]
+    var stepsSparkline: [Double] = [7500, 8200, 9100, 8800, 10200, 9500, 8547]
     var weightSparkline: [Double] = [167.2, 167.0, 166.8, 166.5, 166.2, 165.8, 165.5]
     var exerciseSparkline: [Double] = [30, 0, 45, 60, 0, 30, 45]
     var waterSparkline: [Double] = [7, 8, 6, 8, 7, 5, 6]
@@ -277,6 +282,60 @@ class DashboardViewModel: ObservableObject {
                 ChartDataPoint(
                     date: Calendar.current.date(byAdding: .weekOfYear, value: -weekOffset, to: Date())!,
                     value: Double.random(in: 150...300)
+                )
+            }.reversed()
+        }
+    }
+
+    func getStepsData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
+        switch range {
+        case .day:
+            // Hourly steps for today (24 hours)
+            let calendar = Calendar.current
+            let now = Date()
+            let startOfDay = calendar.startOfDay(for: now)
+
+            return (0..<24).map { hour in
+                let date = calendar.date(byAdding: .hour, value: hour, to: startOfDay)!
+                let currentHour = calendar.component(.hour, from: now)
+
+                // Generate realistic step data
+                let steps: Double = {
+                    if hour > currentHour {
+                        return 0 // Future hours have no steps
+                    } else if hour < 6 {
+                        return Double.random(in: 0...50) // Early morning
+                    } else if hour < 9 {
+                        return Double.random(in: 200...500) // Morning activity
+                    } else if hour < 12 {
+                        return Double.random(in: 300...800) // Mid-morning
+                    } else if hour < 14 {
+                        return Double.random(in: 400...900) // Lunch time
+                    } else if hour < 18 {
+                        return Double.random(in: 300...700) // Afternoon
+                    } else if hour < 21 {
+                        return Double.random(in: 200...600) // Evening
+                    } else {
+                        return Double.random(in: 50...200) // Night
+                    }
+                }()
+
+                return ChartDataPoint(date: date, value: steps)
+            }
+        case .week:
+            // Daily steps for past 7 days
+            return (0..<7).map { dayOffset in
+                ChartDataPoint(
+                    date: Calendar.current.date(byAdding: .day, value: -dayOffset, to: Date())!,
+                    value: Double([7500, 8200, 9100, 8800, 10200, 9500, 8547][dayOffset % 7])
+                )
+            }.reversed()
+        case .month:
+            // Weekly averages for past month
+            return (0..<4).map { weekOffset in
+                ChartDataPoint(
+                    date: Calendar.current.date(byAdding: .weekOfYear, value: -weekOffset, to: Date())!,
+                    value: Double.random(in: 8000...10000)
                 )
             }.reversed()
         }

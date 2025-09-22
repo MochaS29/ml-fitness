@@ -213,6 +213,8 @@ struct DayMealPlanCard: View {
 // Meal plan row
 struct MealPlanRow: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @StateObject private var dataManager = UnifiedDataManager.shared
+    @State private var showingAddedAlert = false
     let mealPlan: MealPlan
     let mealType: MealType
     
@@ -223,16 +225,16 @@ struct MealPlanRow: View {
                 .font(.body)
                 .foregroundColor(.secondary)
                 .frame(width: 24)
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(mealType.rawValue)
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Text(mealPlan.recipeName ?? "Unknown")
                     .font(.subheadline)
                     .fontWeight(.medium)
-                
+
                 if let notes = mealPlan.notes, !notes.isEmpty {
                     Text(notes)
                         .font(.caption)
@@ -240,22 +242,42 @@ struct MealPlanRow: View {
                         .lineLimit(1)
                 }
             }
-            
+
             Spacer()
-            
+
+            if showingAddedAlert {
+                Text("Added!")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.wellnessGreen)
+                    .transition(.scale.combined(with: .opacity))
+            }
+
             if mealPlan.servings > 1 {
                 Text("\(mealPlan.servings) servings")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
             
+            // Quick Add to Diary button
+            Button(action: addToDiary) {
+                Image(systemName: "plus.app")
+                    .font(.body)
+                    .foregroundColor(.mindfulTeal)
+            }
+            .buttonStyle(.plain)
+
             Menu {
+                Button(action: addToDiary) {
+                    Label("Add to Today's Diary", systemImage: "plus.app")
+                }
+
                 Button(action: {
                     // Edit meal
                 }) {
                     Label("Edit", systemImage: "pencil")
                 }
-                
+
                 Button(role: .destructive) {
                     viewContext.delete(mealPlan)
                     try? viewContext.save()
@@ -276,6 +298,35 @@ struct MealPlanRow: View {
         case .lunch: return "sun.max.fill"
         case .dinner: return "moon.fill"
         case .snack: return "leaf.fill"
+        }
+    }
+
+    private func addToDiary() {
+        // Create a food entry from the meal plan
+        let calories = mealPlan.calories > 0 ? mealPlan.calories : 300 // Default if not set
+        let protein = mealPlan.protein > 0 ? mealPlan.protein : 15
+        let carbs = mealPlan.carbohydrates > 0 ? mealPlan.carbohydrates : 30
+        let fat = mealPlan.fat > 0 ? mealPlan.fat : 10
+
+        dataManager.addFoodEntry(
+            name: mealPlan.recipeName ?? "Meal",
+            calories: calories,
+            protein: protein,
+            carbs: carbs,
+            fat: fat,
+            fiber: 0,
+            sugar: 0,
+            sodium: 0,
+            servingSize: "\(mealPlan.servings) serving\(mealPlan.servings > 1 ? "s" : "")",
+            mealType: mealType.rawValue
+        )
+
+        // Show confirmation
+        showingAddedAlert = true
+
+        // Hide alert after 2 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            showingAddedAlert = false
         }
     }
 }

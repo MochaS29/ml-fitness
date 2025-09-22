@@ -8,6 +8,7 @@ struct OnboardingView: View {
     @State private var name = ""
     @State private var selectedGender = Gender.female
     @State private var birthDate = Date()
+    @State private var startingWeight = ""
     @State private var activityLevel = ActivityLevel.moderate
     @State private var selectedRestrictions: Set<DietaryRestriction> = []
     @State private var selectedConditions: Set<HealthCondition> = []
@@ -23,7 +24,7 @@ struct OnboardingView: View {
             
             TabView(selection: $currentStep) {
                 // Step 1: Basic Info
-                BasicInfoView(name: $name, gender: $selectedGender, birthDate: $birthDate)
+                BasicInfoView(name: $name, gender: $selectedGender, birthDate: $birthDate, startingWeight: $startingWeight)
                     .tag(0)
                 
                 // Step 2: Activity Level
@@ -49,6 +50,7 @@ struct OnboardingView: View {
                     name: name,
                     gender: selectedGender,
                     birthDate: birthDate,
+                    startingWeight: startingWeight,
                     activityLevel: activityLevel,
                     restrictions: selectedRestrictions,
                     conditions: selectedConditions,
@@ -109,7 +111,12 @@ struct OnboardingView: View {
         profile.isPregnant = isPregnant
         profile.pregnancyTrimester = pregnancyTrimester
         profile.isBreastfeeding = isBreastfeeding
-        
+
+        // Save starting weight if provided
+        if !startingWeight.isEmpty, let weight = Double(startingWeight) {
+            profile.startingWeight = weight
+        }
+
         profileManager.saveProfile(profile)
     }
 }
@@ -118,6 +125,7 @@ struct BasicInfoView: View {
     @Binding var name: String
     @Binding var gender: Gender
     @Binding var birthDate: Date
+    @Binding var startingWeight: String
 
     var age: Int {
         Calendar.current.dateComponents([.year], from: birthDate, to: Date()).year ?? 0
@@ -128,11 +136,11 @@ struct BasicInfoView: View {
             Text("Let's Get Started")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-            
+
             Text("Tell us a bit about yourself")
                 .font(.title3)
                 .foregroundColor(.secondary)
-            
+
             VStack(alignment: .leading, spacing: 20) {
                 VStack(alignment: .leading) {
                     Text("Name")
@@ -140,7 +148,7 @@ struct BasicInfoView: View {
                     TextField("Your name", text: $name)
                         .textFieldStyle(.roundedBorder)
                 }
-                
+
                 VStack(alignment: .leading) {
                     Text("Gender")
                         .font(.headline)
@@ -151,7 +159,7 @@ struct BasicInfoView: View {
                     }
                     .pickerStyle(.segmented)
                 }
-                
+
                 VStack(alignment: .leading) {
                     Text("Birth Date")
                         .font(.headline)
@@ -164,9 +172,25 @@ struct BasicInfoView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
+
+                VStack(alignment: .leading) {
+                    Text("Starting Weight (Optional)")
+                        .font(.headline)
+                    HStack {
+                        TextField("Enter weight", text: $startingWeight)
+                            .keyboardType(.decimalPad)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: 150)
+                        Text("lbs")
+                            .foregroundColor(.secondary)
+                    }
+                    Text("This helps track your progress")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
             .padding()
-            
+
             Spacer()
         }
         .padding()
@@ -388,6 +412,7 @@ struct OnboardingSummaryView: View {
     let name: String
     let gender: Gender
     let birthDate: Date
+    let startingWeight: String
     let activityLevel: ActivityLevel
     let restrictions: Set<DietaryRestriction>
     let conditions: Set<HealthCondition>
@@ -410,6 +435,9 @@ struct OnboardingSummaryView: View {
                     ProfileSummaryRow(label: "Name", value: name)
                     ProfileSummaryRow(label: "Gender", value: gender.rawValue)
                     ProfileSummaryRow(label: "Age", value: "\(age) years")
+                    if !startingWeight.isEmpty {
+                        ProfileSummaryRow(label: "Starting Weight", value: "\(startingWeight) lbs")
+                    }
                     ProfileSummaryRow(label: "Activity Level", value: activityLevel.rawValue)
                     
                     if !restrictions.isEmpty {

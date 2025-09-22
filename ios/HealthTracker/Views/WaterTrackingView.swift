@@ -93,28 +93,35 @@ struct WaterTrackingView: View {
                     .padding(.horizontal)
                     
                     // Custom amounts
-                    HStack(spacing: 12) {
-                        ForEach([12, 16, 20, 32], id: \.self) { amount in
-                            Button(action: {
-                                addWaterEntry(amount: Double(amount))
-                            }) {
-                                Text("\(amount) oz")
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            ForEach([8, 12, 16, 20, 24, 32], id: \.self) { amount in
+                                Button(action: {
+                                    addWaterEntry(amount: Double(amount))
+                                }) {
+                                    Text("\(amount) oz")
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.blue)
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 8)
+                                        .background(Color.blue.opacity(0.1))
+                                        .cornerRadius(20)
+                                }
+                                .buttonStyle(.plain)
+                            }
+
+                            Button(action: { showingAddCustom = true }) {
+                                Label("Custom", systemImage: "plus.circle")
                                     .font(.caption)
                                     .fontWeight(.medium)
                                     .foregroundColor(.blue)
-                                    .padding(.horizontal, 16)
+                                    .padding(.horizontal, 14)
                                     .padding(.vertical, 8)
                                     .background(Color.blue.opacity(0.1))
                                     .cornerRadius(20)
                             }
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: { showingAddCustom = true }) {
-                            Image(systemName: "plus.circle")
-                                .font(.title2)
-                                .foregroundColor(.blue)
+                            .buttonStyle(.plain)
                         }
                     }
                     .padding(.horizontal)

@@ -196,17 +196,17 @@ struct SupplementEntrySheet: View {
     @State private var servingUnit = "tablet"
     @State private var selectedVitamins: Set<String> = []
 
-    let commonSupplements = [
-        "Multivitamin",
-        "Vitamin D",
-        "Vitamin C",
-        "Omega-3",
-        "Calcium",
-        "Iron",
-        "Magnesium",
-        "Zinc",
-        "B Complex",
-        "Probiotics"
+    let commonSupplements: [(name: String, brand: String)] = [
+        ("Multivitamin", "Nature Made"),
+        ("Vitamin D3", "NOW Foods"),
+        ("Vitamin C", "Garden of Life"),
+        ("Omega-3", "Nordic Naturals"),
+        ("Calcium", "Citracal"),
+        ("Iron", "Nature's Bounty"),
+        ("Magnesium", "Doctor's Best"),
+        ("Zinc", "Thorne"),
+        ("B Complex", "Jarrow Formulas"),
+        ("Probiotics", "Culturelle")
     ]
 
     let servingUnits = ["tablet", "capsule", "softgel", "gummy", "ml", "tsp", "scoop"]
@@ -232,11 +232,11 @@ struct SupplementEntrySheet: View {
                 }
 
                 Section("Quick Add Common Supplements") {
-                    ForEach(commonSupplements, id: \.self) { supplement in
+                    ForEach(commonSupplements, id: \.name) { supplement in
                         Button(action: {
                             dataManager.addSupplementEntry(
-                                name: supplement,
-                                brand: nil,
+                                name: supplement.name,
+                                brand: supplement.brand,
                                 servingSize: "1",
                                 servingUnit: "tablet",
                                 nutrients: [:]
@@ -246,8 +246,14 @@ struct SupplementEntrySheet: View {
                             HStack {
                                 Image(systemName: "pills")
                                     .foregroundColor(.purple)
-                                Text(supplement)
-                                    .foregroundColor(.primary)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(supplement.name)
+                                        .foregroundColor(.primary)
+                                        .font(.subheadline)
+                                    Text(supplement.brand)
+                                        .foregroundColor(.secondary)
+                                        .font(.caption)
+                                }
                                 Spacer()
                                 Image(systemName: "plus.circle")
                                     .foregroundColor(.purple.opacity(0.6))
