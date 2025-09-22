@@ -9,29 +9,82 @@ class AchievementDetector: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
     private let viewContext: NSManagedObjectContext
+    private var celebratedToday = Set<String>()  // Track what we've celebrated today
+    private var lastCheckedDate: Date?
 
     init(context: NSManagedObjectContext) {
         self.viewContext = context
         setupNotifications()
+        resetDailyCelebrations()
     }
 
     private func setupNotifications() {
-        // Listen for Core Data saves
+        // Listen for Core Data saves but only check relevant achievements
         NotificationCenter.default.publisher(for: .NSManagedObjectContextDidSave)
-            .sink { [weak self] _ in
-                self?.checkForAchievements()
+            .sink { [weak self] notification in
+                self?.handleDataSave(notification)
             }
             .store(in: &cancellables)
     }
 
+    private func handleDataSave(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+
+        // Check what was inserted
+        if let insertedObjects = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject> {
+            var shouldCheckExercise = false
+            var shouldCheckWeight = false
+            var shouldCheckCalories = false
+
+            for object in insertedObjects {
+                switch object {
+                case is ExerciseEntry:
+                    shouldCheckExercise = true
+                case is WeightEntry:
+                    shouldCheckWeight = true
+                case is FoodEntry:
+                    shouldCheckCalories = true
+                default:
+                    break
+                }
+            }
+
+            // Only check relevant achievements based on what was saved
+            resetDailyCelebrations()
+            if shouldCheckExercise { checkExerciseTarget() }
+            if shouldCheckWeight { checkWeightLoss() }
+            if shouldCheckCalories {
+                checkCalorieTarget()
+                checkLoggingStreak()
+            }
+        }
+    }
+
     func checkForAchievements() {
+        resetDailyCelebrations()  // Reset if it's a new day
         checkWeightLoss()
         checkExerciseTarget()
         checkCalorieTarget()
         checkLoggingStreak()
     }
 
+    private func resetDailyCelebrations() {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+
+        if let lastDate = lastCheckedDate {
+            let lastDay = calendar.startOfDay(for: lastDate)
+            if lastDay != today {
+                celebratedToday.removeAll()
+            }
+        }
+        lastCheckedDate = Date()
+    }
+
     private func checkWeightLoss() {
+        // Skip if already celebrated today
+        guard !celebratedToday.contains("weightLoss") else { return }
+
         let request: NSFetchRequest<WeightEntry> = WeightEntry.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \WeightEntry.timestamp, ascending: false)]
         request.fetchLimit = 2
@@ -44,11 +97,15 @@ class AchievementDetector: ObservableObject {
 
         if latestWeight < previousWeight {
             let weightLost = previousWeight - latestWeight
+            celebratedToday.insert("weightLoss")
             triggerCelebration(.weightLoss(pounds: weightLost))
         }
     }
 
     private func checkExerciseTarget() {
+        // Skip if already celebrated today
+        guard !celebratedToday.contains("exercise30") else { return }
+
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
@@ -56,13 +113,15 @@ class AchievementDetector: ObservableObject {
         let request: NSFetchRequest<ExerciseEntry> = ExerciseEntry.fetchRequest()
         request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", today as NSDate, tomorrow as NSDate)
 
-        guard let exercises = try? viewContext.fetch(request) else { return }
+        guard let exercises = try? viewContext.fetch(request),
+              !exercises.isEmpty else { return }  // Only check if there are exercises
 
         let totalCalories = exercises.reduce(0) { $0 + $1.caloriesBurned }
         let totalMinutes = exercises.reduce(0) { $0 + Int($1.duration) }
 
         // Check if hit 30 minutes of exercise
         if totalMinutes >= 30 {
+            celebratedToday.insert("exercise30")
             triggerCelebration(.exerciseGoal(minutes: totalMinutes, calories: Int(totalCalories)))
         }
     }
@@ -85,7 +144,8 @@ class AchievementDetector: ObservableObject {
             let percentageOff = (difference / targetCalories) * 100
 
             // Within 5% of target
-            if percentageOff <= 5 {
+            if percentageOff <= 5 && !celebratedToday.contains("calorieTarget") {
+                celebratedToday.insert("calorieTarget")
                 triggerCelebration(.calorieTarget(calories: Int(totalCalories), target: Int(targetCalories)))
             }
         }
@@ -113,7 +173,9 @@ class AchievementDetector: ObservableObject {
         }
 
         // Celebrate streaks at specific milestones
-        if [2, 3, 7, 14, 21, 30].contains(streak) {
+        let streakKey = "streak\(streak)"
+        if [2, 3, 7, 14, 21, 30].contains(streak) && !celebratedToday.contains(streakKey) {
+            celebratedToday.insert(streakKey)
             triggerCelebration(.loggingStreak(days: streak))
         }
     }
