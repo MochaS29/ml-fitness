@@ -312,14 +312,14 @@ struct CustomExerciseEntryView: View {
     @State private var selectedType: ExerciseType = .other
 
     var body: some View {
-        NavigationStack {
+        NavigationView {
             Form {
                 Section("Exercise Details") {
                     TextField("Exercise Name", text: $name)
 
                     Picker("Type", selection: $selectedType) {
                         ForEach(ExerciseType.allCases, id: \.self) { type in
-                            Text(type.displayName).tag(type)
+                            Text(type.rawValue).tag(type)
                         }
                     }
                 }
