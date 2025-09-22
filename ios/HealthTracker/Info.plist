@@ -6,6 +6,12 @@
 	<string></string>
 	<key>CFBundleSignature</key>
 	<string></string>
+	<key>NSMotionUsageDescription</key>
+	<string>This app uses motion data to track your daily steps and activity.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>This app reads health data to show your fitness metrics.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>This app saves your health data to track your progress.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

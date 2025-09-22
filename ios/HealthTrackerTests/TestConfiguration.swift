@@ -70,21 +70,21 @@ struct TestConfiguration {
     }
     
     struct MockExercises {
-        static let running = ExerciseTemplate(
+        static let running = ExerciseTemplateModel(
             name: "Running",
             type: .cardio,
             caloriesPerMinute: 10,
             category: "Outdoor"
         )
-        
-        static let weightLifting = ExerciseTemplate(
+
+        static let weightLifting = ExerciseTemplateModel(
             name: "Weight Lifting",
             type: .strength,
             caloriesPerMinute: 6,
             category: "Gym"
         )
-        
-        static let yoga = ExerciseTemplate(
+
+        static let yoga = ExerciseTemplateModel(
             name: "Yoga",
             type: .flexibility,
             caloriesPerMinute: 3,

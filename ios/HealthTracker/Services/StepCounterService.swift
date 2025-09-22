@@ -11,7 +11,9 @@ class StepCounterService: ObservableObject {
 
     // Published properties for UI updates
     @Published var todaySteps: Int = 0
-    @Published var todayDistance: Double = 0.0 // in meters
+    @Published var todayDistanceInMeters: Double = 0.0 // Raw value in meters
+    @Published var todayDistance: Double = 0.0 // Converted to user's preferred unit
+    @Published var distanceUnit: DistanceUnit = .miles
     @Published var todayFloorsAscended: Int = 0
     @Published var todayFloorsDescended: Int = 0
     @Published var currentPace: Double? = nil // meters per second
@@ -31,8 +33,42 @@ class StepCounterService: ObservableObject {
     // Error handling
     @Published var errorMessage: String?
 
+    enum DistanceUnit: String, CaseIterable {
+        case miles = "mi"
+        case kilometers = "km"
+
+        var conversionFactor: Double {
+            switch self {
+            case .miles: return 0.000621371 // meters to miles
+            case .kilometers: return 0.001 // meters to kilometers
+            }
+        }
+    }
+
     private init() {
         checkAvailability()
+        loadDistancePreference()
+    }
+
+    private func loadDistancePreference() {
+        // Check user defaults for saved preference
+        if let savedUnit = UserDefaults.standard.string(forKey: "distanceUnit"),
+           let unit = DistanceUnit(rawValue: savedUnit) {
+            distanceUnit = unit
+        } else {
+            // Default based on locale
+            let locale = Locale.current
+            let isMetric = locale.usesMetricSystem
+            distanceUnit = isMetric ? .kilometers : .miles
+        }
+    }
+
+    func setDistanceUnit(_ unit: DistanceUnit) {
+        distanceUnit = unit
+        UserDefaults.standard.set(unit.rawValue, forKey: "distanceUnit")
+
+        // Recalculate current distance with new unit
+        todayDistance = todayDistanceInMeters * unit.conversionFactor
     }
 
     // MARK: - Setup and Permissions
@@ -51,20 +87,51 @@ class StepCounterService: ObservableObject {
             return
         }
 
-        // Start real-time pedometer updates
-        startPedometerUpdates()
+        // Check and request permission first
+        checkAndRequestPermission { [weak self] authorized in
+            guard authorized else {
+                self?.errorMessage = "Permission denied for motion tracking"
+                return
+            }
 
-        // Start activity monitoring
-        startActivityUpdates()
+            DispatchQueue.main.async {
+                // Start real-time pedometer updates
+                self?.startPedometerUpdates()
 
-        // Query today's accumulated steps
-        queryTodaysSteps()
+                // Start activity monitoring
+                self?.startActivityUpdates()
 
-        // Set up hourly update timer
-        setupHourlyTimer()
+                // Query today's accumulated steps
+                self?.queryTodaysSteps()
 
-        // Query hourly breakdown
-        queryHourlySteps()
+                // Set up hourly update timer
+                self?.setupHourlyTimer()
+
+                // Query hourly breakdown
+                self?.queryHourlySteps()
+            }
+        }
+    }
+
+    private func checkAndRequestPermission(completion: @escaping (Bool) -> Void) {
+        // Core Motion doesn't require explicit permission request
+        // but we should check if it's available and handle errors gracefully
+        if CMPedometer.isStepCountingAvailable() {
+            // Test if we can access pedometer data
+            let testDate = Date()
+            pedometer.queryPedometerData(from: testDate, to: testDate) { _, error in
+                DispatchQueue.main.async {
+                    if error != nil {
+                        // Might be first time, just proceed
+                        completion(true)
+                    } else {
+                        completion(true)
+                    }
+                }
+            }
+        } else {
+            completion(false)
+        }
     }
 
     func stopStepCounting() {
@@ -91,9 +158,10 @@ class StepCounterService: ObservableObject {
                 // Update step count
                 self?.todaySteps = data.numberOfSteps.intValue
 
-                // Update distance (convert to miles for US users)
+                // Update distance
                 if let distance = data.distance {
-                    self?.todayDistance = distance.doubleValue * 0.000621371 // meters to miles
+                    self?.todayDistanceInMeters = distance.doubleValue
+                    self?.todayDistance = distance.doubleValue * (self?.distanceUnit.conversionFactor ?? 0.000621371)
                 }
 
                 // Update floors
@@ -255,13 +323,24 @@ class StepCounterService: ObservableObject {
     // MARK: - Helper Methods
 
     func formattedDistance() -> String {
-        return String(format: "%.1f mi", todayDistance)
+        return String(format: "%.1f %@", todayDistance, distanceUnit.rawValue)
+    }
+
+    func formattedDistanceWithUnit() -> String {
+        let unitLabel = distanceUnit == .miles ? "miles" : "kilometers"
+        return String(format: "%.1f %@", todayDistance, unitLabel)
     }
 
     func formattedPace() -> String {
         guard let pace = currentPace else { return "--" }
-        let milesPerHour = pace * 2.23694 // meters/sec to mph
-        return String(format: "%.1f mph", milesPerHour)
+
+        if distanceUnit == .miles {
+            let milesPerHour = pace * 2.23694 // meters/sec to mph
+            return String(format: "%.1f mph", milesPerHour)
+        } else {
+            let kmPerHour = pace * 3.6 // meters/sec to km/h
+            return String(format: "%.1f km/h", kmPerHour)
+        }
     }
 
     func estimatedCaloriesBurned() -> Int {

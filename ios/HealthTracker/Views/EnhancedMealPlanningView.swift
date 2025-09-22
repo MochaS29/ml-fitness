@@ -243,6 +243,9 @@ struct MealCard: View {
     let icon: String
     let color: Color
     let onTap: () -> Void
+    @StateObject private var dataManager = UnifiedDataManager.shared
+    @State private var showingAddedAlert = false
+    @State private var addedMealName = ""
 
     var body: some View {
         Button(action: onTap) {
@@ -253,6 +256,23 @@ struct MealCard: View {
                         .foregroundColor(color)
 
                     Spacer()
+
+                    // Add to Diary button
+                    Button(action: {
+                        addToDiary()
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Add to Diary")
+                        }
+                        .font(.caption)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.wellnessGreen)
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                    }
+                    .buttonStyle(PlainButtonStyle())
 
                     HStack(spacing: 4) {
                         Image(systemName: "clock")
@@ -303,12 +323,52 @@ struct MealCard: View {
             .padding(.horizontal)
         }
         .buttonStyle(PlainButtonStyle())
+        .alert("Added to Diary", isPresented: $showingAddedAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("\(addedMealName) has been added to your food diary for \(mealType.lowercased()).")
+        }
+    }
+
+    private func addToDiary() {
+        // Map meal type to MealType enum
+        let diaryMealType: MealType
+        switch mealType.lowercased() {
+        case "breakfast":
+            diaryMealType = .breakfast
+        case "lunch":
+            diaryMealType = .lunch
+        case "dinner":
+            diaryMealType = .dinner
+        default:
+            diaryMealType = .snack
+        }
+
+        // Add each ingredient or the meal as a whole to diary
+        dataManager.addFoodEntry(
+            name: meal.name,
+            calories: Double(meal.calories),
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            fiber: 0, // Add if available in meal data
+            sugar: 0, // Add if available in meal data
+            sodium: 0, // Add if available in meal data
+            servingSize: "1 serving",
+            mealType: diaryMealType
+        )
+
+        // Show confirmation
+        addedMealName = meal.name
+        showingAddedAlert = true
     }
 }
 
 struct MiniMealCard: View {
     let meal: Meal
     let onTap: () -> Void
+    @StateObject private var dataManager = UnifiedDataManager.shared
+    @State private var showingAddedAlert = false
 
     var body: some View {
         Button(action: onTap) {
@@ -332,6 +392,16 @@ struct MiniMealCard: View {
 
                 Spacer()
 
+                // Add to Diary button
+                Button(action: {
+                    addToDiary()
+                }) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.body)
+                        .foregroundColor(.wellnessGreen)
+                }
+                .buttonStyle(PlainButtonStyle())
+
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -342,6 +412,27 @@ struct MiniMealCard: View {
             .padding(.horizontal)
         }
         .buttonStyle(PlainButtonStyle())
+        .alert("Added to Diary", isPresented: $showingAddedAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("\(meal.name) has been added to your food diary as a snack.")
+        }
+    }
+
+    private func addToDiary() {
+        dataManager.addFoodEntry(
+            name: meal.name,
+            calories: Double(meal.calories),
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            fiber: 0,
+            sugar: 0,
+            sodium: 0,
+            servingSize: "1 serving",
+            mealType: .snack
+        )
+        showingAddedAlert = true
     }
 }
 

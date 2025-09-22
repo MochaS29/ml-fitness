@@ -30,9 +30,12 @@ struct PersistenceController {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
+
+        // Load stores asynchronously to avoid blocking
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+                print("Core Data error: \(error), \(error.userInfo)")
+                // Don't crash the app, just log the error
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true

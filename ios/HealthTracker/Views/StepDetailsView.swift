@@ -128,7 +128,7 @@ struct StepDetailsView: View {
                     Text("Distance")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Text(String(format: "%.1f mi", viewModel.distanceInMiles))
+                    Text(viewModel.formattedDistance)
                         .font(.headline)
                         .fontWeight(.semibold)
                 }
@@ -358,6 +358,7 @@ class StepDetailsViewModel: ObservableObject {
     @Published var stepGoal = 10000
     @Published var averageSteps = 0
     @Published var distanceInMiles = 0.0
+    @Published var formattedDistance = "0.0 mi"
     @Published var activeTime = "--"
 
     @Published var hourlySteps: [StepDetailDataPoint] = []
@@ -402,6 +403,7 @@ class StepDetailsViewModel: ObservableObject {
         stepCounter.$todayDistance
             .sink { [weak self] distance in
                 self?.distanceInMiles = distance
+                self?.formattedDistance = self?.stepCounter.formattedDistance() ?? "0.0 mi"
             }
             .store(in: &cancellables)
 

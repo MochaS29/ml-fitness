@@ -2,8 +2,9 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var profileManager: UserProfileManager
+    @StateObject private var stepCounter = StepCounterService.shared
     @State private var showingEditProfile = false
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -57,11 +58,27 @@ struct ProfileView: View {
                     }
                     
                     Section("Settings") {
+                        HStack {
+                            Label("Distance Unit", systemImage: "ruler")
+                            Spacer()
+                            Picker("Distance Unit", selection: $stepCounter.distanceUnit) {
+                                ForEach(StepCounterService.DistanceUnit.allCases, id: \.self) { unit in
+                                    Text(unit == .miles ? "Miles" : "Kilometers")
+                                        .tag(unit)
+                                }
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                            .frame(width: 150)
+                            .onChange(of: stepCounter.distanceUnit) { newUnit in
+                                stepCounter.setDistanceUnit(newUnit)
+                            }
+                        }
+
                         Button(action: { showingEditProfile = true }) {
                             Label("Edit Profile", systemImage: "pencil")
                         }
-                        
-                        Button(action: { 
+
+                        Button(action: {
                             profileManager.resetProfile()
                         }) {
                             Label("Reset Profile", systemImage: "arrow.counterclockwise")

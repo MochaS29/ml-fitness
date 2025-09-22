@@ -2,61 +2,61 @@ import SwiftUI
 
 @main
 struct HealthTrackerApp: App {
-    let persistenceController = PersistenceController.shared
     @StateObject private var userProfileManager = UserProfileManager()
-    @AppStorage("hasDemoData") private var hasDemoData = false
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+    @State private var showMainApp = false
+
     var body: some Scene {
         WindowGroup {
-            if userProfileManager.hasCompletedOnboarding {
+            if showMainApp || userProfileManager.hasCompletedOnboarding {
                 ContentView()
-                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                    .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
                     .environmentObject(userProfileManager)
                     .accentColor(Color.mochaBrown)
-                    .onAppear {
-                        importSampleDataIfNeeded()
-
-                        // Check if we should generate demo data
-                        if CommandLine.arguments.contains("--demo") || ProcessInfo.processInfo.environment["GENERATE_DEMO_DATA"] == "true" {
-                            generateDemoData()
-                        }
-
-                    }
             } else {
-                OnboardingView()
-                    .environmentObject(userProfileManager)
-                    .accentColor(Color.mochaBrown)
+                // Simplified onboarding with bypass option
+                VStack(spacing: 30) {
+                    Text("Welcome to Health Tracker")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.top, 50)
+
+                    Text("Quick Setup")
+                        .font(.title3)
+                        .foregroundColor(.secondary)
+
+                    Spacer()
+
+                    // Direct bypass button
+                    Button(action: {
+                        // Create a default profile
+                        let profile = UserProfile(name: "User", gender: .other, birthDate: Date())
+                        userProfileManager.saveProfile(profile)
+                        // Force navigation to main app
+                        showMainApp = true
+                    }) {
+                        Text("Start Using App")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+
+                    Button(action: {
+                        // Alternative: just set the flag
+                        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+                        showMainApp = true
+                    }) {
+                        Text("Skip Setup")
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                    }
+                    .padding(.bottom, 30)
+                }
+                .environmentObject(userProfileManager)
             }
-        }
-    }
-    
-    func importSampleDataIfNeeded() {
-        let hasImportedKey = "hasImportedSampleData"
-        let hasImportedOpenRecipesKey = "hasImportedOpenRecipes"
-        let userDefaults = UserDefaults.standard
-        
-        let context = persistenceController.container.viewContext
-        
-        if !userDefaults.bool(forKey: hasImportedKey) {
-            SampleDataImporter.importSampleUSDAFoods(context: context)
-            SampleDataImporter.importSampleUserRecipes(context: context)
-            userDefaults.set(true, forKey: hasImportedKey)
-        }
-        
-        // Import open recipes if not already done
-        if !userDefaults.bool(forKey: hasImportedOpenRecipesKey) {
-            OpenRecipeImporter.importOpenRecipes(context: context)
-            userDefaults.set(true, forKey: hasImportedOpenRecipesKey)
-        }
-    }
-    
-    func generateDemoData() {
-        if !hasDemoData {
-            let context = persistenceController.container.viewContext
-            DemoDataGenerator.generateDemoData(context: context)
-            hasDemoData = true
-            print("Demo data generated successfully!")
         }
     }
 }

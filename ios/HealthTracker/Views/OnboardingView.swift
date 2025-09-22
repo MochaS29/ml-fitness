@@ -2,122 +2,72 @@ import SwiftUI
 
 struct OnboardingView: View {
     @EnvironmentObject var profileManager: UserProfileManager
-    @State private var currentStep = 0
-    
-    // Profile data
     @State private var name = ""
     @State private var selectedGender = Gender.female
     @State private var birthDate = Date()
-    @State private var startingWeight = ""
-    @State private var activityLevel = ActivityLevel.moderate
-    @State private var selectedRestrictions: Set<DietaryRestriction> = []
-    @State private var selectedConditions: Set<HealthCondition> = []
-    @State private var isPregnant = false
-    @State private var pregnancyTrimester: PregnancyTrimester?
-    @State private var isBreastfeeding = false
-    
+
     var body: some View {
-        VStack {
-            // Progress indicator
-            ProgressView(value: Double(currentStep + 1), total: 5)
-                .padding()
-            
-            TabView(selection: $currentStep) {
-                // Step 1: Basic Info
-                BasicInfoView(name: $name, gender: $selectedGender, birthDate: $birthDate, startingWeight: $startingWeight)
-                    .tag(0)
-                
-                // Step 2: Activity Level
-                ActivityLevelView(activityLevel: $activityLevel)
-                    .tag(1)
-                
-                // Step 3: Dietary Restrictions
-                DietaryRestrictionsView(selectedRestrictions: $selectedRestrictions)
-                    .tag(2)
-                
-                // Step 4: Health Conditions
-                HealthConditionsView(
-                    selectedConditions: $selectedConditions,
-                    gender: selectedGender,
-                    isPregnant: $isPregnant,
-                    pregnancyTrimester: $pregnancyTrimester,
-                    isBreastfeeding: $isBreastfeeding
-                )
-                .tag(3)
-                
-                // Step 5: Summary
-                OnboardingSummaryView(
-                    name: name,
-                    gender: selectedGender,
-                    birthDate: birthDate,
-                    startingWeight: startingWeight,
-                    activityLevel: activityLevel,
-                    restrictions: selectedRestrictions,
-                    conditions: selectedConditions,
-                    isPregnant: isPregnant,
-                    pregnancyTrimester: pregnancyTrimester,
-                    isBreastfeeding: isBreastfeeding
-                )
-                .tag(4)
-            }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-            
-            // Navigation buttons
-            HStack {
-                if currentStep > 0 {
-                    Button("Previous") {
-                        withAnimation {
-                            currentStep -= 1
+        VStack(spacing: 30) {
+            Text("Welcome to Health Tracker")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.top, 50)
+
+            Text("Let's set up your profile")
+                .font(.title3)
+                .foregroundColor(.secondary)
+
+            VStack(alignment: .leading, spacing: 20) {
+                // Name input
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Name")
+                        .font(.headline)
+                    TextField("Enter your name", text: $name)
+                        .textFieldStyle(.roundedBorder)
+                        .autocapitalization(.words)
+                }
+
+                // Gender selection
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Gender")
+                        .font(.headline)
+                    Picker("Gender", selection: $selectedGender) {
+                        ForEach(Gender.allCases, id: \.self) { gender in
+                            Text(gender.rawValue).tag(gender)
                         }
                     }
-                    .buttonStyle(.bordered)
+                    .pickerStyle(SegmentedPickerStyle())
                 }
-                
-                Spacer()
-                
-                if currentStep < 4 {
-                    Button("Next") {
-                        withAnimation {
-                            currentStep += 1
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(!isCurrentStepValid())
-                } else {
-                    Button("Get Started") {
-                        createProfile()
-                    }
-                    .buttonStyle(.borderedProminent)
+
+                // Birth date
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Birth Date")
+                        .font(.headline)
+                    DatePicker("", selection: $birthDate, displayedComponents: .date)
+                        .datePickerStyle(.compact)
                 }
             }
-            .padding()
-        }
-    }
-    
-    func isCurrentStepValid() -> Bool {
-        switch currentStep {
-        case 0:
-            return !name.isEmpty
-        default:
-            return true
-        }
-    }
-    
-    func createProfile() {
-        var profile = UserProfile(name: name, gender: selectedGender, birthDate: birthDate)
-        profile.activityLevel = activityLevel
-        profile.dietaryRestrictions = Array(selectedRestrictions)
-        profile.healthConditions = Array(selectedConditions)
-        profile.isPregnant = isPregnant
-        profile.pregnancyTrimester = pregnancyTrimester
-        profile.isBreastfeeding = isBreastfeeding
+            .padding(.horizontal)
 
-        // Save starting weight if provided
-        if !startingWeight.isEmpty, let weight = Double(startingWeight) {
-            profile.startingWeight = weight
-        }
+            Spacer()
 
-        profileManager.saveProfile(profile)
+            // Get Started button
+            Button(action: {
+                let profile = UserProfile(name: name, gender: selectedGender, birthDate: birthDate)
+                profileManager.saveProfile(profile)
+            }) {
+                Text("Get Started")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.accentColor)
+                    .cornerRadius(10)
+            }
+            .disabled(name.isEmpty)
+            .padding(.horizontal)
+            .padding(.bottom, 30)
+        }
     }
 }
 
@@ -132,22 +82,24 @@ struct BasicInfoView: View {
     }
 
     var body: some View {
-        VStack(spacing: 30) {
-            Text("Let's Get Started")
-                .font(.largeTitle)
-                .fontWeight(.bold)
+        ScrollView {
+            VStack(spacing: 30) {
+                Text("Let's Get Started")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.top, 20)
 
-            Text("Tell us a bit about yourself")
-                .font(.title3)
-                .foregroundColor(.secondary)
+                Text("Tell us a bit about yourself")
+                    .font(.title3)
+                    .foregroundColor(.secondary)
 
-            VStack(alignment: .leading, spacing: 20) {
-                VStack(alignment: .leading) {
-                    Text("Name")
-                        .font(.headline)
-                    TextField("Your name", text: $name)
-                        .textFieldStyle(.roundedBorder)
-                }
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading) {
+                        Text("Name")
+                            .font(.headline)
+                        TextField("Your name", text: $name)
+                            .textFieldStyle(.roundedBorder)
+                    }
 
                 VStack(alignment: .leading) {
                     Text("Gender")
@@ -194,6 +146,7 @@ struct BasicInfoView: View {
             Spacer()
         }
         .padding()
+        }
     }
 }
 

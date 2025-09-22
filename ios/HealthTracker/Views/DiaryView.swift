@@ -330,16 +330,18 @@ struct DiaryView: View {
             HStack {
                 Text("Water")
                     .font(.headline)
-                
+
                 Spacer()
-                
-                Text("\(Int(dailySummary.waterOunces)) oz")
+
+                Text("\(Int(calculateTodaysWaterOunces())) oz")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                
+
                 Button(action: {
                     // Add 8oz of water
                     dataManager.quickAddWater(8)
+                    // Refresh the view
+                    updateDailySummary()
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .foregroundColor(.blue)
@@ -347,14 +349,37 @@ struct DiaryView: View {
             }
             .padding()
             .background(Color(UIColor.systemBackground))
-            
-            // Water tracking UI
-            WaterTrackingRow(currentOunces: Int(dailySummary.waterOunces))
-                .padding()
-                .background(Color(UIColor.secondarySystemGroupedBackground))
+
+            // Water tracking UI with proper update
+            WaterTrackingRow(
+                currentOunces: Int(calculateTodaysWaterOunces()),
+                onWaterAdded: { ounces in
+                    dataManager.quickAddWater(ounces)
+                    updateDailySummary()
+                }
+            )
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
         }
         .cornerRadius(12)
         .padding(.horizontal)
+    }
+
+    private func calculateTodaysWaterOunces() -> Double {
+        // Get water entries for selected date
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: selectedDate)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        let request: NSFetchRequest<WaterEntry> = WaterEntry.fetchRequest()
+        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+
+        guard let entries = try? viewContext.fetch(request) else { return 0 }
+
+        return entries.reduce(0) { sum, entry in
+            let amount = entry.unit == "ml" ? entry.amount / 29.5735 : entry.amount
+            return sum + amount
+        }
     }
     
     private var notesSection: some View {
@@ -581,6 +606,7 @@ struct SupplementEntryRow: View {
 
 struct WaterTrackingRow: View {
     let currentOunces: Int
+    var onWaterAdded: ((Double) -> Void)? = nil
     let glassSize: Int = 8
     @StateObject private var dataManager = UnifiedDataManager.shared
 
@@ -592,10 +618,22 @@ struct WaterTrackingRow: View {
         HStack(spacing: 8) {
             ForEach(0..<8, id: \.self) { index in
                 Button(action: {
-                    // Add water when tapping a drop
-                    let ouncesToAdd = Double((index + 1) * glassSize - currentOunces)
+                    // Calculate how much water to add
+                    let targetOunces = (index + 1) * glassSize
+                    let ouncesToAdd = Double(targetOunces - currentOunces)
+
                     if ouncesToAdd > 0 {
-                        dataManager.quickAddWater(ouncesToAdd)
+                        // Use callback if provided, otherwise use dataManager
+                        if let onWaterAdded = onWaterAdded {
+                            onWaterAdded(ouncesToAdd)
+                        } else {
+                            dataManager.quickAddWater(ouncesToAdd)
+                        }
+                    } else if ouncesToAdd < 0 {
+                        // If tapping a filled glass, toggle it off
+                        if let onWaterAdded = onWaterAdded {
+                            onWaterAdded(ouncesToAdd)
+                        }
                     }
                 }) {
                     Image(systemName: index < glasses ? "drop.fill" : "drop")
