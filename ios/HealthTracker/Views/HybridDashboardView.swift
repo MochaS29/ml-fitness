@@ -13,6 +13,8 @@ struct HybridDashboardView: View {
     @State private var showingWaterDetail = false
     @State private var showingSupplementDetail = false
     @State private var showingStepDetail = false
+    @State private var showingStepGoal = false
+    @State private var showingExerciseQuickAdd = false
     @State private var widgetsEnabled = false
 
     enum TimeRange: String, CaseIterable {
@@ -107,6 +109,12 @@ struct HybridDashboardView: View {
         }
         .sheet(isPresented: $showingStepDetail) {
             StepDetailsView()
+        }
+        .sheet(isPresented: $showingStepGoal) {
+            StepGoalView()
+        }
+        .sheet(isPresented: $showingExerciseQuickAdd) {
+            ExerciseQuickAddView()
         }
     }
     
@@ -239,10 +247,9 @@ struct HybridDashboardView: View {
                 color: .green,
                 sparklineData: viewModel.stepsSparkline
             )
-            // Temporarily disabled to prevent freezing
-            // .onTapGesture {
-            //     showingStepDetail = true
-            // }
+            .onTapGesture {
+                showingStepGoal = true  // Show the new StepGoalView
+            }
             
             MetricCardWithTrend(
                 title: "Weight",
@@ -260,16 +267,16 @@ struct HybridDashboardView: View {
             
             MetricCardWithTrend(
                 title: "Exercise",
-                value: "0",
+                value: "\(viewModel.todayExercise) min",
                 subtitle: "\(viewModel.exerciseSessions) sessions",
                 trend: .up,
                 trendValue: "+15%",
                 icon: "figure.run",
-                color: .green,
+                color: .orange,
                 sparklineData: viewModel.exerciseSparkline
             )
             .onTapGesture {
-                showingExerciseDetail = true
+                showingExerciseQuickAdd = true  // Show quick add for exercises
             }
             
             MetricCardWithTrend(
