@@ -118,7 +118,11 @@ struct BasicInfoView: View {
     @Binding var name: String
     @Binding var gender: Gender
     @Binding var birthDate: Date
-    
+
+    var age: Int {
+        Calendar.current.dateComponents([.year], from: birthDate, to: Date()).year ?? 0
+    }
+
     var body: some View {
         VStack(spacing: 30) {
             Text("Let's Get Started")
@@ -151,9 +155,14 @@ struct BasicInfoView: View {
                 VStack(alignment: .leading) {
                     Text("Birth Date")
                         .font(.headline)
-                    DatePicker("Birth Date", selection: $birthDate, displayedComponents: .date)
+                    DatePicker("Birth Date", selection: $birthDate,
+                              in: ...Date(),
+                              displayedComponents: .date)
                         .datePickerStyle(.compact)
                         .labelsHidden()
+                    Text("Age: \(age) years")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             }
             .padding()
@@ -400,7 +409,7 @@ struct OnboardingSummaryView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     ProfileSummaryRow(label: "Name", value: name)
                     ProfileSummaryRow(label: "Gender", value: gender.rawValue)
-                    ProfileSummaryRow(label: "Age", value: "0")
+                    ProfileSummaryRow(label: "Age", value: "\(age) years")
                     ProfileSummaryRow(label: "Activity Level", value: activityLevel.rawValue)
                     
                     if !restrictions.isEmpty {
