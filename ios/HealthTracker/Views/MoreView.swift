@@ -1042,11 +1042,14 @@ struct SettingsView: View {
                     Toggle("Enable Notifications", isOn: $enableNotifications)
 
                     if enableNotifications {
-                        HStack {
-                            Text("Water Reminder")
-                            Spacer()
-                            Text("Every 2 hours")
-                                .foregroundColor(.secondary)
+                        NavigationLink(destination: WaterReminderSettingsView()) {
+                            HStack {
+                                Label("Water Reminders", systemImage: "drop.fill")
+                                    .foregroundColor(.primary)
+                                Spacer()
+                                Text(WaterReminderService.shared.isEnabled ? "On" : "Off")
+                                    .foregroundColor(.secondary)
+                            }
                         }
 
                         HStack {

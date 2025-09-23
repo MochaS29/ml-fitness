@@ -4,6 +4,7 @@ import CoreData
 struct WaterTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var reminderService = WaterReminderService.shared
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \WaterEntry.timestamp, ascending: false)],
         predicate: NSPredicate(format: "timestamp >= %@ AND timestamp < %@",
@@ -11,15 +12,16 @@ struct WaterTrackingView: View {
                              Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))! as NSDate),
         animation: .default)
     private var todayWaterEntries: FetchedResults<WaterEntry>
-    
+
     @State private var waterGoal: Int = 8 // 8 glasses of 8oz each
     @State private var showingAddCustom = false
     @State private var customAmount: String = ""
-    
+    @State private var showingReminderSettings = false
+
     var totalOuncesToday: Double {
         todayWaterEntries.reduce(0) { $0 + $1.amount }
     }
-    
+
     var glassesConsumed: Int {
         Int(totalOuncesToday / 8)
     }
@@ -40,12 +42,27 @@ struct WaterTrackingView: View {
                 }
                 .padding(.top)
                 
+                // Reminder Status Badge
+                if reminderService.isEnabled {
+                    HStack {
+                        Image(systemName: "bell.fill")
+                            .foregroundColor(.mindfulTeal)
+                        Text("Reminders: \(reminderService.intervalDescription)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.mindfulTeal.opacity(0.1))
+                    .cornerRadius(20)
+                }
+
                 // Progress Circle
                 ZStack {
                     Circle()
                         .stroke(Color.lightGray.opacity(0.3), lineWidth: 20)
                         .frame(width: 200, height: 200)
-                    
+
                     Circle()
                         .trim(from: 0, to: min(totalOuncesToday / (Double(waterGoal) * 8), 1.0))
                         .stroke(Color.blue, style: StrokeStyle(lineWidth: 20, lineCap: .round))
@@ -200,6 +217,15 @@ struct WaterTrackingView: View {
                     dismiss()
                 }
             }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { showingReminderSettings = true }) {
+                    Image(systemName: reminderService.isEnabled ? "bell.fill" : "bell.slash")
+                        .foregroundColor(reminderService.isEnabled ? .mindfulTeal : .secondary)
+                }
+            }
+        }
+        .sheet(isPresented: $showingReminderSettings) {
+            WaterReminderSettingsView()
         }
         .alert("Add Custom Amount", isPresented: $showingAddCustom) {
             TextField("Amount (oz)", text: $customAmount)
@@ -225,10 +251,13 @@ struct WaterTrackingView: View {
         entry.amount = amount
         entry.timestamp = Date()
         entry.unit = "oz"
-        
+
         do {
             try viewContext.save()
-            
+
+            // Sync with reminder service
+            reminderService.addWaterIntake(amount)
+
             // Update goals based on the new water entry
             GoalsManager.shared.updateGoalsFromWaterEntry(entry)
         } catch {

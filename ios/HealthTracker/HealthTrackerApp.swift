@@ -4,8 +4,14 @@ import SwiftUI
 struct HealthTrackerApp: App {
     @StateObject private var userProfileManager = UserProfileManager()
     @StateObject private var achievementManager = AchievementManager.shared
+    @StateObject private var waterReminderService = WaterReminderService.shared
     @State private var showMainApp = false
     @State private var showQuickSetup = false
+
+    init() {
+        // Initialize water reminder service to set up notification delegate
+        _ = WaterReminderService.shared
+    }
 
     var body: some Scene {
         WindowGroup {
