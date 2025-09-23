@@ -232,14 +232,9 @@ struct DiaryView: View {
             if !mealFoods.isEmpty {
                 VStack(spacing: 0) {
                     ForEach(mealFoods) { entry in
-                        FoodEntryRow(entry: entry)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    deleteFoodEntry(entry)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
+                        FoodEntryRow(entry: entry, onDelete: {
+                            deleteFoodEntry(entry)
+                        })
 
                         if entry != mealFoods.last {
                             Divider()
@@ -280,14 +275,9 @@ struct DiaryView: View {
             if !exerciseEntries.isEmpty {
                 VStack(spacing: 0) {
                     ForEach(exerciseEntries) { entry in
-                        ExerciseEntryRow(entry: entry)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    deleteExerciseEntry(entry)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
+                        ExerciseEntryRow(entry: entry, onDelete: {
+                            deleteExerciseEntry(entry)
+                        })
 
                         if entry != exerciseEntries.last {
                             Divider()
@@ -324,14 +314,10 @@ struct DiaryView: View {
             if !supplementEntries.isEmpty {
                 VStack(spacing: 0) {
                     ForEach(supplementEntries) { entry in
-                        SupplementEntryRow(entry: entry)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    deleteSupplementEntry(entry)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
+                        SupplementEntryRow(entry: entry, onDelete: {
+                            deleteSupplementEntry(entry)
+                        })
+                            .background(Color(UIColor.secondarySystemGroupedBackground))
 
                         if entry != supplementEntries.last {
                             Divider()
@@ -339,7 +325,6 @@ struct DiaryView: View {
                         }
                     }
                 }
-                .background(Color(UIColor.secondarySystemGroupedBackground))
             }
         }
         .cornerRadius(12)
@@ -578,89 +563,126 @@ struct SummaryMetric: View {
 
 struct FoodEntryRow: View {
     let entry: FoodEntry
-    
+    var onDelete: (() -> Void)? = nil
+    @State private var showingDeleteButton = false
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(entry.name ?? "Unknown Food")
                     .font(.subheadline)
-                
+
                 if let brand = entry.brand {
                     Text(brand)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
             }
-            
+            .padding(.leading)
+
             Spacer()
-            
+
             VStack(alignment: .trailing, spacing: 4) {
                 Text("\(Int(entry.calories)) cal")
                     .font(.subheadline)
                     .foregroundColor(.primary)
-                
+
                 Text("\(entry.servingSize ?? "1") \(entry.servingUnit ?? "serving")")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
+
+            if let onDelete = onDelete {
+                Button(action: onDelete) {
+                    Image(systemName: "trash")
+                        .font(.system(size: 14))
+                        .foregroundColor(.red)
+                }
+                .padding(.trailing)
+            }
         }
-        .padding()
+        .padding(.vertical, 12)
+        .contentShape(Rectangle())
     }
 }
 
 struct ExerciseEntryRow: View {
     let entry: ExerciseEntry
-    
+    var onDelete: (() -> Void)? = nil
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(entry.name ?? "Unknown Exercise")
                     .font(.subheadline)
-                
+
                 Text(entry.category ?? "General")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            
+            .padding(.leading)
+
             Spacer()
-            
+
             VStack(alignment: .trailing, spacing: 4) {
                 Text("\(entry.duration) min")
                     .font(.subheadline)
                     .foregroundColor(.primary)
-                
+
                 Text("\(Int(entry.caloriesBurned)) cal")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
+
+            if let onDelete = onDelete {
+                Button(action: onDelete) {
+                    Image(systemName: "trash")
+                        .font(.system(size: 14))
+                        .foregroundColor(.red)
+                }
+                .padding(.trailing)
+            }
         }
-        .padding()
+        .padding(.vertical, 12)
+        .contentShape(Rectangle())
     }
 }
 
 struct SupplementEntryRow: View {
     let entry: SupplementEntry
-    
+    var onDelete: (() -> Void)? = nil
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(entry.name ?? "Unknown Supplement")
                     .font(.subheadline)
-                
+
                 if let brand = entry.brand {
                     Text(brand)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
             }
-            
+            .padding(.leading)
+
             Spacer()
-            
+
             Text("\(entry.servingSize ?? "1") \(entry.servingUnit ?? "serving")")
                 .font(.caption)
                 .foregroundColor(.secondary)
+
+            if let onDelete = onDelete {
+                Button(action: onDelete) {
+                    Image(systemName: "trash")
+                        .font(.system(size: 14))
+                        .foregroundColor(.red)
+                }
+                .padding(.trailing)
+            }
         }
-        .padding()
+        .padding(.vertical, 12)
+        .contentShape(Rectangle())
     }
 }
 
