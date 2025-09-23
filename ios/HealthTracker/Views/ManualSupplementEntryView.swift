@@ -78,7 +78,7 @@ struct ManualSupplementEntryView: View {
                     Button("Save") {
                         saveSupplement()
                     }
-                    .disabled(supplementName.isEmpty || nutrients.isEmpty)
+                    .disabled(supplementName.isEmpty)
                 }
             }
             .sheet(isPresented: $showingNutrientPicker) {
@@ -160,6 +160,23 @@ struct ManualSupplementEntryView: View {
         }
         if let zinc = supplement.minerals.zinc {
             nutrients.append(ManualNutrientEntry(id: "zinc", name: "Zinc", amount: zinc.amount, unit: .mg))
+        }
+
+        // Add other ingredients (important for herbal supplements like EstroSmart)
+        for ingredient in supplement.otherIngredients {
+            if let amount = ingredient.amount {
+                // Determine the unit based on the ingredient's unit string
+                let unit: NutrientUnit = amount.unit.lowercased().contains("mg") ? .mg :
+                                        amount.unit.lowercased().contains("mcg") ? .mcg :
+                                        amount.unit.lowercased().contains("iu") ? .iu : .mg
+
+                nutrients.append(ManualNutrientEntry(
+                    id: ingredient.name.lowercased().replacingOccurrences(of: " ", with: "_"),
+                    name: ingredient.name,
+                    amount: amount.amount,
+                    unit: unit
+                ))
+            }
         }
     }
     

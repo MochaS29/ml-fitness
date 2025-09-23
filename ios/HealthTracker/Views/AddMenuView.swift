@@ -69,10 +69,11 @@ struct AddMenuView: View {
                         .foregroundColor(.primary)
                 }
                 
-                Button(action: { showingBarcodeScanner = true }) {
-                    Label("Scan Barcode", systemImage: "barcode.viewfinder")
-                        .foregroundColor(.primary)
-                }
+                // Barcode scanner temporarily disabled - coming in next release
+                // Button(action: { showingBarcodeScanner = true }) {
+                //     Label("Scan Barcode", systemImage: "barcode.viewfinder")
+                //         .foregroundColor(.primary)
+                // }
             }
             
             // Exercise Section

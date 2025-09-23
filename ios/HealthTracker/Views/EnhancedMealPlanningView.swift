@@ -712,6 +712,17 @@ struct MonthlyOverviewView: View {
             try autoreleasepool {
                 foodEntries = try viewContext.fetch(request)
             }
+
+            // Debug: Log fetched entries
+            print("Fetched \(foodEntries.count) food entries for month \(displayMonth)")
+
+            // Debug: Show unique dates with meals
+            let uniqueDates = Set(foodEntries.compactMap { entry -> Date? in
+                guard let timestamp = entry.timestamp else { return nil }
+                return Calendar.current.startOfDay(for: timestamp)
+            })
+            print("Days with meals: \(uniqueDates.count)")
+
         } catch {
             print("Error fetching food entries: \(error)")
             foodEntries = []
@@ -807,6 +818,7 @@ struct CalendarGridView: View {
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
 
         var mealDots = MealDots()
+        var dayMealCount = 0
 
         // Use early exit to minimize processing
         for entry in foodEntries {
@@ -820,18 +832,29 @@ struct CalendarGridView: View {
                   timestamp >= startOfDay && timestamp < endOfDay,
                   let mealType = entry.mealType else { continue }
 
-            switch mealType.lowercased() {
-            case "breakfast" where !mealDots.hasBreakfast:
+            switch mealType {
+            case "Breakfast" where !mealDots.hasBreakfast:
                 mealDots.hasBreakfast = true
-            case "lunch" where !mealDots.hasLunch:
+                dayMealCount += 1
+            case "Lunch" where !mealDots.hasLunch:
                 mealDots.hasLunch = true
-            case "dinner", "supper" where !mealDots.hasDinner:
+                dayMealCount += 1
+            case "Dinner", "Supper" where !mealDots.hasDinner:
                 mealDots.hasDinner = true
-            case "snack", "snacks" where !mealDots.hasSnack:
+                dayMealCount += 1
+            case "Snack", "Snacks" where !mealDots.hasSnack:
                 mealDots.hasSnack = true
+                dayMealCount += 1
             default:
                 break
             }
+        }
+
+        // Debug: Log if this day has meals
+        if dayMealCount > 0 {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM dd"
+            print("Date \(formatter.string(from: date)) has \(dayMealCount) meal types")
         }
 
         return mealDots

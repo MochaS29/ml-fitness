@@ -10,7 +10,11 @@ struct AutocompleteFoodSearchView: View {
     @State private var selectedFoodItem: FoodItem?
     @State private var showingManualEntry = false
     @State private var isSearching = false
+    @State private var usdaResults: [USDAFoodItem] = []
+    @State private var isLoadingUSDA = false
     @FocusState private var isSearchFieldFocused: Bool
+
+    private let usdaService = USDAFoodService.shared
 
     // Recently used foods
     @FetchRequest(
@@ -39,9 +43,9 @@ struct AutocompleteFoodSearchView: View {
                     protein: entry.protein,
                     carbs: entry.carbs,
                     fat: entry.fat,
-                    fiber: entry.fiber ?? 0,
-                    sugar: entry.sugar ?? 0,
-                    sodium: entry.sodium ?? 0,
+                    fiber: entry.fiber,
+                    sugar: entry.sugar,
+                    sodium: entry.sodium,
                     cholesterol: 0,
                     saturatedFat: 0,
                     barcode: entry.barcode,
@@ -75,12 +79,21 @@ struct AutocompleteFoodSearchView: View {
             }
             .prefix(10)  // Limit database results
 
-        return recentMatches + Array(databaseMatches)
+        // Add USDA results converted to FoodItem
+        let usdaFoodItems = usdaResults.map { $0.toFoodItem() }
+            .filter { food in
+                // Don't include if already in recent or database matches
+                !recentMatches.contains { $0.name == food.name && $0.brand == food.brand } &&
+                !databaseMatches.contains { $0.name == food.name && $0.brand == food.brand }
+            }
+            .prefix(10)
+
+        return recentMatches + Array(databaseMatches) + Array(usdaFoodItems)
     }
 
     // Suggested foods based on time of day
     private var suggestedFoods: [FoodItem] {
-        let hour = Calendar.current.component(.hour, from: Date())
+        _ = Calendar.current.component(.hour, from: Date())
 
         // Return empty results for now - can be enhanced later
         return []
@@ -103,6 +116,11 @@ struct AutocompleteFoodSearchView: View {
                             .focused($isSearchFieldFocused)
                             .onChange(of: searchText) { _, newValue in
                                 isSearching = !newValue.isEmpty
+                                if !newValue.isEmpty {
+                                    searchUSDA(newValue)
+                                } else {
+                                    usdaResults = []
+                                }
                             }
 
                         if !searchText.isEmpty {
@@ -147,6 +165,21 @@ struct AutocompleteFoodSearchView: View {
                                         .padding()
                                         .background(Color(.systemBackground))
                                     }
+
+                                    Divider()
+                                }
+
+                                // Loading indicator for USDA search
+                                if isLoadingUSDA {
+                                    HStack {
+                                        ProgressView()
+                                            .scaleEffect(0.8)
+                                        Text("Searching USDA database...")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                    }
+                                    .padding()
 
                                     Divider()
                                 }
@@ -284,28 +317,33 @@ struct AutocompleteFoodSearchView: View {
     }
 
     private func createNewFood() {
-        // Create a basic food item with the search text as the name
-        let newFood = FoodItem(
-            name: searchText,
-            brand: nil,
-            category: .other,
-            servingSize: "1",
-            servingUnit: "serving",
-            calories: 0,
-            protein: 0,
-            carbs: 0,
-            fat: 0,
-            fiber: 0,
-            sugar: 0,
-            sodium: 0,
-            cholesterol: 0,
-            saturatedFat: 0,
-            barcode: nil,
-            isCommon: false
-        )
-
         showingManualEntry = true
-        // Pass the name to manual entry
+        // The manual entry form will use the search text as the initial name
+    }
+
+    private func searchUSDA(_ query: String) {
+        // Debounce the search
+        Task {
+            // Wait a bit to avoid too many API calls while typing
+            try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
+
+            // Check if search text hasn't changed
+            guard query == searchText else { return }
+
+            isLoadingUSDA = true
+            do {
+                let results = try await usdaService.searchFoods(query)
+                await MainActor.run {
+                    self.usdaResults = results
+                    self.isLoadingUSDA = false
+                }
+            } catch {
+                await MainActor.run {
+                    self.isLoadingUSDA = false
+                    print("USDA search error: \(error)")
+                }
+            }
+        }
     }
 }
 

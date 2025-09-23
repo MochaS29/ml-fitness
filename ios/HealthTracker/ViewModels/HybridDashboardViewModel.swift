@@ -1,23 +1,322 @@
 import SwiftUI
 import Combine
 import CoreMotion
+import CoreData
 
 class DashboardViewModel: ObservableObject {
     // User Info
-    @Published var userName = "Mocha"
-    @Published var healthScore: Double = 85
+    @Published var userName = "User"
+    @Published var healthScore: Double = 0
 
     // Services
     private let stepCounter = StepCounterService.shared
+    private let userProfileManager = UserProfileManager()
+    private let viewContext = PersistenceController.shared.container.viewContext
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
-        // Don't start ANYTHING immediately - wait 5 minutes for app to stabilize
-        setupStepCounterBindings()
+    // Simple goals storage (until proper goals system is implemented)
+    @Published var dailyStepGoal: Int = UserDefaults.standard.integer(forKey: "dailyStepGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyStepGoal") : 8000
+    @Published var dailyCalorieGoal: Int = UserDefaults.standard.integer(forKey: "dailyCalorieGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyCalorieGoal") : 2000
+    @Published var dailyWaterGoal: Int = UserDefaults.standard.integer(forKey: "dailyWaterGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyWaterGoal") : 8
+    @Published var weightGoal: Double = UserDefaults.standard.double(forKey: "weightGoal")
 
-        // Delay ALL background services for 5 minutes (300 seconds)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 300.0) { [weak self] in
+    init() {
+        // Load user profile
+        loadUserProfile()
+
+        // Setup bindings and load goals
+        setupStepCounterBindings()
+        loadSimpleGoals()
+        loadTodayWaterIntake()
+        loadTodayExerciseData()
+        loadTodayCalories()
+        calculateHealthScore()
+
+        // Listen for UserDefaults changes to refresh goals
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(userDefaultsDidChange),
+            name: UserDefaults.didChangeNotification,
+            object: nil
+        )
+
+        // Listen for Core Data changes to refresh water intake and exercise
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(managedObjectContextDidSave),
+            name: .NSManagedObjectContextDidSave,
+            object: nil
+        )
+
+        // Start step counting immediately with a short delay for UI to stabilize
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             self?.stepCounter.startStepCounting()
+        }
+    }
+
+    @objc private func userDefaultsDidChange() {
+        // Reload goals when UserDefaults changes
+        loadSimpleGoals()
+    }
+
+    @objc private func managedObjectContextDidSave(_ notification: Notification) {
+        // Reload all data when Core Data changes
+        loadTodayWaterIntake()
+        loadTodayExerciseData()
+        loadTodayCalories()
+        calculateHealthScore()
+    }
+
+    private func calculateHealthScore() {
+        var score: Double = 0
+        var componentsCount = 0
+
+        print("Calculating health score - Steps: \(todaySteps)/\(stepGoal), Exercise: \(todayExercise), Water: \(todayWater)/\(waterGoal), Calories: \(todayCalories)/\(calorieGoal)")
+
+        // Step score (0-100 based on goal)
+        if stepGoal > 0 {
+            let stepScore = min(Double(todaySteps) / Double(stepGoal) * 100, 100)
+            score += stepScore
+            componentsCount += 1
+            print("Step score: \(stepScore)")
+        }
+
+        // Exercise score (0-100, 30 min = 100%)
+        if todayExercise > 0 {
+            let exerciseScore = min(Double(todayExercise) / 30.0 * 100, 100)
+            score += exerciseScore
+            componentsCount += 1
+        }
+
+        // Water score (0-100 based on goal)
+        if waterGoal > 0 {
+            let waterScore = min(Double(todayWater) / Double(waterGoal) * 100, 100)
+            score += waterScore
+            componentsCount += 1
+        }
+
+        // Calorie score (0-100, perfect = staying under goal)
+        if calorieGoal > 0 && todayCalories > 0 {
+            // Score is 100 if at or under goal, decreases if over
+            let calorieScore: Double
+            if todayCalories <= calorieGoal {
+                // Under or at goal: score based on how close to goal (eating too little is also not ideal)
+                let percentOfGoal = Double(todayCalories) / Double(calorieGoal)
+                if percentOfGoal >= 0.8 {
+                    calorieScore = 100 // 80-100% of goal is perfect
+                } else {
+                    calorieScore = percentOfGoal * 125 // Scale up for lower intake
+                }
+            } else {
+                // Over goal: decrease score
+                let percentOver = Double(todayCalories - calorieGoal) / Double(calorieGoal)
+                calorieScore = max(0, 100 - (percentOver * 200)) // Lose points for going over
+            }
+            score += calorieScore
+            componentsCount += 1
+        }
+
+        // Weight loss progress score (0-100 based on progress to goal)
+        if let profile = userProfileManager.currentProfile,
+           let startingWeight = profile.startingWeight,
+           targetWeight > 0 && startingWeight != targetWeight {
+
+            let totalToLose = abs(startingWeight - targetWeight)
+            let currentProgress = abs(startingWeight - currentWeight)
+
+            // Calculate progress percentage (capped at 100)
+            let weightScore = min((currentProgress / totalToLose) * 100, 100)
+
+            // Bonus points for consistent weight tracking
+            if currentWeight > 0 && currentWeight != startingWeight {
+                score += weightScore
+                componentsCount += 1
+            }
+        }
+
+        // Calculate average score
+        if componentsCount > 0 {
+            healthScore = score / Double(componentsCount)
+            print("Final health score: \(healthScore) from \(componentsCount) components")
+        } else {
+            // If no components, but we have goals, give partial credit for having goals set
+            if stepGoal > 0 || waterGoal > 0 || calorieGoal > 0 {
+                healthScore = 25 // Base score for having goals
+                print("Base health score: 25 for having goals set")
+            } else {
+                healthScore = 0
+                print("No health score - no goals or data")
+            }
+        }
+    }
+
+    private func loadTodayWaterIntake() {
+        let request = NSFetchRequest<WaterEntry>(entityName: "WaterEntry")
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+
+        do {
+            let entries = try viewContext.fetch(request)
+            let totalOunces = entries.reduce(0) { $0 + $1.amount }
+
+            // Convert ounces to glasses (8 oz per glass)
+            DispatchQueue.main.async { [weak self] in
+                self?.todayWater = Int(totalOunces / 8.0)
+            }
+        } catch {
+            print("Error fetching water entries: \(error)")
+        }
+    }
+
+    private func loadTodayExerciseData() {
+        let request = NSFetchRequest<ExerciseEntry>(entityName: "ExerciseEntry")
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+
+        do {
+            let entries = try viewContext.fetch(request)
+
+            // Calculate total minutes and number of sessions
+            let totalMinutes = entries.reduce(0) { $0 + Int($1.duration) }
+            let sessionCount = entries.count
+
+            DispatchQueue.main.async { [weak self] in
+                self?.todayExercise = totalMinutes
+                self?.exerciseSessions = sessionCount
+            }
+        } catch {
+            print("Error fetching exercise entries: \(error)")
+        }
+    }
+
+    private func loadTodayCalories() {
+        let request = NSFetchRequest<FoodEntry>(entityName: "FoodEntry")
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+
+        do {
+            let entries = try viewContext.fetch(request)
+
+            // Calculate total calories from food entries
+            let totalCalories = entries.reduce(0) { $0 + Int($1.calories) }
+
+            DispatchQueue.main.async { [weak self] in
+                self?.todayCalories = totalCalories
+            }
+        } catch {
+            print("Error fetching food entries: \(error)")
+        }
+    }
+
+    private func loadUserProfile() {
+        if let profile = userProfileManager.currentProfile {
+            userName = profile.name
+            if let startingWeight = profile.startingWeight {
+                currentWeight = startingWeight
+            } else {
+                currentWeight = 0.0
+            }
+        } else {
+            userName = "User"
+            currentWeight = 0.0
+        }
+    }
+
+    private func loadSimpleGoals() {
+        // Reload from UserDefaults to get latest values
+        let newStepGoal = UserDefaults.standard.integer(forKey: "dailyStepGoal")
+        if newStepGoal > 0 {
+            dailyStepGoal = newStepGoal
+            stepGoal = newStepGoal
+        } else {
+            stepGoal = dailyStepGoal
+        }
+
+        let newCalorieGoal = UserDefaults.standard.integer(forKey: "dailyCalorieGoal")
+        if newCalorieGoal > 0 {
+            dailyCalorieGoal = newCalorieGoal
+            calorieGoal = newCalorieGoal
+        } else {
+            calorieGoal = dailyCalorieGoal
+        }
+
+        let newWaterGoal = UserDefaults.standard.integer(forKey: "dailyWaterGoal")
+        if newWaterGoal > 0 {
+            dailyWaterGoal = newWaterGoal
+            waterGoal = newWaterGoal
+        } else {
+            waterGoal = dailyWaterGoal
+        }
+
+        let newWeightGoal = UserDefaults.standard.double(forKey: "weightGoal")
+        if newWeightGoal > 0 {
+            weightGoal = newWeightGoal
+            targetWeight = newWeightGoal
+        } else {
+            targetWeight = currentWeight
+        }
+    }
+
+    func saveStepGoal(_ goal: Int) {
+        dailyStepGoal = goal
+        stepGoal = goal
+        UserDefaults.standard.set(goal, forKey: "dailyStepGoal")
+    }
+
+    func saveCalorieGoal(_ goal: Int) {
+        dailyCalorieGoal = goal
+        calorieGoal = goal
+        UserDefaults.standard.set(goal, forKey: "dailyCalorieGoal")
+    }
+
+    func saveWaterGoal(_ goal: Int) {
+        dailyWaterGoal = goal
+        waterGoal = goal
+        UserDefaults.standard.set(goal, forKey: "dailyWaterGoal")
+    }
+
+    func saveWeightGoal(_ goal: Double) {
+        weightGoal = goal
+        targetWeight = goal
+        UserDefaults.standard.set(goal, forKey: "weightGoal")
+    }
+
+    func addWaterGlass() {
+        // Add 8 oz of water (1 glass)
+        let entry = WaterEntry(context: viewContext)
+        entry.id = UUID()
+        entry.amount = 8.0 // 8 oz per glass
+        entry.timestamp = Date()
+        entry.unit = "oz"
+
+        do {
+            try viewContext.save()
+            // Water intake will be updated via Core Data notification
+        } catch {
+            print("Error saving water entry: \(error)")
+        }
+    }
+
+    func removeWaterGlass() {
+        // Remove the last water entry for today
+        let request = NSFetchRequest<WaterEntry>(entityName: "WaterEntry")
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+        request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        request.fetchLimit = 1
+
+        do {
+            let entries = try viewContext.fetch(request)
+            if let lastEntry = entries.first {
+                viewContext.delete(lastEntry)
+                try viewContext.save()
+            }
+        } catch {
+            print("Error removing water entry: \(error)")
         }
     }
 
@@ -26,6 +325,7 @@ class DashboardViewModel: ObservableObject {
         stepCounter.$todaySteps
             .sink { [weak self] steps in
                 self?.todaySteps = steps
+                self?.calculateHealthScore() // Recalculate when steps update
             }
             .store(in: &cancellables)
 
@@ -67,27 +367,56 @@ class DashboardViewModel: ObservableObject {
     }
     
     var healthSummary: String {
-        return "You've lost 1.7 lbs this week! Your consistent exercise routine is paying off."
+        // Generate real summary based on actual data
+        var summaryParts: [String] = []
+
+        // Steps summary
+        if todaySteps > 0 {
+            summaryParts.append("\(todaySteps.formatted()) steps today")
+        }
+
+        // Exercise summary
+        if todayExercise > 0 {
+            summaryParts.append("\(todayExercise) min of exercise")
+        }
+
+        // Water summary
+        if todayWater > 0 {
+            let percent = waterPercentage
+            summaryParts.append("\(percent)% hydrated")
+        }
+
+        if summaryParts.isEmpty {
+            return "Start tracking your activities to see your progress"
+        } else {
+            return summaryParts.joined(separator: " • ")
+        }
     }
     
     // Today's Metrics
-    // TODO: Replace with real data from HealthKit/Core Data
-    @Published var todayCalories = 0 // Mock: 1650
-    @Published var calorieGoal = 2200
-    @Published var todaySteps = 0 // Mock: 8547 - Needs HealthKit integration
-    @Published var stepGoal = 10000
-    @Published var currentWeight = 165.5
-    @Published var targetWeight = 160.0
-    @Published var todayExercise = 45
-    @Published var exerciseSessions = 2
-    @Published var todayWater = 6
+    // These will be updated from real data sources
+    @Published var todayCalories = 0
+    @Published var calorieGoal = 2000
+    @Published var todaySteps = 0
+    @Published var stepGoal = 8000
+    @Published var currentWeight = 0.0
+    @Published var targetWeight = 0.0
+    @Published var todayExercise = 0
+    @Published var exerciseSessions = 0
+    @Published var todayWater = 0
     @Published var waterGoal = 8
     
     // Calculated Properties
     var weightProgress: Double {
-        let totalToLose = 170.0 - targetWeight // Assuming starting weight was 170
-        let currentLost = 170.0 - currentWeight
-        return (currentLost / totalToLose) * 100
+        guard let profile = userProfileManager.currentProfile,
+              let startingWeight = profile.startingWeight,
+              targetWeight > 0 else { return 0 }
+
+        let totalChange = abs(startingWeight - targetWeight)
+        guard totalChange > 0 else { return 0 }
+
+        let currentChange = abs(startingWeight - currentWeight)
+        return min((currentChange / totalChange) * 100, 100)
     }
     
     var waterPercentage: Int {
@@ -112,114 +441,335 @@ class DashboardViewModel: ObservableObject {
     var exerciseSparkline: [Double] = [] // Mock: [30, 0, 45, 60, 0, 30, 45]
     var waterSparkline: [Double] = [] // Mock: [7, 8, 6, 8, 7, 5, 6]
     
-    // Nutrition Distribution
+    // Nutrition Distribution - Calculate from actual food entries
     var nutritionData: [HybridNutritionItem] {
-        [
-            HybridNutritionItem(name: "Carbs", value: 45, percentage: 45, color: .orange),
-            HybridNutritionItem(name: "Protein", value: 30, percentage: 30, color: .blue),
-            HybridNutritionItem(name: "Fat", value: 25, percentage: 25, color: .purple)
-        ]
+        // Fetch today's food entries and calculate macro distribution
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: Date())
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        let request = NSFetchRequest<FoodEntry>(entityName: "FoodEntry")
+        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@",
+                                       startOfDay as NSDate, endOfDay as NSDate)
+
+        do {
+            let entries = try viewContext.fetch(request)
+
+            // Calculate total macros in grams
+            var totalProtein: Double = 0
+            var totalCarbs: Double = 0
+            var totalFat: Double = 0
+
+            for entry in entries {
+                totalProtein += entry.protein
+                totalCarbs += entry.carbs
+                totalFat += entry.fat
+            }
+
+            // Convert to calories (protein: 4 cal/g, carbs: 4 cal/g, fat: 9 cal/g)
+            let proteinCalories = totalProtein * 4
+            let carbCalories = totalCarbs * 4
+            let fatCalories = totalFat * 9
+            let totalCalories = proteinCalories + carbCalories + fatCalories
+
+            // If no macros logged, return empty
+            if totalCalories == 0 {
+                return []
+            }
+
+            // Calculate percentages based on calories and create distribution items
+            return [
+                HybridNutritionItem(
+                    name: "Protein",
+                    value: proteinCalories,
+                    percentage: (proteinCalories / totalCalories) * 100,
+                    color: .blue
+                ),
+                HybridNutritionItem(
+                    name: "Carbs",
+                    value: carbCalories,
+                    percentage: (carbCalories / totalCalories) * 100,
+                    color: .orange
+                ),
+                HybridNutritionItem(
+                    name: "Fat",
+                    value: fatCalories,
+                    percentage: (fatCalories / totalCalories) * 100,
+                    color: .purple
+                )
+            ]
+        } catch {
+            print("Error fetching food entries for nutrition distribution: \(error)")
+            return []
+        }
     }
     
-    // Weekly Data for Chart
+    // Weekly Data for Chart - No mock data
     var weeklyData: [WeeklyDataPoint] {
-        [
-            WeeklyDataPoint(day: "Mon", value: 1850),
-            WeeklyDataPoint(day: "Tue", value: 2100),
-            WeeklyDataPoint(day: "Wed", value: 1950),
-            WeeklyDataPoint(day: "Thu", value: 2200),
-            WeeklyDataPoint(day: "Fri", value: 1900),
-            WeeklyDataPoint(day: "Sat", value: 2050),
-            WeeklyDataPoint(day: "Sun", value: 1650)
-        ]
+        // Return empty data until user has logged actual data
+        return []
     }
     
-    // AI Insights
+    // AI Insights - Generated from real data
     var aiInsights: [AIInsight] {
-        [
-            AIInsight(
-                title: "Protein Timing Discovery",
-                description: "You absorb 23% more protein when consumed within 30 minutes after exercise",
-                icon: "clock.fill",
-                color: .blue,
-                impact: "High Impact",
-                isNew: true
-            ),
-            AIInsight(
-                title: "Hydration Pattern",
-                description: "Your energy dips correlate with low water intake. Try drinking water every 2 hours",
-                icon: "drop.fill",
-                color: .cyan,
+        var insights: [AIInsight] = []
+
+        // Step insight
+        if stepGoal > 0 {
+            let stepPercentage = Double(todaySteps) / Double(stepGoal) * 100
+            if stepPercentage < 50 {
+                insights.append(AIInsight(
+                    title: "Step Goal Progress",
+                    description: "You're at \(Int(stepPercentage))% of your daily step goal. Try a 10-minute walk to boost your progress.",
+                    icon: "figure.walk",
+                    color: .green,
+                    impact: "Medium Impact",
+                    isNew: false
+                ))
+            } else if stepPercentage >= 100 {
+                insights.append(AIInsight(
+                    title: "Step Goal Achieved!",
+                    description: "Great job! You've reached \(todaySteps.formatted()) steps today, exceeding your goal of \(stepGoal).",
+                    icon: "star.fill",
+                    color: .yellow,
+                    impact: "Positive",
+                    isNew: true
+                ))
+            }
+        }
+
+        // Hydration insight
+        if waterGoal > 0 {
+            let waterPercentage = self.waterPercentage
+            if waterPercentage < 50 && Calendar.current.component(.hour, from: Date()) > 14 {
+                insights.append(AIInsight(
+                    title: "Hydration Alert",
+                    description: "You're only \(waterPercentage)% hydrated. Aim to drink \(waterGoal - todayWater) more glasses today.",
+                    icon: "drop.fill",
+                    color: .cyan,
+                    impact: "High Impact",
+                    isNew: true
+                ))
+            }
+        }
+
+        // Exercise insight
+        if todayExercise == 0 && Calendar.current.component(.hour, from: Date()) > 12 {
+            insights.append(AIInsight(
+                title: "Movement Reminder",
+                description: "No exercise logged today. Even 15 minutes of activity can boost your energy and health score.",
+                icon: "figure.run",
+                color: .orange,
                 impact: "Medium Impact",
                 isNew: false
-            ),
-            AIInsight(
-                title: "Sleep & Cravings",
-                description: "You consume 340 extra calories on days with less than 7 hours sleep",
-                icon: "moon.fill",
-                color: .indigo,
-                impact: "High Impact",
-                isNew: true
-            ),
-            AIInsight(
-                title: "Meal Timing Win",
-                description: "Your 3pm snack prevents evening overeating - keep it up!",
-                icon: "star.fill",
-                color: .yellow,
+            ))
+        } else if todayExercise >= 30 {
+            insights.append(AIInsight(
+                title: "Exercise Goal Met!",
+                description: "You've completed \(todayExercise) minutes of exercise. Great for heart health and weight management!",
+                icon: "heart.fill",
+                color: .red,
                 impact: "Positive",
                 isNew: false
-            )
-        ]
-    }
-    
-    // AI Recommendations
-    var recommendations: [AIRecommendation] {
-        [
-            AIRecommendation(
-                title: "Add 20g protein to breakfast",
-                description: "Based on your morning workouts, this will boost recovery by 40%",
-                icon: "sunrise.fill",
-                color: .orange,
-                actionText: "See protein-rich breakfast ideas"
-            ),
-            AIRecommendation(
-                title: "Hydrate before your 2pm meeting",
-                description: "Your focus scores drop 15% when dehydrated",
-                icon: "drop.circle.fill",
+            ))
+        }
+
+        // Calorie insight
+        if calorieGoal > 0 && todayCalories > 0 {
+            let caloriePercentage = Double(todayCalories) / Double(calorieGoal) * 100
+            if caloriePercentage > 110 {
+                insights.append(AIInsight(
+                    title: "Calorie Overage",
+                    description: "You're \(todayCalories - calorieGoal) calories over your goal. Consider a lighter dinner or evening walk.",
+                    icon: "exclamationmark.triangle",
+                    color: .orange,
+                    impact: "High Impact",
+                    isNew: true
+                ))
+            }
+        }
+
+        // Return insights or a default if none
+        if insights.isEmpty {
+            insights.append(AIInsight(
+                title: "Start Tracking",
+                description: "Log your activities to get personalized health insights and recommendations.",
+                icon: "lightbulb.fill",
                 color: .blue,
-                actionText: "Set reminder"
-            ),
-            AIRecommendation(
-                title: "Try intermittent fasting",
-                description: "Your metabolism shows signs it would respond well to 16:8 fasting",
-                icon: "clock.arrow.circlepath",
-                color: .green,
-                actionText: "Learn more"
-            ),
-            AIRecommendation(
-                title: "Swap evening carbs for veggies",
-                description: "This could improve your sleep quality by 25%",
-                icon: "moon.stars.fill",
-                color: .purple,
-                actionText: "See dinner alternatives"
-            )
-        ]
+                impact: "Get Started",
+                isNew: true
+            ))
+        }
+
+        return insights
     }
     
-    // Nutrient Breakdown
+    // AI Recommendations - Based on real data
+    var recommendations: [AIRecommendation] {
+        var recs: [AIRecommendation] = []
+
+        // Step recommendation
+        if stepGoal > 0 && todaySteps < stepGoal {
+            let stepsNeeded = stepGoal - todaySteps
+            recs.append(AIRecommendation(
+                title: "Take \(stepsNeeded.formatted()) more steps",
+                description: "A \(stepsNeeded / 100)-minute walk would help you reach your daily goal",
+                icon: "figure.walk.motion",
+                color: .green,
+                actionText: "Start walking timer"
+            ))
+        }
+
+        // Hydration recommendation
+        if waterPercentage < 75 && Calendar.current.component(.hour, from: Date()) < 18 {
+            recs.append(AIRecommendation(
+                title: "Increase water intake",
+                description: "Drink \(waterGoal - todayWater) more glasses to reach your hydration goal",
+                icon: "drop.circle.fill",
+                color: .cyan,
+                actionText: "Set water reminder"
+            ))
+        }
+
+        // Exercise recommendation
+        if todayExercise < 30 {
+            let minutesNeeded = 30 - todayExercise
+            recs.append(AIRecommendation(
+                title: "Add \(minutesNeeded) minutes of exercise",
+                description: "Regular exercise improves health score and supports weight goals",
+                icon: "figure.run.circle",
+                color: .orange,
+                actionText: "View quick workouts"
+            ))
+        }
+
+        // Weight loss recommendation
+        if targetWeight > 0 && currentWeight > targetWeight {
+            let toGo = currentWeight - targetWeight
+            recs.append(AIRecommendation(
+                title: "Stay focused on your goal",
+                description: "You're \(String(format: "%.1f", toGo)) lbs from your target weight. Keep tracking!",
+                icon: "target",
+                color: .purple,
+                actionText: "View weight trend"
+            ))
+        }
+
+        // Default recommendation if none
+        if recs.isEmpty {
+            recs.append(AIRecommendation(
+                title: "Set your health goals",
+                description: "Establish daily targets for steps, water, and exercise",
+                icon: "flag.circle",
+                color: .blue,
+                actionText: "Set goals"
+            ))
+        }
+
+        return Array(recs.prefix(3)) // Return max 3 recommendations
+    }
+    
+    // Nutrient Breakdown - Including supplements
     var nutrientBreakdown: [NutrientBreakdown] {
-        [
-            NutrientBreakdown(name: "Calories", current: "1,650", goal: "2,200", percentage: 75, color: .orange),
-            NutrientBreakdown(name: "Protein", current: "85g", goal: "120g", percentage: 71, color: .blue),
-            NutrientBreakdown(name: "Carbs", current: "186g", goal: "275g", percentage: 68, color: .brown),
-            NutrientBreakdown(name: "Fat", current: "46g", goal: "73g", percentage: 63, color: .purple),
-            NutrientBreakdown(name: "Fiber", current: "22g", goal: "30g", percentage: 73, color: .green),
-            NutrientBreakdown(name: "Sugar", current: "45g", goal: "50g", percentage: 90, color: .pink),
-            NutrientBreakdown(name: "Sodium", current: "2,800mg", goal: "2,300mg", percentage: 122, color: .red),
-            NutrientBreakdown(name: "Iron", current: "14mg", goal: "18mg", percentage: 78, color: .gray),
-            NutrientBreakdown(name: "Calcium", current: "950mg", goal: "1,000mg", percentage: 95, color: .mint),
-            NutrientBreakdown(name: "Vitamin D", current: "12μg", goal: "15μg", percentage: 80, color: .yellow)
+        var nutrients: [NutrientBreakdown] = []
+
+        // Only show calories if we have actual food logged
+        if todayCalories > 0 {
+            nutrients.append(NutrientBreakdown(
+                name: "Calories",
+                current: "\(todayCalories)",
+                goal: "\(calorieGoal)",
+                percentage: (Double(todayCalories) / Double(calorieGoal)) * 100,
+                color: .orange
+            ))
+        }
+
+        // Add vitamins and minerals from supplements
+        let supplementNutrients = getTodaySupplementNutrients()
+
+        // Common vitamins with their RDAs
+        let vitaminRDAs: [(id: String, name: String, rda: Double, unit: String, color: Color)] = [
+            ("vitamin_a", "Vitamin A", 900, "mcg", .orange),
+            ("vitamin_c", "Vitamin C", 90, "mg", .yellow),
+            ("vitamin_d", "Vitamin D", 600, "IU", .blue),
+            ("vitamin_e", "Vitamin E", 15, "mg", .green),
+            ("vitamin_k", "Vitamin K", 120, "mcg", .green),
+            ("thiamine", "Vitamin B1", 1.2, "mg", .purple),
+            ("riboflavin", "Vitamin B2", 1.3, "mg", .purple),
+            ("niacin", "Vitamin B3", 16, "mg", .purple),
+            ("vitamin_b6", "Vitamin B6", 1.3, "mg", .purple),
+            ("folate", "Folate", 400, "mcg", .purple),
+            ("vitamin_b12", "Vitamin B12", 2.4, "mcg", .purple),
+            ("biotin", "Biotin", 30, "mcg", .purple)
         ]
+
+        // Common minerals with their RDAs
+        let mineralRDAs: [(id: String, name: String, rda: Double, unit: String, color: Color)] = [
+            ("calcium", "Calcium", 1000, "mg", .gray),
+            ("iron", "Iron", 18, "mg", .red),
+            ("magnesium", "Magnesium", 400, "mg", .blue),
+            ("zinc", "Zinc", 11, "mg", Color(red: 139/255, green: 69/255, blue: 19/255)),
+            ("selenium", "Selenium", 55, "mcg", .mindfulTeal),
+            ("potassium", "Potassium", 2600, "mg", .orange),
+            ("phosphorus", "Phosphorus", 700, "mg", .mindfulTeal)
+        ]
+
+        // Add vitamins to breakdown
+        for vitamin in vitaminRDAs {
+            if let amount = supplementNutrients[vitamin.id], amount > 0 {
+                let percentage = (amount / vitamin.rda) * 100
+                nutrients.append(NutrientBreakdown(
+                    name: vitamin.name,
+                    current: String(format: "%.1f", amount),
+                    goal: "\(Int(vitamin.rda)) \(vitamin.unit)",
+                    percentage: percentage,
+                    color: vitamin.color
+                ))
+            }
+        }
+
+        // Add minerals to breakdown
+        for mineral in mineralRDAs {
+            if let amount = supplementNutrients[mineral.id], amount > 0 {
+                let percentage = (amount / mineral.rda) * 100
+                nutrients.append(NutrientBreakdown(
+                    name: mineral.name,
+                    current: String(format: "%.1f", amount),
+                    goal: "\(Int(mineral.rda)) \(mineral.unit)",
+                    percentage: percentage,
+                    color: mineral.color
+                ))
+            }
+        }
+
+        return nutrients
+    }
+
+    private func getTodaySupplementNutrients() -> [String: Double] {
+        var totalNutrients: [String: Double] = [:]
+
+        // Fetch today's supplement entries
+        let request = NSFetchRequest<SupplementEntry>(entityName: "SupplementEntry")
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+
+        do {
+            let entries = try viewContext.fetch(request)
+
+            // Aggregate nutrients from all supplements
+            for entry in entries {
+                if let nutrients = entry.nutrients {
+                    for (nutrientId, amount) in nutrients {
+                        totalNutrients[nutrientId, default: 0] += amount
+                    }
+                }
+            }
+        } catch {
+            print("Error fetching supplement entries: \(error)")
+        }
+
+        return totalNutrients
     }
 
     func updateTimeRange(_ range: HybridDashboardView.TimeRange) {
@@ -242,89 +792,94 @@ class DashboardViewModel: ObservableObject {
     // MARK: - Chart Data Methods
 
     func getCaloriesData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
-        switch range {
-        case .day:
-            // Hour-by-hour for today
-            let hours = stride(from: 0, to: 24, by: 4).map { hour in
-                ChartDataPoint(
-                    date: Calendar.current.date(byAdding: .hour, value: hour, to: Calendar.current.startOfDay(for: Date()))!,
-                    value: Double.random(in: 200...400)
-                )
-            }
-            return hours
-        case .week:
-            // Daily for past 7 days
-            return (0..<7).map { dayOffset in
-                ChartDataPoint(
-                    date: Calendar.current.date(byAdding: .day, value: -dayOffset, to: Date())!,
-                    value: Double([1850, 2100, 1950, 2200, 1900, 2050, 1650][dayOffset % 7])
-                )
-            }.reversed()
-        case .month:
-            // Weekly averages for past month
-            return (0..<4).map { weekOffset in
-                ChartDataPoint(
-                    date: Calendar.current.date(byAdding: .weekOfYear, value: -weekOffset, to: Date())!,
-                    value: Double.random(in: 1800...2200)
-                )
-            }.reversed()
-        }
+        // Return empty data until user logs food
+        return []
     }
 
     func getWeightData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
-        switch range {
-        case .day:
-            // Single point for today
-            return [ChartDataPoint(date: Date(), value: currentWeight)]
-        case .week:
-            // Daily weights for past week
-            return (0..<7).map { dayOffset in
-                ChartDataPoint(
-                    date: Calendar.current.date(byAdding: .day, value: -dayOffset, to: Date())!,
-                    value: currentWeight + Double.random(in: -1...1)
-                )
-            }.reversed()
-        case .month:
-            // Weekly weights for past month
-            return (0..<4).map { weekOffset in
-                ChartDataPoint(
-                    date: Calendar.current.date(byAdding: .weekOfYear, value: -weekOffset, to: Date())!,
-                    value: currentWeight + Double(4 - weekOffset) * 0.5
-                )
-            }.reversed()
+        // Get weight data for the past 7 days
+        var dataPoints: [ChartDataPoint] = []
+        let calendar = Calendar.current
+        let today = Date()
+
+        // Fetch weight entries for each day
+        for dayOffset in 0..<7 {
+            if let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) {
+                let startOfDay = calendar.startOfDay(for: date)
+                let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+                let request = NSFetchRequest<WeightEntry>(entityName: "WeightEntry")
+                request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+                request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+                request.fetchLimit = 1
+
+                do {
+                    let entries = try viewContext.fetch(request)
+                    if let entry = entries.first {
+                        dataPoints.append(ChartDataPoint(date: date, value: entry.weight))
+                    } else if dayOffset == 0 && currentWeight > 0 {
+                        // Use current weight for today if no entry
+                        dataPoints.append(ChartDataPoint(date: date, value: currentWeight))
+                    }
+                } catch {
+                    if dayOffset == 0 && currentWeight > 0 {
+                        dataPoints.append(ChartDataPoint(date: date, value: currentWeight))
+                    }
+                }
+            }
         }
+
+        return dataPoints.reversed()
     }
 
     func getExerciseData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
-        switch range {
-        case .day:
-            // Sessions for today
-            return [
-                ChartDataPoint(date: Calendar.current.date(byAdding: .hour, value: -6, to: Date())!, value: 30),
-                ChartDataPoint(date: Calendar.current.date(byAdding: .hour, value: -2, to: Date())!, value: 15)
-            ]
-        case .week:
-            // Daily totals for past week
-            return (0..<7).map { dayOffset in
-                ChartDataPoint(
-                    date: Calendar.current.date(byAdding: .day, value: -dayOffset, to: Date())!,
-                    value: Double([30, 0, 45, 60, 0, 30, 45][dayOffset % 7])
-                )
-            }.reversed()
-        case .month:
-            // Weekly totals for past month
-            return (0..<4).map { weekOffset in
-                ChartDataPoint(
-                    date: Calendar.current.date(byAdding: .weekOfYear, value: -weekOffset, to: Date())!,
-                    value: Double.random(in: 150...300)
-                )
-            }.reversed()
+        // Get exercise data for the past 7 days
+        var dataPoints: [ChartDataPoint] = []
+        let calendar = Calendar.current
+        let today = Date()
+
+        // Fetch exercise data for each day
+        for dayOffset in 0..<7 {
+            if let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) {
+                let startOfDay = calendar.startOfDay(for: date)
+                let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+                let request = NSFetchRequest<ExerciseEntry>(entityName: "ExerciseEntry")
+                request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+
+                do {
+                    let entries = try viewContext.fetch(request)
+                    let totalMinutes = entries.reduce(0) { $0 + Int($1.duration) }
+                    dataPoints.append(ChartDataPoint(date: date, value: Double(totalMinutes)))
+                } catch {
+                    dataPoints.append(ChartDataPoint(date: date, value: 0))
+                }
+            }
         }
+
+        return dataPoints.reversed()
+    }
+
+    func getWeeklyStepsData() -> [ChartDataPoint] {
+        // Get step data for the past 7 days
+        var dataPoints: [ChartDataPoint] = []
+        let calendar = Calendar.current
+        let today = Date()
+
+        for dayOffset in 0..<7 {
+            if let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) {
+                // For now, use today's step count for current day, 0 for others
+                // This will be expanded to fetch historical data from HealthKit
+                let steps = dayOffset == 0 ? Double(todaySteps) : 0
+                dataPoints.append(ChartDataPoint(date: date, value: steps))
+            }
+        }
+
+        return dataPoints.reversed()
     }
 
     func getStepsData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
-        // TODO: Connect to HealthKit for real step data
-        // Mock data temporarily disabled
+        // Deprecated - use getWeeklyStepsData instead
         return []
 
         /* Original mock data - commented out

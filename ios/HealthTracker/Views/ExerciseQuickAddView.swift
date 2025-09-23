@@ -57,6 +57,22 @@ struct ExerciseQuickAddView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
+                    // Add to Today's Activity Button at the top
+                    Button(action: addExercise) {
+                        HStack {
+                            Image(systemName: "plus")
+                                .font(.system(size: 16, weight: .semibold))
+                            Text("Add to Today's Activity")
+                                .font(.system(size: 16, weight: .semibold))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(selectedExercise != nil ? Color.orange : Color.gray.opacity(0.5))
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                    }
+                    .disabled(selectedExercise == nil)
+
                     // Exercise Selection Grid
                     exerciseGrid
 
@@ -70,9 +86,6 @@ struct ExerciseQuickAddView: View {
 
                     // Quick Duration Buttons
                     quickDurationButtons
-
-                    // Add Button
-                    addButton
                 }
                 .padding()
             }
@@ -215,20 +228,6 @@ struct ExerciseQuickAddView: View {
         }
     }
 
-    private var addButton: some View {
-        Button(action: addExercise) {
-            HStack {
-                Image(systemName: "plus.circle.fill")
-                Text("Add to Today's Activity")
-            }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(selectedExercise != nil ? Color.blue : Color.gray)
-            .foregroundColor(.white)
-            .cornerRadius(12)
-        }
-        .disabled(selectedExercise == nil)
-    }
 
     private func addExercise() {
         guard let exercise = selectedExercise else { return }

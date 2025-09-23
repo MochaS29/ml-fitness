@@ -30,17 +30,19 @@ struct SupplementTrackingView: View {
                     List {
                         Section {
                             VStack(spacing: 12) {
-                                HStack {
-                                    Button(action: { showingBarcodeScanner = true }) {
-                                        Label("Scan Barcode", systemImage: "barcode.viewfinder")
-                                    }
-                                    .buttonStyle(.borderedProminent)
+                                // Barcode scanner temporarily disabled - coming in next release
+                                // HStack {
+                                //     Button(action: { showingBarcodeScanner = true }) {
+                                //         Label("Scan Barcode", systemImage: "barcode.viewfinder")
+                                //     }
+                                //     .buttonStyle(.borderedProminent)
+                                // }
 
-                                    Button(action: { showingScanner = true }) {
-                                        Label("Scan Label", systemImage: "camera.viewfinder")
-                                    }
-                                    .buttonStyle(.bordered)
+                                Button(action: { showingScanner = true }) {
+                                    Label("Scan Label", systemImage: "camera.viewfinder")
+                                        .frame(maxWidth: .infinity)
                                 }
+                                .buttonStyle(.borderedProminent)
 
                                 Button(action: { showingManualEntry = true }) {
                                     Label("Manual Entry", systemImage: "plus.circle")
@@ -169,12 +171,13 @@ struct EmptySupplementsView: View {
                 .padding(.horizontal)
 
             VStack(spacing: 15) {
-                Button(action: { showingBarcodeScanner = true }) {
-                    Label("Scan Supplement Barcode", systemImage: "barcode.viewfinder")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                // Barcode scanner temporarily disabled - coming in next release
+                // Button(action: { showingBarcodeScanner = true }) {
+                //     Label("Scan Supplement Barcode", systemImage: "barcode.viewfinder")
+                //     .frame(maxWidth: .infinity)
+                // }
+                // .buttonStyle(.borderedProminent)
+                // .controlSize(.large)
 
                 Button(action: { showingScanner = true }) {
                     Label("Scan Supplement Label", systemImage: "camera.viewfinder")

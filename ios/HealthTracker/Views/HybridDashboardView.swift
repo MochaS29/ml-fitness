@@ -15,6 +15,7 @@ struct HybridDashboardView: View {
     @State private var showingStepDetail = false
     @State private var showingStepGoal = false
     @State private var showingExerciseQuickAdd = false
+    @State private var showingAllInsights = false
     @State private var widgetsEnabled = false
 
     enum TimeRange: String, CaseIterable {
@@ -71,7 +72,7 @@ struct HybridDashboardView: View {
             }
             .padding()
         }
-        .background(Color.softCream)
+        .background(Color(UIColor.systemGroupedBackground))
         .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
@@ -116,6 +117,9 @@ struct HybridDashboardView: View {
         .sheet(isPresented: $showingExerciseQuickAdd) {
             ExerciseQuickAddView()
         }
+        .sheet(isPresented: $showingAllInsights) {
+            AllInsightsView(insights: viewModel.aiInsights)
+        }
     }
     
     // MARK: - Header Section
@@ -123,31 +127,15 @@ struct HybridDashboardView: View {
     private var headerSection: some View {
         VStack(spacing: 12) {
             // Welcome Message with AI Touch
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Hello, \(viewModel.userName)!")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.deepCharcoal)
-                    
-                    Text(viewModel.aiGreeting)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                
-                Spacer()
-                
-                // Time Range Picker
-                Picker("Time Range", selection: $selectedTimeRange) {
-                    ForEach(TimeRange.allCases, id: \.self) { range in
-                        Text(range.rawValue).tag(range)
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .frame(width: 200)
-                .onChange(of: selectedTimeRange) { oldValue, newValue in
-                    viewModel.updateTimeRange(newValue)
-                }
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Hello, \(viewModel.userName)!")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.deepCharcoal)
+
+                Text(viewModel.aiGreeting)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
             
             // Overall Health Score with AI Analysis
@@ -155,7 +143,7 @@ struct HybridDashboardView: View {
                 // Score Circle
                 ZStack {
                     Circle()
-                        .stroke(Color.gray.opacity(0.2), lineWidth: 8)
+                        .stroke(Color(UIColor.systemFill), lineWidth: 8)
                         .frame(width: 80, height: 80)
                     
                     Circle()
@@ -196,7 +184,7 @@ struct HybridDashboardView: View {
                 Spacer()
             }
             .padding()
-            .background(Color.white)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
         }
@@ -213,7 +201,7 @@ struct HybridDashboardView: View {
                 
                 Spacer()
                 
-                Button(action: {}) {
+                Button(action: { showingAllInsights = true }) {
                     Text("View All")
                         .font(.caption)
                         .foregroundColor(.mindfulTeal)
@@ -276,12 +264,12 @@ struct HybridDashboardView: View {
                 sparklineData: viewModel.exerciseSparkline
             )
             .onTapGesture {
-                showingExerciseQuickAdd = true  // Show quick add for exercises
+                showingExerciseQuickAdd = true
             }
             
             MetricCardWithTrend(
                 title: "Water",
-                value: "0",
+                value: "\(viewModel.todayWater)",
                 subtitle: "\(viewModel.waterPercentage)% hydrated",
                 trend: viewModel.waterTrend,
                 trendValue: "\(viewModel.waterTrendPercent)%",
@@ -299,28 +287,21 @@ struct HybridDashboardView: View {
 
     private var chartsSection: some View {
         VStack(spacing: 20) {
-            // Steps Chart with Time Range
+            // Steps Chart - Weekly View
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     HStack(spacing: 8) {
                         Image(systemName: "figure.walk")
                             .font(.headline)
                             .foregroundColor(.green)
-                        Text("Steps")
+                        Text("Steps - Weekly")
                             .font(.headline)
                             .foregroundColor(.deepCharcoal)
                     }
                     Spacer()
-                    Picker("", selection: $selectedTimeRange) {
-                        Text("Day").tag(TimeRange.day)
-                        Text("Week").tag(TimeRange.week)
-                        Text("Month").tag(TimeRange.month)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .frame(width: 180)
                 }
 
-                Chart(viewModel.getStepsData(for: selectedTimeRange)) { dataPoint in
+                Chart(viewModel.getWeeklyStepsData()) { dataPoint in
                     BarMark(
                         x: .value("Time", dataPoint.date),
                         y: .value("Steps", dataPoint.value)
@@ -340,20 +321,16 @@ struct HybridDashboardView: View {
                 }
                 .chartXAxis {
                     AxisMarks { value in
-                        if selectedTimeRange == .day {
-                            AxisValueLabel {
-                                if let date = value.as(Date.self) {
-                                    Text(date, format: .dateTime.hour())
-                                }
+                        AxisValueLabel {
+                            if let date = value.as(Date.self) {
+                                Text(date, format: .dateTime.weekday(.abbreviated))
                             }
-                        } else {
-                            AxisValueLabel()
                         }
                     }
                 }
             }
             .padding()
-            .background(Color.white)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
 
@@ -388,7 +365,7 @@ struct HybridDashboardView: View {
                 .chartYScale(domain: viewModel.getWeightRange(for: selectedTimeRange))
             }
             .padding()
-            .background(Color.white)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
 
@@ -422,7 +399,7 @@ struct HybridDashboardView: View {
                 .frame(height: 150)
             }
             .padding()
-            .background(Color.white)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
 
@@ -477,7 +454,7 @@ struct HybridDashboardView: View {
                 .padding(.horizontal)
             }
             .padding()
-            .background(Color.white)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
             
@@ -548,7 +525,7 @@ struct HybridDashboardView: View {
                 }
             }
             .padding()
-            .background(Color.white)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
         }
@@ -577,7 +554,7 @@ struct HybridDashboardView: View {
                 }
             }
             .padding()
-            .background(Color.white)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
         }
@@ -590,43 +567,66 @@ struct HybridDashboardView: View {
             Text("Detailed Analytics")
                 .font(.headline)
                 .foregroundColor(.deepCharcoal)
-            
-            // Nutrient Breakdown Table
-            VStack(spacing: 0) {
-                // Header
-                HStack {
-                    Text("Nutrient")
+
+            if viewModel.nutrientBreakdown.isEmpty {
+                // Empty state when no food has been logged
+                VStack(spacing: 12) {
+                    Image(systemName: "chart.bar.doc.horizontal")
+                        .font(.system(size: 40))
+                        .foregroundColor(.gray.opacity(0.5))
+
+                    Text("No nutrition data yet")
+                        .font(.headline)
+                        .foregroundColor(.gray)
+
+                    Text("Start logging your meals to see detailed nutrient analytics")
                         .font(.caption)
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("Today")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .frame(width: 60)
-                    Text("Goal")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .frame(width: 60)
-                    Text("Status")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .frame(width: 80)
+                        .foregroundColor(.gray.opacity(0.8))
+                        .multilineTextAlignment(.center)
                 }
-                .padding(.horizontal)
-                .padding(.vertical, 8)
-                .background(Color.gray.opacity(0.1))
-                
-                Divider()
-                
-                // Rows
-                ForEach(viewModel.nutrientBreakdown) { nutrient in
-                    HybridNutrientRow(nutrient: nutrient)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 40)
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+            } else {
+                // Nutrient Breakdown Table
+                VStack(spacing: 0) {
+                    // Header
+                    HStack {
+                        Text("Nutrient")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("Today")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .frame(width: 60)
+                        Text("Goal")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .frame(width: 60)
+                        Text("Status")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .frame(width: 80)
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .background(Color(UIColor.tertiarySystemFill))
+
                     Divider()
+
+                    // Rows
+                    ForEach(viewModel.nutrientBreakdown) { nutrient in
+                        HybridNutrientRow(nutrient: nutrient)
+                        Divider()
+                    }
                 }
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
             }
-            .background(Color.white)
-            .cornerRadius(12)
-            .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
         }
     }
 }
@@ -682,7 +682,7 @@ struct AIInsightCard: View {
         }
         .padding()
         .frame(width: 280)
-        .background(Color.white)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
@@ -776,7 +776,7 @@ struct MetricCardWithTrend: View {
             .padding(.top, 4)
         }
         .padding()
-        .background(Color.white)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
@@ -918,13 +918,7 @@ struct NutrientBreakdown: Identifiable {
     }
     
     var statusText: String {
-        if percentage >= 90 && percentage <= 110 {
-            return "Good"
-        } else if percentage < 90 {
-            return "Low"
-        } else {
-            return "High"
-        }
+        return "\(Int(percentage))% RDA"
     }
 }
 

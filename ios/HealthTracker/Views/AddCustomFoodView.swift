@@ -52,12 +52,13 @@ struct AddCustomFoodView: View {
                         TextField("Unit (g, oz, cup, etc.)", text: $servingUnit)
                     }
                     
-                    HStack {
-                        TextField("Barcode (Optional)", text: $barcode)
-                        Button(action: { showingBarcodeScanner = true }) {
-                            Image(systemName: "barcode.viewfinder")
-                        }
-                    }
+                    // Barcode scanner temporarily disabled - coming in next release
+                    // HStack {
+                    //     TextField("Barcode (Optional)", text: $barcode)
+                    //     Button(action: { showingBarcodeScanner = true }) {
+                    //         Image(systemName: "barcode.viewfinder")
+                    //     }
+                    // }
                 }
                 
                 Section("Nutrition Facts (per serving)") {

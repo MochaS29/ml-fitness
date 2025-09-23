@@ -119,7 +119,7 @@ struct DiaryView: View {
                 WaterEntrySheet()
             }
             .sheet(isPresented: $showingSupplementEntry) {
-                SupplementEntrySheet()
+                ManualSupplementEntryView()
             }
             .onChange(of: selectedDate) {
                 updateFetchRequests()
@@ -169,28 +169,28 @@ struct DiaryView: View {
         HStack(spacing: 20) {
             SummaryMetric(
                 title: "Calories",
-                value: "0",
+                value: "\(Int(dailySummary.calories))",
                 subtitle: "/ \(Int(dailySummary.calorieGoal))",
                 color: Color(red: 127/255, green: 176/255, blue: 105/255)
             )
-            
+
             SummaryMetric(
                 title: "Protein",
-                value: "0",
+                value: "\(Int(dailySummary.protein))",
                 subtitle: "/ \(Int(dailySummary.proteinGoal))g",
                 color: Color(red: 74/255, green: 155/255, blue: 155/255)
             )
-            
+
             SummaryMetric(
                 title: "Exercise",
-                value: "0",
+                value: "\(Int(dailySummary.exerciseMinutes))",
                 subtitle: "min",
                 color: .orange
             )
-            
+
             SummaryMetric(
                 title: "Water",
-                value: "0",
+                value: "\(Int(calculateTodaysWaterOunces()))",
                 subtitle: "oz",
                 color: .blue
             )
@@ -431,13 +431,20 @@ struct DiaryView: View {
     }
     
     private func updateDailySummary() {
+        // Calculate totals from actual data
         dailySummary.calories = foodEntries.reduce(0) { $0 + $1.calories }
         dailySummary.protein = foodEntries.reduce(0) { $0 + $1.protein }
         dailySummary.exerciseMinutes = Double(exerciseEntries.reduce(0) { $0 + Int($1.duration) })
-        // Set default goals
-        dailySummary.calorieGoal = 2000
-        dailySummary.proteinGoal = 50
-        dailySummary.waterOunces = 0 // Would need water tracking entity
+        dailySummary.waterOunces = calculateTodaysWaterOunces()
+
+        // Load goals from UserDefaults
+        let defaults = UserDefaults.standard
+        dailySummary.calorieGoal = Double(defaults.integer(forKey: "calorieGoal")) > 0
+            ? Double(defaults.integer(forKey: "calorieGoal"))
+            : 2000
+        dailySummary.proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0
+            ? Double(defaults.integer(forKey: "proteinGoal"))
+            : 50
     }
     
     private func mealCalories(for mealType: MealType) -> Int {

@@ -33,6 +33,7 @@ enum FoodCategory: String, CaseIterable {
     case meals = "Prepared Meals"
     case condiments = "Condiments & Sauces"
     case oils = "Oils & Fats"
+    case supplements = "Supplements"
     case other = "Other"
 }
 
@@ -179,12 +180,62 @@ class FoodDatabase {
         FoodItem(name: "Lime", brand: nil, category: .fruits, servingSize: "1", servingUnit: "fruit", calories: 20, protein: 0.5, carbs: 7, fat: 0.1, fiber: 1.9, sugar: 1.1, sodium: 1, cholesterol: 0, saturatedFat: 0, barcode: nil, isCommon: true)
     ]
     
-    func searchFoods(_ query: String) -> [FoodItem] {
+    // Convert supplements to food items for unified search
+    private func getSupplementsAsFoodItems() -> [FoodItem] {
+        var supplementItems: [FoodItem] = []
+
+        // Access the supplement database
+        let supplementDB = SupplementDatabase.shared
+
+        // Convert men's multivitamins
+        for supplement in supplementDB.mensMultivitamins {
+            supplementItems.append(convertSupplementToFoodItem(supplement))
+        }
+
+        // Convert women's multivitamins
+        for supplement in supplementDB.womensMultivitamins {
+            supplementItems.append(convertSupplementToFoodItem(supplement))
+        }
+
+        // Convert popular supplements
+        for supplement in supplementDB.popularSupplements {
+            supplementItems.append(convertSupplementToFoodItem(supplement))
+        }
+
+        return supplementItems
+    }
+
+    private func convertSupplementToFoodItem(_ supplement: Supplement) -> FoodItem {
+        // Supplements typically don't have macronutrients, so we set them to 0
+        return FoodItem(
+            name: supplement.name,
+            brand: supplement.brand,
+            category: .supplements,
+            servingSize: supplement.servingSize,
+            servingUnit: "",
+            calories: 0, // Supplements typically have minimal calories
+            protein: 0,
+            carbs: 0,
+            fat: 0,
+            fiber: 0,
+            sugar: 0,
+            sodium: 0,
+            cholesterol: 0,
+            saturatedFat: 0,
+            barcode: supplement.barcode,
+            isCommon: false
+        )
+    }
+
+    func searchFoods(_ query: String, includeSupplements: Bool = true) -> [FoodItem] {
         guard !query.isEmpty else { return [] }
-        
+
         let searchQuery = query.lowercased()
-        
-        return foods.filter { food in
+
+        // Combine regular foods with supplements if requested
+        let searchableItems = includeSupplements ? foods + getSupplementsAsFoodItems() : foods
+
+        return searchableItems.filter { food in
             food.name.lowercased().contains(searchQuery) ||
             (food.brand?.lowercased().contains(searchQuery) ?? false)
         }.sorted { first, second in

@@ -235,18 +235,23 @@ struct ProfessionalProgressView: View {
     }
     
     private func loadStepsData(from startDate: Date, to endDate: Date) {
-        // For demo purposes, generate sample step data
+        // Get actual step data from StepCounterService
+        let stepService = StepCounterService.shared
         let calendar = Calendar.current
         var data: [(date: Date, value: Double)] = []
-        var currentDate = startDate
-        
-        while currentDate <= endDate {
-            let steps = Double.random(in: 3000...8000)
-            data.append((date: currentDate, value: steps))
-            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+
+        // For now, only show today's steps as we don't have historical data storage
+        // In a full implementation, you would fetch from HealthKit or Core Data
+        if calendar.isDateInToday(endDate) {
+            data.append((date: Date(), value: Double(stepService.todaySteps)))
         }
-        
-        updateProgressData(from: data, unit: "steps")
+
+        // If we have no real data, show empty state
+        if data.isEmpty {
+            updateProgressData(from: [], unit: "steps")
+        } else {
+            updateProgressData(from: data, unit: "steps")
+        }
     }
     
     private func loadCaloriesData(from startDate: Date, to endDate: Date) {
