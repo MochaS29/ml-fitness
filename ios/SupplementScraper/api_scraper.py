@@ -410,10 +410,10 @@ class SupplementDatabase {{
         for row in cursor.fetchall():
             barcode = row[1]
             name = row[2].replace('"', '\\"') if row[2] else ""
-            brand = f'"{row[3].replace('"', '\\"')}"' if row[3] else "nil"
-            serving_size = f'"{row[5]}"' if row[5] else "nil"
-            serving_unit = f'"{row[6]}"' if row[6] else "nil"
-            ingredients = f'"{row[7].replace('"', '\\"')}"' if row[7] else "nil"
+            brand = '"{}"'.format(row[3].replace('"', '\\"')) if row[3] else "nil"
+            serving_size = '"{}"'.format(row[5]) if row[5] else "nil"
+            serving_unit = '"{}"'.format(row[6]) if row[6] else "nil"
+            ingredients = '"{}"'.format(row[7].replace('"', '\\"')) if row[7] else "nil"
 
             nutrients_swift = "["
             if row[-1]:  # nutrients_data
@@ -495,9 +495,6 @@ def main():
 
     # Export to Swift
     collector.export_to_swift()
-
-    # Also export to JSON
-    collector.export_to_json()
 
 
 if __name__ == "__main__":

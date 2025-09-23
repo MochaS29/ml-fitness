@@ -10,6 +10,7 @@ class SupplementBarcodeService: ObservableObject {
     @Published var lastError: String?
 
     private let openFoodFactsBaseURL = "https://world.openfoodfacts.org/api/v2"
+    private let spoonacularApiKey = "78925a5a97ef4f53a8fc692cad0b1618"
     private let nutritionixAppId = "YOUR_APP_ID" // Add your API credentials if you have them
     private let nutritionixApiKey = "YOUR_API_KEY"
 
@@ -48,6 +49,11 @@ class SupplementBarcodeService: ObservableObject {
 
         // Try Open Food Facts first (free)
         if let supplement = try await fetchFromOpenFoodFacts(barcode: barcode) {
+            return supplement
+        }
+
+        // Try Spoonacular API (free tier: 150 requests/day)
+        if let supplement = try await fetchFromSpoonacular(barcode: barcode) {
             return supplement
         }
 
@@ -141,6 +147,60 @@ class SupplementBarcodeService: ObservableObject {
             imageURL: product.imageFrontURL,
             nutrients: nutrients,
             source: .openFoodFacts
+        )
+    }
+
+    // MARK: - Spoonacular API
+
+    private func fetchFromSpoonacular(barcode: String) async throws -> SupplementInfo? {
+        let urlString = "https://api.spoonacular.com/food/products/upc/\(barcode)?apiKey=\(spoonacularApiKey)"
+        guard let url = URL(string: urlString) else {
+            throw BarcodeError.invalidURL
+        }
+
+        let (data, response) = try await URLSession.shared.data(from: url)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            return nil
+        }
+
+        let decoder = JSONDecoder()
+        let result = try decoder.decode(SpoonacularProduct.self, from: data)
+
+        return parseSpoonacularProduct(result, barcode: barcode)
+    }
+
+    private func parseSpoonacularProduct(_ product: SpoonacularProduct, barcode: String) -> SupplementInfo {
+        var nutrients: [Nutrient] = []
+
+        // Parse nutrients from Spoonacular format
+        if let nutritionData = product.nutrition {
+            for nutrient in nutritionData.nutrients {
+                let name = nutrient.name
+                let amount = nutrient.amount
+                let unit = nutrient.unit
+                let dailyValue = nutrient.percentOfDailyNeeds
+
+                nutrients.append(Nutrient(
+                    name: name,
+                    amount: amount,
+                    unit: unit,
+                    dailyValue: dailyValue
+                ))
+            }
+        }
+
+        return SupplementInfo(
+            barcode: barcode,
+            name: product.title,
+            brand: product.brand,
+            servingSize: product.servingSize,
+            servingUnit: product.servingUnit ?? "serving",
+            ingredients: product.ingredientList,
+            imageURL: product.image,
+            nutrients: nutrients,
+            source: .openFoodFacts // Using same enum case for now
         )
     }
 
@@ -241,6 +301,29 @@ struct OpenFoodFactsResponse: Codable {
         case statusVerbose = "status_verbose"
         case product
     }
+}
+
+// Spoonacular API Models
+struct SpoonacularProduct: Codable {
+    let id: Int?
+    let title: String
+    let brand: String?
+    let image: String?
+    let servingSize: String?
+    let servingUnit: String?
+    let ingredientList: String?
+    let nutrition: SpoonacularNutrition?
+}
+
+struct SpoonacularNutrition: Codable {
+    let nutrients: [SpoonacularNutrient]
+}
+
+struct SpoonacularNutrient: Codable {
+    let name: String
+    let amount: Double
+    let unit: String
+    let percentOfDailyNeeds: Double?
 }
 
 struct OpenFoodFactsProduct: Codable {
