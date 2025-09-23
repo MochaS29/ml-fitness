@@ -272,8 +272,16 @@ struct AddReminderView: View {
                     }
                     
                     Button(action: setupHourlyWaterReminder) {
-                        Label("Hourly Water Reminder (8AM-8PM)", systemImage: "drop.fill")
-                            .foregroundColor(.wellnessGreen)
+                        HStack {
+                            Label("Hourly Water Reminder (8AM-8PM)", systemImage: "drop.fill")
+                                .foregroundColor(.wellnessGreen)
+                            Spacer()
+                            if WaterReminderService.shared.isEnabled {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                    .font(.caption)
+                            }
+                        }
                     }
                 }
             }
@@ -332,15 +340,18 @@ struct AddReminderView: View {
     }
     
     private func setupHourlyWaterReminder() {
+        // Use our enhanced water reminder service
+        let reminderService = WaterReminderService.shared
+        reminderService.reminderInterval = 3600 // 1 hour
+
         let calendar = Calendar.current
         if let startTime = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: Date()),
            let endTime = calendar.date(bySettingHour: 20, minute: 0, second: 0, of: Date()) {
-            _ = NotificationService.shared.scheduleWaterReminder(
-                interval: 3600, // 1 hour
-                startTime: startTime,
-                endTime: endTime
-            )
+            reminderService.startTime = startTime
+            reminderService.endTime = endTime
         }
+
+        reminderService.enableReminders()
         dismiss()
     }
 }

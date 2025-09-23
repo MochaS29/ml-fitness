@@ -1042,22 +1042,20 @@ struct SettingsView: View {
                     Toggle("Enable Notifications", isOn: $enableNotifications)
 
                     if enableNotifications {
-                        NavigationLink(destination: WaterReminderSettingsView()) {
-                            HStack {
-                                Label("Water Reminders", systemImage: "drop.fill")
-                                    .foregroundColor(.primary)
-                                Spacer()
-                                Text(WaterReminderService.shared.isEnabled ? "On" : "Off")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-
-                        HStack {
-                            Text("Meal Logging")
-                            Spacer()
-                            Text("3 times daily")
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Manage all your reminders in the Reminders tab")
+                                .font(.caption)
                                 .foregroundColor(.secondary)
+
+                            HStack {
+                                Image(systemName: "bell.fill")
+                                    .foregroundColor(.mindfulTeal)
+                                Text("Go to Reminders tab →")
+                                    .foregroundColor(.mindfulTeal)
+                            }
+                            .font(.callout)
                         }
+                        .padding(.vertical, 4)
                     }
                 }
 

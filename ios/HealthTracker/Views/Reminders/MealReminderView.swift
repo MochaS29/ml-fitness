@@ -65,76 +65,135 @@ struct MealReminderView: View {
 
 struct WaterReminderView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var intervalHours = 1
-    @State private var intervalMinutes = 0
-    @State private var startTime = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date()) ?? Date()
-    @State private var endTime = Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date()) ?? Date()
-    @State private var enableTimeRange = true
+    @StateObject private var reminderService = WaterReminderService.shared
+    @State private var showingFullSettings = false
     
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Reminder Interval")) {
-                    HStack {
-                        Picker("Hours", selection: $intervalHours) {
-                            ForEach(0..<24) { hour in
-                                Text("\(hour) hr").tag(hour)
-                            }
+                // Current Status
+                if reminderService.isEnabled {
+                    Section("Current Settings") {
+                        HStack {
+                            Label("Status", systemImage: "bell.fill")
+                            Spacer()
+                            Text("Active")
+                                .foregroundColor(.green)
                         }
-                        .pickerStyle(WheelPickerStyle())
-                        .frame(width: 100)
-                        
-                        Picker("Minutes", selection: $intervalMinutes) {
-                            ForEach([0, 15, 30, 45], id: \.self) { minute in
-                                Text("\(minute) min").tag(minute)
-                            }
+
+                        HStack {
+                            Label("Frequency", systemImage: "clock")
+                            Spacer()
+                            Text(reminderService.intervalDescription)
+                                .foregroundColor(.secondary)
                         }
-                        .pickerStyle(WheelPickerStyle())
-                        .frame(width: 100)
+
+                        HStack {
+                            Label("Daily Goal", systemImage: "drop.fill")
+                            Spacer()
+                            Text("\(Int(reminderService.dailyGoal)) oz")
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
-                
-                Section(header: Text("Active Hours")) {
-                    Toggle("Set Active Hours", isOn: $enableTimeRange)
-                    
-                    if enableTimeRange {
-                        DatePicker("Start Time", selection: $startTime, displayedComponents: .hourAndMinute)
-                        DatePicker("End Time", selection: $endTime, displayedComponents: .hourAndMinute)
+
+                // Quick Setup Options
+                Section("Quick Setup") {
+                    Button(action: { setupInterval(1800) }) { // 30 min
+                        HStack {
+                            Label("Every 30 minutes", systemImage: "timer")
+                            Spacer()
+                            if reminderService.reminderInterval == 1800 {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                            }
+                        }
                     }
+                    .foregroundColor(.primary)
+
+                    Button(action: { setupInterval(3600) }) { // 1 hour
+                        HStack {
+                            Label("Every hour", systemImage: "timer")
+                            Spacer()
+                            if reminderService.reminderInterval == 3600 {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                            }
+                        }
+                    }
+                    .foregroundColor(.primary)
+
+                    Button(action: { setupInterval(7200) }) { // 2 hours
+                        HStack {
+                            Label("Every 2 hours", systemImage: "timer")
+                            Spacer()
+                            if reminderService.reminderInterval == 7200 {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                            }
+                        }
+                    }
+                    .foregroundColor(.primary)
                 }
-                
+
+                // Action Buttons
                 Section {
-                    Button(action: scheduleReminder) {
-                        Text("Schedule Reminder")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.wellnessGreen)
-                            .cornerRadius(10)
+                    if !reminderService.isEnabled {
+                        Button(action: enableReminders) {
+                            Label("Enable Water Reminders", systemImage: "bell.badge")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.wellnessGreen)
+                                .cornerRadius(10)
+                        }
+                    } else {
+                        Button(action: { showingFullSettings = true }) {
+                            Label("Advanced Settings", systemImage: "slider.horizontal.3")
+                                .font(.headline)
+                                .foregroundColor(.wellnessGreen)
+                        }
+
+                        Button(action: disableReminders) {
+                            Label("Disable Reminders", systemImage: "bell.slash")
+                                .font(.headline)
+                                .foregroundColor(.red)
+                        }
                     }
-                    .disabled(intervalHours == 0 && intervalMinutes == 0)
                 }
             }
-            .navigationTitle("Water Reminder")
+            .navigationTitle("Water Reminders")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
+                    Button("Done") {
                         dismiss()
                     }
                 }
             }
+            .sheet(isPresented: $showingFullSettings) {
+                WaterReminderSettingsView()
+            }
         }
     }
-    
-    private func scheduleReminder() {
-        let interval = TimeInterval((intervalHours * 3600) + (intervalMinutes * 60))
-        _ = NotificationService.shared.scheduleWaterReminder(
-            interval: interval,
-            startTime: enableTimeRange ? startTime : Date(),
-            endTime: enableTimeRange ? endTime : Date().addingTimeInterval(86400)
-        )
+
+    private func setupInterval(_ interval: TimeInterval) {
+        reminderService.reminderInterval = interval
+        reminderService.saveSettings()
+        if reminderService.isEnabled {
+            reminderService.scheduleReminders()
+        } else {
+            reminderService.enableReminders()
+        }
+    }
+
+    private func enableReminders() {
+        reminderService.enableReminders()
+    }
+
+    private func disableReminders() {
+        reminderService.disableReminders()
         dismiss()
     }
 }
