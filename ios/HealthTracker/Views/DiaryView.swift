@@ -228,12 +228,19 @@ struct DiaryView: View {
             
             // Food entries for this meal
             let mealFoods = foodEntries.filter { $0.mealType == mealType.rawValue }
-            
+
             if !mealFoods.isEmpty {
                 VStack(spacing: 0) {
                     ForEach(mealFoods) { entry in
                         FoodEntryRow(entry: entry)
-                        
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    deleteFoodEntry(entry)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
+
                         if entry != mealFoods.last {
                             Divider()
                                 .padding(.leading, 16)
@@ -274,7 +281,14 @@ struct DiaryView: View {
                 VStack(spacing: 0) {
                     ForEach(exerciseEntries) { entry in
                         ExerciseEntryRow(entry: entry)
-                        
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    deleteExerciseEntry(entry)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
+
                         if entry != exerciseEntries.last {
                             Divider()
                                 .padding(.leading, 16)
@@ -311,7 +325,14 @@ struct DiaryView: View {
                 VStack(spacing: 0) {
                     ForEach(supplementEntries) { entry in
                         SupplementEntryRow(entry: entry)
-                        
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    deleteSupplementEntry(entry)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
+
                         if entry != supplementEntries.last {
                             Divider()
                                 .padding(.leading, 16)
@@ -486,6 +507,38 @@ struct DiaryView: View {
             updateDailySummary()
         } catch {
             print("Error saving food entry: \(error)")
+        }
+    }
+
+    // MARK: - Delete Functions
+
+    private func deleteFoodEntry(_ entry: FoodEntry) {
+        viewContext.delete(entry)
+        do {
+            try viewContext.save()
+            updateDailySummary()
+        } catch {
+            print("Error deleting food entry: \(error)")
+        }
+    }
+
+    private func deleteExerciseEntry(_ entry: ExerciseEntry) {
+        viewContext.delete(entry)
+        do {
+            try viewContext.save()
+            updateDailySummary()
+        } catch {
+            print("Error deleting exercise entry: \(error)")
+        }
+    }
+
+    private func deleteSupplementEntry(_ entry: SupplementEntry) {
+        viewContext.delete(entry)
+        do {
+            try viewContext.save()
+            updateDailySummary()
+        } catch {
+            print("Error deleting supplement entry: \(error)")
         }
     }
 }
