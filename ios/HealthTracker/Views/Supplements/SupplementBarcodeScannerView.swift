@@ -117,7 +117,9 @@ struct SupplementBarcodeScannerView: View {
     private func lookupBarcode(_ barcode: String) {
         Task {
             do {
-                if let supplement = try await barcodeService.lookupSupplement(barcode: barcode) {
+                // Use enhanced database service that includes scraped data
+                let databaseService = SupplementDatabaseService.shared
+                if let supplement = try await databaseService.lookupSupplement(barcode: barcode) {
                     await MainActor.run {
                         scanner.stopScanning()
                         scannedSupplement = supplement
