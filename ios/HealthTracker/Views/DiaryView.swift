@@ -325,6 +325,7 @@ struct DiaryView: View {
                 VStack(spacing: 0) {
                     ForEach(supplementEntries) { entry in
                         SupplementEntryRow(entry: entry)
+                            .background(Color(UIColor.secondarySystemGroupedBackground))
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
                                     deleteSupplementEntry(entry)
@@ -339,7 +340,6 @@ struct DiaryView: View {
                         }
                     }
                 }
-                .background(Color(UIColor.secondarySystemGroupedBackground))
             }
         }
         .cornerRadius(12)
@@ -578,89 +578,98 @@ struct SummaryMetric: View {
 
 struct FoodEntryRow: View {
     let entry: FoodEntry
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(entry.name ?? "Unknown Food")
                     .font(.subheadline)
-                
+
                 if let brand = entry.brand {
                     Text(brand)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
             }
-            
+            .padding(.leading)
+
             Spacer()
-            
+
             VStack(alignment: .trailing, spacing: 4) {
                 Text("\(Int(entry.calories)) cal")
                     .font(.subheadline)
                     .foregroundColor(.primary)
-                
+
                 Text("\(entry.servingSize ?? "1") \(entry.servingUnit ?? "serving")")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
+            .padding(.trailing)
         }
-        .padding()
+        .padding(.vertical, 12)
+        .contentShape(Rectangle())
     }
 }
 
 struct ExerciseEntryRow: View {
     let entry: ExerciseEntry
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(entry.name ?? "Unknown Exercise")
                     .font(.subheadline)
-                
+
                 Text(entry.category ?? "General")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            
+            .padding(.leading)
+
             Spacer()
-            
+
             VStack(alignment: .trailing, spacing: 4) {
                 Text("\(entry.duration) min")
                     .font(.subheadline)
                     .foregroundColor(.primary)
-                
+
                 Text("\(Int(entry.caloriesBurned)) cal")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
+            .padding(.trailing)
         }
-        .padding()
+        .padding(.vertical, 12)
+        .contentShape(Rectangle())
     }
 }
 
 struct SupplementEntryRow: View {
     let entry: SupplementEntry
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(entry.name ?? "Unknown Supplement")
                     .font(.subheadline)
-                
+
                 if let brand = entry.brand {
                     Text(brand)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
             }
-            
+            .padding(.leading)
+
             Spacer()
-            
+
             Text("\(entry.servingSize ?? "1") \(entry.servingUnit ?? "serving")")
                 .font(.caption)
                 .foregroundColor(.secondary)
+                .padding(.trailing)
         }
-        .padding()
+        .padding(.vertical, 12)
+        .contentShape(Rectangle())
     }
 }
 
