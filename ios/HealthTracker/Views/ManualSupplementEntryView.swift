@@ -11,8 +11,9 @@ struct ManualSupplementEntryView: View {
     @State private var nutrients: [ManualNutrientEntry] = []
     @State private var showingNutrientPicker = false
     @State private var showingSupplementSelection = false
+    @State private var showingBarcodeScanner = false
     @State private var selectedSupplement: Supplement?
-    
+
     var body: some View {
         NavigationView {
             Form {
@@ -34,6 +35,11 @@ struct ManualSupplementEntryView: View {
                         }
                     }
                     .buttonStyle(.plain)
+
+                    Button(action: { showingBarcodeScanner = true }) {
+                        Label("Scan Barcode", systemImage: "barcode.viewfinder")
+                            .foregroundColor(.blue)
+                    }
                 }
 
                 Section("Or Enter Manually") {
@@ -109,6 +115,9 @@ struct ManualSupplementEntryView: View {
                         showingSupplementSelection = false
                     }
                 )
+            }
+            .fullScreenCover(isPresented: $showingBarcodeScanner) {
+                SupplementBarcodeScannerView()
             }
         }
     }
