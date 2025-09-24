@@ -20,10 +20,16 @@ class DemoDataGenerator {
         
         // Generate weight entries
         generateWeightEntries(context: context, startDate: today)
-        
+
+        // Generate water entries
+        generateWaterEntries(context: context, startDate: today)
+
         // Generate supplement entries
         generateSupplementEntries(context: context, startDate: today)
-        
+
+        // Set demo step count in UserDefaults for today
+        setDemoStepCount()
+
         // Generate achievements
         generateAchievements()
         
@@ -192,28 +198,78 @@ class DemoDataGenerator {
     
     private static func generateWeightEntries(context: NSManagedObjectContext, startDate: Date) {
         let calendar = Calendar.current
-        let startingWeight = 180.0 // Starting weight in pounds
-        let targetWeightLoss = 10.0 // Target loss over 30 days
-        
-        // Generate weight entries every 2-3 days
-        for dayOffset in stride(from: 0, to: 30, by: Int.random(in: 2...3)) {
+        let currentWeight = 170.0 // Current weight showing on dashboard
+        let startingWeight = 180.0 // Starting weight 30 days ago
+        let goalWeight = 160.0 // Goal weight
+
+        // Generate weight entries every 2-3 days showing gradual loss
+        var previousWeight = startingWeight
+        for dayOffset in [28, 25, 22, 19, 16, 14, 11, 8, 5, 3, 0] {
             guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: startDate) else { continue }
-            
-            // Simulate gradual weight loss with some fluctuation
-            let progress = Double(30 - dayOffset) / 30.0
-            let weightLoss = targetWeightLoss * progress
-            let fluctuation = Double.random(in: -1.5...1.5)
-            let weight = startingWeight - weightLoss + fluctuation
-            
+
+            // Calculate weight with gradual loss trend
+            let progress = Double(28 - dayOffset) / 28.0
+            let targetLoss = startingWeight - currentWeight
+            let baseWeight = startingWeight - (targetLoss * progress)
+
+            // Add small realistic fluctuation
+            let fluctuation = dayOffset == 0 ? 0 : Double.random(in: -0.3...0.3)
+            var weight = baseWeight + fluctuation
+
+            // Make sure today's weight is exactly 170
+            if dayOffset == 0 {
+                weight = currentWeight
+            }
+
             let entry = WeightEntry(context: context)
             entry.id = UUID()
             entry.weight = weight
             entry.timestamp = date
             entry.date = date
-            entry.notes = dayOffset == 0 ? "Goal weight reached!" : nil
+
+            // Add motivating notes
+            if dayOffset == 0 {
+                entry.notes = "New low! 10 lbs down 🎉"
+            } else if dayOffset == 3 {
+                entry.notes = "Almost at 170!"
+            } else if dayOffset == 14 {
+                entry.notes = "Halfway to goal weight"
+            }
+
+            previousWeight = weight
         }
     }
     
+    private static func generateWaterEntries(context: NSManagedObjectContext, startDate: Date) {
+        let calendar = Calendar.current
+
+        // Generate water intake for today and past week
+        for dayOffset in 0..<7 {
+            guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: startDate) else { continue }
+
+            // Generate 6-8 water entries throughout the day
+            let numEntries = Int.random(in: 6...8)
+            let targetOunces = 64 // Daily goal
+
+            for entryNum in 0..<numEntries {
+                // Spread entries throughout the day
+                let hour = 7 + (entryNum * 2) // Starting at 7am, every 2 hours
+                guard let entryDate = calendar.date(bySettingHour: hour, minute: 0, second: 0, of: date) else { continue }
+
+                let entry = WaterEntry(context: context)
+                entry.id = UUID()
+                entry.amount = Double.random(in: 8...12) // 8-12 oz per entry
+                entry.unit = "oz"
+                entry.timestamp = entryDate
+
+                // For today, make sure we're at good hydration
+                if dayOffset == 0 && entryNum < 5 {
+                    entry.amount = 10 // Consistent 10 oz entries
+                }
+            }
+        }
+    }
+
     private static func generateSupplementEntries(context: NSManagedObjectContext, startDate: Date) {
         let calendar = Calendar.current
         
@@ -247,6 +303,12 @@ class DemoDataGenerator {
         }
     }
     
+    private static func setDemoStepCount() {
+        // Set a good step count for today (shown in dashboard)
+        UserDefaults.standard.set(6915, forKey: "demoStepCount")
+        UserDefaults.standard.set(Date(), forKey: "demoStepCountDate")
+    }
+
     private static func generateAchievements() {
         let achievementManager = AchievementManager.shared
         

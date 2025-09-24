@@ -210,6 +210,23 @@ struct MoreView: View {
                     }
                 }
                 
+                // Demo Data (for screenshots)
+                #if DEBUG
+                Section("Developer Tools") {
+                    Button(action: {
+                        DemoDataGenerator.generateDemoData(context: viewContext)
+                        // Refresh the dashboard
+                        NotificationCenter.default.post(name: .NSManagedObjectContextDidSave, object: nil)
+                    }) {
+                        MoreMenuItem(
+                            icon: "wand.and.stars",
+                            title: "Generate Demo Data",
+                            color: .purple
+                        )
+                    }
+                }
+                #endif
+
                 // Settings & Support
                 Section("Settings & Support") {
                     Button(action: { showingReminders = true }) {
