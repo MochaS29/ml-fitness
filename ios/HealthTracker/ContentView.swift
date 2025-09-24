@@ -2,45 +2,56 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var selectedTab = 0
     @StateObject private var achievementManager = AchievementManager.shared
     @State private var showingAddMenu = false
     @State private var notificationAction: NotificationAction?
-    
+
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
-                DashboardView()
-                    .tabItem {
-                        Label("Dashboard", systemImage: "square.grid.2x2.fill")
-                    }
-                    .tag(0)
-                
-                DiaryView()
-                    .tabItem {
-                        Label("Diary", systemImage: "book.fill")
-                    }
-                    .tag(1)
-                
+                NavigationStack {
+                    DashboardView()
+                }
+                .tabItem {
+                    Label("Dashboard", systemImage: "square.grid.2x2.fill")
+                }
+                .tag(0)
+
+                NavigationStack {
+                    DiaryView()
+                }
+                .tabItem {
+                    Label("Diary", systemImage: "book.fill")
+                }
+                .tag(1)
+
                 Text("")
                     .tabItem {
                         Label("", systemImage: "plus.circle.fill")
                     }
                     .tag(2)
-                
-                EnhancedMealPlanningView()
-                    .tabItem {
-                        Label("Plan", systemImage: "calendar")
-                    }
-                    .tag(3)
-                
-                MoreView()
-                    .tabItem {
-                        Label("More", systemImage: "ellipsis.circle")
-                    }
-                    .tag(4)
+
+                NavigationStack {
+                    EnhancedMealPlanningView()
+                }
+                .tabItem {
+                    Label("Plan", systemImage: "calendar")
+                }
+                .tag(3)
+
+                NavigationStack {
+                    MoreView()
+                }
+                .tabItem {
+                    Label("More", systemImage: "ellipsis.circle")
+                }
+                .tag(4)
             }
             .accentColor(.mochaBrown)
+            // Force tab bar to be visible on iPad
+            .tabViewStyle(.automatic)
             .onChange(of: selectedTab) { oldValue, newValue in
                 if newValue == 2 {
                     // Reset to previous tab and show add menu
