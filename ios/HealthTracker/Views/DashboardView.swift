@@ -1,710 +1,931 @@
 import SwiftUI
 import Charts
-import CoreData
 
 struct DashboardView: View {
-    @EnvironmentObject var profileManager: UserProfileManager
-    @Environment(\.managedObjectContext) private var viewContext
-    @State private var selectedTimeRange = TimeRange.today
-    @State private var nutrientAnalyses: [NutrientAnalysis] = []
-    
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Welcome card
-                    WelcomeCard(profile: profileManager.currentProfile)
-                    
-                    // Time range selector
-                    Picker("Time Range", selection: $selectedTimeRange) {
-                        ForEach(TimeRange.allCases, id: \.self) { range in
-                            Text(range.rawValue).tag(range)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal)
-                    
-                    // Summary card
-                    SummaryCard(timeRange: selectedTimeRange)
+    @StateObject private var viewModel = DashboardViewModel()
+    @State private var selectedTimeRange = TimeRange.week
+    @State private var showingAIInsightDetail = false
+    @State private var selectedInsight: AIInsight?
+    @State private var animateCharts = false
+    @State private var showingCalorieDetail = false
+    @State private var showingWeightDetail = false
+    @State private var showingExerciseDetail = false
+    @State private var showingWaterDetail = false
+    @State private var showingSupplementDetail = false
+    @State private var showingStepDetail = false
+    @State private var showingStepGoal = false
+    @State private var showingExerciseQuickAdd = false
+    @State private var showingAllInsights = false
+    @State private var widgetsEnabled = false
 
-                    // Weight Card
-                    WeightCard()
-
-                    // Step Chart
-                    StepChartCard(timeRange: selectedTimeRange)
-
-                    // Nutrient status
-                    NutrientStatusCard(analyses: nutrientAnalyses)
-                    
-                    // Life stage alerts
-                    let alerts = profileManager.checkForLifeStageTransitions()
-                    if !alerts.isEmpty {
-                        LifeStageAlertsCard(alerts: alerts)
-                    }
-                    
-                    // Recent activities
-                    RecentActivitiesCard()
-                }
-                .padding()
-            }
-            .navigationTitle("Dashboard")
-            .onAppear {
-                loadNutrientAnalyses()
-            }
-            .onChange(of: selectedTimeRange) {
-                loadNutrientAnalyses()
-            }
-        }
-    }
-    
-    func loadNutrientAnalyses() {
-        // This would load actual data from Core Data
-        // For now, using sample data
-        guard let profile = profileManager.currentProfile else { return }
+    enum TimeRange: String, CaseIterable {
+        case day = "Day"
+        case week = "Week"
+        case month = "Month"
         
-        let calculator = RDACalculator()
-        let sampleIntakes = [
-            NutrientIntake(nutrientId: "vitamin_c", amount: 209, unit: .mg),
-            NutrientIntake(nutrientId: "iron", amount: 18.1, unit: .mg),
-            NutrientIntake(nutrientId: "calcium", amount: 205, unit: .mg),
-            NutrientIntake(nutrientId: "vitamin_d", amount: 300, unit: .iu),
-            NutrientIntake(nutrientId: "folate", amount: 665, unit: .mcg)
-        ]
-        
-        nutrientAnalyses = calculator.analyzeIntake(sampleIntakes, for: profile)
+        var days: Int {
+            switch self {
+            case .day: return 1
+            case .week: return 7
+            case .month: return 30
+            }
+        }
     }
-}
-
-struct WelcomeCard: View {
-    let profile: UserProfile?
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Welcome back, \(profile?.name ?? "User")!")
-                .font(.title2)
-                .fontWeight(.bold)
-            
-            if let profile = profile {
-                HStack {
-                    Label("\(profile.age) years", systemImage: "person")
-                    Label(profile.gender.rawValue, systemImage: "figure.stand")
-                    if profile.isPregnant {
-                        Label("Pregnant", systemImage: "heart.fill")
-                            .foregroundColor(.pink)
+        ScrollView {
+            VStack(spacing: 20) {
+                // Header with Time Range Selector
+                headerSection
+                
+                // Delay loading heavy widgets
+                if widgetsEnabled {
+                    // AI Insights Carousel (from Option 4)
+                    aiInsightsSection
+
+                    // Key Metrics Cards with Trends (from Option 3)
+                    metricsOverview
+
+                    // Supplement Stats Widget
+                    SupplementStatsWidget(showingDetail: $showingSupplementDetail)
+
+                    // Interactive Charts Section (from Option 3)
+                    chartsSection
+
+                    // AI Recommendations (from Option 4)
+                    aiRecommendationsSection
+
+                    // Detailed Analytics (from Option 3)
+                    detailedAnalyticsSection
+                } else {
+                    // Show loading placeholder
+                    VStack(spacing: 20) {
+                        ProgressView("Loading Dashboard...")
+                            .padding()
+
+                        Text("Please wait while we prepare your health data")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
-                }
-                .font(.caption)
-                .foregroundColor(.secondary)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(10)
-    }
-}
-
-struct SummaryCard: View {
-    let timeRange: TimeRange
-    @StateObject private var fastingManager = FastingManager()
-    @StateObject private var dataManager = UnifiedDataManager.shared
-    @State private var totalCalories: Double = 0
-    @State private var totalCaloriesBurned: Double = 0
-    @State private var totalSteps: Int = 0
-    @State private var totalWater: Double = 0
-    
-    var fastingStatus: String {
-        if let session = fastingManager.currentSession {
-            let hours = Int(session.currentDuration) / 3600
-            let minutes = (Int(session.currentDuration) % 3600) / 60
-            return "\(hours)h \(minutes)m"
-        } else {
-            return "Not fasting"
-        }
-    }
-    
-    var fastingColor: Color {
-        fastingManager.currentSession != nil ? .wellnessGreen : .secondary
-    }
-    
-    var summaryTitle: String {
-        switch timeRange {
-        case .today:
-            return "Today's Summary"
-        case .week:
-            return "Weekly Summary"
-        case .month:
-            return "Monthly Summary"
-        }
-    }
-    
-    var body: some View {
-        VStack(spacing: 15) {
-            Text(summaryTitle)
-                .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    DashboardSummaryMetric(
-                        icon: "scalemass",
-                        value: dataManager.currentWeight > 0 ? "\(Int(dataManager.currentWeight))" : "--",
-                        label: "Weight",
-                        color: .purple
-                    )
-
-                    DashboardSummaryMetric(
-                        icon: "flame",
-                        value: "\(Int(totalCalories))",
-                        label: "Calories",
-                        color: .orange
-                    )
-
-                    DashboardSummaryMetric(
-                        icon: "flame.fill",
-                        value: "\(Int(totalCaloriesBurned))",
-                        label: "Burned",
-                        color: .red
-                    )
-
-                    DashboardSummaryMetric(
-                        icon: "drop.fill",
-                        value: "\(Int(totalWater)) oz",
-                        label: "Water",
-                        color: .blue
-                    )
-
-                    DashboardSummaryMetric(
-                        icon: "figure.walk",
-                        value: "\(totalSteps)",
-                        label: "Steps",
-                        color: .green
-                    )
+                    .frame(height: 200)
                 }
             }
+            .padding()
         }
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(10)
+        .background(Color(UIColor.systemGroupedBackground))
+        .navigationTitle("Dashboard")
+        .navigationBarTitleDisplayMode(.large)
         .onAppear {
-            loadSummaryData()
-        }
-        .onChange(of: timeRange) {
-            loadSummaryData()
-        }
-    }
-    
-    private func loadSummaryData() {
-        // Refresh data in UnifiedDataManager
-        dataManager.refreshAllData()
-
-        // Use data from UnifiedDataManager based on time range
-        switch timeRange {
-        case .today:
-            totalCalories = dataManager.todayCalories
-            totalCaloriesBurned = dataManager.todayCaloriesBurned
-            totalWater = dataManager.todayWater
-            totalSteps = dataManager.todaySteps
-        case .week, .month:
-            // For week/month, fetch historical data
-            fetchHistoricalData()
-        }
-    }
-
-    private func fetchHistoricalData() {
-        let calendar = Calendar.current
-        let endDate = Date()
-        let startDate: Date
-
-        switch timeRange {
-        case .today:
-            return // Handled above
-        case .week:
-            startDate = calendar.date(byAdding: .day, value: -7, to: endDate) ?? endDate
-        case .month:
-            startDate = calendar.date(byAdding: .month, value: -1, to: endDate) ?? endDate
-        }
-
-        // Use UnifiedDataManager's context for consistency
-        let context = PersistenceController.shared.container.viewContext
-
-        // Fetch historical data
-        let foodRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
-        foodRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as CVarArg, endDate as CVarArg)
-
-        let exerciseRequest: NSFetchRequest<ExerciseEntry> = ExerciseEntry.fetchRequest()
-        exerciseRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as CVarArg, endDate as CVarArg)
-
-        let waterRequest: NSFetchRequest<WaterEntry> = WaterEntry.fetchRequest()
-        waterRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp <= %@", startDate as CVarArg, endDate as CVarArg)
-
-        do {
-            let foodEntries = try context.fetch(foodRequest)
-            totalCalories = foodEntries.reduce(0) { $0 + $1.calories }
-
-            let exerciseEntries = try context.fetch(exerciseRequest)
-            totalCaloriesBurned = exerciseEntries.reduce(0) { $0 + $1.caloriesBurned }
-
-            let waterEntries = try context.fetch(waterRequest)
-            totalWater = waterEntries.reduce(0) { sum, entry in
-                let amount = entry.unit == "ml" ? entry.amount / 29.5735 : entry.amount
-                return sum + amount
-            }
-
-            HealthKitManager.shared.fetchSteps(from: startDate, to: endDate) { steps in
-                DispatchQueue.main.async {
-                    self.totalSteps = Int(steps)
+            // Enable widgets after a delay to prevent initial freezing
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                withAnimation(.easeOut(duration: 0.5)) {
+                    widgetsEnabled = true
                 }
             }
-        } catch {
-            print("Error fetching historical data: \(error)")
-        }
-    }
-}
 
-struct DashboardSummaryMetric: View {
-    let icon: String
-    let value: String
-    let label: String
-    let color: Color
-    
-    var body: some View {
-        VStack(spacing: 5) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(color)
-            
-            Text(value)
-                .font(.headline)
-            
-            Text(label)
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-    }
-}
-
-struct NutrientStatusCard: View {
-    let analyses: [NutrientAnalysis]
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            Text("Nutrient Status")
-                .font(.headline)
-            
-            if analyses.isEmpty {
-                Text("No supplement data yet")
-                .foregroundColor(.secondary)
-                .frame(maxWidth: .infinity)
-                .padding()
-            } else {
-                ForEach(analyses, id: \.nutrientId) { analysis in
-                    NutrientRow(analysis: analysis)
+            // Further delay chart animations
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                withAnimation(.easeOut(duration: 0.3)) {
+                    animateCharts = true
                 }
             }
         }
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(10)
-    }
-}
-
-struct NutrientRow: View {
-    let analysis: NutrientAnalysis
-    
-    var statusColor: Color {
-        switch analysis.status.color {
-        case "green": return .green
-        case "yellow": return .yellow
-        case "orange": return .orange
-        case "red": return .red
-        case "darkred": return Color(red: 0.5, green: 0, blue: 0)
-        default: return .gray
+        .sheet(item: $selectedInsight) { insight in
+            AIInsightDetailView(insight: insight)
+        }
+        .sheet(isPresented: $showingCalorieDetail) {
+            FoodTrackingView()
+        }
+        .sheet(isPresented: $showingWeightDetail) {
+            WeightTrackingView()
+        }
+        .sheet(isPresented: $showingExerciseDetail) {
+            ExerciseTrackingView()
+        }
+        .sheet(isPresented: $showingWaterDetail) {
+            WaterTrackingView()
+        }
+        .sheet(isPresented: $showingSupplementDetail) {
+            EnhancedSupplementTrackingView()
+        }
+        .sheet(isPresented: $showingStepDetail) {
+            StepDetailsView()
+        }
+        .sheet(isPresented: $showingStepGoal) {
+            StepGoalView()
+        }
+        .sheet(isPresented: $showingExerciseQuickAdd) {
+            ExerciseQuickAddView()
+        }
+        .sheet(isPresented: $showingAllInsights) {
+            AllInsightsView(insights: viewModel.aiInsights)
         }
     }
     
-    var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            HStack {
-                Text(analysis.nutrientName)
+    // MARK: - Header Section
+    
+    private var headerSection: some View {
+        VStack(spacing: 12) {
+            // Welcome Message with AI Touch
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Hello, \(viewModel.userName)!")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.deepCharcoal)
+
+                Text(viewModel.aiGreeting)
                     .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+            
+            // Overall Health Score with AI Analysis
+            HStack(spacing: 16) {
+                // Score Circle
+                ZStack {
+                    Circle()
+                        .stroke(Color(UIColor.systemFill), lineWidth: 8)
+                        .frame(width: 80, height: 80)
+                    
+                    Circle()
+                        .trim(from: 0, to: animateCharts ? viewModel.healthScore / 100 : 0)
+                        .stroke(
+                            LinearGradient(
+                                colors: [.wellnessGreen, .mindfulTeal],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            style: StrokeStyle(lineWidth: 8, lineCap: .round)
+                        )
+                        .frame(width: 80, height: 80)
+                        .rotationEffect(.degrees(-90))
+                    
+                    VStack(spacing: 2) {
+                        Text("\(Int(viewModel.healthScore))")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        Text("Score")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                // AI Analysis
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(viewModel.healthTrend, systemImage: viewModel.healthTrendIcon)
+                        .font(.headline)
+                        .foregroundColor(viewModel.healthTrendColor)
+                    
+                    Text(viewModel.healthSummary)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                }
+                
+                Spacer()
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+        }
+    }
+    
+    // MARK: - AI Insights Section (from Option 4)
+    
+    private var aiInsightsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Label("AI Insights", systemImage: "brain")
+                    .font(.headline)
+                    .foregroundColor(.deepCharcoal)
                 
                 Spacer()
                 
-                Text("\(Int(analysis.percentageOfRDA))%")
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                
-                Text(analysis.status.symbol)
-            }
-            
-            GeometryReader { geometry in
-                ZStack(alignment: .leading) {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.2))
-                        .frame(height: 8)
-                        .cornerRadius(4)
-                    
-                    Rectangle()
-                        .fill(statusColor)
-                        .frame(width: min(geometry.size.width * (analysis.percentageOfRDA / 100), geometry.size.width), height: 8)
-                        .cornerRadius(4)
+                Button(action: { showingAllInsights = true }) {
+                    Text("View All")
+                        .font(.caption)
+                        .foregroundColor(.mindfulTeal)
                 }
             }
-            .frame(height: 8)
             
-            if let recommendation = analysis.recommendation {
-                Text(recommendation)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                    .padding(.top, 2)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(viewModel.aiInsights) { insight in
+                        AIInsightCard(insight: insight)
+                            .onTapGesture {
+                                selectedInsight = insight
+                            }
+                    }
+                }
             }
         }
     }
-}
-
-struct LifeStageAlertsCard: View {
-    let alerts: [LifeStageAlert]
     
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Life Stage Updates")
-                .font(.headline)
+    // MARK: - Metrics Overview (from Option 3)
+    
+    private var metricsOverview: some View {
+        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+            MetricCardWithTrend(
+                title: "Steps",
+                value: "\(viewModel.todaySteps)",
+                subtitle: "of \(viewModel.stepGoal) goal",
+                trend: viewModel.stepsTrend,
+                trendValue: "+\(viewModel.stepsTrendPercent)%",
+                icon: "figure.walk",
+                color: .green,
+                sparklineData: viewModel.stepsSparkline
+            )
+            .onTapGesture {
+                showingStepGoal = true  // Show the new StepGoalView
+            }
             
-            ForEach(alerts, id: \.message) { alert in
+            MetricCardWithTrend(
+                title: "Weight",
+                value: String(format: "%.1f lbs", viewModel.currentWeight),
+                subtitle: String(format: "%.1f lbs to goal", viewModel.currentWeight - viewModel.targetWeight),
+                trend: viewModel.weightTrend,
+                trendValue: "\(viewModel.weightTrendPercent)%",
+                icon: "scalemass.fill",
+                color: .blue,
+                sparklineData: viewModel.weightSparkline
+            )
+            .onTapGesture {
+                showingWeightDetail = true
+            }
+            
+            MetricCardWithTrend(
+                title: "Exercise",
+                value: "\(viewModel.todayExercise) min",
+                subtitle: "\(viewModel.exerciseSessions) sessions",
+                trend: .up,
+                trendValue: "+15%",
+                icon: "figure.run",
+                color: .orange,
+                sparklineData: viewModel.exerciseSparkline
+            )
+            .onTapGesture {
+                showingExerciseQuickAdd = true
+            }
+            
+            MetricCardWithTrend(
+                title: "Water",
+                value: "\(viewModel.todayWater)",
+                subtitle: "\(viewModel.waterPercentage)% hydrated",
+                trend: viewModel.waterTrend,
+                trendValue: "\(viewModel.waterTrendPercent)%",
+                icon: "drop.fill",
+                color: .cyan,
+                sparklineData: viewModel.waterSparkline
+            )
+            .onTapGesture {
+                showingWaterDetail = true
+            }
+        }
+    }
+    
+    // MARK: - Charts Section (from Option 3)
+
+    private var chartsSection: some View {
+        VStack(spacing: 20) {
+            // Steps Chart - Weekly View
+            VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    Image(systemName: alert.icon)
-                        .foregroundColor(.accentColor)
-                    
-                    Text(alert.message)
-                        .font(.subheadline)
-                    
+                    HStack(spacing: 8) {
+                        Image(systemName: "figure.walk")
+                            .font(.headline)
+                            .foregroundColor(.green)
+                        Text("Steps - Weekly")
+                            .font(.headline)
+                            .foregroundColor(.deepCharcoal)
+                    }
                     Spacer()
                 }
-                .padding()
-                .background(Color.accentColor.opacity(0.1))
-                .cornerRadius(8)
-            }
-        }
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(10)
-    }
-}
 
-struct RecentActivitiesCard: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            Text("Recent Activities")
-                .font(.headline)
+                Chart(viewModel.getWeeklyStepsData()) { dataPoint in
+                    BarMark(
+                        x: .value("Time", dataPoint.date),
+                        y: .value("Steps", dataPoint.value)
+                    )
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.green.opacity(0.8), .mint.opacity(0.6)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .cornerRadius(4)
+                }
+                .frame(height: 200)
+                .chartYAxis {
+                    AxisMarks(position: .leading)
+                }
+                .chartXAxis {
+                    AxisMarks { value in
+                        AxisValueLabel {
+                            if let date = value.as(Date.self) {
+                                Text(date, format: .dateTime.weekday(.abbreviated))
+                            }
+                        }
+                    }
+                }
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+
+            // Weight Chart
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 8) {
+                    Image(systemName: "scalemass")
+                        .font(.headline)
+                        .foregroundColor(.blue)
+                    Text("Weight Trend")
+                        .font(.headline)
+                        .foregroundColor(.deepCharcoal)
+                    Spacer()
+                }
+
+                Chart(viewModel.getWeightData(for: selectedTimeRange)) { dataPoint in
+                    LineMark(
+                        x: .value("Date", dataPoint.date),
+                        y: .value("Weight", dataPoint.value)
+                    )
+                    .foregroundStyle(Color.blue)
+                    .lineStyle(StrokeStyle(lineWidth: 2))
+
+                    PointMark(
+                        x: .value("Date", dataPoint.date),
+                        y: .value("Weight", dataPoint.value)
+                    )
+                    .foregroundStyle(Color.blue)
+                    .symbolSize(50)
+                }
+                .frame(height: 150)
+                .chartYScale(domain: viewModel.getWeightRange(for: selectedTimeRange))
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+
+            // Exercise Minutes Chart
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 8) {
+                    Image(systemName: "figure.run")
+                        .font(.headline)
+                        .foregroundColor(.orange)
+                    Text("Exercise Minutes")
+                        .font(.headline)
+                        .foregroundColor(.deepCharcoal)
+                    Spacer()
+                }
+                .padding(.bottom, 4)
+
+                Chart(viewModel.getExerciseData(for: selectedTimeRange)) { dataPoint in
+                    BarMark(
+                        x: .value("Date", dataPoint.date),
+                        y: .value("Minutes", dataPoint.value)
+                    )
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.green, .mint],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .cornerRadius(4)
+                }
+                .frame(height: 150)
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+
+            // Nutrition Distribution Chart
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Nutrition Distribution")
+                    .font(.headline)
+                    .foregroundColor(.deepCharcoal)
+                
+                Chart {
+                    ForEach(viewModel.nutritionData) { item in
+                        SectorMark(
+                            angle: .value("Value", item.value),
+                            innerRadius: .ratio(0.6),
+                            angularInset: 2
+                        )
+                        .foregroundStyle(item.color)
+                        .cornerRadius(4)
+                        .opacity(animateCharts ? 1 : 0)
+                    }
+                }
+                .frame(height: 200)
+                .chartBackground { chartProxy in
+                    GeometryReader { geometry in
+                        VStack {
+                            Text("\(viewModel.todayCalories)")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            Text("calories")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                    }
+                }
+                
+                // Legend
+                HStack(spacing: 20) {
+                    ForEach(viewModel.nutritionData) { item in
+                        HStack(spacing: 4) {
+                            Circle()
+                                .fill(item.color)
+                                .frame(width: 12, height: 12)
+                            Text(item.name)
+                                .font(.caption)
+                            Text("\(Int(item.percentage))%")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                        }
+                    }
+                }
+                .padding(.horizontal)
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
             
-            VStack(spacing: 10) {
-                ActivityRow(
-                    icon: "fork.knife",
-                    title: "Breakfast",
-                    subtitle: "Oatmeal with berries",
-                    time: "8:30 AM",
-                    color: .orange
-                )
+            // Weekly Trend Chart
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("Weekly Trends")
+                        .font(.headline)
+                        .foregroundColor(.deepCharcoal)
+                    
+                    Spacer()
+                    
+                    // Metric Selector
+                    Menu {
+                        Button("Calories") { }
+                        Button("Weight") { }
+                        Button("Exercise") { }
+                        Button("Water") { }
+                    } label: {
+                        Label("Calories", systemImage: "chevron.down")
+                            .font(.caption)
+                            .foregroundColor(.mindfulTeal)
+                    }
+                }
                 
-                ActivityRow(
-                    icon: "pills",
-                    title: "Supplements",
-                    subtitle: "Multivitamin + Omega-3",
-                    time: "9:00 AM",
-                    color: .purple
-                )
+                Chart(viewModel.weeklyData) { item in
+                    LineMark(
+                        x: .value("Day", item.day),
+                        y: .value("Value", item.value)
+                    )
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.wellnessGreen, .mindfulTeal],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .lineStyle(StrokeStyle(lineWidth: 3, lineCap: .round))
+                    .opacity(animateCharts ? 1 : 0)
+                    
+                    AreaMark(
+                        x: .value("Day", item.day),
+                        y: .value("Value", item.value)
+                    )
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.wellnessGreen.opacity(0.3), .mindfulTeal.opacity(0.1)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .opacity(animateCharts ? 1 : 0)
+                    
+                    PointMark(
+                        x: .value("Day", item.day),
+                        y: .value("Value", item.value)
+                    )
+                    .foregroundStyle(.white)
+                    .symbolSize(animateCharts ? 60 : 0)
+                }
+                .frame(height: 200)
+                .chartYScale(domain: 0...3000)
+                .chartXAxis {
+                    AxisMarks(values: .automatic) { value in
+                        AxisValueLabel()
+                            .font(.caption)
+                    }
+                }
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+        }
+    }
+    
+    // MARK: - AI Recommendations (from Option 4)
+    
+    private var aiRecommendationsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Label("Smart Recommendations", systemImage: "lightbulb.fill")
+                    .font(.headline)
+                    .foregroundColor(.deepCharcoal)
                 
-                ActivityRow(
-                    icon: "figure.run",
-                    title: "Morning Run",
-                    subtitle: "5.2 km in 28 minutes",
-                    time: "6:45 AM",
-                    color: .green
-                )
+                Spacer()
+                
+                Button(action: {}) {
+                    Image(systemName: "arrow.clockwise")
+                        .foregroundColor(.mindfulTeal)
+                }
+            }
+            
+            VStack(spacing: 12) {
+                ForEach(viewModel.recommendations) { recommendation in
+                    HybridRecommendationRow(recommendation: recommendation)
+                }
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+        }
+    }
+    
+    // MARK: - Detailed Analytics (from Option 3)
+    
+    private var detailedAnalyticsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Detailed Analytics")
+                .font(.headline)
+                .foregroundColor(.deepCharcoal)
+
+            if viewModel.nutrientBreakdown.isEmpty {
+                // Empty state when no food has been logged
+                VStack(spacing: 12) {
+                    Image(systemName: "chart.bar.doc.horizontal")
+                        .font(.system(size: 40))
+                        .foregroundColor(.gray.opacity(0.5))
+
+                    Text("No nutrition data yet")
+                        .font(.headline)
+                        .foregroundColor(.gray)
+
+                    Text("Start logging your meals to see detailed nutrient analytics")
+                        .font(.caption)
+                        .foregroundColor(.gray.opacity(0.8))
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 40)
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+            } else {
+                // Nutrient Breakdown Table
+                VStack(spacing: 0) {
+                    // Header
+                    HStack {
+                        Text("Nutrient")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("Today")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .frame(width: 60)
+                        Text("Goal")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .frame(width: 60)
+                        Text("Status")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .frame(width: 80)
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .background(Color(UIColor.tertiarySystemFill))
+
+                    Divider()
+
+                    // Rows
+                    ForEach(viewModel.nutrientBreakdown) { nutrient in
+                        HybridNutrientRow(nutrient: nutrient)
+                        Divider()
+                    }
+                }
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
             }
         }
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(10)
     }
 }
 
-struct ActivityRow: View {
-    let icon: String
-    let title: String
-    let subtitle: String
-    let time: String
-    let color: Color
+// MARK: - Supporting Views
 
+struct AIInsightCard: View {
+    let insight: AIInsight
+    
     var body: some View {
-        HStack {
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundColor(color)
-                .frame(width: 30)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: insight.icon)
+                    .font(.title3)
+                    .foregroundColor(insight.color)
+                
+                Spacer()
+                
+                if insight.isNew {
+                    Text("NEW")
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.red)
+                        .cornerRadius(4)
+                }
+            }
+            
+            Text(insight.title)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundColor(.deepCharcoal)
+                .lineLimit(2)
+            
+            Text(insight.description)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(3)
+            
+            HStack {
+                Label("\(insight.impact)", systemImage: "arrow.up.circle.fill")
+                    .font(.caption)
+                    .foregroundColor(insight.color)
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+        }
+        .padding()
+        .frame(width: 280)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+    }
+}
 
-            VStack(alignment: .leading) {
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
+struct MetricCardWithTrend: View {
+    let title: String
+    let value: String
+    let subtitle: String
+    let trend: Trend
+    let trendValue: String
+    let icon: String
+    let color: Color
+    let sparklineData: [Double]
+    
+    enum Trend {
+        case up, down, neutral
+        
+        var icon: String {
+            switch self {
+            case .up: return "arrow.up.right"
+            case .down: return "arrow.down.right"
+            case .neutral: return "arrow.right"
+            }
+        }
+        
+        var color: Color {
+            switch self {
+            case .up: return .green
+            case .down: return .red
+            case .neutral: return .gray
+            }
+        }
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(color)
+                
+                Spacer()
+                
+                HStack(spacing: 4) {
+                    Image(systemName: trend.icon)
+                        .font(.caption2)
+                    Text(trendValue)
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                }
+                .foregroundColor(trend.color)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(value)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.deepCharcoal)
+                
                 Text(subtitle)
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-
-            Spacer()
-
-            Text(time)
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-    }
-}
-
-struct StepChartCard: View {
-    let timeRange: TimeRange
-    @State private var stepData: [StepDataPoint] = []
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            Text("Step Activity")
-                .font(.headline)
-
-            if stepData.isEmpty {
-                // Placeholder when no data
-                VStack {
-                    Image(systemName: "figure.walk")
-                        .font(.largeTitle)
-                        .foregroundColor(.gray.opacity(0.3))
-                    Text("No step data available")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                .frame(height: 200)
-                .frame(maxWidth: .infinity)
-            } else {
-                Chart(stepData) { dataPoint in
-                    BarMark(
-                        x: .value("Date", dataPoint.date),
-                        y: .value("Steps", dataPoint.steps)
-                    )
-                    .foregroundStyle(Color.green.gradient)
-                    .cornerRadius(4)
-                }
-                .frame(height: 200)
-                .chartYAxisLabel("Steps", position: .leading)
-                .chartXAxis {
-                    AxisMarks(values: .automatic) { value in
-                        AxisValueLabel {
-                            if let date = value.as(Date.self) {
-                                Text(formatDateForChart(date))
-                            }
-                        }
-                        AxisGridLine()
-                        AxisTick()
-                    }
-                }
-                .chartYAxis {
-                    AxisMarks(position: .leading)
-                }
-            }
-        }
-        .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(10)
-        .onAppear {
-            loadStepData()
-        }
-        .onChange(of: timeRange) {
-            loadStepData()
-        }
-    }
-
-    private func loadStepData() {
-        let calendar = Calendar.current
-        let endDate = Date()
-        let startDate: Date
-        let interval: Calendar.Component
-
-        switch timeRange {
-        case .today:
-            // Hourly data for today
-            startDate = calendar.startOfDay(for: endDate)
-            interval = .hour
-
-            // Generate hourly data points for today
-            var hourlyData: [StepDataPoint] = []
-            for hour in 0..<24 {
-                if let hourDate = calendar.date(byAdding: .hour, value: hour, to: startDate),
-                   hourDate <= endDate {
-                    // For demo, generate some sample data
-                    let steps = Int.random(in: 0...500)
-                    hourlyData.append(StepDataPoint(date: hourDate, steps: steps))
-                }
-            }
-
-            // Fetch actual data from HealthKit
-            HealthKitManager.shared.fetchHourlySteps(from: startDate, to: endDate) { hourlySteps in
-                DispatchQueue.main.async {
-                    if !hourlySteps.isEmpty {
-                        self.stepData = hourlySteps.enumerated().map { index, steps in
-                            let date = calendar.date(byAdding: .hour, value: index, to: startDate) ?? startDate
-                            return StepDataPoint(date: date, steps: Int(steps))
-                        }
-                    } else {
-                        self.stepData = hourlyData
-                    }
-                }
-            }
-
-        case .week:
-            // Daily data for past week
-            startDate = calendar.date(byAdding: .day, value: -7, to: endDate) ?? endDate
-            interval = .day
-
-            var dailyData: [StepDataPoint] = []
-            for day in 0..<7 {
-                if let dayDate = calendar.date(byAdding: .day, value: day, to: startDate) {
-                    dailyData.append(StepDataPoint(date: dayDate, steps: 0))
-                }
-            }
-
-            // Fetch actual data from HealthKit
-            for (index, dataPoint) in dailyData.enumerated() {
-                let dayStart = dataPoint.date
-                let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart
-
-                HealthKitManager.shared.fetchSteps(from: dayStart, to: dayEnd) { steps in
-                    DispatchQueue.main.async {
-                        if index < self.stepData.count {
-                            self.stepData[index].steps = Int(steps)
+            
+            // Mini Sparkline
+            GeometryReader { geometry in
+                Path { path in
+                    guard sparklineData.count > 1 else { return }
+                    
+                    let width = geometry.size.width
+                    let height = geometry.size.height
+                    let maxValue = sparklineData.max() ?? 1
+                    let minValue = sparklineData.min() ?? 0
+                    let range = maxValue - minValue
+                    
+                    for (index, value) in sparklineData.enumerated() {
+                        let x = width * CGFloat(index) / CGFloat(sparklineData.count - 1)
+                        let y = height - (height * CGFloat(value - minValue) / CGFloat(range))
+                        
+                        if index == 0 {
+                            path.move(to: CGPoint(x: x, y: y))
                         } else {
-                            dailyData[index].steps = Int(steps)
-                            self.stepData = dailyData
+                            path.addLine(to: CGPoint(x: x, y: y))
                         }
                     }
                 }
+                .stroke(color.opacity(0.6), lineWidth: 2)
             }
-
-        case .month:
-            // Weekly data for past month
-            startDate = calendar.date(byAdding: .month, value: -1, to: endDate) ?? endDate
-            interval = .weekOfYear
-
-            var weeklyData: [StepDataPoint] = []
-            for week in 0..<4 {
-                if let weekDate = calendar.date(byAdding: .weekOfYear, value: week, to: startDate) {
-                    weeklyData.append(StepDataPoint(date: weekDate, steps: 0))
-                }
-            }
-
-            self.stepData = weeklyData
-        }
-    }
-
-    private func formatDateForChart(_ date: Date) -> String {
-        let formatter = DateFormatter()
-
-        switch timeRange {
-        case .today:
-            formatter.dateFormat = "ha" // 12PM, 1PM, etc.
-        case .week:
-            formatter.dateFormat = "E" // Mon, Tue, etc.
-        case .month:
-            formatter.dateFormat = "MMM d" // Jan 1, etc.
-        }
-
-        return formatter.string(from: date)
-    }
-}
-
-struct StepDataPoint: Identifiable {
-    let id = UUID()
-    let date: Date
-    var steps: Int
-}
-
-struct WeightCard: View {
-    @StateObject private var dataManager = UnifiedDataManager.shared
-    @State private var showingWeightTracking = false
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Weight")
-                    .font(.headline)
-
-                Spacer()
-
-                Button(action: { showingWeightTracking = true }) {
-                    Image(systemName: "plus.circle")
-                        .foregroundColor(.accentColor)
-                }
-            }
-
-            HStack(spacing: 20) {
-                // Current Weight
-                VStack(alignment: .leading, spacing: 4) {
-                    if dataManager.currentWeight > 0 {
-                        Text("\(dataManager.currentWeight, specifier: "%.1f") lbs")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-
-                        Text("Current")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    } else {
-                        Text("No weight recorded")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                }
-
-                Spacer()
-
-                // Weight Change
-                if dataManager.weightChange != 0 && dataManager.currentWeight > 0 {
-                    VStack(alignment: .trailing, spacing: 4) {
-                        HStack(spacing: 4) {
-                            Image(systemName: dataManager.weightChange > 0 ? "arrow.up.right" : "arrow.down.right")
-                                .font(.caption)
-                            Text("\(abs(dataManager.weightChange), specifier: "%.1f") lbs")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                        }
-                        .foregroundColor(dataManager.weightChange > 0 ? .red : .green)
-
-                        Text("Change")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-
-                // Last Updated
-                if let lastEntry = dataManager.latestWeightEntry {
-                    VStack(alignment: .trailing, spacing: 4) {
-                        Text(lastEntry.timestamp ?? Date(), style: .relative)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-
-                        Text("Last updated")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
+            .frame(height: 30)
+            .padding(.top, 4)
         }
         .padding()
-        .background(Color(UIColor.secondarySystemBackground))
-        .cornerRadius(10)
-        .sheet(isPresented: $showingWeightTracking) {
-            WeightTrackingView()
-        }
-        .onAppear {
-            dataManager.refreshAllData()
-        }
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 }
 
+struct HybridRecommendationRow: View {
+    let recommendation: AIRecommendation
+    @State private var isCompleted = false
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: recommendation.icon)
+                .font(.title3)
+                .foregroundColor(recommendation.color)
+                .frame(width: 40, height: 40)
+                .background(recommendation.color.opacity(0.1))
+                .cornerRadius(8)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(recommendation.title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.deepCharcoal)
+                
+                Text(recommendation.description)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                if let actionText = recommendation.actionText {
+                    Text(actionText)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundColor(recommendation.color)
+                }
+            }
+            
+            Spacer()
+            
+            Button(action: {
+                withAnimation {
+                    isCompleted.toggle()
+                }
+            }) {
+                Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundColor(isCompleted ? .green : .gray)
+            }
+        }
+        .padding(.vertical, 8)
+        .opacity(isCompleted ? 0.6 : 1)
+    }
+}
+
+struct HybridNutrientRow: View {
+    let nutrient: NutrientBreakdown
+    
+    var body: some View {
+        HStack {
+            HStack(spacing: 8) {
+                Circle()
+                    .fill(nutrient.color)
+                    .frame(width: 8, height: 8)
+                Text(nutrient.name)
+                    .font(.subheadline)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Text(nutrient.current)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .frame(width: 60)
+            
+            Text(nutrient.goal)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .frame(width: 60)
+            
+            HStack(spacing: 4) {
+                Image(systemName: nutrient.statusIcon)
+                    .font(.caption)
+                Text(nutrient.statusText)
+                    .font(.caption)
+            }
+            .foregroundColor(nutrient.statusColor)
+            .frame(width: 80)
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+    }
+}
+
+// MARK: - View Models and Data Models
+
+struct AIInsight: Identifiable {
+    let id = UUID()
+    let title: String
+    let description: String
+    let icon: String
+    let color: Color
+    let impact: String
+    let isNew: Bool
+}
+
+struct AIRecommendation: Identifiable {
+    let id = UUID()
+    let title: String
+    let description: String
+    let icon: String
+    let color: Color
+    let actionText: String?
+}
+
+struct NutrientBreakdown: Identifiable {
+    let id = UUID()
+    let name: String
+    let current: String
+    let goal: String
+    let percentage: Double
+    let color: Color
+    
+    var statusIcon: String {
+        if percentage >= 90 && percentage <= 110 {
+            return "checkmark.circle.fill"
+        } else if percentage < 90 {
+            return "exclamationmark.circle.fill"
+        } else {
+            return "arrow.up.circle.fill"
+        }
+    }
+    
+    var statusColor: Color {
+        if percentage >= 90 && percentage <= 110 {
+            return .green
+        } else if percentage < 90 {
+            return .orange
+        } else {
+            return .red
+        }
+    }
+    
+    var statusText: String {
+        return "\(Int(percentage))% RDA"
+    }
+}
+
+// MARK: - Preview
+
+// #Preview {
+//     NavigationView {
+//         DashboardView()
+//     }
+// }

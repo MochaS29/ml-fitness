@@ -794,7 +794,7 @@ class DashboardViewModel: ObservableObject {
         return totalNutrients
     }
 
-    func updateTimeRange(_ range: HybridDashboardView.TimeRange) {
+    func updateTimeRange(_ range: DashboardView.TimeRange) {
         // Update data based on selected time range
         switch range {
         case .day:
@@ -813,12 +813,12 @@ class DashboardViewModel: ObservableObject {
 
     // MARK: - Chart Data Methods
 
-    func getCaloriesData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
+    func getCaloriesData(for range: DashboardView.TimeRange) -> [ChartDataPoint] {
         // Return empty data until user logs food
         return []
     }
 
-    func getWeightData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
+    func getWeightData(for range: DashboardView.TimeRange) -> [ChartDataPoint] {
         // Get weight data for the past 7 days
         var dataPoints: [ChartDataPoint] = []
         let calendar = Calendar.current
@@ -854,7 +854,7 @@ class DashboardViewModel: ObservableObject {
         return dataPoints.reversed()
     }
 
-    func getExerciseData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
+    func getExerciseData(for range: DashboardView.TimeRange) -> [ChartDataPoint] {
         // Get exercise data for the past 7 days
         var dataPoints: [ChartDataPoint] = []
         let calendar = Calendar.current
@@ -900,7 +900,7 @@ class DashboardViewModel: ObservableObject {
         return dataPoints.reversed()
     }
 
-    func getStepsData(for range: HybridDashboardView.TimeRange) -> [ChartDataPoint] {
+    func getStepsData(for range: DashboardView.TimeRange) -> [ChartDataPoint] {
         // Deprecated - use getWeeklyStepsData instead
         return []
 
@@ -959,7 +959,7 @@ class DashboardViewModel: ObservableObject {
         */
     }
 
-    func getWeightRange(for range: HybridDashboardView.TimeRange) -> ClosedRange<Double> {
+    func getWeightRange(for range: DashboardView.TimeRange) -> ClosedRange<Double> {
         switch range {
         case .day:
             return (currentWeight - 2)...(currentWeight + 2)
