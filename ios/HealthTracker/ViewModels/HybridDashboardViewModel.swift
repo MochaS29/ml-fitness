@@ -64,6 +64,7 @@ class DashboardViewModel: ObservableObject {
         loadTodayWaterIntake()
         loadTodayExerciseData()
         loadTodayCalories()
+        loadLatestWeight()  // Reload weight when data changes
         calculateHealthScore()
     }
 
@@ -214,13 +215,34 @@ class DashboardViewModel: ObservableObject {
     private func loadUserProfile() {
         if let profile = userProfileManager.currentProfile {
             userName = profile.name
-            if let startingWeight = profile.startingWeight {
-                currentWeight = startingWeight
-            } else {
-                currentWeight = 0.0
-            }
         } else {
             userName = "User"
+        }
+
+        // Load actual current weight from Core Data
+        loadLatestWeight()
+    }
+
+    private func loadLatestWeight() {
+        let request: NSFetchRequest<WeightEntry> = WeightEntry.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \WeightEntry.timestamp, ascending: false)]
+        request.fetchLimit = 1
+
+        do {
+            let weights = try viewContext.fetch(request)
+            if let latestWeight = weights.first {
+                currentWeight = latestWeight.weight
+            } else {
+                // Fall back to starting weight if no weight entries exist
+                if let profile = userProfileManager.currentProfile,
+                   let startingWeight = profile.startingWeight {
+                    currentWeight = startingWeight
+                } else {
+                    currentWeight = 0.0
+                }
+            }
+        } catch {
+            print("Error fetching latest weight: \(error)")
             currentWeight = 0.0
         }
     }

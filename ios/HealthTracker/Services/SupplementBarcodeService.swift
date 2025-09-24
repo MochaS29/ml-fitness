@@ -312,14 +312,14 @@ struct SpoonacularProduct: Codable {
     let servingSize: String?
     let servingUnit: String?
     let ingredientList: String?
-    let nutrition: SpoonacularNutrition?
+    let nutrition: SpoonacularSupplementNutrition?
 }
 
-struct SpoonacularNutrition: Codable {
-    let nutrients: [SpoonacularNutrient]
+struct SpoonacularSupplementNutrition: Codable {
+    let nutrients: [SpoonacularSupplementNutrient]
 }
 
-struct SpoonacularNutrient: Codable {
+struct SpoonacularSupplementNutrient: Codable {
     let name: String
     let amount: Double
     let unit: String

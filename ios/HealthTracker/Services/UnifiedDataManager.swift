@@ -17,6 +17,7 @@ class UnifiedDataManager: ObservableObject {
     @Published var todaysExerciseEntries: [ExerciseEntry] = []
     @Published var todaysWaterEntries: [WaterEntry] = []
     @Published var todaysSupplementEntries: [SupplementEntry] = []
+    @Published var latestWeightEntry: WeightEntry?
 
     // Summary data
     @Published var todayCalories: Double = 0
@@ -26,6 +27,8 @@ class UnifiedDataManager: ObservableObject {
     @Published var todayWater: Double = 0
     @Published var todayCaloriesBurned: Double = 0
     @Published var todaySteps: Int = 0
+    @Published var currentWeight: Double = 0
+    @Published var weightChange: Double = 0
 
     private init() {
         self.context = PersistenceController.shared.container.viewContext
@@ -262,12 +265,29 @@ class UnifiedDataManager: ObservableObject {
         supplementRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", today as NSDate, tomorrow as NSDate)
         supplementRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
 
+        // Weight entries (fetch all, not just today)
+        let weightRequest: NSFetchRequest<WeightEntry> = WeightEntry.fetchRequest()
+        weightRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        weightRequest.fetchLimit = 2  // Get latest 2 for comparison
+
         do {
             // Fetch all data
             todaysFoodEntries = try context.fetch(foodRequest)
             todaysExerciseEntries = try context.fetch(exerciseRequest)
             todaysWaterEntries = try context.fetch(waterRequest)
             todaysSupplementEntries = try context.fetch(supplementRequest)
+
+            // Fetch weight entries
+            let weightEntries = try context.fetch(weightRequest)
+            if !weightEntries.isEmpty {
+                latestWeightEntry = weightEntries.first
+                currentWeight = weightEntries.first?.weight ?? 0
+
+                // Calculate weight change if we have 2 entries
+                if weightEntries.count > 1 {
+                    weightChange = currentWeight - (weightEntries[1].weight ?? 0)
+                }
+            }
 
             // Calculate summaries
             calculateDailySummaries()

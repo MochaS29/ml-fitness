@@ -503,19 +503,22 @@ struct AddWeightView: View {
         newWeight.weight = weight
         newWeight.notes = notes.isEmpty ? nil : notes
         newWeight.timestamp = selectedDate
-        
+
         do {
             try viewContext.save()
-            
+
             // Update goals based on the new weight entry
             GoalsManager.shared.updateGoalsFromWeightEntry(newWeight)
-            
+
+            // Refresh UnifiedDataManager to update dashboard
+            UnifiedDataManager.shared.refreshAllData()
+
             if syncWithHealthKit {
                 healthKitManager.saveWeight(weight, date: selectedDate) { _ in
                     // Handle success/failure if needed
                 }
             }
-            
+
             presentationMode.wrappedValue.dismiss()
         } catch {
             print("Error saving weight: \(error)")

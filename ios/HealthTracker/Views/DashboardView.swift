@@ -27,6 +27,9 @@ struct DashboardView: View {
                     // Summary card
                     SummaryCard(timeRange: selectedTimeRange)
 
+                    // Weight Card
+                    WeightCard()
+
                     // Step Chart
                     StepChartCard(timeRange: selectedTimeRange)
 
@@ -141,34 +144,43 @@ struct SummaryCard: View {
                 .font(.headline)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            HStack(spacing: 15) {
-                DashboardSummaryMetric(
-                    icon: "flame",
-                    value: "\(Int(totalCalories))",
-                    label: "Calories",
-                    color: .orange
-                )
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    DashboardSummaryMetric(
+                        icon: "scalemass",
+                        value: dataManager.currentWeight > 0 ? "\(Int(dataManager.currentWeight))" : "--",
+                        label: "Weight",
+                        color: .purple
+                    )
 
-                DashboardSummaryMetric(
-                    icon: "flame.fill",
-                    value: "\(Int(totalCaloriesBurned))",
-                    label: "Burned",
-                    color: .red
-                )
+                    DashboardSummaryMetric(
+                        icon: "flame",
+                        value: "\(Int(totalCalories))",
+                        label: "Calories",
+                        color: .orange
+                    )
 
-                DashboardSummaryMetric(
-                    icon: "drop.fill",
-                    value: "\(Int(totalWater)) oz",
-                    label: "Water",
-                    color: .blue
-                )
+                    DashboardSummaryMetric(
+                        icon: "flame.fill",
+                        value: "\(Int(totalCaloriesBurned))",
+                        label: "Burned",
+                        color: .red
+                    )
 
-                DashboardSummaryMetric(
-                    icon: "figure.walk",
-                    value: "\(totalSteps)",
-                    label: "Steps",
-                    color: .green
-                )
+                    DashboardSummaryMetric(
+                        icon: "drop.fill",
+                        value: "\(Int(totalWater)) oz",
+                        label: "Water",
+                        color: .blue
+                    )
+
+                    DashboardSummaryMetric(
+                        icon: "figure.walk",
+                        value: "\(totalSteps)",
+                        label: "Steps",
+                        color: .green
+                    )
+                }
             }
         }
         .padding()
@@ -612,5 +624,87 @@ struct StepDataPoint: Identifiable {
     let id = UUID()
     let date: Date
     var steps: Int
+}
+
+struct WeightCard: View {
+    @StateObject private var dataManager = UnifiedDataManager.shared
+    @State private var showingWeightTracking = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Weight")
+                    .font(.headline)
+
+                Spacer()
+
+                Button(action: { showingWeightTracking = true }) {
+                    Image(systemName: "plus.circle")
+                        .foregroundColor(.accentColor)
+                }
+            }
+
+            HStack(spacing: 20) {
+                // Current Weight
+                VStack(alignment: .leading, spacing: 4) {
+                    if dataManager.currentWeight > 0 {
+                        Text("\(dataManager.currentWeight, specifier: "%.1f") lbs")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+
+                        Text("Current")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text("No weight recorded")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                Spacer()
+
+                // Weight Change
+                if dataManager.weightChange != 0 && dataManager.currentWeight > 0 {
+                    VStack(alignment: .trailing, spacing: 4) {
+                        HStack(spacing: 4) {
+                            Image(systemName: dataManager.weightChange > 0 ? "arrow.up.right" : "arrow.down.right")
+                                .font(.caption)
+                            Text("\(abs(dataManager.weightChange), specifier: "%.1f") lbs")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                        }
+                        .foregroundColor(dataManager.weightChange > 0 ? .red : .green)
+
+                        Text("Change")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                // Last Updated
+                if let lastEntry = dataManager.latestWeightEntry {
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text(lastEntry.timestamp ?? Date(), style: .relative)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+
+                        Text("Last updated")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(Color(UIColor.secondarySystemBackground))
+        .cornerRadius(10)
+        .sheet(isPresented: $showingWeightTracking) {
+            WeightTrackingView()
+        }
+        .onAppear {
+            dataManager.refreshAllData()
+        }
+    }
 }
 

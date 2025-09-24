@@ -538,7 +538,7 @@ class FoodItemDatabase {
 struct SpoonacularImageAnalysisResponse: Codable {
     let category: SpoonacularCategory?
     let recipes: [SpoonacularRecipe]?
-    let nutrition: SpoonacularNutrition?
+    let nutrition: SpoonacularFoodNutrition?
 }
 
 struct SpoonacularCategory: Codable {
@@ -553,7 +553,7 @@ struct SpoonacularRecipe: Codable {
     let nutrition: SpoonacularRecipeNutrition?
 }
 
-struct SpoonacularNutrition: Codable {
+struct SpoonacularFoodNutrition: Codable {
     let recipesUsed: Int?
     let calories: SpoonacularNutrientInfo?
     let fat: SpoonacularNutrientInfo?
@@ -567,10 +567,10 @@ struct SpoonacularNutrientInfo: Codable {
 }
 
 struct SpoonacularRecipeNutrition: Codable {
-    let nutrients: [SpoonacularNutrient]?
+    let nutrients: [SpoonacularFoodNutrient]?
 }
 
-struct SpoonacularNutrient: Codable {
+struct SpoonacularFoodNutrient: Codable {
     let name: String
     let amount: Float
     let unit: String

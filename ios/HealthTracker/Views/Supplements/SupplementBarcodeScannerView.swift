@@ -142,18 +142,21 @@ struct SupplementBarcodeScannerView: View {
         entry.id = UUID()
         entry.name = supplement.name
         entry.brand = supplement.brand
-        entry.servingSize = supplement.servingSize
-        entry.servingUnit = supplement.servingUnit ?? "serving"
-        entry.servingCount = Int16(servingCount)
-        entry.barcode = supplement.barcode
-        entry.timestamp = Date()
 
-        // Save nutrients as JSON in notes field for now
+        // Combine serving count with serving size
+        let servingText = servingCount > 1 ? "\(servingCount) × \(supplement.servingSize ?? "1")" : supplement.servingSize
+        entry.servingSize = servingText
+        entry.servingUnit = supplement.servingUnit ?? "serving"
+        entry.timestamp = Date()
+        entry.date = Date()
+
+        // Save nutrients as dictionary
         if !supplement.nutrients.isEmpty {
-            let nutrientData = supplement.nutrients.map { nutrient in
-                "\(nutrient.name): \(nutrient.amount)\(nutrient.unit)"
-            }.joined(separator: ", ")
-            entry.notes = nutrientData
+            var nutrientDict: [String: Double] = [:]
+            for nutrient in supplement.nutrients {
+                nutrientDict[nutrient.name] = nutrient.amount
+            }
+            entry.nutrients = nutrientDict
         }
 
         do {
@@ -170,19 +173,19 @@ struct SupplementBarcodeScannerView: View {
 struct BarcodeCameraView: UIViewControllerRepresentable {
     let scanner: BarcodeScanner
 
-    func makeUIViewController(context: Context) -> BarcodeScannerViewController {
-        let controller = BarcodeScannerViewController()
+    func makeUIViewController(context: Context) -> SupplementBarcodeScannerViewController {
+        let controller = SupplementBarcodeScannerViewController()
         controller.scanner = scanner
         return controller
     }
 
-    func updateUIViewController(_ uiViewController: BarcodeScannerViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: SupplementBarcodeScannerViewController, context: Context) {
     }
 }
 
 // MARK: - Barcode Scanner View Controller
 
-class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+class SupplementBarcodeScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     var scanner: BarcodeScanner?
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!

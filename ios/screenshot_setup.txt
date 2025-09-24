@@ -1,0 +1,7 @@
+# Install Fastlane (if not installed)
+# sudo gem install fastlane
+
+# Initialize Fastlane snapshot
+# fastlane snapshot init
+
+# Create Snapfile configuration
