@@ -46,8 +46,7 @@ struct DiaryView: View {
     }
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
+        VStack(spacing: 0) {
                 // Date Selector
                 dateSelectorView
                 
@@ -128,9 +127,8 @@ struct DiaryView: View {
             .onAppear {
                 updateDailySummary()
             }
-        }
     }
-    
+
     private var dateSelectorView: some View {
         HStack {
             Button(action: { adjustDate(by: -1) }) {

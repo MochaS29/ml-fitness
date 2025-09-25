@@ -28,10 +28,9 @@ struct MoreView: View {
     @State private var showingSupplementEntry = false
     @State private var showingWaterEntry = false
     @State private var selectedMealType: MealType = .snack
-    
+
     var body: some View {
-        NavigationView {
-            List {
+        List {
                 // User Profile Section
                 Section {
                     Button(action: { showingProfile = true }) {
@@ -385,8 +384,7 @@ struct MoreView: View {
                 Text("This is your final confirmation. All data will be permanently deleted and cannot be recovered.")
             }
         }
-    }
-    
+
     private func generateDemoData() {
         let context = PersistenceController.shared.container.viewContext
         DemoDataGenerator.generateDemoData(context: context)
