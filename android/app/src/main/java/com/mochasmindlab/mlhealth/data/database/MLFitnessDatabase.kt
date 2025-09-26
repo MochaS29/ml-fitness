@@ -17,9 +17,14 @@ import java.util.UUID
         CustomRecipe::class,
         FavoriteRecipe::class,
         MealPlan::class,
-        GroceryList::class
+        GroceryList::class,
+        com.mochasmindlab.mlhealth.data.models.FoodItem::class,
+        com.mochasmindlab.mlhealth.data.models.ExerciseEntry::class,
+        com.mochasmindlab.mlhealth.data.models.WeightEntry::class,
+        com.mochasmindlab.mlhealth.data.models.UserProfile::class,
+        com.mochasmindlab.mlhealth.data.models.Goal::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class, NutrientMapConverter::class, StringListConverter::class)
@@ -35,6 +40,11 @@ abstract class MLFitnessDatabase : RoomDatabase() {
     abstract fun favoriteRecipeDao(): FavoriteRecipeDao
     abstract fun mealPlanDao(): MealPlanDao
     abstract fun groceryListDao(): GroceryListDao
+    abstract fun foodItemDao(): com.mochasmindlab.mlhealth.data.database.FoodDao
+    abstract fun exerciseEntryDao(): com.mochasmindlab.mlhealth.data.database.ExerciseDao
+    abstract fun weightEntryDao(): com.mochasmindlab.mlhealth.data.database.WeightDao
+    abstract fun userProfileDao(): com.mochasmindlab.mlhealth.data.database.UserProfileDao
+    abstract fun goalsDao(): com.mochasmindlab.mlhealth.data.database.GoalsDao
     
     companion object {
         @Volatile
