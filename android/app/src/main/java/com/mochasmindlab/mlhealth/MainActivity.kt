@@ -27,8 +27,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mochasmindlab.mlhealth.ui.screens.*
 import androidx.compose.material3.Text
-import com.mochasmindlab.mlhealth.ui.theme.MLHealthTheme
-import com.mochasmindlab.mlhealth.ui.theme.MindLabsPurple
+import com.mochasmindlab.mlhealth.ui.theme.MLFitnessTheme
+import com.mochasmindlab.mlhealth.ui.theme.MochaBrown
+import com.mochasmindlab.mlhealth.ui.navigation.MLFitnessNavigation
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import com.mochasmindlab.mlhealth.utils.SampleDataGenerator
 import com.mochasmindlab.mlhealth.viewmodel.DashboardViewModel
@@ -66,15 +67,13 @@ class MainActivity : ComponentActivity() {
         }
         
         setContent {
-            MLHealthTheme {
+            MLFitnessTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MLHealthApp(
-                        startDestination = startDestination,
-                        preferencesManager = preferencesManager
-                    )
+                    // Use the new unified navigation
+                    MLFitnessNavigation()
                 }
             }
         }
@@ -302,7 +301,7 @@ fun BottomNavigationBar(
                 ) {
                     FloatingActionButton(
                         onClick = onAddClick,
-                        containerColor = MindLabsPurple,
+                        containerColor = MochaBrown,
                         contentColor = Color.White,
                         modifier = Modifier
                             .size(56.dp)
@@ -337,9 +336,9 @@ fun BottomNavigationBar(
                         Text(item.label)
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MindLabsPurple,
-                        selectedTextColor = MindLabsPurple,
-                        indicatorColor = MindLabsPurple.copy(alpha = 0.1f),
+                        selectedIconColor = MochaBrown,
+                        selectedTextColor = MochaBrown,
+                        indicatorColor = MochaBrown.copy(alpha = 0.1f),
                         unselectedIconColor = Color.Gray,
                         unselectedTextColor = Color.Gray
                     )

@@ -18,8 +18,8 @@ android {
         applicationId = "com.mochasmindlab.mlhealth"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 5
+        versionName = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -28,12 +28,45 @@ android {
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+            isMinifyEnabled = false
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            buildConfigField("String", "BASE_URL", "\"https://api-dev.mochasmindlab.com/\"")
+            buildConfigField("Boolean", "ENABLE_LOGGING", "true")
+            buildConfigField("Boolean", "ENABLE_DEMO_DATA", "true")
+        }
+
         release {
+            isDebuggable = false
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_URL", "\"https://api.mochasmindlab.com/\"")
+            buildConfigField("Boolean", "ENABLE_LOGGING", "false")
+            buildConfigField("Boolean", "ENABLE_DEMO_DATA", "false")
+        }
+    }
+
+    flavorDimensions.add("environment")
+    productFlavors {
+        create("development") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            buildConfigField("String", "ENVIRONMENT", "\"DEVELOPMENT\"")
+            buildConfigField("String", "USDA_API_KEY", "\"DEMO_KEY\"")
+            resValue("string", "app_name", "ML Fitness Dev")
+        }
+
+        create("production") {
+            dimension = "environment"
+            buildConfigField("String", "ENVIRONMENT", "\"PRODUCTION\"")
+            buildConfigField("String", "USDA_API_KEY", "\"${System.getenv("USDA_API_KEY") ?: "DEMO_KEY"}\"")
+            resValue("string", "app_name", "ML Fitness")
         }
     }
     
@@ -52,6 +85,7 @@ android {
     
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     
     composeOptions {
