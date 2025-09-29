@@ -2,9 +2,11 @@ package com.mochasmindlab.mlhealth.data.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.LocalDate
+import androidx.room.TypeConverters
+import com.mochasmindlab.mlhealth.data.database.StringListConverter
+import java.util.Date
 
-@Entity(tableName = "user_profile")
+@Entity(tableName = "user_profiles")
 data class UserProfile(
     @PrimaryKey
     val id: Long = 1,
@@ -13,16 +15,17 @@ data class UserProfile(
     val height: Float = 170f, // in cm
     val currentWeight: Float = 70f, // in lbs
     val goalWeight: Float = 65f, // in lbs
-    val birthDate: LocalDate = LocalDate.of(1990, 1, 1),
+    val birthDate: Date = Date(),
     val gender: String = "Other",
     val activityLevel: String = "Moderately Active",
     val dietType: String = "No Restrictions",
-    val allergies: List<String> = emptyList(),
+    @TypeConverters(StringListConverter::class)
+    val dietaryPreferences: List<String> = emptyList(),
     val dailyCalorieGoal: Int = 2000,
     val dailyProteinGoal: Int = 50,
     val dailyCarbsGoal: Int = 250,
     val dailyFatGoal: Int = 65,
     val dailyWaterGoal: Int = 8,
-    val createdDate: LocalDate = LocalDate.now(),
-    val lastUpdated: LocalDate = LocalDate.now()
+    val createdDate: Date = Date(),
+    val lastUpdated: Date = Date()
 )

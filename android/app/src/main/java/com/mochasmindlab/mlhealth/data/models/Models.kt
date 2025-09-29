@@ -3,55 +3,7 @@ package com.mochasmindlab.mlhealth.data.models
 import kotlinx.serialization.Serializable
 import java.util.*
 
-// ===== GOAL =====
-@Serializable
-data class Goal(
-    val id: String = UUID.randomUUID().toString(),
-    var title: String,
-    var description: String,
-    var category: GoalCategory,
-    var targetType: GoalTargetType,
-    var targetValue: Double,
-    var targetUnit: String,
-    var currentValue: Double = 0.0,
-    var startDate: Long, // Timestamp
-    var targetDate: Long, // Timestamp
-    var frequency: GoalFrequency,
-    var isActive: Boolean = true,
-    var isCompleted: Boolean = false,
-    var completedDate: Long? = null,
-    var milestones: List<GoalMilestone> = emptyList(),
-    var reminderEnabled: Boolean = false,
-    var reminderTime: Long? = null,
-    var notes: String? = null
-)
 
-@Serializable
-data class GoalMilestone(
-    val id: String = UUID.randomUUID().toString(),
-    var percentage: Int, // 25%, 50%, 75%
-    var isReached: Boolean = false,
-    var reachedDate: Long? = null,
-    var reward: String? = null
-)
-
-// ===== USER PROFILE =====
-@Serializable
-data class UserProfile(
-    val id: String = UUID.randomUUID().toString(),
-    var name: String,
-    var gender: Gender,
-    var birthDate: Long, // Timestamp
-    var activityLevel: ActivityLevel,
-    var dietaryRestrictions: List<DietaryRestriction> = emptyList(),
-    var healthConditions: List<HealthCondition> = emptyList(),
-    var foodPreferences: UserFoodPreferences = UserFoodPreferences(),
-    var isPregnant: Boolean = false,
-    var pregnancyTrimester: PregnancyTrimester? = null,
-    var isBreastfeeding: Boolean = false,
-    var createdAt: Long = System.currentTimeMillis(),
-    var updatedAt: Long = System.currentTimeMillis()
-)
 
 @Serializable
 data class UserFoodPreferences(

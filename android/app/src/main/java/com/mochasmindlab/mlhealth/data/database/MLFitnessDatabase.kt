@@ -3,6 +3,7 @@ package com.mochasmindlab.mlhealth.data.database
 import android.content.Context
 import androidx.room.*
 import com.mochasmindlab.mlhealth.data.entities.*
+import com.mochasmindlab.mlhealth.data.models.Goal
 import java.util.Date
 import java.util.UUID
 
@@ -19,10 +20,8 @@ import java.util.UUID
         MealPlan::class,
         GroceryList::class,
         com.mochasmindlab.mlhealth.data.models.FoodItem::class,
-        com.mochasmindlab.mlhealth.data.models.ExerciseEntry::class,
-        com.mochasmindlab.mlhealth.data.models.WeightEntry::class,
         com.mochasmindlab.mlhealth.data.models.UserProfile::class,
-        com.mochasmindlab.mlhealth.data.models.Goal::class
+        Goal::class
     ],
     version = 2,
     exportSchema = false
@@ -40,11 +39,9 @@ abstract class MLFitnessDatabase : RoomDatabase() {
     abstract fun favoriteRecipeDao(): FavoriteRecipeDao
     abstract fun mealPlanDao(): MealPlanDao
     abstract fun groceryListDao(): GroceryListDao
-    abstract fun foodItemDao(): com.mochasmindlab.mlhealth.data.database.FoodDao
-    abstract fun exerciseEntryDao(): com.mochasmindlab.mlhealth.data.database.ExerciseDao
-    abstract fun weightEntryDao(): com.mochasmindlab.mlhealth.data.database.WeightDao
-    abstract fun userProfileDao(): com.mochasmindlab.mlhealth.data.database.UserProfileDao
-    abstract fun goalsDao(): com.mochasmindlab.mlhealth.data.database.GoalsDao
+    abstract fun foodItemDao(): FoodItemDao
+    abstract fun userProfileDao(): UserProfileDao
+    abstract fun goalsDao(): GoalsDao
     
     companion object {
         @Volatile

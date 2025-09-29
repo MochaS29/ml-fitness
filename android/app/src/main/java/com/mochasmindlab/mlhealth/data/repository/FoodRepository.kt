@@ -1,6 +1,6 @@
 package com.mochasmindlab.mlhealth.data.repository
 
-import com.mochasmindlab.mlhealth.data.database.FoodDao
+import com.mochasmindlab.mlhealth.data.database.FoodItemDao
 import com.mochasmindlab.mlhealth.data.models.FoodItem
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class FoodRepository @Inject constructor(
-    private val foodDao: FoodDao
+    private val foodDao: FoodItemDao
 ) {
     suspend fun insertFoodItem(foodItem: FoodItem) = foodDao.insertFoodItem(foodItem)
     

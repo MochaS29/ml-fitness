@@ -247,11 +247,29 @@ fun MLFitnessNavigation(
                 )
             }
 
-            composable("barcode_scanner/{mealType}") {
-                ComingSoonScreen(
-                    title = "Barcode Scanner",
-                    message = "Scan food barcodes for quick entry",
-                    navController = navController
+            composable("barcode_scanner/{mealType}") { backStackEntry ->
+                val mealType = try {
+                    MealType.valueOf(
+                        backStackEntry.arguments?.getString("mealType") ?: "SNACK"
+                    )
+                } catch (e: Exception) {
+                    MealType.SNACK
+                }
+
+                com.mochasmindlab.mlhealth.services.FoodBarcodeScannerScreen(
+                    onFoodFound = { foodItem ->
+                        // Navigate back to diary or food entry with the scanned food
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("scanned_food", foodItem)
+                        navController.popBackStack()
+                    },
+                    onManualEntry = {
+                        navController.navigate("food_search/$mealType")
+                    },
+                    onDismiss = {
+                        navController.popBackStack()
+                    }
                 )
             }
 
