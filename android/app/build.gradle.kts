@@ -58,14 +58,14 @@ android {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
             buildConfigField("String", "ENVIRONMENT", "\"DEVELOPMENT\"")
-            buildConfigField("String", "USDA_API_KEY", "\"DEMO_KEY\"")
+            buildConfigField("String", "USDA_API_KEY", "\"Prq1Udw3TZOvlFdBdIflKXfphbASsabuyG4zGp4A\"")
             resValue("string", "app_name", "ML Fitness Dev")
         }
 
         create("production") {
             dimension = "environment"
             buildConfigField("String", "ENVIRONMENT", "\"PRODUCTION\"")
-            buildConfigField("String", "USDA_API_KEY", "\"${System.getenv("USDA_API_KEY") ?: "DEMO_KEY"}\"")
+            buildConfigField("String", "USDA_API_KEY", "\"${System.getenv("USDA_API_KEY") ?: "Prq1Udw3TZOvlFdBdIflKXfphbASsabuyG4zGp4A"}\"")
             resValue("string", "app_name", "ML Fitness")
         }
     }
@@ -130,6 +130,7 @@ dependencies {
     // Retrofit for networking
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     
     // Camera and barcode scanning

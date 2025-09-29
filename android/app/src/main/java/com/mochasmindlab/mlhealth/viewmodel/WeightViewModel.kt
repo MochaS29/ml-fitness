@@ -2,7 +2,7 @@ package com.mochasmindlab.mlhealth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mochasmindlab.mlhealth.data.models.WeightEntry
+import com.mochasmindlab.mlhealth.data.entities.WeightEntry
 import com.mochasmindlab.mlhealth.data.repository.WeightRepository
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel

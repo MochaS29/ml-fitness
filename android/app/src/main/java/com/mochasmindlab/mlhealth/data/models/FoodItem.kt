@@ -2,7 +2,7 @@ package com.mochasmindlab.mlhealth.data.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.LocalDateTime
+import java.util.Date
 
 @Entity(tableName = "food_items")
 data class FoodItem(
@@ -23,6 +23,7 @@ data class FoodItem(
     val emoji: String? = null,
     val isCustom: Boolean = false,
     val isFavorite: Boolean = false,
-    val lastUsed: LocalDateTime? = null,
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    val lastLogged: Date? = null,
+    val logCount: Int = 0,
+    val createdAt: Date = Date()
 )

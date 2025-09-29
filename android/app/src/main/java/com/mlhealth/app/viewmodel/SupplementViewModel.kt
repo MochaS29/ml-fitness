@@ -3,7 +3,7 @@ package com.mlhealth.app.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mlhealth.app.data.Supplement
-import com.mlhealth.app.data.local.MLFitnessDatabase
+import com.mochasmindlab.mlhealth.data.database.MLFitnessDatabase
 import com.mlhealth.app.data.local.SupplementEntryEntity
 import com.mlhealth.app.ui.screens.SupplementEntry
 import dagger.hilt.android.lifecycle.HiltViewModel

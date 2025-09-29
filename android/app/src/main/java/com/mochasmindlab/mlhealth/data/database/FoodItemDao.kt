@@ -5,7 +5,7 @@ import com.mochasmindlab.mlhealth.data.models.FoodItem
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface FoodDao {
+interface FoodItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFoodItem(foodItem: FoodItem): Long
     

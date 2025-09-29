@@ -116,17 +116,50 @@ fun SupplementBarcodeScannerScreen(
             if (!isProcessing) {
                 isProcessing = true
 
-                // Look up supplement in database
-                val supplement = SupplementDatabase.searchByBarcode(barcode)
+                // First try local database for quick lookup
+                var supplement = SupplementDatabase.searchByBarcode(barcode)
                     ?: SupplementDatabase.searchByDPN(barcode)
 
                 if (supplement != null) {
                     onSupplementFound(supplement)
                 } else {
-                    errorMessage = "Supplement not found. Try manual entry."
-                    delay(3000)
-                    errorMessage = null
-                    scannedBarcode = null
+                    // Try NIH and other APIs
+                    coroutineScope.launch {
+                        try {
+                            val apiService = com.mochasmindlab.mlhealth.services.SupplementAPIService()
+                            val apiResult = apiService.lookupSupplement(barcode)
+
+                            if (apiResult != null) {
+                                // Convert API result to local Supplement format
+                                val newSupplement = Supplement(
+                                    id = "api-${barcode}",
+                                    name = apiResult.name,
+                                    brand = apiResult.brand ?: "Unknown",
+                                    category = "Supplement",
+                                    description = "Found via ${apiResult.source}",
+                                    servingSize = apiResult.servingSize ?: "See bottle",
+                                    barcode = barcode,
+                                    vitamins = VitaminContent(), // Parse from nutrients map
+                                    minerals = MineralContent(), // Parse from nutrients map
+                                    otherIngredients = apiResult.ingredients
+                                )
+
+                                // Add to local database for future quick access
+                                SupplementDatabase.addCustomSupplement(newSupplement)
+                                onSupplementFound(newSupplement)
+                            } else {
+                                errorMessage = "Supplement not found. Try manual entry."
+                                delay(3000)
+                                errorMessage = null
+                                scannedBarcode = null
+                            }
+                        } catch (e: Exception) {
+                            errorMessage = "Error looking up supplement: ${e.message}"
+                            delay(3000)
+                            errorMessage = null
+                            scannedBarcode = null
+                        }
+                    }
                 }
 
                 isProcessing = false
