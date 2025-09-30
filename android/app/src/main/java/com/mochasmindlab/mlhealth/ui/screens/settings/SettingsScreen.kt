@@ -14,9 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mochasmindlab.mlhealth.ui.theme.*
-import com.mochasmindlab.mlhealth.utils.DemoDataGenerator
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
-import kotlinx.coroutines.launch
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,43 +22,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun SettingsScreen(
     navController: NavController,
     preferencesManager: PreferencesManager? = null,
-    demoDataGenerator: DemoDataGenerator? = null
+    viewModel: com.mochasmindlab.mlhealth.viewmodel.SettingsViewModel = hiltViewModel()
 ) {
-    var isDarkMode by remember { mutableStateOf(false) }
-    var notificationsEnabled by remember { mutableStateOf(true) }
-    var waterReminders by remember { mutableStateOf(true) }
-    var mealReminders by remember { mutableStateOf(true) }
-    var exerciseReminders by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsState()
     var showDemoDataDialog by remember { mutableStateOf(false) }
     var showClearDataDialog by remember { mutableStateOf(false) }
-    var isGeneratingData by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
-
-    // Load preferences
-    LaunchedEffect(preferencesManager) {
-        preferencesManager?.let {
-            launch {
-                it.notificationsEnabled.collect { enabled ->
-                    notificationsEnabled = enabled
-                }
-            }
-            launch {
-                it.waterReminderEnabled.collect { enabled ->
-                    waterReminders = enabled
-                }
-            }
-            launch {
-                it.mealReminderEnabled.collect { enabled ->
-                    mealReminders = enabled
-                }
-            }
-            launch {
-                it.exerciseReminderEnabled.collect { enabled ->
-                    exerciseReminders = enabled
-                }
-            }
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -88,8 +54,8 @@ fun SettingsScreen(
                         icon = Icons.Default.DarkMode,
                         title = "Dark Mode",
                         subtitle = "Use dark theme",
-                        checked = isDarkMode,
-                        onCheckedChange = { isDarkMode = it }
+                        checked = uiState.isDarkMode,
+                        onCheckedChange = { viewModel.toggleDarkMode() }
                     )
                 }
             }
@@ -101,58 +67,38 @@ fun SettingsScreen(
                         icon = Icons.Default.Notifications,
                         title = "Enable Notifications",
                         subtitle = "Allow app to send notifications",
-                        checked = notificationsEnabled,
-                        onCheckedChange = { enabled ->
-                            notificationsEnabled = enabled
-                            coroutineScope.launch {
-                                preferencesManager?.setNotificationsEnabled(enabled)
-                            }
-                        }
+                        checked = uiState.notificationsEnabled,
+                        onCheckedChange = { viewModel.toggleNotifications() }
                     )
 
-                    if (notificationsEnabled) {
+                    if (uiState.notificationsEnabled) {
                         Divider(modifier = Modifier.padding(vertical = 8.dp))
 
                         SettingsToggleItem(
                             icon = Icons.Default.WaterDrop,
                             title = "Water Reminders",
                             subtitle = "Remind to drink water",
-                            checked = waterReminders,
-                            onCheckedChange = { enabled ->
-                                waterReminders = enabled
-                                coroutineScope.launch {
-                                    preferencesManager?.setWaterReminderEnabled(enabled)
-                                }
-                            },
-                            enabled = notificationsEnabled
+                            checked = uiState.waterReminders,
+                            onCheckedChange = { viewModel.toggleWaterReminders() },
+                            enabled = uiState.notificationsEnabled
                         )
 
                         SettingsToggleItem(
                             icon = Icons.Default.Restaurant,
                             title = "Meal Reminders",
                             subtitle = "Remind to log meals",
-                            checked = mealReminders,
-                            onCheckedChange = { enabled ->
-                                mealReminders = enabled
-                                coroutineScope.launch {
-                                    preferencesManager?.setMealReminderEnabled(enabled)
-                                }
-                            },
-                            enabled = notificationsEnabled
+                            checked = uiState.mealReminders,
+                            onCheckedChange = { viewModel.toggleMealReminders() },
+                            enabled = uiState.notificationsEnabled
                         )
 
                         SettingsToggleItem(
                             icon = Icons.Default.FitnessCenter,
                             title = "Exercise Reminders",
                             subtitle = "Remind to work out",
-                            checked = exerciseReminders,
-                            onCheckedChange = { enabled ->
-                                exerciseReminders = enabled
-                                coroutineScope.launch {
-                                    preferencesManager?.setExerciseReminderEnabled(enabled)
-                                }
-                            },
-                            enabled = notificationsEnabled
+                            checked = uiState.exerciseReminders,
+                            onCheckedChange = { viewModel.toggleExerciseReminders() },
+                            enabled = uiState.notificationsEnabled
                         )
                     }
                 }
@@ -258,11 +204,7 @@ fun SettingsScreen(
                 TextButton(
                     onClick = {
                         showDemoDataDialog = false
-                        isGeneratingData = true
-                        coroutineScope.launch {
-                            demoDataGenerator?.generateDemoData(30)
-                            isGeneratingData = false
-                        }
+                        viewModel.generateDemoData(30)
                     }
                 ) {
                     Text("Generate")
@@ -292,10 +234,7 @@ fun SettingsScreen(
                 TextButton(
                     onClick = {
                         showClearDataDialog = false
-                        coroutineScope.launch {
-                            // TODO: Implement clear all data
-                            preferencesManager?.clearAllPreferences()
-                        }
+                        viewModel.clearAllData()
                     },
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
@@ -313,7 +252,7 @@ fun SettingsScreen(
     }
 
     // Loading overlay
-    if (isGeneratingData) {
+    if (uiState.isGeneratingData) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center

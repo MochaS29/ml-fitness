@@ -187,8 +187,7 @@ fun MLFitnessNavigation(
             composable("settings") {
                 com.mochasmindlab.mlhealth.ui.screens.settings.SettingsScreen(
                     navController = navController,
-                    preferencesManager = preferencesManager,
-                    demoDataGenerator = hiltViewModel<com.mochasmindlab.mlhealth.viewmodel.SettingsViewModel>().demoDataGenerator
+                    preferencesManager = preferencesManager
                 )
             }
 
