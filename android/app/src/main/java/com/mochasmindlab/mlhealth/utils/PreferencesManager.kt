@@ -41,6 +41,8 @@ class PreferencesManager @Inject constructor(
         val WATER_REMINDER_ENABLED = booleanPreferencesKey("water_reminder_enabled")
         val MEAL_REMINDER_ENABLED = booleanPreferencesKey("meal_reminder_enabled")
         val EXERCISE_REMINDER_ENABLED = booleanPreferencesKey("exercise_reminder_enabled")
+        val WATER_GOAL_OZ = intPreferencesKey("water_goal_oz")
+        val WATER_REMINDER_INTERVAL = stringPreferencesKey("water_reminder_interval")
     }
     
     // Onboarding
@@ -216,6 +218,40 @@ class PreferencesManager @Inject constructor(
             preferences[PreferenceKeys.EXERCISE_REMINDER_ENABLED] ?: false
         }
     
+    // Water tracking specific
+    suspend fun setWaterGoalOz(ounces: Int) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.WATER_GOAL_OZ] = ounces
+        }
+    }
+
+    val waterGoalOz: Flow<Int> = dataStore.data
+        .map { preferences ->
+            preferences[PreferenceKeys.WATER_GOAL_OZ] ?: 64 // Default 64 oz (8 glasses of 8 oz)
+        }
+
+    suspend fun setWaterRemindersEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.WATER_REMINDER_ENABLED] = enabled
+        }
+    }
+
+    val waterRemindersEnabled: Flow<Boolean> = dataStore.data
+        .map { preferences ->
+            preferences[PreferenceKeys.WATER_REMINDER_ENABLED] ?: false
+        }
+
+    suspend fun setWaterReminderInterval(interval: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.WATER_REMINDER_INTERVAL] = interval
+        }
+    }
+
+    val waterReminderInterval: Flow<String> = dataStore.data
+        .map { preferences ->
+            preferences[PreferenceKeys.WATER_REMINDER_INTERVAL] ?: "Every 2 hours"
+        }
+
     // Clear all preferences (for logout/reset)
     suspend fun clearAllPreferences() {
         dataStore.edit { preferences ->

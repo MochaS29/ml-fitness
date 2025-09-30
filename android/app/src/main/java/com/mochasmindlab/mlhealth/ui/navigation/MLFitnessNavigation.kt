@@ -185,10 +185,10 @@ fun MLFitnessNavigation(
             }
 
             composable("settings") {
-                ComingSoonScreen(
-                    title = "Settings",
-                    message = "App settings and preferences",
-                    navController = navController
+                com.mochasmindlab.mlhealth.ui.screens.settings.SettingsScreen(
+                    navController = navController,
+                    preferencesManager = preferencesManager,
+                    demoDataGenerator = hiltViewModel<com.mochasmindlab.mlhealth.viewmodel.SettingsViewModel>().demoDataGenerator
                 )
             }
 
@@ -297,9 +297,7 @@ fun MLFitnessNavigation(
 
             // Water & Hydration
             composable("water") {
-                ComingSoonScreen(
-                    title = "Water Tracking",
-                    message = "Track your daily water intake",
+                com.mochasmindlab.mlhealth.ui.screens.water.WaterTrackingScreen(
                     navController = navController
                 )
             }
