@@ -9,8 +9,7 @@ struct EnhancedMealPlanningView: View {
     @State private var selectedTab = 0
 
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
+        VStack(spacing: 0) {
                 // Plan type selector
                 if let selectedPlan = mealPlanManager.selectedPlanType {
                     PlanTypeBanner(planType: selectedPlan) {
@@ -80,7 +79,6 @@ struct EnhancedMealPlanningView: View {
                     mealPlanManager.toggleFavorite(meal.id)
                 }
             }
-        }
     }
 }
 
