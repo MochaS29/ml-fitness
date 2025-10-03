@@ -1,16 +1,20 @@
 import SwiftUI
+import WatchConnectivity
 
 @main
 struct HealthTrackerApp: App {
     @StateObject private var userProfileManager = UserProfileManager()
     @StateObject private var achievementManager = AchievementManager.shared
     @StateObject private var waterReminderService = WaterReminderService.shared
+    @StateObject private var phoneConnectivity = PhoneConnectivityManager.shared
     @State private var showMainApp = false
     @State private var showQuickSetup = false
 
     init() {
         // Initialize water reminder service to set up notification delegate
         _ = WaterReminderService.shared
+        // Initialize Watch Connectivity
+        _ = PhoneConnectivityManager.shared
     }
 
     var body: some Scene {
@@ -20,7 +24,12 @@ struct HealthTrackerApp: App {
                     .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
                     .environmentObject(userProfileManager)
                     .environmentObject(achievementManager)
+                    .environmentObject(phoneConnectivity)
                     .accentColor(Color.mochaBrown)
+                    .onAppear {
+                        // Send initial data to watch
+                        phoneConnectivity.sendDailyUpdate()
+                    }
             } else if showQuickSetup {
                 QuickSetupView(showMainApp: $showMainApp)
                     .environmentObject(userProfileManager)

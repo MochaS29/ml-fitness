@@ -488,6 +488,8 @@ struct DiaryView: View {
         do {
             try viewContext.save()
             updateDailySummary()
+            // Send update to Apple Watch
+            PhoneConnectivityManager.shared.sendDailyUpdate()
         } catch {
             print("Error saving food entry: \(error)")
         }
@@ -500,6 +502,8 @@ struct DiaryView: View {
         do {
             try viewContext.save()
             updateDailySummary()
+            // Send update to Apple Watch
+            PhoneConnectivityManager.shared.sendDailyUpdate()
         } catch {
             print("Error deleting food entry: \(error)")
         }
@@ -510,6 +514,8 @@ struct DiaryView: View {
         do {
             try viewContext.save()
             updateDailySummary()
+            // Send update to Apple Watch
+            PhoneConnectivityManager.shared.sendDailyUpdate()
         } catch {
             print("Error deleting exercise entry: \(error)")
         }
@@ -520,6 +526,8 @@ struct DiaryView: View {
         do {
             try viewContext.save()
             updateDailySummary()
+            // Send update to Apple Watch
+            PhoneConnectivityManager.shared.sendDailyUpdate()
         } catch {
             print("Error deleting supplement entry: \(error)")
         }
