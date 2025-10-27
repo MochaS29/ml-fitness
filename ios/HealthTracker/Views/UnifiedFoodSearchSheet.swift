@@ -47,11 +47,10 @@ struct UnifiedFoodSearchSheet: View {
                         }
                     }
 
-                    // Barcode scanner temporarily disabled - will be available in next release
-                    // Button(action: { showingBarcode = true }) {
-                    //     Image(systemName: "barcode.viewfinder")
-                    //         .foregroundColor(.blue)
-                    // }
+                    Button(action: { showingBarcode = true }) {
+                        Image(systemName: "barcode.viewfinder")
+                            .foregroundColor(.blue)
+                    }
                 }
                 .padding()
                 .background(Color(.systemGray6))

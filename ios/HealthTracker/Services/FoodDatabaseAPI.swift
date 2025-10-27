@@ -10,7 +10,7 @@ class FoodDatabaseAPI: ObservableObject {
     @Published var searchResults: [USDAFood] = []
 
     // Get your free API key from: https://fdc.nal.usda.gov/api-key-signup.html
-    private let apiKey = "YOUR_API_KEY_HERE" // Replace with your API key
+    private let apiKey = ProcessInfo.processInfo.environment["USDA_API_KEY"] ?? "DEMO_KEY"
     private let baseURL = "https://api.nal.usda.gov/fdc/v1"
 
     private init() {}
@@ -241,8 +241,8 @@ enum APIError: LocalizedError {
 class NutritionixAPI {
     static let shared = NutritionixAPI()
 
-    private let appId = "YOUR_APP_ID"
-    private let appKey = "YOUR_APP_KEY"
+    private let appId = ProcessInfo.processInfo.environment["NUTRITIONIX_APP_ID"] ?? ""
+    private let appKey = ProcessInfo.processInfo.environment["NUTRITIONIX_APP_KEY"] ?? ""
     private let baseURL = "https://trackapi.nutritionix.com/v2"
 
     func searchInstant(_ query: String, completion: @escaping (Result<[NutritionixFood], Error>) -> Void) {
