@@ -13,6 +13,7 @@ struct AddMenuView: View {
     @State private var showingSupplementAdd = false
     @State private var showingWeightEntry = false
     @State private var showingWaterEntry = false
+    @State private var showingMealScanner = false
     
     var body: some View {
         NavigationView {
@@ -48,6 +49,9 @@ struct AddMenuView: View {
         .sheet(isPresented: $showingWaterEntry) {
             QuickWaterAddView(selectedDate: selectedDate)
         }
+        .sheet(isPresented: $showingMealScanner) {
+            MealPhotoAnalyzerView()
+        }
     }
     
     private var listContent: some View {
@@ -68,7 +72,12 @@ struct AddMenuView: View {
                     Label("Search Food Database", systemImage: "magnifyingglass")
                         .foregroundColor(.primary)
                 }
-                
+
+                Button(action: { showingMealScanner = true }) {
+                    Label("Scan Meal with Camera", systemImage: "camera.fill")
+                        .foregroundColor(.primary)
+                }
+
                 // Barcode scanner temporarily disabled - coming in next release
                 // Button(action: { showingBarcodeScanner = true }) {
                 //     Label("Scan Barcode", systemImage: "barcode.viewfinder")
