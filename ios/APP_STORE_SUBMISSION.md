@@ -120,13 +120,21 @@ Your private health companion. Track nutrition, exercise, weight & more. All dat
 
 ---
 
-## What's New (Version 1.5)
+## What's New (Version 1.6.0)
 ```
-• Enhanced iPad navigation - Full screen views without sidebars
-• Improved dashboard with real-time weight tracking
-• Demo data generator for easy app exploration
-• Bug fixes and performance improvements
-• Optimized for iOS 17 and iPhone 15 series
+NEW: AI-Powered Meal Scanner
+• Snap a photo of your meal and let AI identify foods and estimate nutrition
+• Supports OpenAI Vision for accurate food recognition
+• Review and adjust portions before saving to your diary
+
+Enhanced Features:
+• Improved barcode scanning for food items and supplements
+• Better iPad navigation with full screen views
+• Fixed memory issues for smoother performance
+• Real-time weight tracking on dashboard
+• Demo data generator for app exploration
+
+This update continues our commitment to making nutrition tracking effortless while keeping all your data private on your device.
 ```
 
 ---
@@ -249,10 +257,10 @@ None currently
 ## Build Information
 
 ### Version Number
-**1.5**
+**1.6.0**
 
 ### Build Number
-**5**
+**6**
 
 ### Bundle ID
 Check in Xcode (likely: com.mochasmindlab.HealthTracker)
