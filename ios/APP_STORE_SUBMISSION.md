@@ -17,11 +17,19 @@
 ## App Description (4000 characters)
 
 ```
-Transform your health journey with ML Fitness - the comprehensive wellness companion that makes nutrition and fitness tracking effortless and insightful.
+NEW YEAR, NEW YOU! Transform your health journey with ML Fitness - now featuring AI-powered meal scanning that identifies food from photos instantly.
 
-Whether you're managing your weight, optimizing nutrition, or building healthy habits, ML Fitness provides all the tools you need in one beautifully designed app that respects your privacy. Your data never leaves your device.
+Just $6.99 one-time. No subscriptions. No monthly fees. Ever.
+
+Simply snap a photo of your meal and our AI instantly calculates calories, protein, carbs, and fat. No more tedious manual logging or searching through databases. It's the fastest way to track what you eat.
 
 ━━━ KEY FEATURES ━━━
+
+📸 AI MEAL SCANNER (NEW!)
+• Take a photo of any meal
+• AI identifies foods automatically
+• Get instant calorie and macro estimates
+• Adjust portions and save to diary
 
 📊 SMART DASHBOARD
 • View all health metrics at a glance
@@ -108,33 +116,32 @@ Note: This app integrates with Apple Health to sync step data and workouts. All 
 
 ## Keywords (100 characters)
 ```
-calorie,counter,diet,food,tracker,nutrition,weight,loss,water,health,fitness,macro,meal,vitamin
+calorie,photo,scanner,AI,food,tracker,nutrition,weight,loss,fitness,macro,meal,no subscription
 ```
 
 ---
 
 ## Promotional Text (170 characters)
 ```
-Your private health companion. Track nutrition, exercise, weight & more. All data stays on device. No ads, no tracking, just results. Works offline!
+NEW: Snap a photo of your meal and instantly get calories! AI-powered food scanner + complete nutrition tracking. $6.99 one-time. No subscriptions. Your data, your device.
 ```
 
 ---
 
 ## What's New (Version 1.6.0)
 ```
-NEW: AI-Powered Meal Scanner
-• Snap a photo of your meal and let AI identify foods and estimate nutrition
-• Supports OpenAI Vision for accurate food recognition
-• Review and adjust portions before saving to your diary
+NEW YEAR, NEW YOU - Major Update!
 
-Enhanced Features:
-• Improved barcode scanning for food items and supplements
-• Better iPad navigation with full screen views
-• Fixed memory issues for smoother performance
+📸 AI-POWERED MEAL SCANNER
+Just snap a photo of your food and our AI instantly identifies it and calculates calories, protein, carbs, and fat. No more manual searching or guessing portions!
+
+ALSO NEW:
+• Enhanced barcode scanning for food & supplements
+• Improved iPad experience with full-screen views
+• Faster performance and smoother animations
 • Real-time weight tracking on dashboard
-• Demo data generator for app exploration
 
-This update continues our commitment to making nutrition tracking effortless while keeping all your data private on your device.
+Start your health journey for just $6.99 - no subscriptions, ever.
 ```
 
 ---
@@ -242,12 +249,13 @@ The app stores all data locally on the user's device. No personal information, h
 ## Pricing
 
 ### Business Model
-**Paid App** or **Free** (Your choice)
+**Paid App** - $6.99 (One-time purchase, no subscriptions)
 
-Suggested Pricing Tiers:
-- Free (with all features)
-- $2.99 (Premium feel, no subscriptions)
-- $4.99 (Professional health app tier)
+### Value Proposition
+- No monthly fees (competitors charge $10-20/month)
+- All features included
+- Privacy-focused (data stays on device)
+- New Year, New You launch pricing
 
 ### In-App Purchases
 None currently

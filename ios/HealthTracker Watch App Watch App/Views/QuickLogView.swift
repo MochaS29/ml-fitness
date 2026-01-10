@@ -41,7 +41,7 @@ struct QuickLogView: View {
                     Text(categories[index]).tag(index)
                 }
             }
-            .pickerStyle(.segmented)
+            .pickerStyle(.wheel)
             .padding(.horizontal)
 
             ScrollView {

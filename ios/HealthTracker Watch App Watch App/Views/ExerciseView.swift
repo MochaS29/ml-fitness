@@ -190,11 +190,6 @@ struct ExerciseView: View {
     }
 }
 
-extension WatchConnectivityManager {
-    var session: WCSession {
-        WCSession.default
-    }
-}
 
 #Preview {
     ExerciseView()

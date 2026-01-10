@@ -20,7 +20,7 @@ class WatchConnectivityManager: NSObject, ObservableObject {
         min(currentWater / waterGoal, 1.0)
     }
 
-    private let session: WCSession
+    let session: WCSession
 
     override init() {
         self.session = WCSession.default
