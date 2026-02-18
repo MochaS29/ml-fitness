@@ -52,7 +52,7 @@ struct AutocompleteFoodSearchView: View {
                     isCommon: false
                 ))
 
-                if uniqueFoods.count >= 10 { break }  // Limit recent foods to 10
+                if uniqueFoods.count >= 15 { break }  // Limit recent foods to 15
             }
         }
 
@@ -71,13 +71,13 @@ struct AutocompleteFoodSearchView: View {
             ($0.brand?.localizedCaseInsensitiveContains(searchText) ?? false)
         }
 
-        // Then check the food database
-        let databaseMatches = FoodDatabase.shared.searchFoods(searchText)
+        // Then check the local SQLite food database (FTS5 search)
+        let databaseMatches = LocalFoodDatabase.shared.searchFoods(searchText, limit: 20)
             .filter { food in
                 // Don't include if already in recent matches
                 !recentMatches.contains { $0.name == food.name && $0.brand == food.brand }
             }
-            .prefix(10)  // Limit database results
+            .prefix(20)  // Limit database results
 
         // Add USDA results converted to FoodItem
         let usdaFoodItems = usdaResults.map { $0.toFoodItem() }
@@ -86,7 +86,7 @@ struct AutocompleteFoodSearchView: View {
                 !recentMatches.contains { $0.name == food.name && $0.brand == food.brand } &&
                 !databaseMatches.contains { $0.name == food.name && $0.brand == food.brand }
             }
-            .prefix(10)
+            .prefix(20)
 
         return recentMatches + Array(databaseMatches) + Array(usdaFoodItems)
     }
@@ -114,7 +114,7 @@ struct AutocompleteFoodSearchView: View {
                             .autocorrectionDisabled()
                             .textInputAutocapitalization(.words)
                             .focused($isSearchFieldFocused)
-                            .onChange(of: searchText) { _, newValue in
+                            .onChange(of: searchText) { newValue in
                                 isSearching = !newValue.isEmpty
                                 if !newValue.isEmpty {
                                     searchUSDA(newValue)
@@ -194,7 +194,7 @@ struct AutocompleteFoodSearchView: View {
                                 }
                             }
                         }
-                        .frame(maxHeight: 300)
+                        .frame(maxHeight: 500)
                         .background(Color(.systemBackground))
                         .cornerRadius(10)
                         .shadow(radius: 5)

@@ -13,15 +13,31 @@ struct UnifiedFoodSearchSheet: View {
     @State private var showingBarcode = false
     @FocusState private var isSearchFocused: Bool
 
+    // USDA API state
+    @State private var usdaResults: [USDAFoodItem] = []
+    @State private var isLoadingUSDA = false
+    @State private var searchTask: Task<Void, Never>?
+
+    private let usdaService = USDAFoodService.shared
+
     init(mealType: MealType = .snack) {
         self._selectedMealType = State(initialValue: mealType)
     }
 
-    var searchResults: [FoodItem] {
+    // Phase 1: Instant local results (SQLite + recent + cached)
+    var localResults: [FoodItem] {
         if searchText.isEmpty {
             return []
         }
         return dataManager.searchFoodDatabase(searchText)
+    }
+
+    // Phase 2: USDA API results, deduplicated against local
+    var onlineResults: [FoodItem] {
+        let localNames = Set(localResults.map { $0.name.lowercased() })
+        return usdaResults
+            .map { $0.toFoodItem() }
+            .filter { !localNames.contains($0.name.lowercased()) }
     }
 
     var recentFoods: [FoodItem] {
@@ -41,7 +57,11 @@ struct UnifiedFoodSearchSheet: View {
                         .focused($isSearchFocused)
 
                     if !searchText.isEmpty {
-                        Button(action: { searchText = "" }) {
+                        Button(action: {
+                            searchText = ""
+                            usdaResults = []
+                            searchTask?.cancel()
+                        }) {
                             Image(systemName: "xmark.circle.fill")
                                 .foregroundColor(.secondary)
                         }
@@ -87,20 +107,50 @@ struct UnifiedFoodSearchSheet: View {
                         }
                     }
 
-                    // Search Results or Recent Foods
+                    // Search Results or Recent/Common Foods
                     if !searchText.isEmpty {
-                        Section("Search Results") {
-                            ForEach(searchResults.prefix(20), id: \.id) { food in
-                                FoodRowView(food: food) {
-                                    addFood(food)
+                        // Local results (instant)
+                        if !localResults.isEmpty {
+                            Section("Local Results") {
+                                ForEach(localResults.prefix(50), id: \.id) { food in
+                                    FoodRowView(food: food) {
+                                        addFood(food)
+                                    }
+                                }
+                            }
+                        }
+
+                        // Online results (async USDA API)
+                        if isLoadingUSDA {
+                            Section("Online Results") {
+                                HStack {
+                                    ProgressView()
+                                        .scaleEffect(0.8)
+                                    Text("Searching online...")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        } else if !onlineResults.isEmpty {
+                            Section("Online Results") {
+                                ForEach(onlineResults.prefix(30), id: \.id) { food in
+                                    FoodRowView(food: food) {
+                                        addFood(food, fromUSDA: true)
+                                    }
                                 }
                             }
                         }
                     } else {
                         Section("Recent Foods") {
-                            ForEach(recentFoods, id: \.id) { food in
-                                FoodRowView(food: food) {
-                                    addFood(food)
+                            if recentFoods.isEmpty {
+                                Text("No recent foods yet")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                ForEach(recentFoods, id: \.id) { food in
+                                    FoodRowView(food: food) {
+                                        addFood(food)
+                                    }
                                 }
                             }
                         }
@@ -120,6 +170,9 @@ struct UnifiedFoodSearchSheet: View {
             .navigationBarItems(leading: Button("Cancel") { dismiss() })
             .onAppear {
                 isSearchFocused = true
+            }
+            .onChange(of: searchText) { newValue in
+                onSearchTextChanged(newValue)
             }
         }
         .sheet(isPresented: $showingManualEntry) {
@@ -150,19 +203,65 @@ struct UnifiedFoodSearchSheet: View {
         }
     }
 
-    private func addFood(_ food: FoodItem) {
+    // MARK: - Actions
+
+    private func addFood(_ food: FoodItem, fromUSDA: Bool = false) {
+        if fromUSDA {
+            dataManager.cacheFoodItem(food)
+        }
         dataManager.addFoodFromDatabase(food, mealType: selectedMealType)
         dismiss()
     }
 
+    private func onSearchTextChanged(_ newValue: String) {
+        // Cancel previous USDA search
+        searchTask?.cancel()
+        usdaResults = []
+
+        guard !newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            isLoadingUSDA = false
+            return
+        }
+
+        // Phase 2: Debounced USDA API search (0.4s delay)
+        searchTask = Task {
+            try? await Task.sleep(nanoseconds: 400_000_000)
+
+            // Check if search text hasn't changed during debounce
+            guard !Task.isCancelled, newValue == searchText else { return }
+
+            await MainActor.run { isLoadingUSDA = true }
+
+            do {
+                let results = try await usdaService.searchFoods(newValue)
+                guard !Task.isCancelled else { return }
+                await MainActor.run {
+                    self.usdaResults = results
+                    self.isLoadingUSDA = false
+                }
+            } catch {
+                guard !Task.isCancelled else { return }
+                await MainActor.run {
+                    self.isLoadingUSDA = false
+                    print("USDA search error: \(error)")
+                }
+            }
+        }
+    }
+
     private var commonQuickAddFoods: [FoodItem] {
-        return [
-            FoodItem(name: "Apple", brand: nil, category: .fruits, servingSize: "1", servingUnit: "medium", calories: 95, protein: 0.5, carbs: 25, fat: 0.3, fiber: 4.4, sugar: 19, sodium: 2, cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: true),
-            FoodItem(name: "Banana", brand: nil, category: .fruits, servingSize: "1", servingUnit: "medium", calories: 105, protein: 1.3, carbs: 27, fat: 0.4, fiber: 3.1, sugar: 14, sodium: 1, cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: true),
-            FoodItem(name: "Chicken Breast", brand: nil, category: .protein, servingSize: "3", servingUnit: "oz", calories: 140, protein: 26, carbs: 0, fat: 3, fiber: 0, sugar: 0, sodium: 74, cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: true),
-            FoodItem(name: "Rice", brand: nil, category: .grains, servingSize: "1", servingUnit: "cup", calories: 205, protein: 4.3, carbs: 44.5, fat: 0.4, fiber: 0.6, sugar: 0.1, sodium: 1, cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: true),
-            FoodItem(name: "Salad", brand: nil, category: .vegetables, servingSize: "1", servingUnit: "bowl", calories: 50, protein: 3, carbs: 10, fat: 0.5, fiber: 4, sugar: 4, sodium: 100, cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: true)
-        ]
+        let common = LocalFoodDatabase.shared.getCommonFoods(limit: 10)
+        if common.isEmpty {
+            // Fallback if SQLite DB not available
+            return [
+                FoodItem(name: "Apple", brand: nil, category: .fruits, servingSize: "1", servingUnit: "medium", calories: 95, protein: 0.5, carbs: 25, fat: 0.3, fiber: 4.4, sugar: 19, sodium: 2, cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: true),
+                FoodItem(name: "Banana", brand: nil, category: .fruits, servingSize: "1", servingUnit: "medium", calories: 105, protein: 1.3, carbs: 27, fat: 0.4, fiber: 3.1, sugar: 14, sodium: 1, cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: true),
+                FoodItem(name: "Chicken Breast", brand: nil, category: .protein, servingSize: "3", servingUnit: "oz", calories: 140, protein: 26, carbs: 0, fat: 3, fiber: 0, sugar: 0, sodium: 74, cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: true),
+                FoodItem(name: "Rice", brand: nil, category: .grains, servingSize: "1", servingUnit: "cup", calories: 205, protein: 4.3, carbs: 44.5, fat: 0.4, fiber: 0.6, sugar: 0.1, sodium: 1, cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: true),
+                FoodItem(name: "Salad", brand: nil, category: .vegetables, servingSize: "1", servingUnit: "bowl", calories: 50, protein: 3, carbs: 10, fat: 0.5, fiber: 4, sugar: 4, sodium: 100, cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: true)
+            ]
+        }
+        return common
     }
 }
 
