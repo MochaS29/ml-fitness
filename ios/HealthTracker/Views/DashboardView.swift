@@ -2,6 +2,7 @@ import SwiftUI
 import Charts
 
 struct DashboardView: View {
+    @EnvironmentObject var profileManager: UserProfileManager
     @StateObject private var viewModel = DashboardViewModel()
     @State private var selectedTimeRange = TimeRange.week
     @State private var showingAIInsightDetail = false
@@ -129,15 +130,29 @@ struct DashboardView: View {
     private var headerSection: some View {
         VStack(spacing: 12) {
             // Welcome Message with AI Touch
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Hello, \(viewModel.userName)!")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.deepCharcoal)
+            HStack(spacing: 12) {
+                if let avatar = profileManager.avatarImage {
+                    Image(uiImage: avatar)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .font(.system(size: 36))
+                        .foregroundColor(.accentColor)
+                }
 
-                Text(viewModel.aiGreeting)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Hello, \(viewModel.userName)!")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.deepCharcoal)
+
+                    Text(viewModel.aiGreeting)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
             }
             
             // Overall Health Score with AI Analysis
