@@ -108,6 +108,12 @@ class StoreManager: ObservableObject {
     // MARK: - Check Entitlement
 
     func checkEntitlement() async {
+        #if DEBUG
+        if UserDefaults.standard.bool(forKey: "debugProOverride") {
+            setProStatus(true)
+            return
+        }
+        #endif
         for await result in Transaction.currentEntitlements {
             if case .verified(let transaction) = result,
                transaction.productID == Self.proProductID,

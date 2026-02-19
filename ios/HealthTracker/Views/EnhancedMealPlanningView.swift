@@ -157,6 +157,8 @@ struct EmptyPlanBanner: View {
 struct TodaysMealView: View {
     @ObservedObject var manager: MealPlanManager
     @Binding var showingMealDetail: Meal?
+    @StateObject private var dataManager = UnifiedDataManager.shared
+    @State private var showingAddedAllAlert = false
 
     private var todaysMeals: DailyMealPlan? {
         guard let weekPlan = manager.getCurrentWeekPlan() else { return nil }
@@ -196,6 +198,21 @@ struct TodaysMealView: View {
                     }
                     .padding(.horizontal)
 
+                    // Add All to Diary button
+                    Button(action: { addAllToDiary(meals) }) {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Add All to Diary")
+                                .fontWeight(.medium)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color.wellnessGreen)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                    }
+                    .padding(.horizontal)
+
                     // Meal cards
                     MealCard(meal: meals.breakfast, mealType: "Breakfast", icon: "sunrise.fill", color: .orange) {
                         showingMealDetail = meals.breakfast
@@ -231,6 +248,36 @@ struct TodaysMealView: View {
                     .padding()
             }
         }
+        .alert("Added to Diary", isPresented: $showingAddedAllAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("All meals for today have been added to your food diary.")
+        }
+    }
+
+    private func addAllToDiary(_ day: DailyMealPlan) {
+        addMealEntry(day.breakfast, type: .breakfast)
+        addMealEntry(day.lunch, type: .lunch)
+        addMealEntry(day.dinner, type: .dinner)
+        for snack in day.snacks {
+            addMealEntry(snack, type: .snack)
+        }
+        showingAddedAllAlert = true
+    }
+
+    private func addMealEntry(_ meal: Meal, type: MealType) {
+        dataManager.addFoodEntry(
+            name: meal.name,
+            calories: Double(meal.calories),
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            fiber: 0,
+            sugar: 0,
+            sodium: 0,
+            servingSize: "1 serving",
+            mealType: type
+        )
     }
 }
 
@@ -549,6 +596,8 @@ struct DayMealSummaryCard: View {
     let day: DailyMealPlan
     let onMealTap: (Meal) -> Void
     @State private var isExpanded = false
+    @StateObject private var dataManager = UnifiedDataManager.shared
+    @State private var showingAddedAlert = false
 
     var totalCalories: Int {
         day.breakfast.calories + day.lunch.calories + day.dinner.calories +
@@ -569,6 +618,20 @@ struct DayMealSummaryCard: View {
                     }
 
                     Spacer()
+
+                    Button(action: { addDayToDiary() }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Add Day")
+                        }
+                        .font(.caption)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.wellnessGreen)
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                    }
+                    .buttonStyle(PlainButtonStyle())
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                         .foregroundColor(.secondary)
@@ -598,6 +661,48 @@ struct DayMealSummaryCard: View {
         }
         .cornerRadius(12)
         .padding(.horizontal)
+        .alert("Added to Diary", isPresented: $showingAddedAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("All meals for \(day.dayName) have been added to your food diary.")
+        }
+    }
+
+    private func addDayToDiary() {
+        let targetDate = dateForDayName(day.dayName)
+        addMealEntry(day.breakfast, type: .breakfast, on: targetDate)
+        addMealEntry(day.lunch, type: .lunch, on: targetDate)
+        addMealEntry(day.dinner, type: .dinner, on: targetDate)
+        for snack in day.snacks {
+            addMealEntry(snack, type: .snack, on: targetDate)
+        }
+        showingAddedAlert = true
+    }
+
+    private func addMealEntry(_ meal: Meal, type: MealType, on date: Date) {
+        dataManager.addFoodEntry(
+            name: meal.name,
+            calories: Double(meal.calories),
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            fiber: 0,
+            sugar: 0,
+            sodium: 0,
+            servingSize: "1 serving",
+            mealType: type,
+            date: date
+        )
+    }
+
+    private func dateForDayName(_ name: String) -> Date {
+        let calendar = Calendar.current
+        let today = Date()
+        let weekday = calendar.component(.weekday, from: today)
+        let dayMap = ["Monday": 2, "Tuesday": 3, "Wednesday": 4, "Thursday": 5, "Friday": 6, "Saturday": 7, "Sunday": 1]
+        let targetWeekday = dayMap[name] ?? weekday
+        let diff = targetWeekday - weekday
+        return calendar.date(byAdding: .day, value: diff, to: today) ?? today
     }
 }
 

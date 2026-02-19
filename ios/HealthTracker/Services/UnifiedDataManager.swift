@@ -64,8 +64,10 @@ class UnifiedDataManager: ObservableObject {
         servingUnit: String = "serving",
         mealType: MealType = .snack,
         barcode: String? = nil,
-        imageData: Data? = nil
+        imageData: Data? = nil,
+        date: Date? = nil
     ) {
+        let entryDate = date ?? Date()
         let entry = FoodEntry(context: context)
         entry.id = UUID()
         entry.name = name
@@ -81,8 +83,8 @@ class UnifiedDataManager: ObservableObject {
         entry.servingUnit = servingUnit
         entry.mealType = mealType.rawValue
         entry.barcode = barcode
-        entry.timestamp = Date()
-        entry.date = Date()
+        entry.timestamp = entryDate
+        entry.date = entryDate
 
         // Store image data if the field exists
         // entry.photoData = imageData  // Uncomment when field is added
