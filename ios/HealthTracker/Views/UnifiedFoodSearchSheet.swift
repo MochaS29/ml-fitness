@@ -193,10 +193,12 @@ struct UnifiedFoodSearchSheet: View {
             )
         }
         .sheet(isPresented: $showingBarcode) {
-            BarcodeScannerView(
-                selectedDate: Date(),
-                mealType: selectedMealType
-            )
+            ProFeatureGate {
+                BarcodeScannerView(
+                    selectedDate: Date(),
+                    mealType: selectedMealType
+                )
+            }
             .onDisappear {
                 showingBarcode = false
             }

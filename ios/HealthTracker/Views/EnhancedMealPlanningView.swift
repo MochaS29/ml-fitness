@@ -455,7 +455,14 @@ struct NutritionBadge: View {
 // MARK: - Weekly View
 struct WeeklyMealView: View {
     @ObservedObject var manager: MealPlanManager
+    @EnvironmentObject var storeManager: StoreManager
     @Binding var showingMealDetail: Meal?
+    @State private var showingPaywall = false
+
+    /// Free users can only view week 1
+    private var isWeekLocked: Bool {
+        !storeManager.isPro && manager.currentWeek > 1
+    }
 
     var body: some View {
         ScrollView {
@@ -475,8 +482,15 @@ struct WeeklyMealView: View {
 
                         Spacer()
 
-                        Text("Week \(manager.currentWeek)")
-                            .font(.headline)
+                        HStack(spacing: 6) {
+                            Text("Week \(manager.currentWeek)")
+                                .font(.headline)
+                            if isWeekLocked {
+                                Image(systemName: "lock.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
 
                         Spacer()
 
@@ -492,13 +506,41 @@ struct WeeklyMealView: View {
                     }
                     .padding()
 
-                    ForEach(weekPlan.days) { day in
-                        DayMealSummaryCard(day: day) { meal in
-                            showingMealDetail = meal
+                    if isWeekLocked {
+                        // Show locked overlay for weeks 2-4 for free users
+                        VStack(spacing: 16) {
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 40))
+                                .foregroundColor(.secondary)
+                            Text("Week \(manager.currentWeek) requires Pro")
+                                .font(.headline)
+                            Text("Upgrade to access all weekly meal plans.")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Button(action: { showingPaywall = true }) {
+                                Text("Upgrade to Pro")
+                                    .fontWeight(.semibold)
+                                    .padding(.horizontal, 24)
+                                    .padding(.vertical, 10)
+                                    .background(Color.wellnessGreen)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(12)
+                            }
+                        }
+                        .padding(.vertical, 40)
+                    } else {
+                        ForEach(weekPlan.days) { day in
+                            DayMealSummaryCard(day: day) { meal in
+                                showingMealDetail = meal
+                            }
                         }
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+                .environmentObject(storeManager)
         }
     }
 }
@@ -1524,18 +1566,57 @@ struct WeekOverviewCard: View {
 // MARK: - Meal Plan Selector
 struct MealPlanSelectorView: View {
     @ObservedObject var manager: MealPlanManager
+    @EnvironmentObject var storeManager: StoreManager
     @Environment(\.dismiss) private var dismiss
+    @State private var showingPaywall = false
 
     private let planData = MealPlanData.shared
+
+    /// Free users can only access Mediterranean
+    private func isPlanFree(_ plan: MealPlanType) -> Bool {
+        plan.id == "mediterranean"
+    }
 
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 16) {
+                    if !storeManager.isPro {
+                        HStack {
+                            Image(systemName: "info.circle")
+                                .foregroundColor(.mindfulTeal)
+                            Text("Free plan: Mediterranean. Upgrade to Pro for all diets.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding()
+                        .background(Color(UIColor.secondarySystemGroupedBackground))
+                        .cornerRadius(10)
+                    }
+
                     ForEach(planData.allMealPlans) { plan in
-                        PlanTypeCard(plan: plan, isSelected: manager.selectedPlanType?.id == plan.id) {
-                            manager.selectPlan(plan.id)
-                            dismiss()
+                        if storeManager.isPro || isPlanFree(plan) {
+                            PlanTypeCard(plan: plan, isSelected: manager.selectedPlanType?.id == plan.id) {
+                                manager.selectPlan(plan.id)
+                                dismiss()
+                            }
+                        } else {
+                            // Locked plan card
+                            PlanTypeCard(plan: plan, isSelected: false) {
+                                showingPaywall = true
+                            }
+                            .overlay(
+                                ZStack {
+                                    Color(UIColor.systemBackground).opacity(0.6)
+                                    HStack {
+                                        Image(systemName: "lock.fill")
+                                        Text("Pro")
+                                            .fontWeight(.semibold)
+                                    }
+                                    .foregroundColor(.secondary)
+                                }
+                                .cornerRadius(12)
+                            )
                         }
                     }
                 }
@@ -1547,6 +1628,10 @@ struct MealPlanSelectorView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Cancel") { dismiss() }
                 }
+            }
+            .sheet(isPresented: $showingPaywall) {
+                PaywallView()
+                    .environmentObject(storeManager)
             }
         }
     }

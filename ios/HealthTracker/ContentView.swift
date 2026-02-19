@@ -7,6 +7,8 @@ struct ContentView: View {
     @StateObject private var achievementManager = AchievementManager.shared
     @State private var showingAddMenu = false
     @State private var notificationAction: NotificationAction?
+    @EnvironmentObject var storeManager: StoreManager
+    @State private var showingPaywall = false
 
     var body: some View {
         ZStack {
@@ -35,6 +37,11 @@ struct ContentView: View {
 
                 NavigationStack {
                     EnhancedMealPlanningView()
+                        .overlay(alignment: .top) {
+                            if !storeManager.isPro {
+                                ProUpgradeBanner(showingPaywall: $showingPaywall)
+                            }
+                        }
                 }
                 .tabItem {
                     Label("Plan", systemImage: "calendar")
@@ -76,6 +83,10 @@ struct ContentView: View {
         .sheet(isPresented: $showingAddMenu) {
             AddMenuView(selectedDate: Date())
         }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+                .environmentObject(storeManager)
+        }
         .onAppear {
             setupNotificationObservers()
         }
@@ -108,6 +119,32 @@ struct ContentView: View {
             queue: .main
         ) { _ in
             selectedTab = 1 // Go to Diary tab
+        }
+    }
+}
+
+// MARK: - Pro Upgrade Banner
+struct ProUpgradeBanner: View {
+    @Binding var showingPaywall: Bool
+
+    var body: some View {
+        Button(action: { showingPaywall = true }) {
+            HStack(spacing: 8) {
+                Image(systemName: "star.fill")
+                    .font(.caption)
+                Text("Free Preview")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                Text("Upgrade for full access")
+                    .font(.caption)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption2)
+            }
+            .foregroundColor(.white)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(Color.wellnessGreen.opacity(0.9))
         }
     }
 }

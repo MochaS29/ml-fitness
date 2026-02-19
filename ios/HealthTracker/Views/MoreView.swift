@@ -19,6 +19,8 @@ struct MoreView: View {
     @AppStorage("hasDemoData") private var hasDemoData = false
     @State private var showingResetAlert = false
     @State private var showingResetConfirmation = false
+    @State private var showingPaywall = false
+    @EnvironmentObject var storeManager: StoreManager
     @Environment(\.managedObjectContext) private var viewContext
 
     // New state variables for unified tracking tools
@@ -67,6 +69,49 @@ struct MoreView: View {
                     .padding(.vertical, 8)
                 }
                 
+                // ML Fitness Pro
+                Section {
+                    if storeManager.isPro {
+                        HStack(spacing: 12) {
+                            Image(systemName: "star.circle.fill")
+                                .font(.title2)
+                                .foregroundColor(.wellnessGreen)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("ML Fitness Pro")
+                                    .font(.headline)
+                                Text("All features unlocked")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "checkmark.seal.fill")
+                                .foregroundColor(.wellnessGreen)
+                        }
+                        .padding(.vertical, 4)
+                    } else {
+                        Button(action: { showingPaywall = true }) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "star.circle.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.wellnessGreen)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Upgrade to Pro")
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                    Text("Unlock all features — \(storeManager.proPriceDisplay) one-time")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                }
+
                 // Tracking Tools
                 Section("Tracking Tools") {
                     Button(action: { showingFoodSearch = true }) {
@@ -102,7 +147,7 @@ struct MoreView: View {
                     //     )
                     // }
 
-                    NavigationLink(destination: IntermittentFastingView()) {
+                    NavigationLink(destination: ProFeatureGate { IntermittentFastingView() }) {
                         MoreMenuItem(
                             icon: "timer",
                             title: "Fasting Timer",
@@ -268,6 +313,16 @@ struct MoreView: View {
                         )
                     }
 
+                    Button(action: {
+                        Task { await storeManager.restorePurchases() }
+                    }) {
+                        MoreMenuItem(
+                            icon: "arrow.clockwise",
+                            title: "Restore Purchases",
+                            color: .mindfulTeal
+                        )
+                    }
+
                     Button(action: { showingResetAlert = true }) {
                         MoreMenuItem(
                             icon: "trash.fill",
@@ -317,6 +372,10 @@ struct MoreView: View {
                 }
             }
             .navigationTitle("More")
+            .sheet(isPresented: $showingPaywall) {
+                PaywallView()
+                    .environmentObject(storeManager)
+            }
             .sheet(isPresented: $showingProfile) {
                 ProfileView()
             }

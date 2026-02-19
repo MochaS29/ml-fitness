@@ -106,7 +106,9 @@ struct DashboardView: View {
             WaterTrackingView()
         }
         .sheet(isPresented: $showingSupplementDetail) {
-            EnhancedSupplementTrackingView()
+            ProFeatureGate {
+                EnhancedSupplementTrackingView()
+            }
         }
         .sheet(isPresented: $showingStepDetail) {
             StepDetailsView()

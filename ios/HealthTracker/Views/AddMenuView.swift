@@ -35,7 +35,9 @@ struct AddMenuView: View {
             }
         }
         .sheet(isPresented: $showingBarcodeScanner) {
-            BarcodeScannerView(selectedDate: selectedDate, mealType: selectedMealType)
+            ProFeatureGate {
+                BarcodeScannerView(selectedDate: selectedDate, mealType: selectedMealType)
+            }
         }
         .sheet(isPresented: $showingExerciseSearch) {
             ExerciseSearchView(selectedDate: selectedDate)
@@ -50,7 +52,9 @@ struct AddMenuView: View {
             QuickWaterAddView(selectedDate: selectedDate)
         }
         .sheet(isPresented: $showingMealScanner) {
-            MealPhotoAnalyzerView()
+            ProFeatureGate {
+                MealPhotoAnalyzerView()
+            }
         }
     }
     
