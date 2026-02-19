@@ -1,0 +1,1744 @@
+{
+  "dietType": "whole30",
+  "displayName": "Whole30",
+  "description": "30-day elimination diet focusing on whole foods to reset eating habits and identify food sensitivities",
+  "benefits": [
+    "Identify food sensitivities",
+    "Reset eating habits",
+    "Improved energy levels",
+    "Better sleep quality",
+    "Reduced cravings",
+    "Clearer skin"
+  ],
+  "restrictions": [
+    "No sugar or sweeteners of any kind",
+    "No alcohol",
+    "No grains",
+    "No legumes",
+    "No dairy",
+    "No MSG or sulfites",
+    "No recreating baked goods or treats"
+  ],
+  "meals": {
+    "w30_veggie_scramble": {
+      "name": "Loaded Veggie Scramble",
+      "description": "Fluffy scrambled eggs packed with bell peppers, mushrooms, and spinach cooked in ghee",
+      "calories": 385,
+      "protein": 24.0,
+      "carbs": 12.0,
+      "fat": 27.0,
+      "fiber": 3.5,
+      "prepTime": 10,
+      "cookTime": 10,
+      "ingredients": [
+        "3 large eggs",
+        "1 tbsp ghee",
+        "1/2 cup diced bell peppers",
+        "1/2 cup sliced mushrooms",
+        "1 cup fresh spinach",
+        "1/4 tsp garlic powder",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Melt ghee in a nonstick skillet over medium heat.",
+        "Sauté bell peppers and mushrooms for 3-4 minutes until softened.",
+        "Add spinach and cook until wilted, about 1 minute.",
+        "Whisk eggs with garlic powder, salt, and pepper, then pour into the skillet.",
+        "Gently stir eggs until just set, about 2-3 minutes. Serve immediately."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "breakfast"]
+    },
+    "w30_sweet_potato_hash": {
+      "name": "Sweet Potato Breakfast Hash",
+      "description": "Crispy sweet potato cubes with Italian sausage, peppers, and a fried egg on top",
+      "calories": 480,
+      "protein": 28.0,
+      "carbs": 34.0,
+      "fat": 26.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 20,
+      "ingredients": [
+        "1 medium sweet potato, diced into 1/2-inch cubes",
+        "4 oz Whole30-compliant Italian sausage",
+        "1/2 cup diced red bell pepper",
+        "1/4 cup diced yellow onion",
+        "1 large egg",
+        "1 tbsp avocado oil",
+        "1/2 tsp smoked paprika",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Heat avocado oil in a large cast-iron skillet over medium-high heat.",
+        "Add sweet potato cubes and cook for 10-12 minutes, stirring occasionally, until golden and tender.",
+        "Push potatoes to one side, crumble sausage into the pan, and cook for 4-5 minutes until browned.",
+        "Add bell pepper and onion, season with smoked paprika, salt, and pepper, and cook 3 more minutes.",
+        "Make a well in the center and crack the egg into it. Cover and cook until egg white is set, about 3 minutes."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "breakfast"]
+    },
+    "w30_banana_egg_pancakes": {
+      "name": "Banana Egg Pancakes with Berries",
+      "description": "Simple two-ingredient pancakes made with banana and eggs, served with fresh mixed berries",
+      "calories": 310,
+      "protein": 18.0,
+      "carbs": 32.0,
+      "fat": 13.0,
+      "fiber": 4.5,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "2 medium ripe bananas",
+        "3 large eggs",
+        "1/2 tsp cinnamon",
+        "1 tsp coconut oil",
+        "1/2 cup fresh mixed berries (blueberries, raspberries, strawberries)"
+      ],
+      "instructions": [
+        "Mash bananas in a bowl until smooth, then whisk in eggs and cinnamon until combined.",
+        "Heat coconut oil in a nonstick skillet over medium-low heat.",
+        "Pour about 3 tablespoons of batter per pancake. Cook for 2-3 minutes until edges set and bubbles form.",
+        "Flip gently and cook another 1-2 minutes until golden.",
+        "Serve topped with fresh mixed berries."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "breakfast"]
+    },
+    "w30_avocado_egg_cups": {
+      "name": "Baked Avocado Egg Cups",
+      "description": "Creamy avocado halves baked with eggs and topped with everything bagel seasoning",
+      "calories": 340,
+      "protein": 16.0,
+      "carbs": 14.0,
+      "fat": 27.0,
+      "fiber": 9.0,
+      "prepTime": 5,
+      "cookTime": 18,
+      "ingredients": [
+        "2 ripe avocados, halved and pitted",
+        "4 large eggs",
+        "1 tbsp Whole30-compliant everything bagel seasoning",
+        "2 tbsp chopped fresh chives",
+        "Salt and black pepper to taste",
+        "Compliant hot sauce (optional)"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Scoop out a little extra avocado flesh to make room for the eggs.",
+        "Place avocado halves in a muffin tin to keep them stable. Crack one egg into each half.",
+        "Season with salt, pepper, and everything bagel seasoning.",
+        "Bake for 14-18 minutes until egg whites are set but yolks are still slightly runny.",
+        "Top with fresh chives and hot sauce if desired."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "breakfast"]
+    },
+    "w30_sausage_frittata": {
+      "name": "Sausage and Kale Frittata",
+      "description": "Hearty oven-baked frittata loaded with compliant sausage, kale, and roasted red peppers",
+      "calories": 410,
+      "protein": 30.0,
+      "carbs": 8.0,
+      "fat": 29.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "6 large eggs",
+        "6 oz Whole30-compliant breakfast sausage",
+        "2 cups chopped kale, stems removed",
+        "1/3 cup diced roasted red peppers (packed in water)",
+        "1/4 cup diced white onion",
+        "1 tbsp ghee",
+        "1/2 tsp dried oregano",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Heat ghee in an oven-safe skillet over medium heat.",
+        "Crumble sausage into the skillet and cook until browned, about 5 minutes. Add onion and cook 2 more minutes.",
+        "Add kale and roasted red peppers, stirring until kale wilts, about 2 minutes.",
+        "Whisk eggs with oregano, salt, and pepper, then pour evenly over the skillet contents.",
+        "Transfer skillet to the oven and bake for 15-18 minutes until eggs are set and top is lightly golden.",
+        "Let cool 5 minutes before slicing into wedges. Serves 2-3."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "breakfast", "meal-prep"]
+    },
+    "w30_coconut_chia_pudding": {
+      "name": "Coconut Chia Pudding",
+      "description": "Creamy overnight chia pudding made with full-fat coconut milk and topped with toasted coconut flakes",
+      "calories": 295,
+      "protein": 7.0,
+      "carbs": 18.0,
+      "fat": 23.0,
+      "fiber": 10.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "3 tbsp chia seeds",
+        "3/4 cup full-fat coconut milk (canned, no additives)",
+        "1/4 cup water",
+        "1/2 tsp vanilla extract (no sugar added)",
+        "1/4 tsp cinnamon",
+        "1 tbsp unsweetened toasted coconut flakes",
+        "1/4 cup fresh raspberries"
+      ],
+      "instructions": [
+        "In a jar or bowl, whisk together coconut milk, water, vanilla extract, and cinnamon.",
+        "Stir in chia seeds thoroughly to prevent clumping.",
+        "Cover and refrigerate for at least 4 hours or overnight.",
+        "Stir well before serving and top with toasted coconut flakes and fresh raspberries."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "breakfast", "meal-prep", "no-cook"]
+    },
+    "w30_smoked_salmon_plate": {
+      "name": "Smoked Salmon Breakfast Plate",
+      "description": "Wild-caught smoked salmon with sliced avocado, cucumber, capers, and fresh dill over greens",
+      "calories": 370,
+      "protein": 26.0,
+      "carbs": 12.0,
+      "fat": 25.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "4 oz wild-caught smoked salmon (sugar-free, no additives)",
+        "1/2 medium avocado, sliced",
+        "1/2 cup sliced English cucumber",
+        "1 tbsp capers, drained",
+        "1 cup mixed greens",
+        "1 tbsp extra virgin olive oil",
+        "1 tsp fresh lemon juice",
+        "Fresh dill sprigs",
+        "Black pepper to taste"
+      ],
+      "instructions": [
+        "Arrange mixed greens on a plate as a base.",
+        "Layer smoked salmon slices, avocado, and cucumber on top.",
+        "Scatter capers and fresh dill over the plate.",
+        "Drizzle with olive oil and lemon juice, then finish with cracked black pepper."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "breakfast", "no-cook"]
+    },
+    "w30_pork_apple_patties": {
+      "name": "Pork and Apple Breakfast Patties",
+      "description": "Savory-sweet ground pork patties with shredded apple and sage, pan-fried until golden",
+      "calories": 350,
+      "protein": 26.0,
+      "carbs": 10.0,
+      "fat": 24.0,
+      "fiber": 1.5,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "8 oz ground pork",
+        "1/2 medium Granny Smith apple, peeled and grated",
+        "1 tsp dried sage",
+        "1/2 tsp garlic powder",
+        "1/4 tsp ground nutmeg",
+        "1/2 tsp salt",
+        "1/4 tsp black pepper",
+        "1 tsp avocado oil"
+      ],
+      "instructions": [
+        "In a bowl, combine ground pork, grated apple, sage, garlic powder, nutmeg, salt, and pepper. Mix gently until just combined.",
+        "Form mixture into 4 equal patties, about 1/2 inch thick.",
+        "Heat avocado oil in a skillet over medium heat.",
+        "Cook patties for 5-6 minutes per side until cooked through and golden brown.",
+        "Rest for 2 minutes before serving. Pairs well with sautéed greens or a fried egg."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "breakfast", "meal-prep"]
+    },
+    "w30_green_smoothie": {
+      "name": "Green Power Smoothie",
+      "description": "Nutrient-dense smoothie with spinach, banana, coconut milk, and almond butter",
+      "calories": 335,
+      "protein": 10.0,
+      "carbs": 36.0,
+      "fat": 19.0,
+      "fiber": 6.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "2 cups fresh baby spinach",
+        "1 medium frozen banana",
+        "1/2 cup full-fat coconut milk (canned)",
+        "1/2 cup water",
+        "1 tbsp almond butter (no sugar added, no peanuts)",
+        "1/2 cup frozen pineapple chunks",
+        "1/4 tsp ground ginger"
+      ],
+      "instructions": [
+        "Add coconut milk, water, and spinach to a blender and blend until smooth.",
+        "Add frozen banana, pineapple chunks, almond butter, and ginger.",
+        "Blend on high for 60-90 seconds until completely smooth and creamy.",
+        "Pour into a glass and serve immediately."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "breakfast", "no-cook"]
+    },
+    "w30_turkey_breakfast_bowl": {
+      "name": "Turkey Breakfast Power Bowl",
+      "description": "Seasoned ground turkey over roasted sweet potatoes with sautéed greens and a drizzle of tahini",
+      "calories": 445,
+      "protein": 32.0,
+      "carbs": 30.0,
+      "fat": 22.0,
+      "fiber": 5.5,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "5 oz ground turkey",
+        "1 medium sweet potato, diced",
+        "2 cups baby spinach",
+        "1 tbsp avocado oil",
+        "1 tbsp tahini",
+        "1/2 tsp cumin",
+        "1/2 tsp smoked paprika",
+        "1/4 tsp garlic powder",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Toss diced sweet potato with half the avocado oil, salt, and pepper. Spread on a baking sheet and roast for 20-25 minutes until tender and caramelized.",
+        "While potatoes roast, heat remaining avocado oil in a skillet over medium-high heat. Cook ground turkey, breaking it up, for 5-6 minutes until browned.",
+        "Season turkey with cumin, smoked paprika, garlic powder, salt, and pepper.",
+        "Add baby spinach to the skillet and stir until wilted, about 1 minute.",
+        "Assemble bowl with roasted sweet potatoes, seasoned turkey and spinach, and drizzle with tahini."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "breakfast"]
+    },
+    "w30_prosciutto_egg_wrap": {
+      "name": "Prosciutto Egg Wrap",
+      "description": "Thin egg crepes wrapped around prosciutto, arugula, and avocado for a grain-free breakfast wrap",
+      "calories": 395,
+      "protein": 28.0,
+      "carbs": 8.0,
+      "fat": 29.0,
+      "fiber": 4.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "3 large eggs",
+        "1 tsp ghee",
+        "2 oz prosciutto (sugar-free, Whole30-compliant)",
+        "1/2 medium avocado, sliced",
+        "1/2 cup fresh arugula",
+        "1 tsp Dijon mustard (Whole30-compliant, no sugar)",
+        "Pinch of salt"
+      ],
+      "instructions": [
+        "Whisk eggs with a pinch of salt. Heat ghee in a large nonstick skillet over medium-low heat.",
+        "Pour eggs into the skillet and swirl to create a thin, even layer. Cook without stirring for 2-3 minutes until set.",
+        "Carefully flip and cook 30 seconds more. Slide onto a plate.",
+        "Spread Dijon mustard over the egg crepe. Layer prosciutto, avocado slices, and arugula on one side.",
+        "Roll up tightly and slice in half on a diagonal."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "breakfast"]
+    },
+    "w30_plantain_hash_eggs": {
+      "name": "Plantain Hash with Eggs",
+      "description": "Crispy fried green plantain cubes with seasoned ground beef, peppers, and two sunny-side eggs",
+      "calories": 510,
+      "protein": 30.0,
+      "carbs": 38.0,
+      "fat": 26.0,
+      "fiber": 3.5,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "1 large green plantain, peeled and diced",
+        "4 oz ground beef (grass-fed)",
+        "1/4 cup diced green bell pepper",
+        "2 tbsp diced white onion",
+        "2 large eggs",
+        "1.5 tbsp coconut oil",
+        "1/2 tsp cumin",
+        "1/4 tsp chili powder",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Heat 1 tbsp coconut oil in a large skillet over medium-high heat. Add diced plantain and cook for 8-10 minutes, turning occasionally, until golden and crispy.",
+        "Push plantain to the sides, add ground beef to the center, and cook 4-5 minutes until browned. Season with cumin, chili powder, salt, and pepper.",
+        "Add bell pepper and onion, toss everything together, and cook 2 more minutes.",
+        "Make two wells in the hash, add remaining coconut oil, and crack an egg into each well.",
+        "Cover skillet and cook for 3 minutes until egg whites are set. Serve from the skillet."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "breakfast"]
+    },
+    "w30_chicken_caesar_wrap": {
+      "name": "Chicken Caesar Collard Wrap",
+      "description": "Grilled chicken with dairy-free caesar dressing wrapped in large collard green leaves",
+      "calories": 410,
+      "protein": 36.0,
+      "carbs": 10.0,
+      "fat": 26.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 12,
+      "ingredients": [
+        "6 oz boneless skinless chicken breast",
+        "2 large collard green leaves, stems trimmed flat",
+        "1/4 cup Whole30-compliant mayo",
+        "1 tbsp fresh lemon juice",
+        "1 tsp Dijon mustard (Whole30-compliant)",
+        "1 clove garlic, minced",
+        "2 tbsp nutritional yeast",
+        "1/2 cup cherry tomatoes, halved",
+        "1 tbsp extra virgin olive oil",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken breast with salt and pepper. Heat olive oil in a grill pan over medium-high heat and cook chicken 5-6 minutes per side until internal temp reaches 165°F. Let rest 5 minutes, then slice.",
+        "Make the dressing: whisk together mayo, lemon juice, Dijon, minced garlic, nutritional yeast, salt, and pepper.",
+        "Blanch collard leaves in boiling water for 30 seconds, then shock in ice water. Pat dry.",
+        "Lay collard leaves flat, spread dressing down the center, and top with sliced chicken and cherry tomatoes.",
+        "Roll up tightly, tucking in the sides. Slice in half to serve."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch"]
+    },
+    "w30_tuna_stuffed_avocado": {
+      "name": "Tuna-Stuffed Avocados",
+      "description": "Wild-caught tuna salad with celery and herbs nestled in creamy avocado halves",
+      "calories": 420,
+      "protein": 30.0,
+      "carbs": 14.0,
+      "fat": 28.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 can (5 oz) wild-caught albacore tuna in water, drained",
+        "2 tbsp Whole30-compliant mayo",
+        "1/4 cup diced celery",
+        "2 tbsp diced red onion",
+        "1 tbsp fresh lemon juice",
+        "1 tbsp chopped fresh dill",
+        "2 ripe avocados, halved and pitted",
+        "Salt and black pepper to taste",
+        "Pinch of smoked paprika for garnish"
+      ],
+      "instructions": [
+        "Drain tuna and flake into a medium bowl with a fork.",
+        "Add mayo, celery, red onion, lemon juice, dill, salt, and pepper. Mix gently until combined.",
+        "Scoop a little extra avocado flesh from each half to create a larger well.",
+        "Divide tuna mixture evenly among the four avocado halves.",
+        "Dust with smoked paprika and serve immediately."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch", "no-cook"]
+    },
+    "w30_thai_coconut_soup": {
+      "name": "Thai Coconut Chicken Soup",
+      "description": "Aromatic coconut soup with shredded chicken, mushrooms, and lime in a fragrant lemongrass broth",
+      "calories": 380,
+      "protein": 28.0,
+      "carbs": 16.0,
+      "fat": 24.0,
+      "fiber": 2.5,
+      "prepTime": 15,
+      "cookTime": 25,
+      "ingredients": [
+        "6 oz boneless skinless chicken thighs",
+        "1 can (13.5 oz) full-fat coconut milk",
+        "1 cup chicken bone broth",
+        "1 cup sliced shiitake mushrooms",
+        "1 stalk lemongrass, cut into 2-inch pieces and bruised",
+        "1 inch fresh ginger, sliced",
+        "2 tbsp coconut aminos",
+        "1 tbsp fresh lime juice",
+        "1/2 tsp red pepper flakes",
+        "Fresh cilantro and lime wedges for serving"
+      ],
+      "instructions": [
+        "In a pot, bring coconut milk and bone broth to a simmer over medium heat. Add lemongrass and ginger slices.",
+        "Add chicken thighs whole to the pot and simmer for 15 minutes until cooked through.",
+        "Remove chicken, shred with two forks, and return to the pot.",
+        "Add mushrooms, coconut aminos, and red pepper flakes. Simmer 5 more minutes.",
+        "Remove lemongrass pieces and ginger slices. Stir in lime juice.",
+        "Serve in bowls topped with fresh cilantro and lime wedges."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch"]
+    },
+    "w30_steak_salad": {
+      "name": "Grilled Steak Salad",
+      "description": "Seared flank steak over mixed greens with roasted sweet potato, red onion, and balsamic vinaigrette",
+      "calories": 490,
+      "protein": 38.0,
+      "carbs": 26.0,
+      "fat": 26.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 20,
+      "ingredients": [
+        "6 oz flank steak",
+        "4 cups mixed greens",
+        "1 small sweet potato, diced and roasted",
+        "1/4 cup thinly sliced red onion",
+        "1/4 cup sliced radishes",
+        "2 tbsp extra virgin olive oil",
+        "1 tbsp balsamic vinegar (Whole30-compliant, no added sugar)",
+        "1 tsp Dijon mustard (Whole30-compliant)",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Season flank steak generously with salt and pepper. Let come to room temperature for 10 minutes.",
+        "Roast diced sweet potato at 400°F with a drizzle of olive oil for 15-18 minutes until tender.",
+        "Sear steak in a hot cast-iron skillet for 4-5 minutes per side for medium-rare. Rest 5 minutes, then slice thinly against the grain.",
+        "Whisk together olive oil, balsamic vinegar, Dijon mustard, salt, and pepper to make the vinaigrette.",
+        "Arrange greens on a plate, top with sliced steak, roasted sweet potato, red onion, and radishes. Drizzle with vinaigrette."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch"]
+    },
+    "w30_zucchini_turkey_boats": {
+      "name": "Turkey Taco Zucchini Boats",
+      "description": "Baked zucchini halves loaded with seasoned ground turkey, salsa, and guacamole",
+      "calories": 395,
+      "protein": 32.0,
+      "carbs": 18.0,
+      "fat": 22.0,
+      "fiber": 5.5,
+      "prepTime": 15,
+      "cookTime": 25,
+      "ingredients": [
+        "2 large zucchini, halved lengthwise",
+        "8 oz ground turkey",
+        "1/4 cup Whole30-compliant salsa",
+        "1/2 medium avocado, mashed",
+        "1/4 cup diced tomatoes",
+        "1 tsp chili powder",
+        "1/2 tsp cumin",
+        "1/4 tsp garlic powder",
+        "1 tbsp avocado oil",
+        "Salt and black pepper to taste",
+        "Fresh cilantro for garnish"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Scoop out the center of each zucchini half to create boats. Place on a lined baking sheet.",
+        "Heat avocado oil in a skillet over medium-high heat. Cook ground turkey for 5-6 minutes, breaking it apart, until browned.",
+        "Season turkey with chili powder, cumin, garlic powder, salt, and pepper. Stir in salsa and diced tomatoes.",
+        "Fill each zucchini boat with the turkey mixture. Bake for 18-20 minutes until zucchini is tender.",
+        "Top with mashed avocado and fresh cilantro before serving."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch"]
+    },
+    "w30_shrimp_cauliflower_rice": {
+      "name": "Shrimp Cauliflower Fried Rice",
+      "description": "Quick stir-fried cauliflower rice with plump shrimp, vegetables, and coconut aminos",
+      "calories": 340,
+      "protein": 30.0,
+      "carbs": 18.0,
+      "fat": 17.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "8 oz large shrimp, peeled and deveined",
+        "3 cups riced cauliflower",
+        "2 large eggs, beaten",
+        "1/2 cup diced carrots",
+        "1/2 cup frozen peas (Whole30-compliant: check no additives)",
+        "3 green onions, sliced",
+        "2 tbsp coconut aminos",
+        "1 tbsp sesame oil (toasted)",
+        "1 tbsp avocado oil",
+        "1 clove garlic, minced",
+        "1 tsp fresh grated ginger"
+      ],
+      "instructions": [
+        "Heat avocado oil in a large wok or skillet over high heat. Sear shrimp for 2 minutes per side until pink. Remove and set aside.",
+        "Add garlic and ginger to the wok, stir for 30 seconds. Add carrots and cook 2 minutes.",
+        "Push veggies aside, scramble the beaten eggs on the empty side of the wok, then mix together.",
+        "Add riced cauliflower and peas. Stir-fry for 4-5 minutes until cauliflower is tender.",
+        "Return shrimp to the wok, add coconut aminos and sesame oil, toss everything together.",
+        "Serve topped with sliced green onions."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "lunch"]
+    },
+    "w30_chicken_avocado_blt": {
+      "name": "Chicken Avocado BLT Lettuce Wraps",
+      "description": "Crispy bacon, grilled chicken, avocado, and tomato in butter lettuce cups with ranch drizzle",
+      "calories": 450,
+      "protein": 34.0,
+      "carbs": 10.0,
+      "fat": 31.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "5 oz grilled chicken breast, sliced",
+        "3 slices Whole30-compliant bacon (sugar-free, no nitrates)",
+        "1/2 medium avocado, sliced",
+        "4 large butter lettuce leaves",
+        "1/2 cup sliced cherry tomatoes",
+        "2 tbsp Whole30-compliant ranch dressing",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Cook bacon in a skillet over medium heat until crispy, about 4-5 minutes per side. Drain on paper towels.",
+        "Season chicken breast with salt and pepper. Grill or pan-sear 5-6 minutes per side until cooked through. Slice.",
+        "Arrange butter lettuce leaves as cups on a plate.",
+        "Layer sliced chicken, crumbled bacon, avocado slices, and cherry tomatoes in each cup.",
+        "Drizzle with Whole30-compliant ranch dressing and serve."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch", "no-cook"]
+    },
+    "w30_mediterranean_bowl": {
+      "name": "Mediterranean Salmon Bowl",
+      "description": "Herb-crusted baked salmon over cauliflower tabbouleh with olives, cucumbers, and tahini dressing",
+      "calories": 470,
+      "protein": 34.0,
+      "carbs": 16.0,
+      "fat": 31.0,
+      "fiber": 5.5,
+      "prepTime": 15,
+      "cookTime": 18,
+      "ingredients": [
+        "6 oz wild-caught salmon fillet",
+        "2 cups riced cauliflower",
+        "1/4 cup diced cucumber",
+        "1/4 cup halved Kalamata olives",
+        "2 tbsp diced red onion",
+        "2 tbsp chopped fresh parsley",
+        "1 tbsp chopped fresh mint",
+        "1 tbsp tahini",
+        "1 tbsp extra virgin olive oil",
+        "1 tbsp fresh lemon juice",
+        "1/2 tsp dried oregano",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Season salmon with oregano, salt, pepper, and a drizzle of olive oil. Bake for 14-16 minutes until flaky.",
+        "Sauté riced cauliflower in a dry pan over medium heat for 4-5 minutes until slightly dried out. Transfer to a bowl and cool.",
+        "Toss cooled cauliflower rice with cucumber, olives, red onion, parsley, mint, lemon juice, and remaining olive oil.",
+        "Whisk tahini with 1 tbsp water and a squeeze of lemon until smooth and drizzle-able.",
+        "Arrange cauliflower tabbouleh in a bowl, top with baked salmon, and drizzle with tahini dressing."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch"]
+    },
+    "w30_egg_roll_bowl": {
+      "name": "Egg Roll in a Bowl",
+      "description": "Deconstructed egg roll with ground pork, shredded cabbage, and ginger-garlic coconut aminos sauce",
+      "calories": 390,
+      "protein": 28.0,
+      "carbs": 14.0,
+      "fat": 25.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "8 oz ground pork",
+        "3 cups shredded green cabbage",
+        "1 cup shredded carrots",
+        "3 green onions, sliced",
+        "2 cloves garlic, minced",
+        "1 tbsp fresh grated ginger",
+        "2 tbsp coconut aminos",
+        "1 tbsp sesame oil",
+        "1 tbsp avocado oil",
+        "1/4 tsp white pepper"
+      ],
+      "instructions": [
+        "Heat avocado oil in a large skillet or wok over medium-high heat. Cook ground pork for 5-6 minutes, breaking apart, until browned. Drain excess fat.",
+        "Add garlic and ginger, stir for 30 seconds until fragrant.",
+        "Add shredded cabbage and carrots. Stir-fry for 5-6 minutes until cabbage is wilted but still has some crunch.",
+        "Pour in coconut aminos and sesame oil, toss to coat evenly. Season with white pepper.",
+        "Serve in bowls topped with sliced green onions."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "lunch"]
+    },
+    "w30_chipotle_chicken_bowl": {
+      "name": "Chipotle Chicken Sweet Potato Bowl",
+      "description": "Smoky chipotle-rubbed chicken over roasted sweet potatoes with cilantro-lime slaw",
+      "calories": 475,
+      "protein": 36.0,
+      "carbs": 34.0,
+      "fat": 22.0,
+      "fiber": 6.0,
+      "prepTime": 15,
+      "cookTime": 25,
+      "ingredients": [
+        "6 oz boneless skinless chicken thighs",
+        "1 medium sweet potato, cubed",
+        "2 cups shredded purple cabbage",
+        "1/4 cup chopped fresh cilantro",
+        "1 tbsp fresh lime juice",
+        "1 tsp chipotle powder",
+        "1/2 tsp cumin",
+        "1/2 tsp garlic powder",
+        "1/2 tsp onion powder",
+        "1.5 tbsp avocado oil",
+        "1/4 medium avocado, sliced",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Toss sweet potato cubes with 1/2 tbsp avocado oil and salt. Roast for 20-25 minutes until caramelized.",
+        "Mix chipotle powder, cumin, garlic powder, onion powder, salt, and pepper. Rub over chicken thighs.",
+        "Heat remaining avocado oil in a skillet over medium-high heat. Sear chicken 5 minutes per side until cooked through (165°F). Let rest, then slice.",
+        "Toss shredded cabbage with lime juice, cilantro, and a pinch of salt to make the slaw.",
+        "Assemble bowls with roasted sweet potato, sliced chipotle chicken, cilantro-lime slaw, and avocado slices."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch", "meal-prep"]
+    },
+    "w30_italian_meatball_soup": {
+      "name": "Italian Meatball and Vegetable Soup",
+      "description": "Tender Italian-seasoned meatballs simmered in a rich tomato broth with zucchini and spinach",
+      "calories": 400,
+      "protein": 32.0,
+      "carbs": 18.0,
+      "fat": 22.0,
+      "fiber": 4.5,
+      "prepTime": 20,
+      "cookTime": 25,
+      "ingredients": [
+        "8 oz ground beef (grass-fed)",
+        "1/4 cup almond flour",
+        "1 large egg",
+        "1 tsp Italian seasoning",
+        "1 can (14.5 oz) diced tomatoes",
+        "3 cups chicken bone broth",
+        "1 medium zucchini, diced",
+        "2 cups fresh spinach",
+        "1/4 cup diced white onion",
+        "2 cloves garlic, minced",
+        "1 tbsp extra virgin olive oil",
+        "Salt and black pepper to taste",
+        "Fresh basil for garnish"
+      ],
+      "instructions": [
+        "Mix ground beef, almond flour, egg, half the Italian seasoning, salt, and pepper. Form into 12-14 small meatballs.",
+        "Heat olive oil in a large pot over medium heat. Brown meatballs on all sides, about 4-5 minutes. Remove and set aside.",
+        "In the same pot, sauté onion and garlic for 2 minutes. Add diced tomatoes, bone broth, remaining Italian seasoning, and bring to a simmer.",
+        "Return meatballs to the pot, add zucchini, and simmer for 15 minutes until meatballs are cooked through.",
+        "Stir in fresh spinach until wilted. Season with salt and pepper.",
+        "Ladle into bowls and garnish with fresh basil."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch"]
+    },
+    "w30_burger_lettuce_wrap": {
+      "name": "Classic Burger Lettuce Wraps",
+      "description": "Juicy grass-fed beef burgers in crisp lettuce wraps with all the fixings and special sauce",
+      "calories": 465,
+      "protein": 34.0,
+      "carbs": 10.0,
+      "fat": 33.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "6 oz ground beef (grass-fed), formed into a patty",
+        "4 large iceberg lettuce leaves",
+        "2 slices tomato",
+        "2 slices red onion",
+        "4 dill pickle slices (Whole30-compliant, no sugar)",
+        "1 tbsp Whole30-compliant mayo",
+        "1 tsp yellow mustard",
+        "1 tsp coconut aminos",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Season the burger patty generously with salt and pepper on both sides.",
+        "Cook in a hot cast-iron skillet or grill over medium-high heat for 4-5 minutes per side for medium doneness.",
+        "Mix together mayo, mustard, and coconut aminos to create the special sauce.",
+        "Stack two lettuce leaves together for each wrap. Place cooked burger on lettuce, top with tomato, onion, pickles, and special sauce.",
+        "Wrap lettuce around the burger and secure with a toothpick if needed."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch"]
+    },
+    "w30_lemon_herb_chicken": {
+      "name": "Lemon Herb Roasted Chicken Thighs",
+      "description": "Juicy bone-in chicken thighs roasted with lemon, garlic, and fresh herbs over roasted vegetables",
+      "calories": 520,
+      "protein": 38.0,
+      "carbs": 22.0,
+      "fat": 30.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 40,
+      "ingredients": [
+        "2 bone-in, skin-on chicken thighs (about 10 oz total)",
+        "1 medium lemon, half sliced, half juiced",
+        "4 cloves garlic, smashed",
+        "2 cups broccoli florets",
+        "1 cup diced butternut squash",
+        "1 tbsp fresh rosemary, chopped",
+        "1 tbsp fresh thyme leaves",
+        "2 tbsp extra virgin olive oil",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Toss broccoli and butternut squash with 1 tbsp olive oil, salt, and pepper on a sheet pan.",
+        "Season chicken thighs with salt, pepper, rosemary, and thyme. Nestle them skin-side up among the vegetables.",
+        "Scatter smashed garlic cloves and lemon slices around the pan. Drizzle chicken with remaining olive oil and lemon juice.",
+        "Roast for 35-40 minutes until chicken skin is golden and crispy, and internal temp reaches 175°F.",
+        "Let rest 5 minutes before serving directly from the sheet pan."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "dinner"]
+    },
+    "w30_salmon_asparagus": {
+      "name": "Pan-Seared Salmon with Roasted Asparagus",
+      "description": "Crispy-skinned wild salmon with tender roasted asparagus and a bright lemon-caper pan sauce",
+      "calories": 480,
+      "protein": 40.0,
+      "carbs": 10.0,
+      "fat": 31.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "6 oz wild-caught salmon fillet, skin on",
+        "1 bunch asparagus (about 12 spears), trimmed",
+        "2 tbsp ghee",
+        "1 tbsp capers, drained",
+        "2 tbsp fresh lemon juice",
+        "2 cloves garlic, minced",
+        "1 tbsp avocado oil",
+        "Salt and black pepper to taste",
+        "Lemon wedges for serving"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Toss asparagus with avocado oil, salt, and pepper on a baking sheet. Roast for 12-15 minutes until tender-crisp.",
+        "Pat salmon dry and season with salt and pepper. Heat 1 tbsp ghee in a skillet over medium-high heat.",
+        "Place salmon skin-side down and sear for 4 minutes. Flip and cook 3 more minutes until just cooked through. Remove from pan.",
+        "In the same skillet, add remaining ghee, garlic, and capers. Cook 30 seconds, then add lemon juice and swirl to combine.",
+        "Plate asparagus with salmon on top, spoon the lemon-caper sauce over everything, and serve with lemon wedges."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "dinner"]
+    },
+    "w30_beef_stir_fry": {
+      "name": "Beef and Broccoli Stir-Fry",
+      "description": "Thinly sliced beef and crisp broccoli tossed in a savory coconut aminos and ginger sauce",
+      "calories": 430,
+      "protein": 36.0,
+      "carbs": 16.0,
+      "fat": 24.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 12,
+      "ingredients": [
+        "8 oz flank steak, thinly sliced against the grain",
+        "3 cups broccoli florets",
+        "3 tbsp coconut aminos",
+        "1 tbsp arrowroot starch mixed with 2 tbsp water",
+        "1 tbsp sesame oil",
+        "1 tbsp avocado oil",
+        "3 cloves garlic, minced",
+        "1 tbsp fresh grated ginger",
+        "1/4 tsp red pepper flakes",
+        "Sesame seeds for garnish"
+      ],
+      "instructions": [
+        "Toss sliced beef with 1 tbsp coconut aminos and let sit while you prep other ingredients.",
+        "Heat avocado oil in a wok or large skillet over high heat until smoking. Sear beef in a single layer for 2 minutes, flip, and cook 1 more minute. Remove.",
+        "Add sesame oil to the wok, toss in broccoli and stir-fry 3-4 minutes until bright green and tender-crisp.",
+        "Add garlic, ginger, and red pepper flakes, stir 30 seconds. Return beef to the wok.",
+        "Pour in remaining coconut aminos and arrowroot slurry. Toss until sauce thickens and coats everything, about 1 minute.",
+        "Serve over cauliflower rice if desired. Garnish with sesame seeds."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "dinner"]
+    },
+    "w30_pork_carnitas": {
+      "name": "Slow-Cooker Pork Carnitas",
+      "description": "Fall-apart tender pork shoulder braised with citrus and spices, crisped under the broiler",
+      "calories": 440,
+      "protein": 36.0,
+      "carbs": 8.0,
+      "fat": 28.0,
+      "fiber": 2.0,
+      "prepTime": 15,
+      "cookTime": 480,
+      "ingredients": [
+        "2 lbs pork shoulder (bone-in or boneless), trimmed",
+        "1 medium orange, juiced",
+        "2 limes, juiced",
+        "4 cloves garlic, minced",
+        "1 tbsp cumin",
+        "1 tbsp chili powder",
+        "1 tsp oregano",
+        "1 tsp smoked paprika",
+        "1/2 cup diced white onion",
+        "1 jalapeño, seeded and diced",
+        "Salt and black pepper to taste",
+        "Fresh cilantro and lime wedges for serving"
+      ],
+      "instructions": [
+        "Mix cumin, chili powder, oregano, smoked paprika, salt, and pepper. Rub generously all over the pork shoulder.",
+        "Place onion, garlic, and jalapeño in the bottom of a slow cooker. Set pork on top. Pour orange and lime juice over.",
+        "Cover and cook on LOW for 8 hours or HIGH for 4 hours until pork shreds easily.",
+        "Shred meat with two forks, discarding any large pieces of fat. Toss shredded pork in the cooking juices.",
+        "For crispy edges, spread shredded pork on a baking sheet and broil for 3-5 minutes until edges char.",
+        "Serve in lettuce cups or over cauliflower rice with cilantro and lime wedges. Serves 4-6."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "slow-cooker", "dinner", "meal-prep"]
+    },
+    "w30_stuffed_peppers": {
+      "name": "Stuffed Bell Peppers",
+      "description": "Colorful bell peppers filled with seasoned ground beef, cauliflower rice, and tomato sauce",
+      "calories": 420,
+      "protein": 30.0,
+      "carbs": 22.0,
+      "fat": 24.0,
+      "fiber": 5.5,
+      "prepTime": 15,
+      "cookTime": 35,
+      "ingredients": [
+        "3 large bell peppers (mixed colors), halved and seeded",
+        "8 oz ground beef",
+        "1 cup riced cauliflower",
+        "1/2 cup Whole30-compliant marinara sauce",
+        "1/4 cup diced white onion",
+        "2 cloves garlic, minced",
+        "1 tsp Italian seasoning",
+        "1/2 tsp smoked paprika",
+        "1 tbsp avocado oil",
+        "Salt and black pepper to taste",
+        "Fresh basil for garnish"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Place pepper halves cut-side up in a baking dish.",
+        "Heat avocado oil in a skillet over medium-high heat. Sauté onion and garlic for 2 minutes, then add ground beef. Cook 5-6 minutes until browned.",
+        "Stir in cauliflower rice, half the marinara sauce, Italian seasoning, smoked paprika, salt, and pepper. Cook 2 minutes.",
+        "Fill each pepper half generously with the beef mixture. Spoon remaining marinara over the tops.",
+        "Cover with foil and bake for 25 minutes. Remove foil and bake 10 more minutes until peppers are tender.",
+        "Garnish with fresh basil. Serves 2-3."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "dinner", "meal-prep"]
+    },
+    "w30_garlic_shrimp_zoodles": {
+      "name": "Garlic Shrimp with Zucchini Noodles",
+      "description": "Succulent garlic butter shrimp served over spiralized zucchini noodles with cherry tomatoes",
+      "calories": 360,
+      "protein": 32.0,
+      "carbs": 14.0,
+      "fat": 20.0,
+      "fiber": 3.5,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "8 oz large shrimp, peeled and deveined",
+        "3 medium zucchini, spiralized",
+        "3 tbsp ghee",
+        "4 cloves garlic, minced",
+        "1/2 cup cherry tomatoes, halved",
+        "1/4 tsp red pepper flakes",
+        "2 tbsp fresh lemon juice",
+        "2 tbsp chopped fresh parsley",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Pat shrimp dry and season with salt and pepper.",
+        "Melt 2 tbsp ghee in a large skillet over medium-high heat. Add shrimp in a single layer and cook 2 minutes per side until pink. Remove.",
+        "Add remaining ghee and garlic to the skillet. Sauté 30 seconds until fragrant. Add cherry tomatoes and cook 1 minute.",
+        "Add zucchini noodles and toss for 2-3 minutes until just tender (don't overcook or they'll get watery).",
+        "Return shrimp to the pan, add lemon juice, red pepper flakes, and parsley. Toss to combine and serve immediately."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "dinner"]
+    },
+    "w30_tuscan_chicken": {
+      "name": "Tuscan Chicken with Sun-Dried Tomatoes",
+      "description": "Creamy coconut milk-braised chicken with sun-dried tomatoes, spinach, and fresh basil",
+      "calories": 490,
+      "protein": 38.0,
+      "carbs": 12.0,
+      "fat": 32.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "2 boneless skinless chicken breasts (about 12 oz total)",
+        "1/3 cup sun-dried tomatoes (oil-packed, check for Whole30 compliance)",
+        "3/4 cup full-fat coconut milk",
+        "3 cups fresh baby spinach",
+        "4 cloves garlic, minced",
+        "1 tbsp nutritional yeast",
+        "1 tbsp ghee",
+        "1 tsp Italian seasoning",
+        "Salt and black pepper to taste",
+        "Fresh basil leaves for garnish"
+      ],
+      "instructions": [
+        "Season chicken breasts with Italian seasoning, salt, and pepper. Heat ghee in a large skillet over medium-high heat.",
+        "Sear chicken for 5-6 minutes per side until golden and cooked through (165°F). Remove and set aside.",
+        "In the same skillet, add garlic and cook 30 seconds. Add sun-dried tomatoes and coconut milk. Stir in nutritional yeast.",
+        "Simmer for 3-4 minutes until sauce thickens slightly. Add spinach and stir until wilted.",
+        "Return chicken to the skillet, spooning sauce over the top. Simmer 2 more minutes.",
+        "Garnish with fresh basil and serve. Serves 2."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "dinner"]
+    },
+    "w30_lamb_chops": {
+      "name": "Herb-Crusted Lamb Chops with Mashed Cauliflower",
+      "description": "Tender rack of lamb chops with a rosemary-garlic crust served over silky mashed cauliflower",
+      "calories": 530,
+      "protein": 36.0,
+      "carbs": 14.0,
+      "fat": 36.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 20,
+      "ingredients": [
+        "4 lamb rib chops (about 12 oz total)",
+        "1 large head cauliflower, cut into florets",
+        "3 tbsp ghee, divided",
+        "2 cloves garlic, minced",
+        "1 tbsp fresh rosemary, finely chopped",
+        "1 tbsp fresh thyme leaves",
+        "2 tbsp extra virgin olive oil",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Boil cauliflower florets in salted water for 10-12 minutes until very tender. Drain well.",
+        "Mash cauliflower with 2 tbsp ghee, salt, and pepper using a potato masher or food processor until smooth and creamy.",
+        "Mix garlic, rosemary, thyme, olive oil, salt, and pepper into a paste. Rub all over lamb chops.",
+        "Heat remaining ghee in a cast-iron skillet over high heat. Sear lamb chops 3-4 minutes per side for medium-rare (145°F internal).",
+        "Let lamb rest for 5 minutes. Serve over a bed of mashed cauliflower."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "dinner"]
+    },
+    "w30_chicken_tikka": {
+      "name": "Chicken Tikka with Roasted Vegetables",
+      "description": "Warmly spiced chicken thighs with tikka masala seasoning served with roasted cauliflower and sweet potato",
+      "calories": 460,
+      "protein": 34.0,
+      "carbs": 28.0,
+      "fat": 24.0,
+      "fiber": 5.5,
+      "prepTime": 15,
+      "cookTime": 30,
+      "ingredients": [
+        "8 oz boneless skinless chicken thighs, cut into chunks",
+        "1/3 cup full-fat coconut milk",
+        "1 tsp turmeric",
+        "1 tsp garam masala",
+        "1 tsp cumin",
+        "1/2 tsp coriander",
+        "1/2 tsp smoked paprika",
+        "1/4 tsp cayenne pepper",
+        "1 medium sweet potato, cubed",
+        "2 cups cauliflower florets",
+        "1.5 tbsp avocado oil",
+        "2 cloves garlic, minced",
+        "1 tbsp fresh grated ginger",
+        "Salt and black pepper to taste",
+        "Fresh cilantro for garnish"
+      ],
+      "instructions": [
+        "Mix coconut milk, turmeric, garam masala, cumin, coriander, paprika, cayenne, garlic, ginger, and salt in a bowl. Toss chicken chunks in the marinade and let sit 10 minutes.",
+        "Preheat oven to 425°F. Toss sweet potato and cauliflower with 1 tbsp avocado oil and salt on a sheet pan. Roast for 20-25 minutes.",
+        "Heat remaining avocado oil in a skillet over medium-high heat. Cook marinated chicken for 6-8 minutes, turning occasionally, until golden and cooked through.",
+        "Add any remaining marinade to the skillet and simmer 2 minutes until thickened.",
+        "Serve chicken over roasted vegetables, garnished with fresh cilantro."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "dinner"]
+    },
+    "w30_fish_tacos": {
+      "name": "Blackened Fish Tacos in Jicama Shells",
+      "description": "Cajun-spiced white fish in crisp jicama taco shells with mango salsa and avocado crema",
+      "calories": 390,
+      "protein": 32.0,
+      "carbs": 24.0,
+      "fat": 20.0,
+      "fiber": 8.0,
+      "prepTime": 20,
+      "cookTime": 10,
+      "ingredients": [
+        "6 oz cod or mahi-mahi fillet",
+        "1 medium jicama, peeled and sliced into thin rounds",
+        "1/2 cup diced mango",
+        "2 tbsp diced red onion",
+        "1 tbsp chopped fresh cilantro",
+        "1 tbsp fresh lime juice",
+        "1/2 medium avocado",
+        "2 tbsp full-fat coconut milk",
+        "1 tsp chili powder",
+        "1/2 tsp cumin",
+        "1/2 tsp smoked paprika",
+        "1/4 tsp garlic powder",
+        "1 tbsp avocado oil",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Mix chili powder, cumin, smoked paprika, garlic powder, salt, and pepper. Coat fish on all sides with the spice blend.",
+        "Make mango salsa: combine diced mango, red onion, cilantro, half the lime juice, and a pinch of salt.",
+        "Make avocado crema: blend avocado, coconut milk, remaining lime juice, and salt until smooth.",
+        "Heat avocado oil in a skillet over medium-high heat. Cook fish 4-5 minutes per side until blackened and flaky.",
+        "Flake fish into large chunks. Serve in jicama rounds topped with mango salsa and avocado crema."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "dinner"]
+    },
+    "w30_pot_roast": {
+      "name": "Classic Pot Roast with Root Vegetables",
+      "description": "Melt-in-your-mouth beef chuck roast slow-braised with carrots, parsnips, and fresh herbs",
+      "calories": 510,
+      "protein": 40.0,
+      "carbs": 24.0,
+      "fat": 28.0,
+      "fiber": 5.0,
+      "prepTime": 20,
+      "cookTime": 480,
+      "ingredients": [
+        "2 lbs beef chuck roast",
+        "3 medium carrots, cut into 2-inch chunks",
+        "2 medium parsnips, cut into 2-inch chunks",
+        "1 large yellow onion, quartered",
+        "4 cloves garlic, smashed",
+        "1 cup beef bone broth",
+        "2 tbsp tomato paste (no sugar added)",
+        "2 sprigs fresh rosemary",
+        "3 sprigs fresh thyme",
+        "1 tbsp avocado oil",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Season chuck roast generously with salt and pepper. Heat avocado oil in a large Dutch oven over high heat and sear the roast 3-4 minutes per side until deeply browned. Remove.",
+        "Add onion and garlic to the pot and cook 2 minutes. Stir in tomato paste and cook 1 minute more.",
+        "Pour in bone broth and scrape up any browned bits from the bottom.",
+        "Return the roast to the pot, add rosemary and thyme sprigs. Surround with carrots and parsnips.",
+        "Cover with a tight lid and braise in a 300°F oven for 3.5-4 hours (or slow cooker on LOW for 8 hours) until fork-tender.",
+        "Slice or shred meat, serve with vegetables and cooking liquid spooned over. Serves 4-6."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "slow-cooker", "dinner", "meal-prep"]
+    },
+    "w30_turkey_meatloaf": {
+      "name": "Turkey Meatloaf with Roasted Brussels Sprouts",
+      "description": "Moist ground turkey meatloaf with a tangy tomato glaze alongside crispy halved Brussels sprouts",
+      "calories": 440,
+      "protein": 36.0,
+      "carbs": 20.0,
+      "fat": 24.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 45,
+      "ingredients": [
+        "1 lb ground turkey",
+        "1/4 cup almond flour",
+        "1 large egg",
+        "1/4 cup diced celery",
+        "1/4 cup diced white onion",
+        "2 cloves garlic, minced",
+        "2 tbsp tomato paste (no sugar added)",
+        "1 tbsp coconut aminos",
+        "1 tsp dried thyme",
+        "1 lb Brussels sprouts, halved",
+        "1.5 tbsp avocado oil",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Mix ground turkey, almond flour, egg, celery, onion, garlic, half the tomato paste, coconut aminos, thyme, salt, and pepper.",
+        "Shape mixture into a loaf on a parchment-lined baking sheet. Spread remaining tomato paste over the top.",
+        "Toss halved Brussels sprouts with avocado oil, salt, and pepper. Scatter around the meatloaf.",
+        "Bake for 40-45 minutes until meatloaf reaches 165°F internal and Brussels sprouts are golden and crispy.",
+        "Let meatloaf rest 10 minutes before slicing. Serves 3-4."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "dinner", "meal-prep"]
+    },
+    "w30_seared_scallops": {
+      "name": "Seared Scallops with Butternut Squash Purée",
+      "description": "Golden-crusted sea scallops served over velvety butternut squash purée with crispy prosciutto",
+      "calories": 410,
+      "protein": 30.0,
+      "carbs": 28.0,
+      "fat": 20.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 25,
+      "ingredients": [
+        "8 large dry-packed sea scallops (about 8 oz)",
+        "2 cups cubed butternut squash",
+        "2 slices Whole30-compliant prosciutto",
+        "2 tbsp ghee, divided",
+        "1/4 tsp ground nutmeg",
+        "1/4 cup chicken bone broth",
+        "1 tbsp fresh sage leaves",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Boil butternut squash in salted water for 12-15 minutes until very tender. Drain and purée with 1 tbsp ghee, bone broth, nutmeg, salt, and pepper until silky smooth.",
+        "Crisp prosciutto slices in a dry skillet over medium heat for 2-3 minutes per side. Crumble and set aside.",
+        "Pat scallops very dry with paper towels and season with salt and pepper.",
+        "Heat remaining ghee in a skillet over high heat until smoking. Sear scallops 2 minutes per side without moving them — they should develop a deep golden crust.",
+        "Spoon butternut purée onto plates, arrange scallops on top, and finish with crumbled prosciutto and fried sage leaves."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "dinner"]
+    },
+    "w30_chicken_stir_fry": {
+      "name": "Cashew Chicken Stir-Fry",
+      "description": "Quick weeknight stir-fry with tender chicken, roasted cashews, and colorful vegetables in a savory sauce",
+      "calories": 460,
+      "protein": 36.0,
+      "carbs": 20.0,
+      "fat": 26.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 12,
+      "ingredients": [
+        "8 oz boneless skinless chicken breast, cut into bite-size pieces",
+        "1/3 cup raw cashews",
+        "1 cup snap peas, trimmed",
+        "1/2 cup diced red bell pepper",
+        "1/2 cup sliced water chestnuts",
+        "3 tbsp coconut aminos",
+        "1 tbsp arrowroot starch mixed with 2 tbsp water",
+        "1 tbsp avocado oil",
+        "1 tsp sesame oil",
+        "2 cloves garlic, minced",
+        "1 tsp fresh grated ginger",
+        "Green onions for garnish"
+      ],
+      "instructions": [
+        "Toast cashews in a dry skillet over medium heat for 3-4 minutes, tossing frequently, until golden. Set aside.",
+        "Heat avocado oil in a wok over high heat. Season chicken with salt and stir-fry for 4-5 minutes until golden and cooked through. Remove.",
+        "Add snap peas, bell pepper, and water chestnuts to the wok. Stir-fry 2-3 minutes until crisp-tender.",
+        "Add garlic and ginger, cook 30 seconds. Return chicken to the wok.",
+        "Pour in coconut aminos, sesame oil, and arrowroot slurry. Toss until sauce thickens and coats everything.",
+        "Top with toasted cashews and green onions. Serve over cauliflower rice."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "one-pan", "dinner"]
+    },
+    "w30_balsamic_pork_chops": {
+      "name": "Balsamic Glazed Pork Chops with Roasted Beets",
+      "description": "Thick-cut pork chops with a tangy balsamic reduction alongside sweet roasted beets and arugula",
+      "calories": 470,
+      "protein": 36.0,
+      "carbs": 22.0,
+      "fat": 26.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 35,
+      "ingredients": [
+        "2 bone-in pork chops (about 10 oz each)",
+        "3 medium beets, peeled and cubed",
+        "2 cups fresh arugula",
+        "3 tbsp balsamic vinegar (Whole30-compliant, no sugar added)",
+        "1 tbsp ghee",
+        "1.5 tbsp extra virgin olive oil",
+        "2 cloves garlic, minced",
+        "1 tsp fresh thyme leaves",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Toss cubed beets with 1 tbsp olive oil, salt, and pepper. Roast for 25-30 minutes until tender and caramelized.",
+        "Season pork chops generously with salt and pepper. Heat ghee in an oven-safe skillet over medium-high heat.",
+        "Sear pork chops 3 minutes per side until golden. Transfer skillet to the oven and cook 8-10 minutes until internal temp reaches 145°F.",
+        "Remove pork chops to rest. Place skillet back on stove over medium heat. Add garlic, cook 30 seconds, then pour in balsamic vinegar and thyme. Simmer 2-3 minutes until reduced and syrupy.",
+        "Toss arugula with remaining olive oil and a pinch of salt. Plate with roasted beets, pork chops, and drizzle the balsamic glaze over everything."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "dinner"]
+    },
+    "w30_guacamole": {
+      "name": "Classic Guacamole with Veggie Dippers",
+      "description": "Chunky, zesty guacamole served with an assortment of fresh vegetable sticks for dipping",
+      "calories": 220,
+      "protein": 4.0,
+      "carbs": 16.0,
+      "fat": 18.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "2 ripe avocados, diced",
+        "2 tbsp diced red onion",
+        "1 small jalapeño, seeded and minced",
+        "2 tbsp chopped fresh cilantro",
+        "1 tbsp fresh lime juice",
+        "1/4 tsp cumin",
+        "1 cup carrot sticks",
+        "1 cup celery sticks",
+        "1 cup cucumber slices",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "In a bowl, mash one avocado roughly and dice the other for a chunky texture.",
+        "Fold in red onion, jalapeño, cilantro, lime juice, cumin, and salt.",
+        "Taste and adjust seasoning — add more lime or salt as needed.",
+        "Serve immediately with carrot sticks, celery sticks, and cucumber slices."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "snack", "no-cook"]
+    },
+    "w30_turkey_roll_ups": {
+      "name": "Turkey and Avocado Roll-Ups",
+      "description": "Whole30-compliant deli turkey rolled around avocado, cucumber, and mustard for a quick protein snack",
+      "calories": 195,
+      "protein": 18.0,
+      "carbs": 6.0,
+      "fat": 12.0,
+      "fiber": 3.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "4 oz Whole30-compliant deli turkey slices (no sugar, nitrate-free)",
+        "1/3 medium avocado, sliced",
+        "1/4 cup thinly sliced cucumber",
+        "1 tsp Dijon mustard (Whole30-compliant)",
+        "Fresh cracked black pepper"
+      ],
+      "instructions": [
+        "Lay turkey slices flat on a cutting board.",
+        "Spread a thin layer of Dijon mustard across each slice.",
+        "Place avocado slices and cucumber strips at one end of each turkey slice.",
+        "Roll up tightly and secure with a toothpick if needed. Serve immediately."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "snack", "no-cook"]
+    },
+    "w30_deviled_eggs": {
+      "name": "Everything Bagel Deviled Eggs",
+      "description": "Classic deviled eggs made with compliant mayo and topped with everything bagel seasoning",
+      "calories": 210,
+      "protein": 13.0,
+      "carbs": 2.0,
+      "fat": 17.0,
+      "fiber": 0.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "6 large eggs",
+        "2 tbsp Whole30-compliant mayo",
+        "1 tsp Dijon mustard (Whole30-compliant)",
+        "1 tsp apple cider vinegar",
+        "1 tbsp Whole30-compliant everything bagel seasoning",
+        "Pinch of smoked paprika",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Place eggs in a pot, cover with cold water. Bring to a boil, then cover, remove from heat, and let sit 12 minutes.",
+        "Transfer eggs to an ice bath for 5 minutes. Peel carefully.",
+        "Slice eggs in half lengthwise and scoop yolks into a bowl.",
+        "Mash yolks with mayo, Dijon, apple cider vinegar, and salt until smooth.",
+        "Pipe or spoon filling back into egg white halves. Sprinkle with everything bagel seasoning and paprika. Makes 12 halves."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "snack", "meal-prep"]
+    },
+    "w30_almond_butter_apple": {
+      "name": "Apple Slices with Almond Butter",
+      "description": "Crisp apple slices paired with creamy almond butter and a sprinkle of cinnamon",
+      "calories": 245,
+      "protein": 7.0,
+      "carbs": 28.0,
+      "fat": 14.0,
+      "fiber": 5.5,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1 large Honeycrisp apple, cored and sliced",
+        "2 tbsp almond butter (no sugar added)",
+        "1/4 tsp cinnamon"
+      ],
+      "instructions": [
+        "Core and slice the apple into thin wedges.",
+        "Arrange apple slices on a plate with almond butter in a small dish for dipping.",
+        "Sprinkle cinnamon over the almond butter."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "snack", "no-cook"]
+    },
+    "w30_coconut_energy_bites": {
+      "name": "Coconut Date Energy Bites",
+      "description": "No-bake energy bites made with dates, coconut, cashews, and a hint of vanilla",
+      "calories": 180,
+      "protein": 4.0,
+      "carbs": 22.0,
+      "fat": 10.0,
+      "fiber": 3.0,
+      "prepTime": 15,
+      "cookTime": 0,
+      "ingredients": [
+        "1 cup Medjool dates, pitted (about 8-10)",
+        "1/2 cup raw cashews",
+        "1/4 cup unsweetened shredded coconut",
+        "2 tbsp coconut oil, melted",
+        "1/2 tsp vanilla extract (no sugar added)",
+        "1/4 tsp sea salt",
+        "2 tbsp unsweetened coconut flakes for rolling"
+      ],
+      "instructions": [
+        "Place dates, cashews, shredded coconut, coconut oil, vanilla, and salt in a food processor.",
+        "Pulse until the mixture is finely chopped and sticks together when pressed between your fingers.",
+        "Roll into 10-12 small balls, about 1 tablespoon each.",
+        "Roll each ball in coconut flakes to coat.",
+        "Refrigerate for at least 30 minutes to firm up. Store in the fridge for up to one week. Makes ~12 bites (serving: 3 bites)."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "snack", "meal-prep", "no-cook"]
+    },
+    "w30_prosciutto_wrapped_melon": {
+      "name": "Prosciutto-Wrapped Melon Bites",
+      "description": "Sweet cantaloupe wrapped in salty prosciutto with a squeeze of fresh lime",
+      "calories": 150,
+      "protein": 10.0,
+      "carbs": 14.0,
+      "fat": 6.0,
+      "fiber": 1.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "8 cantaloupe chunks (about 1-inch cubes)",
+        "4 slices Whole30-compliant prosciutto, halved lengthwise",
+        "1 tbsp fresh lime juice",
+        "Fresh mint leaves",
+        "Cracked black pepper"
+      ],
+      "instructions": [
+        "Cut cantaloupe into 1-inch cubes.",
+        "Wrap each cube with a half-slice of prosciutto.",
+        "Arrange on a plate, squeeze fresh lime over the top.",
+        "Garnish with fresh mint leaves and cracked black pepper."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "snack", "no-cook"]
+    },
+    "w30_sweet_potato_fries": {
+      "name": "Baked Sweet Potato Fries with Garlic Aioli",
+      "description": "Crispy oven-baked sweet potato fries with a creamy homemade garlic aioli dipping sauce",
+      "calories": 270,
+      "protein": 4.0,
+      "carbs": 32.0,
+      "fat": 15.0,
+      "fiber": 4.5,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "1 large sweet potato, cut into 1/4-inch fries",
+        "1 tbsp avocado oil",
+        "1/2 tsp smoked paprika",
+        "1/4 tsp garlic powder",
+        "2 tbsp Whole30-compliant mayo",
+        "1 small clove garlic, finely grated",
+        "1 tsp fresh lemon juice",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Soak cut fries in cold water for 10 minutes, then pat completely dry.",
+        "Toss fries with avocado oil, smoked paprika, garlic powder, salt, and pepper. Spread in a single layer on a parchment-lined baking sheet.",
+        "Bake for 20-25 minutes, flipping halfway, until golden and crispy on the edges.",
+        "Mix mayo, grated garlic, lemon juice, and a pinch of salt to make the aioli.",
+        "Serve fries hot with garlic aioli on the side."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "snack"]
+    },
+    "w30_smoked_salmon_bites": {
+      "name": "Smoked Salmon Cucumber Bites",
+      "description": "Refreshing cucumber rounds topped with smoked salmon, avocado mousse, and fresh dill",
+      "calories": 185,
+      "protein": 14.0,
+      "carbs": 6.0,
+      "fat": 12.0,
+      "fiber": 2.5,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 large English cucumber, cut into 1/2-inch thick rounds",
+        "3 oz wild-caught smoked salmon (sugar-free)",
+        "1/2 medium avocado",
+        "1 tbsp fresh lemon juice",
+        "1 tbsp chopped fresh dill",
+        "Pinch of garlic powder",
+        "Cracked black pepper",
+        "Capers for garnish"
+      ],
+      "instructions": [
+        "Mash avocado with lemon juice, garlic powder, and a pinch of salt until smooth.",
+        "Arrange cucumber rounds on a serving plate.",
+        "Top each round with a small spoonful of avocado mousse.",
+        "Place a piece of smoked salmon on each cucumber round.",
+        "Garnish with fresh dill, capers, and cracked black pepper."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "snack", "no-cook"]
+    },
+    "w30_plantain_chips_salsa": {
+      "name": "Baked Plantain Chips with Fresh Salsa",
+      "description": "Thin crispy baked green plantain chips served with a bright pico de gallo",
+      "calories": 200,
+      "protein": 2.0,
+      "carbs": 34.0,
+      "fat": 8.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "2 large green plantains, peeled",
+        "1 tbsp avocado oil",
+        "1/2 cup diced tomatoes",
+        "2 tbsp diced white onion",
+        "1 tbsp chopped fresh cilantro",
+        "1 tsp fresh lime juice",
+        "1/2 small jalapeño, seeded and minced",
+        "Sea salt to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Slice plantains paper-thin using a mandoline or sharp knife.",
+        "Toss plantain slices with avocado oil and sea salt. Arrange in a single layer on parchment-lined baking sheets.",
+        "Bake for 15-18 minutes, flipping halfway, until golden and crispy. Watch closely to prevent burning.",
+        "While chips bake, combine tomatoes, onion, cilantro, lime juice, jalapeño, and salt for the salsa.",
+        "Let chips cool for 5 minutes to crisp up further. Serve with fresh salsa."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "snack"]
+    },
+    "w30_mixed_nuts_olives": {
+      "name": "Rosemary Roasted Nuts and Olives",
+      "description": "Warm roasted mixed nuts and marinated olives with rosemary, garlic, and red pepper flakes",
+      "calories": 230,
+      "protein": 6.0,
+      "carbs": 8.0,
+      "fat": 21.0,
+      "fiber": 3.5,
+      "prepTime": 5,
+      "cookTime": 12,
+      "ingredients": [
+        "1/4 cup raw almonds",
+        "1/4 cup raw cashews",
+        "1/4 cup raw walnuts",
+        "1/3 cup mixed olives (Kalamata and green)",
+        "1 tbsp extra virgin olive oil",
+        "1 sprig fresh rosemary, leaves stripped",
+        "1 clove garlic, thinly sliced",
+        "1/4 tsp red pepper flakes",
+        "Flaky sea salt"
+      ],
+      "instructions": [
+        "Preheat oven to 350°F. Spread nuts on a baking sheet and roast for 8-10 minutes until fragrant and lightly golden.",
+        "In a small skillet, warm olive oil over low heat with garlic, rosemary, and red pepper flakes for 2-3 minutes.",
+        "Toss warm roasted nuts and olives with the infused oil mixture.",
+        "Sprinkle with flaky sea salt and serve warm. Makes 2 servings."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "snack"]
+    },
+    "w30_waldorf_chicken_salad": {
+      "name": "Whole30 Waldorf Chicken Salad",
+      "description": "Classic Waldorf salad reinvented with shredded chicken, crisp apples, grapes, celery, and walnuts in a creamy mayo dressing",
+      "calories": 430,
+      "protein": 32.0,
+      "carbs": 18.0,
+      "fat": 26.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 0,
+      "ingredients": [
+        "6 oz cooked chicken breast, shredded",
+        "1/2 medium Granny Smith apple, diced",
+        "1/4 cup halved red grapes",
+        "1/4 cup diced celery",
+        "2 tbsp chopped walnuts",
+        "2 tbsp Whole30-compliant mayo",
+        "1 tsp fresh lemon juice",
+        "1/4 tsp celery seed",
+        "4 cups mixed greens",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "In a large bowl, combine shredded chicken, diced apple, grapes, celery, and walnuts.",
+        "In a small bowl, whisk together mayo, lemon juice, celery seed, salt, and pepper.",
+        "Pour dressing over the chicken mixture and toss gently to coat.",
+        "Serve over a bed of mixed greens."
+      ],
+      "tags": ["whole30", "paleo", "dairy-free", "grain-free", "sugar-free", "lunch", "no-cook"]
+    }
+  },
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "w30_veggie_scramble",
+          "lunch": "w30_chicken_caesar_wrap",
+          "dinner": "w30_lemon_herb_chicken",
+          "snack": "w30_guacamole"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "w30_sweet_potato_hash",
+          "lunch": "w30_tuna_stuffed_avocado",
+          "dinner": "w30_salmon_asparagus",
+          "snack": "w30_turkey_roll_ups"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "w30_banana_egg_pancakes",
+          "lunch": "w30_thai_coconut_soup",
+          "dinner": "w30_beef_stir_fry",
+          "snack": "w30_deviled_eggs"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "w30_avocado_egg_cups",
+          "lunch": "w30_steak_salad",
+          "dinner": "w30_pork_carnitas",
+          "snack": "w30_almond_butter_apple"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "w30_sausage_frittata",
+          "lunch": "w30_zucchini_turkey_boats",
+          "dinner": "w30_garlic_shrimp_zoodles",
+          "snack": "w30_coconut_energy_bites"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "w30_smoked_salmon_plate",
+          "lunch": "w30_shrimp_cauliflower_rice",
+          "dinner": "w30_stuffed_peppers",
+          "snack": "w30_prosciutto_wrapped_melon"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "w30_coconut_chia_pudding",
+          "lunch": "w30_chicken_avocado_blt",
+          "dinner": "w30_tuscan_chicken",
+          "snack": "w30_sweet_potato_fries"
+        }
+      ]
+    },
+    {
+      "weekNumber": 2,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "w30_pork_apple_patties",
+          "lunch": "w30_mediterranean_bowl",
+          "dinner": "w30_chicken_tikka",
+          "snack": "w30_smoked_salmon_bites"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "w30_green_smoothie",
+          "lunch": "w30_egg_roll_bowl",
+          "dinner": "w30_lamb_chops",
+          "snack": "w30_plantain_chips_salsa"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "w30_turkey_breakfast_bowl",
+          "lunch": "w30_chipotle_chicken_bowl",
+          "dinner": "w30_fish_tacos",
+          "snack": "w30_mixed_nuts_olives"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "w30_prosciutto_egg_wrap",
+          "lunch": "w30_italian_meatball_soup",
+          "dinner": "w30_seared_scallops",
+          "snack": "w30_guacamole"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "w30_plantain_hash_eggs",
+          "lunch": "w30_burger_lettuce_wrap",
+          "dinner": "w30_chicken_stir_fry",
+          "snack": "w30_turkey_roll_ups"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "w30_sweet_potato_hash",
+          "lunch": "w30_tuna_stuffed_avocado",
+          "dinner": "w30_pot_roast",
+          "snack": "w30_deviled_eggs"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "w30_sausage_frittata",
+          "lunch": "w30_thai_coconut_soup",
+          "dinner": "w30_turkey_meatloaf",
+          "snack": "w30_almond_butter_apple"
+        }
+      ]
+    },
+    {
+      "weekNumber": 3,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "w30_avocado_egg_cups",
+          "lunch": "w30_steak_salad",
+          "dinner": "w30_garlic_shrimp_zoodles",
+          "snack": "w30_coconut_energy_bites"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "w30_coconut_chia_pudding",
+          "lunch": "w30_chicken_avocado_blt",
+          "dinner": "w30_balsamic_pork_chops",
+          "snack": "w30_prosciutto_wrapped_melon"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "w30_smoked_salmon_plate",
+          "lunch": "w30_shrimp_cauliflower_rice",
+          "dinner": "w30_tuscan_chicken",
+          "snack": "w30_sweet_potato_fries"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "w30_banana_egg_pancakes",
+          "lunch": "w30_zucchini_turkey_boats",
+          "dinner": "w30_pork_carnitas",
+          "snack": "w30_smoked_salmon_bites"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "w30_veggie_scramble",
+          "lunch": "w30_mediterranean_bowl",
+          "dinner": "w30_stuffed_peppers",
+          "snack": "w30_plantain_chips_salsa"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "w30_pork_apple_patties",
+          "lunch": "w30_egg_roll_bowl",
+          "dinner": "w30_salmon_asparagus",
+          "snack": "w30_mixed_nuts_olives"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "w30_turkey_breakfast_bowl",
+          "lunch": "w30_chipotle_chicken_bowl",
+          "dinner": "w30_lemon_herb_chicken",
+          "snack": "w30_guacamole"
+        }
+      ]
+    },
+    {
+      "weekNumber": 4,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "w30_green_smoothie",
+          "lunch": "w30_italian_meatball_soup",
+          "dinner": "w30_chicken_tikka",
+          "snack": "w30_turkey_roll_ups"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "w30_prosciutto_egg_wrap",
+          "lunch": "w30_burger_lettuce_wrap",
+          "dinner": "w30_beef_stir_fry",
+          "snack": "w30_deviled_eggs"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "w30_plantain_hash_eggs",
+          "lunch": "w30_chicken_caesar_wrap",
+          "dinner": "w30_lamb_chops",
+          "snack": "w30_almond_butter_apple"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "w30_sweet_potato_hash",
+          "lunch": "w30_thai_coconut_soup",
+          "dinner": "w30_fish_tacos",
+          "snack": "w30_coconut_energy_bites"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "w30_sausage_frittata",
+          "lunch": "w30_steak_salad",
+          "dinner": "w30_seared_scallops",
+          "snack": "w30_prosciutto_wrapped_melon"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "w30_smoked_salmon_plate",
+          "lunch": "w30_tuna_stuffed_avocado",
+          "dinner": "w30_pot_roast",
+          "snack": "w30_sweet_potato_fries"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "w30_avocado_egg_cups",
+          "lunch": "w30_mediterranean_bowl",
+          "dinner": "w30_turkey_meatloaf",
+          "snack": "w30_smoked_salmon_bites"
+        }
+      ]
+    }
+  ]
+}

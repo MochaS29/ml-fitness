@@ -136,7 +136,7 @@ struct EmptyPlanBanner: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Select a Meal Plan")
                         .font(.headline)
-                    Text("Choose from 5 different diet types")
+                    Text("Choose from 8 different diet types")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -1993,7 +1993,7 @@ struct NoPlanSelectedView: View {
                 .font(.title2)
                 .fontWeight(.semibold)
 
-            Text("Choose from 5 different diet types with full monthly menus")
+            Text("Choose from 8 different diet types with full monthly menus")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

@@ -1,0 +1,1930 @@
+{
+  "dietType": "low_carb",
+  "displayName": "Low Carb",
+  "description": "Reduced carbohydrate diet focusing on proteins, healthy fats, and non-starchy vegetables for steady energy",
+  "benefits": [
+    "Steady blood sugar levels",
+    "Reduced cravings",
+    "Effective weight management",
+    "Improved insulin sensitivity",
+    "Reduced inflammation"
+  ],
+  "restrictions": [
+    "Under 100g carbs daily",
+    "No refined grains",
+    "Limited starchy vegetables",
+    "No added sugars",
+    "Minimal fruit juice"
+  ],
+  "meals": {
+    "lc_spinach_feta_omelet": {
+      "name": "Spinach & Feta Omelet",
+      "description": "Fluffy three-egg omelet stuffed with sauteed spinach, sun-dried tomatoes, and crumbled feta cheese",
+      "calories": 385,
+      "protein": 26.0,
+      "carbs": 6.0,
+      "fat": 29.0,
+      "fiber": 2.0,
+      "prepTime": 5,
+      "cookTime": 8,
+      "ingredients": [
+        "3 large eggs",
+        "1 cup fresh spinach",
+        "1 oz crumbled feta cheese",
+        "2 tbsp sun-dried tomatoes, chopped",
+        "1 tbsp butter",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Whisk eggs with salt and pepper in a bowl.",
+        "Melt butter in a non-stick skillet over medium heat. Add spinach and sun-dried tomatoes, saute for 1 minute until spinach wilts.",
+        "Pour eggs over the vegetables and tilt pan to spread evenly. Cook undisturbed for 2 minutes until edges set.",
+        "Sprinkle feta over one half, fold the omelet, and cook 1 more minute until center is just set.",
+        "Slide onto a plate and serve immediately."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "breakfast",
+        "vegetarian",
+        "keto-friendly"
+      ]
+    },
+    "lc_avocado_bacon_eggs": {
+      "name": "Avocado Bacon & Eggs",
+      "description": "Crispy bacon strips alongside perfectly fried eggs served with sliced avocado and a sprinkle of everything seasoning",
+      "calories": 472,
+      "protein": 24.0,
+      "carbs": 8.0,
+      "fat": 39.0,
+      "fiber": 6.0,
+      "prepTime": 3,
+      "cookTime": 12,
+      "ingredients": [
+        "3 slices thick-cut bacon",
+        "2 large eggs",
+        "1/2 medium avocado, sliced",
+        "1 tsp everything bagel seasoning",
+        "Pinch of flaky sea salt"
+      ],
+      "instructions": [
+        "Cook bacon in a skillet over medium heat until crispy, about 4 minutes per side. Transfer to a paper towel-lined plate.",
+        "Pour off most of the bacon grease, leaving about 1 tablespoon in the pan.",
+        "Crack eggs into the skillet and fry to desired doneness, about 3 minutes for over-easy.",
+        "Plate the eggs alongside bacon and sliced avocado. Sprinkle everything seasoning and sea salt over the avocado."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "breakfast",
+        "dairy-free",
+        "keto-friendly"
+      ]
+    },
+    "lc_sausage_pepper_scramble": {
+      "name": "Sausage & Pepper Scramble",
+      "description": "Hearty scrambled eggs with crumbled Italian sausage, diced bell peppers, and sharp cheddar cheese",
+      "calories": 445,
+      "protein": 32.0,
+      "carbs": 7.0,
+      "fat": 33.0,
+      "fiber": 1.5,
+      "prepTime": 5,
+      "cookTime": 12,
+      "ingredients": [
+        "3 large eggs",
+        "3 oz Italian sausage, casings removed",
+        "1/4 cup diced red bell pepper",
+        "1/4 cup diced green bell pepper",
+        "1 oz shredded sharp cheddar cheese",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a skillet over medium-high heat. Crumble sausage into the pan and cook until browned, about 5 minutes.",
+        "Add diced bell peppers and saute for 2 minutes until slightly softened.",
+        "Whisk eggs with salt and pepper, pour into the skillet, and stir gently with a spatula as they cook.",
+        "When eggs are nearly set, sprinkle cheddar on top. Remove from heat, cover for 30 seconds to melt cheese, and serve."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "breakfast"
+      ]
+    },
+    "lc_greek_yogurt_berry_bowl": {
+      "name": "Greek Yogurt Berry Bowl",
+      "description": "Thick full-fat Greek yogurt topped with fresh mixed berries, sliced almonds, and a drizzle of sugar-free vanilla",
+      "calories": 295,
+      "protein": 22.0,
+      "carbs": 18.0,
+      "fat": 15.0,
+      "fiber": 4.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1 cup full-fat plain Greek yogurt",
+        "1/4 cup fresh blueberries",
+        "1/4 cup fresh raspberries",
+        "2 tbsp sliced almonds",
+        "1/2 tsp vanilla extract",
+        "1 tsp chia seeds"
+      ],
+      "instructions": [
+        "Spoon Greek yogurt into a bowl and stir in vanilla extract.",
+        "Top with blueberries and raspberries.",
+        "Sprinkle sliced almonds and chia seeds over the berries.",
+        "Serve immediately or refrigerate up to 2 hours."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "breakfast",
+        "vegetarian",
+        "no-cook"
+      ]
+    },
+    "lc_smoked_salmon_cream_cheese_roll": {
+      "name": "Smoked Salmon Cream Cheese Rolls",
+      "description": "Silky smoked salmon wrapped around herbed cream cheese with capers and fresh dill on a bed of arugula",
+      "calories": 310,
+      "protein": 24.0,
+      "carbs": 4.0,
+      "fat": 22.0,
+      "fiber": 1.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "4 oz smoked salmon slices",
+        "2 oz cream cheese, softened",
+        "1 tbsp fresh dill, chopped",
+        "1 tsp capers, drained",
+        "1 cup arugula",
+        "1 tsp lemon juice",
+        "Freshly ground black pepper"
+      ],
+      "instructions": [
+        "Mix softened cream cheese with chopped dill, lemon juice, and black pepper.",
+        "Lay smoked salmon slices flat and spread a thin layer of herbed cream cheese on each.",
+        "Place a few capers on each slice and roll up tightly.",
+        "Arrange arugula on a plate and place salmon rolls on top. Serve chilled."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "breakfast",
+        "no-cook",
+        "keto-friendly"
+      ]
+    },
+    "lc_mushroom_swiss_egg_cups": {
+      "name": "Mushroom Swiss Egg Cups",
+      "description": "Baked egg cups with sauteed mushrooms, Swiss cheese, and fresh thyme in a muffin tin for easy grab-and-go mornings",
+      "calories": 330,
+      "protein": 24.0,
+      "carbs": 5.0,
+      "fat": 24.0,
+      "fiber": 1.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "4 large eggs",
+        "1 cup cremini mushrooms, diced",
+        "2 oz Swiss cheese, shredded",
+        "1 tbsp butter",
+        "1 tsp fresh thyme leaves",
+        "Salt and pepper to taste",
+        "Cooking spray"
+      ],
+      "instructions": [
+        "Preheat oven to 375F. Spray 4 cups of a muffin tin with cooking spray.",
+        "Melt butter in a skillet, add mushrooms and thyme, and saute over medium heat for 4 minutes until golden.",
+        "Divide mushrooms evenly among the 4 muffin cups. Top each with Swiss cheese.",
+        "Crack one egg into each cup, season with salt and pepper.",
+        "Bake for 15-18 minutes until egg whites are set but yolks are still slightly soft. Cool 2 minutes before removing."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "breakfast",
+        "vegetarian",
+        "meal-prep"
+      ]
+    },
+    "lc_coconut_chia_pudding": {
+      "name": "Coconut Chia Pudding",
+      "description": "Creamy overnight chia pudding made with coconut milk, topped with toasted coconut flakes and a few fresh raspberries",
+      "calories": 285,
+      "protein": 8.0,
+      "carbs": 14.0,
+      "fat": 22.0,
+      "fiber": 10.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "3 tbsp chia seeds",
+        "3/4 cup full-fat coconut milk",
+        "1/4 cup unsweetened almond milk",
+        "1/2 tsp vanilla extract",
+        "1 tbsp unsweetened shredded coconut, toasted",
+        "6 fresh raspberries"
+      ],
+      "instructions": [
+        "Combine chia seeds, coconut milk, almond milk, and vanilla in a jar or bowl. Stir well.",
+        "Cover and refrigerate for at least 4 hours or overnight, stirring once after 30 minutes to prevent clumping.",
+        "In the morning, stir the pudding and add a splash more almond milk if too thick.",
+        "Top with toasted coconut flakes and fresh raspberries before serving."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "breakfast",
+        "vegetarian",
+        "vegan",
+        "no-cook",
+        "meal-prep"
+      ]
+    },
+    "lc_ham_cheese_lettuce_wrap": {
+      "name": "Ham & Cheese Lettuce Wraps",
+      "description": "Deli ham and melted provolone wrapped in crisp romaine leaves with mustard and crunchy pickles",
+      "calories": 280,
+      "protein": 22.0,
+      "carbs": 5.0,
+      "fat": 19.0,
+      "fiber": 2.0,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "4 oz deli ham, sliced",
+        "2 oz provolone cheese, sliced",
+        "4 large romaine lettuce leaves",
+        "2 dill pickle spears, halved lengthwise",
+        "1 tbsp Dijon mustard",
+        "Freshly ground black pepper"
+      ],
+      "instructions": [
+        "Wash and pat dry the romaine leaves, trimming the thick base if needed.",
+        "Spread a thin layer of Dijon mustard on each lettuce leaf.",
+        "Layer ham and provolone slices evenly across the leaves.",
+        "Place a pickle spear half on each, grind black pepper on top, and roll up tightly. Secure with toothpicks if desired."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch",
+        "no-cook",
+        "keto-friendly"
+      ]
+    },
+    "lc_grilled_chicken_caesar_bowl": {
+      "name": "Grilled Chicken Caesar Bowl",
+      "description": "Sliced grilled chicken breast over chopped romaine with shaved Parmesan, crunchy pork rinds, and creamy Caesar dressing",
+      "calories": 420,
+      "protein": 40.0,
+      "carbs": 8.0,
+      "fat": 26.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 14,
+      "ingredients": [
+        "6 oz boneless skinless chicken breast",
+        "3 cups chopped romaine lettuce",
+        "1 oz shaved Parmesan cheese",
+        "1 oz pork rinds, crushed",
+        "2 tbsp Caesar dressing",
+        "1 tbsp olive oil",
+        "1/2 lemon, juiced",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken breast with olive oil, salt, pepper, and lemon juice. Let sit 5 minutes.",
+        "Grill or pan-sear chicken over medium-high heat for 6-7 minutes per side until internal temperature reaches 165F. Rest 5 minutes, then slice.",
+        "Arrange chopped romaine in a bowl, top with sliced chicken and shaved Parmesan.",
+        "Drizzle Caesar dressing over the bowl and top with crushed pork rinds for crunch."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch"
+      ]
+    },
+    "lc_tuna_stuffed_avocado": {
+      "name": "Tuna Stuffed Avocado",
+      "description": "Ripe avocado halves filled with seasoned albacore tuna salad, celery, and a squeeze of lime",
+      "calories": 395,
+      "protein": 28.0,
+      "carbs": 12.0,
+      "fat": 27.0,
+      "fiber": 7.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 can (5 oz) albacore tuna, drained",
+        "1 medium ripe avocado, halved and pitted",
+        "2 tbsp mayonnaise",
+        "1 stalk celery, finely diced",
+        "1 tbsp red onion, minced",
+        "1 tbsp fresh lime juice",
+        "1/4 tsp smoked paprika",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Combine drained tuna, mayonnaise, celery, red onion, and smoked paprika in a bowl. Mix well.",
+        "Season with salt, pepper, and half the lime juice.",
+        "Scoop a small amount of avocado flesh from each half to widen the cavity. Dice and fold into the tuna mixture.",
+        "Pile tuna salad into avocado halves, squeeze remaining lime juice on top, and serve."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch",
+        "no-cook",
+        "dairy-free"
+      ]
+    },
+    "lc_zucchini_noodle_bolognese": {
+      "name": "Zucchini Noodle Bolognese",
+      "description": "Spiralized zucchini noodles tossed with a rich ground beef and tomato bolognese sauce with fresh basil",
+      "calories": 410,
+      "protein": 32.0,
+      "carbs": 14.0,
+      "fat": 26.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "2 medium zucchini, spiralized",
+        "6 oz lean ground beef (85/15)",
+        "1/2 cup crushed tomatoes (no sugar added)",
+        "2 cloves garlic, minced",
+        "1 tbsp olive oil",
+        "1 tsp dried oregano",
+        "1 tsp dried basil",
+        "2 tbsp fresh basil, torn",
+        "Salt and pepper to taste",
+        "1 tbsp grated Parmesan"
+      ],
+      "instructions": [
+        "Heat olive oil in a large skillet over medium-high heat. Add garlic and cook 30 seconds until fragrant.",
+        "Add ground beef, breaking it apart, and cook until browned, about 6 minutes. Drain excess fat.",
+        "Stir in crushed tomatoes, oregano, and dried basil. Simmer on medium-low for 12 minutes, stirring occasionally.",
+        "In a separate pan, saute spiralized zucchini for 2-3 minutes over medium heat until just tender.",
+        "Plate the zucchini noodles, ladle bolognese sauce on top, and garnish with fresh basil and Parmesan."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner",
+        "dairy-free"
+      ]
+    },
+    "lc_cauliflower_fried_rice": {
+      "name": "Cauliflower Fried Rice with Shrimp",
+      "description": "Riced cauliflower stir-fried with shrimp, scrambled egg, snap peas, and ginger-soy flavors",
+      "calories": 325,
+      "protein": 30.0,
+      "carbs": 12.0,
+      "fat": 18.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "3 cups riced cauliflower",
+        "6 oz raw shrimp, peeled and deveined",
+        "2 large eggs, beaten",
+        "1/2 cup snap peas, trimmed and halved",
+        "2 green onions, sliced",
+        "1 tbsp sesame oil",
+        "2 tbsp coconut aminos",
+        "1 tsp fresh ginger, grated",
+        "1 clove garlic, minced"
+      ],
+      "instructions": [
+        "Heat half the sesame oil in a large wok or skillet over high heat. Cook shrimp 2 minutes per side until pink. Remove and set aside.",
+        "Add remaining sesame oil, garlic, and ginger. Stir-fry 30 seconds.",
+        "Add riced cauliflower and snap peas. Stir-fry for 4-5 minutes until cauliflower is tender but not mushy.",
+        "Push vegetables to one side, pour beaten eggs into the empty space, and scramble until set. Mix everything together.",
+        "Return shrimp to the wok, add coconut aminos, toss to combine, and garnish with green onions."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner",
+        "dairy-free"
+      ]
+    },
+    "lc_lemon_herb_salmon": {
+      "name": "Lemon Herb Baked Salmon",
+      "description": "Oven-baked Atlantic salmon fillet with lemon, dill, and capers alongside roasted asparagus",
+      "calories": 445,
+      "protein": 38.0,
+      "carbs": 8.0,
+      "fat": 29.0,
+      "fiber": 3.0,
+      "prepTime": 8,
+      "cookTime": 18,
+      "ingredients": [
+        "6 oz Atlantic salmon fillet",
+        "1 bunch asparagus (about 8 spears), trimmed",
+        "1 tbsp olive oil",
+        "1 tbsp butter, melted",
+        "1 lemon (half sliced, half juiced)",
+        "1 tbsp fresh dill, chopped",
+        "1 tbsp capers",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400F. Line a baking sheet with parchment paper.",
+        "Toss asparagus with olive oil, salt, and pepper. Spread on one side of the baking sheet.",
+        "Place salmon on the other side, brush with melted butter and lemon juice, and top with lemon slices, dill, and capers.",
+        "Bake for 15-18 minutes until salmon flakes easily and asparagus is tender-crisp.",
+        "Serve immediately with any remaining pan juices drizzled on top."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner",
+        "omega-3"
+      ]
+    },
+    "lc_stuffed_bell_pepper": {
+      "name": "Stuffed Bell Peppers with Turkey",
+      "description": "Colorful bell peppers stuffed with seasoned ground turkey, diced tomatoes, and melted mozzarella",
+      "calories": 380,
+      "protein": 34.0,
+      "carbs": 16.0,
+      "fat": 20.0,
+      "fiber": 4.0,
+      "prepTime": 12,
+      "cookTime": 30,
+      "ingredients": [
+        "2 large bell peppers, halved and seeded",
+        "8 oz ground turkey (93/7)",
+        "1/2 cup diced tomatoes",
+        "1/4 cup diced onion",
+        "2 cloves garlic, minced",
+        "2 oz shredded mozzarella cheese",
+        "1 tsp cumin",
+        "1 tsp chili powder",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375F. Place bell pepper halves cut-side up in a baking dish.",
+        "Heat olive oil in a skillet over medium-high heat. Cook onion and garlic for 2 minutes, then add ground turkey and cook until browned.",
+        "Stir in diced tomatoes, cumin, chili powder, salt, and pepper. Simmer 5 minutes.",
+        "Fill each pepper half with the turkey mixture and top with mozzarella cheese.",
+        "Cover with foil and bake 20 minutes. Remove foil and bake 5-8 more minutes until cheese is bubbly and golden."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner"
+      ]
+    },
+    "lc_chicken_broccoli_alfredo": {
+      "name": "Chicken Broccoli Alfredo",
+      "description": "Tender chicken and broccoli florets in a rich Parmesan cream sauce over steamed cauliflower",
+      "calories": 465,
+      "protein": 42.0,
+      "carbs": 11.0,
+      "fat": 28.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "6 oz boneless skinless chicken breast, cubed",
+        "2 cups broccoli florets",
+        "1.5 cups riced cauliflower, steamed",
+        "1/4 cup heavy cream",
+        "1 oz grated Parmesan cheese",
+        "1 tbsp butter",
+        "2 cloves garlic, minced",
+        "1/4 tsp nutmeg",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken cubes with salt and pepper. Melt butter in a large skillet over medium-high heat and cook chicken until golden, about 6 minutes. Remove and set aside.",
+        "In the same skillet, saute garlic for 30 seconds. Add broccoli florets and 2 tablespoons water. Cover and steam 4 minutes.",
+        "Pour in heavy cream, add Parmesan, and stir over medium heat until sauce thickens, about 3 minutes.",
+        "Return chicken to the pan, add nutmeg, and toss to coat everything in sauce.",
+        "Serve over steamed riced cauliflower."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner"
+      ]
+    },
+    "lc_thai_basil_beef_lettuce_cups": {
+      "name": "Thai Basil Beef Lettuce Cups",
+      "description": "Fragrant stir-fried ground beef with Thai basil, chili, and lime served in butter lettuce cups",
+      "calories": 390,
+      "protein": 30.0,
+      "carbs": 9.0,
+      "fat": 26.0,
+      "fiber": 2.0,
+      "prepTime": 8,
+      "cookTime": 10,
+      "ingredients": [
+        "6 oz lean ground beef",
+        "8 butter lettuce leaves",
+        "1/2 cup fresh Thai basil leaves",
+        "1 red Thai chili, thinly sliced",
+        "2 tbsp coconut aminos",
+        "1 tbsp fish sauce",
+        "1 lime, juiced",
+        "2 cloves garlic, minced",
+        "1 tbsp avocado oil"
+      ],
+      "instructions": [
+        "Heat avocado oil in a wok or skillet over high heat. Add garlic and chili, stir-fry 30 seconds.",
+        "Add ground beef, breaking into small pieces, and cook until browned, about 5 minutes.",
+        "Add coconut aminos and fish sauce, toss for 1 minute.",
+        "Remove from heat, stir in Thai basil until just wilted, and squeeze lime juice over the mixture.",
+        "Spoon beef filling into butter lettuce cups and serve immediately."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner",
+        "dairy-free"
+      ]
+    },
+    "lc_pork_chop_green_beans": {
+      "name": "Herb-Crusted Pork Chop with Green Beans",
+      "description": "Pan-seared pork chop with a Dijon-herb crust alongside garlic-sauteed green beans and almonds",
+      "calories": 435,
+      "protein": 38.0,
+      "carbs": 10.0,
+      "fat": 27.0,
+      "fiber": 4.0,
+      "prepTime": 8,
+      "cookTime": 18,
+      "ingredients": [
+        "1 bone-in pork chop (6 oz)",
+        "2 cups green beans, trimmed",
+        "1 tbsp Dijon mustard",
+        "1 tbsp almond flour",
+        "1 tsp dried rosemary",
+        "1 tsp dried thyme",
+        "2 tbsp sliced almonds",
+        "2 cloves garlic, sliced",
+        "1.5 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season pork chop with salt and pepper. Spread Dijon mustard on both sides, then press almond flour, rosemary, and thyme onto the surface.",
+        "Heat 1 tbsp olive oil in a cast-iron skillet over medium-high heat. Sear pork chop 5 minutes per side until crust is golden and internal temperature reaches 145F. Rest 5 minutes.",
+        "In another skillet, heat remaining olive oil. Saute green beans and garlic for 4-5 minutes until tender-crisp.",
+        "Toast sliced almonds in the pan for 1 minute, then toss with the green beans.",
+        "Plate pork chop alongside the green beans and serve."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner",
+        "dairy-free"
+      ]
+    },
+    "lc_shrimp_scampi_zoodles": {
+      "name": "Shrimp Scampi over Zoodles",
+      "description": "Garlicky butter-wine shrimp scampi served over tender zucchini noodles with a splash of lemon",
+      "calories": 355,
+      "protein": 32.0,
+      "carbs": 10.0,
+      "fat": 21.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "8 oz large shrimp, peeled and deveined",
+        "2 medium zucchini, spiralized",
+        "3 cloves garlic, minced",
+        "2 tbsp butter",
+        "2 tbsp dry white wine",
+        "1 lemon, juiced",
+        "1/4 tsp red pepper flakes",
+        "2 tbsp fresh parsley, chopped",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Pat shrimp dry and season with salt, pepper, and red pepper flakes.",
+        "Melt 1 tbsp butter in a large skillet over medium-high heat. Cook shrimp 2 minutes per side until pink. Remove and set aside.",
+        "Add remaining butter and garlic to the pan, cook 30 seconds. Deglaze with white wine and lemon juice, let reduce for 1 minute.",
+        "Add spiralized zucchini to the pan and toss for 2 minutes until just tender.",
+        "Return shrimp to the pan, toss everything together, and garnish with fresh parsley."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner"
+      ]
+    },
+    "lc_turkey_taco_lettuce_wraps": {
+      "name": "Turkey Taco Lettuce Wraps",
+      "description": "Seasoned ground turkey with all the taco fixings wrapped in crisp iceberg lettuce leaves",
+      "calories": 365,
+      "protein": 32.0,
+      "carbs": 12.0,
+      "fat": 21.0,
+      "fiber": 3.0,
+      "prepTime": 8,
+      "cookTime": 10,
+      "ingredients": [
+        "6 oz ground turkey",
+        "6 large iceberg lettuce leaves",
+        "1/4 cup diced tomato",
+        "1/4 cup shredded cheddar cheese",
+        "2 tbsp sour cream",
+        "1 tbsp taco seasoning (no sugar added)",
+        "1/4 avocado, diced",
+        "1 tbsp olive oil",
+        "2 tbsp salsa (no sugar added)",
+        "Fresh cilantro for garnish"
+      ],
+      "instructions": [
+        "Heat olive oil in a skillet over medium-high heat. Add ground turkey and cook until browned, about 6 minutes.",
+        "Add taco seasoning and 2 tablespoons water. Stir and simmer for 3 minutes until sauce thickens.",
+        "Spoon seasoned turkey into lettuce leaves.",
+        "Top with diced tomato, shredded cheese, avocado, sour cream, and salsa. Garnish with cilantro."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch"
+      ]
+    },
+    "lc_mediterranean_chicken_plate": {
+      "name": "Mediterranean Chicken Plate",
+      "description": "Grilled chicken thigh with cucumber-tomato salad, olives, feta, and a drizzle of herbed olive oil",
+      "calories": 440,
+      "protein": 36.0,
+      "carbs": 10.0,
+      "fat": 28.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 16,
+      "ingredients": [
+        "6 oz boneless skinless chicken thigh",
+        "1/2 cup diced cucumber",
+        "1/2 cup diced tomato",
+        "6 Kalamata olives, halved",
+        "1 oz crumbled feta cheese",
+        "2 tbsp olive oil",
+        "1 tsp dried oregano",
+        "1 tbsp red wine vinegar",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken thigh with 1 tbsp olive oil, oregano, salt, and pepper.",
+        "Grill or pan-sear chicken over medium-high heat for 7-8 minutes per side until internal temp reaches 165F. Rest 5 minutes, then slice.",
+        "Toss cucumber, tomato, olives, and feta with remaining olive oil and red wine vinegar.",
+        "Plate sliced chicken alongside the Mediterranean salad."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch"
+      ]
+    },
+    "lc_egg_salad_lettuce_cups": {
+      "name": "Egg Salad Lettuce Cups",
+      "description": "Classic creamy egg salad with chives and Dijon served in crisp butter lettuce cups with paprika",
+      "calories": 320,
+      "protein": 20.0,
+      "carbs": 4.0,
+      "fat": 25.0,
+      "fiber": 1.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "4 large eggs, hard-boiled",
+        "2 tbsp mayonnaise",
+        "1 tsp Dijon mustard",
+        "1 tbsp fresh chives, minced",
+        "6 butter lettuce leaves",
+        "1/4 tsp smoked paprika",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Peel hard-boiled eggs and chop into small pieces.",
+        "Mix eggs with mayonnaise, Dijon mustard, chives, salt, and pepper until well combined.",
+        "Spoon egg salad into butter lettuce cups.",
+        "Dust with smoked paprika and serve."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch",
+        "vegetarian"
+      ]
+    },
+    "lc_cobb_salad": {
+      "name": "Classic Cobb Salad",
+      "description": "Rows of grilled chicken, bacon, hard-boiled egg, avocado, tomato, and blue cheese over mixed greens",
+      "calories": 480,
+      "protein": 38.0,
+      "carbs": 12.0,
+      "fat": 32.0,
+      "fiber": 6.0,
+      "prepTime": 15,
+      "cookTime": 10,
+      "ingredients": [
+        "4 oz grilled chicken breast, sliced",
+        "3 cups mixed salad greens",
+        "2 slices bacon, cooked and chopped",
+        "1 hard-boiled egg, quartered",
+        "1/2 avocado, diced",
+        "1/4 cup cherry tomatoes, halved",
+        "1 oz blue cheese crumbles",
+        "2 tbsp ranch dressing (no sugar added)",
+        "1 tbsp red wine vinegar"
+      ],
+      "instructions": [
+        "Arrange mixed greens on a large plate or shallow bowl.",
+        "Arrange chicken, bacon, egg, avocado, tomatoes, and blue cheese in neat rows over the greens.",
+        "Whisk ranch dressing with red wine vinegar for a thinner consistency.",
+        "Drizzle dressing over the salad and serve immediately."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch"
+      ]
+    },
+    "lc_buffalo_chicken_bowl": {
+      "name": "Buffalo Chicken Bowl",
+      "description": "Shredded buffalo chicken over a bed of crunchy cabbage slaw with blue cheese and celery",
+      "calories": 410,
+      "protein": 36.0,
+      "carbs": 10.0,
+      "fat": 25.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "6 oz boneless skinless chicken breast",
+        "3 tbsp buffalo hot sauce",
+        "1 tbsp butter, melted",
+        "2 cups shredded green cabbage",
+        "2 stalks celery, sliced",
+        "1 oz blue cheese crumbles",
+        "1 tbsp ranch dressing",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken with salt and pepper. Heat olive oil in a skillet over medium-high heat and cook chicken 6-7 minutes per side until done. Rest 3 minutes.",
+        "Shred chicken with two forks. Toss with melted butter and buffalo hot sauce.",
+        "Arrange shredded cabbage in a bowl and top with celery slices.",
+        "Pile buffalo chicken on top, sprinkle blue cheese, and drizzle with ranch dressing."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch"
+      ]
+    },
+    "lc_caprese_chicken": {
+      "name": "Caprese Chicken",
+      "description": "Pan-seared chicken breast topped with fresh mozzarella, sliced tomato, and basil with a balsamic reduction",
+      "calories": 430,
+      "protein": 42.0,
+      "carbs": 8.0,
+      "fat": 25.0,
+      "fiber": 1.0,
+      "prepTime": 8,
+      "cookTime": 18,
+      "ingredients": [
+        "6 oz boneless skinless chicken breast",
+        "2 oz fresh mozzarella, sliced",
+        "1 medium tomato, sliced",
+        "4 large fresh basil leaves",
+        "1 tbsp balsamic vinegar",
+        "1 tbsp olive oil",
+        "1 tsp Italian seasoning",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Pound chicken to even thickness. Season with Italian seasoning, salt, and pepper.",
+        "Heat olive oil in an oven-safe skillet over medium-high heat. Sear chicken 5 minutes per side until golden.",
+        "Top chicken with tomato slices and mozzarella. Place under broiler for 2-3 minutes until cheese melts and bubbles.",
+        "Remove from oven, top with fresh basil leaves, and drizzle balsamic vinegar over the top."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner"
+      ]
+    },
+    "lc_spicy_sausage_cabbage_skillet": {
+      "name": "Spicy Sausage & Cabbage Skillet",
+      "description": "Sliced spicy Italian sausage sauteed with shredded cabbage, onions, and a touch of apple cider vinegar",
+      "calories": 420,
+      "protein": 26.0,
+      "carbs": 14.0,
+      "fat": 29.0,
+      "fiber": 4.0,
+      "prepTime": 8,
+      "cookTime": 18,
+      "ingredients": [
+        "2 spicy Italian sausage links (6 oz total), sliced into rounds",
+        "3 cups shredded green cabbage",
+        "1/2 medium onion, sliced",
+        "1 tbsp olive oil",
+        "1 tbsp apple cider vinegar",
+        "1 tsp caraway seeds",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a large skillet over medium-high heat. Add sausage rounds and cook until browned on both sides, about 5 minutes. Remove and set aside.",
+        "Add onion to the skillet and saute 3 minutes until softened.",
+        "Add shredded cabbage and caraway seeds. Cook, stirring occasionally, for 8 minutes until cabbage is tender and slightly caramelized.",
+        "Return sausage to the pan, add apple cider vinegar, and toss to combine. Season with salt and pepper."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner",
+        "dairy-free",
+        "one-pan"
+      ]
+    },
+    "lc_blackened_cod_slaw": {
+      "name": "Blackened Cod with Citrus Slaw",
+      "description": "Cajun-spiced blackened cod fillet served over a bright citrus cabbage slaw with cilantro-lime crema",
+      "calories": 340,
+      "protein": 34.0,
+      "carbs": 12.0,
+      "fat": 17.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 8,
+      "ingredients": [
+        "6 oz cod fillet",
+        "1 tbsp blackening seasoning",
+        "2 cups shredded Napa cabbage",
+        "1/4 cup shredded carrot",
+        "1 orange, segmented",
+        "2 tbsp sour cream",
+        "1 tbsp fresh lime juice",
+        "1 tbsp fresh cilantro, chopped",
+        "1 tbsp avocado oil",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Pat cod dry and coat both sides with blackening seasoning.",
+        "Heat avocado oil in a cast-iron skillet over high heat. Sear cod 3-4 minutes per side until blackened crust forms and fish flakes easily.",
+        "Toss Napa cabbage, carrot, and orange segments with half the lime juice and a pinch of salt.",
+        "Mix sour cream with remaining lime juice and cilantro for the crema.",
+        "Plate slaw, set blackened cod on top, and drizzle with cilantro-lime crema."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner"
+      ]
+    },
+    "lc_steak_chimichurri": {
+      "name": "Grilled Steak with Chimichurri",
+      "description": "Juicy grilled flank steak sliced thin and drizzled with fresh parsley-garlic chimichurri sauce alongside grilled zucchini",
+      "calories": 470,
+      "protein": 40.0,
+      "carbs": 6.0,
+      "fat": 32.0,
+      "fiber": 2.0,
+      "prepTime": 15,
+      "cookTime": 12,
+      "ingredients": [
+        "6 oz flank steak",
+        "1 medium zucchini, sliced lengthwise",
+        "1/4 cup fresh parsley, finely chopped",
+        "2 tbsp olive oil",
+        "1 tbsp red wine vinegar",
+        "2 cloves garlic, minced",
+        "1/4 tsp red pepper flakes",
+        "1 tbsp fresh oregano, minced",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Make chimichurri: combine parsley, 1 tbsp olive oil, red wine vinegar, garlic, oregano, and red pepper flakes. Set aside.",
+        "Season flank steak generously with salt and pepper. Brush zucchini slices with remaining olive oil.",
+        "Grill steak over high heat for 4-5 minutes per side for medium-rare (135F internal). Grill zucchini alongside for 3 minutes per side.",
+        "Rest steak 5 minutes, then slice thin against the grain.",
+        "Plate steak and zucchini, spoon chimichurri generously over the top."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner",
+        "dairy-free"
+      ]
+    },
+    "lc_chicken_coconut_curry": {
+      "name": "Chicken Coconut Curry",
+      "description": "Tender chicken simmered in a fragrant coconut curry sauce with spinach, bell pepper, and fresh cilantro",
+      "calories": 425,
+      "protein": 36.0,
+      "carbs": 12.0,
+      "fat": 26.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 22,
+      "ingredients": [
+        "6 oz boneless skinless chicken thigh, cubed",
+        "1/2 cup full-fat coconut milk",
+        "2 cups fresh spinach",
+        "1/2 red bell pepper, sliced",
+        "1 tbsp yellow curry paste",
+        "1 tbsp coconut oil",
+        "2 cloves garlic, minced",
+        "1 tsp fresh ginger, grated",
+        "1 tbsp fish sauce",
+        "Fresh cilantro for garnish"
+      ],
+      "instructions": [
+        "Heat coconut oil in a deep skillet over medium-high heat. Cook chicken cubes until browned on all sides, about 5 minutes. Remove.",
+        "Add garlic, ginger, and curry paste to the pan. Stir for 1 minute until fragrant.",
+        "Pour in coconut milk and fish sauce. Bring to a simmer.",
+        "Return chicken and add bell pepper. Simmer for 12 minutes until chicken is cooked through and sauce has thickened.",
+        "Stir in spinach until wilted, garnish with cilantro, and serve."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner",
+        "dairy-free"
+      ]
+    },
+    "lc_blt_turkey_roll_up": {
+      "name": "BLT Turkey Roll-Ups",
+      "description": "Deli turkey slices rolled around crispy bacon, lettuce, tomato, and mayo for a bread-free BLT experience",
+      "calories": 305,
+      "protein": 26.0,
+      "carbs": 5.0,
+      "fat": 20.0,
+      "fiber": 1.5,
+      "prepTime": 10,
+      "cookTime": 8,
+      "ingredients": [
+        "5 oz sliced deli turkey breast",
+        "3 slices bacon",
+        "4 romaine lettuce leaves",
+        "4 thin slices tomato",
+        "1 tbsp mayonnaise",
+        "Freshly ground black pepper"
+      ],
+      "instructions": [
+        "Cook bacon in a skillet over medium heat until crispy, about 4 minutes per side. Drain on paper towels and break in half.",
+        "Lay turkey slices out flat, overlapping slightly if needed to form a wrap base.",
+        "Spread a thin layer of mayo on the turkey, then layer lettuce, tomato, and bacon pieces.",
+        "Roll up tightly and cut in half on a diagonal. Secure with toothpicks if needed."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch",
+        "sugar-free"
+      ]
+    },
+    "lc_asian_chicken_cabbage_salad": {
+      "name": "Asian Chicken Cabbage Salad",
+      "description": "Shredded chicken with crunchy Napa cabbage, edamame, and toasted sesame in a ginger-soy vinaigrette",
+      "calories": 375,
+      "protein": 34.0,
+      "carbs": 14.0,
+      "fat": 20.0,
+      "fiber": 5.0,
+      "prepTime": 12,
+      "cookTime": 0,
+      "ingredients": [
+        "5 oz cooked chicken breast, shredded",
+        "2 cups shredded Napa cabbage",
+        "1/4 cup shelled edamame",
+        "2 green onions, sliced",
+        "1 tbsp toasted sesame seeds",
+        "1 tbsp sesame oil",
+        "1 tbsp rice vinegar",
+        "1 tbsp coconut aminos",
+        "1 tsp fresh ginger, grated"
+      ],
+      "instructions": [
+        "Whisk together sesame oil, rice vinegar, coconut aminos, and grated ginger for the dressing.",
+        "Toss shredded cabbage, edamame, and green onions in a large bowl.",
+        "Add shredded chicken on top.",
+        "Drizzle with dressing and sprinkle toasted sesame seeds. Toss gently and serve."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch",
+        "dairy-free",
+        "no-cook"
+      ]
+    },
+    "lc_broccoli_cheddar_soup": {
+      "name": "Broccoli Cheddar Soup",
+      "description": "Thick and creamy broccoli cheddar soup made with cauliflower as the base instead of flour for a low-carb version",
+      "calories": 340,
+      "protein": 18.0,
+      "carbs": 14.0,
+      "fat": 24.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "3 cups broccoli florets",
+        "1 cup riced cauliflower",
+        "2 cups chicken broth",
+        "1/2 cup heavy cream",
+        "4 oz sharp cheddar cheese, shredded",
+        "1/4 cup diced onion",
+        "2 cloves garlic, minced",
+        "1 tbsp butter",
+        "1/4 tsp cayenne pepper",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Melt butter in a pot over medium heat. Saute onion and garlic for 3 minutes until softened.",
+        "Add broccoli, riced cauliflower, and chicken broth. Bring to a boil, then reduce heat and simmer for 15 minutes until vegetables are tender.",
+        "Use an immersion blender to partially blend the soup, leaving some chunks for texture.",
+        "Stir in heavy cream and cheddar cheese on low heat until cheese is fully melted.",
+        "Season with cayenne, salt, and pepper. Serve hot."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "lunch",
+        "vegetarian-optional",
+        "comfort-food"
+      ]
+    },
+    "lc_cucumber_turkey_bites": {
+      "name": "Cucumber Turkey Bites",
+      "description": "Thick cucumber rounds topped with cream cheese, deli turkey, and a sprinkle of everything seasoning",
+      "calories": 165,
+      "protein": 14.0,
+      "carbs": 6.0,
+      "fat": 10.0,
+      "fiber": 1.0,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "1 large English cucumber, sliced into 1/2-inch rounds",
+        "3 oz deli turkey breast",
+        "2 oz cream cheese, softened",
+        "1 tsp everything bagel seasoning",
+        "Fresh dill sprigs for garnish"
+      ],
+      "instructions": [
+        "Slice cucumber into thick rounds and pat dry with a paper towel.",
+        "Spread about 1 teaspoon of cream cheese on each cucumber round.",
+        "Fold or roll a small piece of turkey on top of each.",
+        "Sprinkle with everything seasoning and garnish with a tiny dill sprig."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "snack",
+        "no-cook",
+        "high-protein"
+      ]
+    },
+    "lc_almond_butter_celery": {
+      "name": "Almond Butter Celery Sticks",
+      "description": "Crisp celery sticks filled with creamy almond butter and topped with a few dark chocolate chips",
+      "calories": 195,
+      "protein": 6.0,
+      "carbs": 9.0,
+      "fat": 16.0,
+      "fiber": 3.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "4 large celery stalks",
+        "2 tbsp almond butter (no sugar added)",
+        "1 tsp sugar-free dark chocolate chips",
+        "Pinch of flaky sea salt"
+      ],
+      "instructions": [
+        "Wash celery stalks and cut into 4-inch pieces.",
+        "Fill the groove of each celery piece with almond butter.",
+        "Sprinkle a few dark chocolate chips and a pinch of flaky sea salt on top.",
+        "Serve immediately or refrigerate for a cold snack."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "snack",
+        "no-cook",
+        "vegan"
+      ]
+    },
+    "lc_cheese_pepperoni_crisps": {
+      "name": "Cheese & Pepperoni Crisps",
+      "description": "Baked Parmesan and pepperoni crisps for a crunchy, savory, chip-like low-carb snack",
+      "calories": 180,
+      "protein": 12.0,
+      "carbs": 2.0,
+      "fat": 14.0,
+      "fiber": 0.0,
+      "prepTime": 5,
+      "cookTime": 12,
+      "ingredients": [
+        "1/2 cup shredded Parmesan cheese",
+        "12 pepperoni slices",
+        "1/2 tsp Italian seasoning",
+        "1/4 tsp garlic powder"
+      ],
+      "instructions": [
+        "Preheat oven to 375F. Line a baking sheet with parchment paper.",
+        "Place tablespoon-sized mounds of Parmesan on the baking sheet, spacing them 2 inches apart. Flatten slightly.",
+        "Press a pepperoni slice into the center of each cheese mound. Sprinkle with Italian seasoning and garlic powder.",
+        "Bake for 8-10 minutes until cheese is golden and crispy. Cool completely on the baking sheet before serving."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "snack",
+        "keto-friendly",
+        "sugar-free"
+      ]
+    },
+    "lc_guacamole_veggie_dippers": {
+      "name": "Guacamole with Veggie Dippers",
+      "description": "Fresh chunky guacamole with lime and cilantro served alongside sliced bell peppers and jicama sticks",
+      "calories": 190,
+      "protein": 4.0,
+      "carbs": 10.0,
+      "fat": 16.0,
+      "fiber": 7.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 medium ripe avocado",
+        "1 tbsp fresh lime juice",
+        "2 tbsp diced red onion",
+        "1 tbsp fresh cilantro, chopped",
+        "1/2 jalapeno, seeded and minced",
+        "1/2 cup sliced bell pepper strips",
+        "1/4 cup jicama sticks",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Halve and pit avocado. Scoop flesh into a bowl and mash with a fork to desired chunkiness.",
+        "Stir in lime juice, red onion, cilantro, jalapeno, and salt.",
+        "Arrange bell pepper strips and jicama sticks on a plate alongside the guacamole.",
+        "Serve immediately for best freshness."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "snack",
+        "no-cook",
+        "vegan",
+        "dairy-free"
+      ]
+    },
+    "lc_string_cheese_almonds": {
+      "name": "String Cheese & Almonds",
+      "description": "Simple grab-and-go snack pairing mozzarella string cheese with a small handful of roasted almonds",
+      "calories": 220,
+      "protein": 14.0,
+      "carbs": 5.0,
+      "fat": 17.0,
+      "fiber": 2.0,
+      "prepTime": 1,
+      "cookTime": 0,
+      "ingredients": [
+        "2 mozzarella string cheese sticks",
+        "1 oz roasted almonds (about 22 almonds)",
+        "Pinch of sea salt"
+      ],
+      "instructions": [
+        "Unwrap string cheese sticks.",
+        "Portion almonds into a small container or bag.",
+        "Enjoy together as a balanced protein-and-fat snack."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "snack",
+        "no-cook",
+        "vegetarian",
+        "portable"
+      ]
+    },
+    "lc_deviled_eggs": {
+      "name": "Classic Deviled Eggs",
+      "description": "Creamy deviled eggs with a smooth mustard-mayo filling, topped with smoked paprika and chives",
+      "calories": 195,
+      "protein": 13.0,
+      "carbs": 2.0,
+      "fat": 15.0,
+      "fiber": 0.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "4 large eggs",
+        "2 tbsp mayonnaise",
+        "1 tsp Dijon mustard",
+        "1 tsp white vinegar",
+        "1/4 tsp smoked paprika",
+        "1 tbsp fresh chives, minced",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Place eggs in a pot, cover with cold water, and bring to a boil. Once boiling, cover, remove from heat, and let stand 10 minutes.",
+        "Transfer eggs to an ice bath for 5 minutes, then peel.",
+        "Halve eggs lengthwise and scoop yolks into a bowl. Mash yolks with mayo, mustard, vinegar, salt, and pepper until smooth.",
+        "Pipe or spoon filling back into egg white halves. Dust with smoked paprika and garnish with chives."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "snack",
+        "vegetarian",
+        "keto-friendly",
+        "meal-prep"
+      ]
+    },
+    "lc_bacon_wrapped_jalapenos": {
+      "name": "Bacon-Wrapped Jalapeno Poppers",
+      "description": "Fresh jalapeno halves stuffed with cream cheese, wrapped in bacon, and baked until crispy",
+      "calories": 225,
+      "protein": 11.0,
+      "carbs": 4.0,
+      "fat": 18.0,
+      "fiber": 1.0,
+      "prepTime": 12,
+      "cookTime": 22,
+      "ingredients": [
+        "4 fresh jalapeno peppers, halved and seeded",
+        "3 oz cream cheese, softened",
+        "1 oz shredded cheddar cheese",
+        "4 slices bacon, halved crosswise",
+        "1/4 tsp garlic powder",
+        "Pinch of cayenne pepper"
+      ],
+      "instructions": [
+        "Preheat oven to 400F. Line a baking sheet with foil and set a wire rack on top.",
+        "Mix cream cheese, cheddar, garlic powder, and cayenne until combined.",
+        "Fill each jalapeno half generously with the cheese mixture.",
+        "Wrap a half-slice of bacon around each stuffed jalapeno and place seam-side down on the wire rack.",
+        "Bake for 20-22 minutes until bacon is crispy and peppers are tender."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "snack",
+        "keto-friendly"
+      ]
+    },
+    "lc_mixed_nuts_dark_chocolate": {
+      "name": "Mixed Nuts & Dark Chocolate Trail Mix",
+      "description": "A curated mix of walnuts, pecans, and macadamia nuts with a few squares of 85% dark chocolate",
+      "calories": 240,
+      "protein": 5.0,
+      "carbs": 9.0,
+      "fat": 22.0,
+      "fiber": 3.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "1/2 oz walnuts",
+        "1/2 oz pecans",
+        "1/2 oz macadamia nuts",
+        "0.5 oz 85% dark chocolate, chopped into small pieces",
+        "Pinch of flaky sea salt"
+      ],
+      "instructions": [
+        "Combine walnuts, pecans, and macadamia nuts in a small bowl or container.",
+        "Add chopped dark chocolate pieces and toss gently.",
+        "Sprinkle with flaky sea salt and serve as a portable snack."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "snack",
+        "no-cook",
+        "vegan",
+        "portable"
+      ]
+    },
+    "lc_edamame_sea_salt": {
+      "name": "Steamed Edamame with Sea Salt",
+      "description": "Warm steamed edamame pods sprinkled with flaky sea salt and a squeeze of lemon",
+      "calories": 150,
+      "protein": 12.0,
+      "carbs": 9.0,
+      "fat": 6.0,
+      "fiber": 4.0,
+      "prepTime": 2,
+      "cookTime": 5,
+      "ingredients": [
+        "1.5 cups frozen edamame in pods",
+        "1 tsp flaky sea salt",
+        "1 lemon wedge"
+      ],
+      "instructions": [
+        "Bring a pot of water to a boil. Add frozen edamame and cook for 4-5 minutes until tender.",
+        "Drain well and transfer to a bowl.",
+        "Sprinkle with flaky sea salt and squeeze lemon wedge over the top. Serve warm."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "snack",
+        "vegan",
+        "dairy-free",
+        "high-protein"
+      ]
+    },
+    "lc_herb_roasted_chicken_thighs": {
+      "name": "Herb Roasted Chicken Thighs",
+      "description": "Crispy-skinned chicken thighs roasted with rosemary, thyme, and garlic alongside roasted radishes",
+      "calories": 450,
+      "protein": 36.0,
+      "carbs": 6.0,
+      "fat": 31.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 35,
+      "ingredients": [
+        "2 bone-in skin-on chicken thighs (8 oz total)",
+        "1 bunch radishes, halved (about 8)",
+        "2 tbsp olive oil",
+        "3 cloves garlic, smashed",
+        "1 tbsp fresh rosemary, chopped",
+        "1 tsp fresh thyme leaves",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425F. Pat chicken thighs dry and season generously with salt, pepper, rosemary, and thyme.",
+        "Toss halved radishes with 1 tbsp olive oil, salt, and garlic cloves. Spread on a baking sheet.",
+        "Heat remaining olive oil in an oven-safe skillet over medium-high heat. Sear chicken skin-side down for 4 minutes until golden.",
+        "Flip chicken and transfer skillet to the oven alongside the radish pan. Roast 25-30 minutes until chicken reaches 175F internally.",
+        "Serve chicken over roasted radishes with pan juices drizzled on top."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "dinner",
+        "dairy-free"
+      ]
+    },
+    "lc_salmon_avocado_bowl": {
+      "name": "Salmon Avocado Poke Bowl",
+      "description": "Cubed fresh salmon with avocado, cucumber, and sesame over riced cauliflower with a soy-ginger sauce",
+      "calories": 440,
+      "protein": 34.0,
+      "carbs": 14.0,
+      "fat": 28.0,
+      "fiber": 6.0,
+      "prepTime": 15,
+      "cookTime": 3,
+      "ingredients": [
+        "5 oz sushi-grade salmon, cubed",
+        "1.5 cups riced cauliflower",
+        "1/2 avocado, diced",
+        "1/4 cup cucumber, diced",
+        "1 tbsp coconut aminos",
+        "1 tsp sesame oil",
+        "1 tsp rice vinegar",
+        "1/2 tsp fresh ginger, grated",
+        "1 tbsp toasted sesame seeds",
+        "1 green onion, sliced"
+      ],
+      "instructions": [
+        "Microwave or saute riced cauliflower for 2-3 minutes. Season with rice vinegar and let cool slightly.",
+        "Toss cubed salmon with coconut aminos, sesame oil, and ginger in a bowl. Let marinate 5 minutes.",
+        "Place cauliflower rice in a bowl and arrange salmon, avocado, and cucumber on top.",
+        "Garnish with toasted sesame seeds and sliced green onion."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch",
+        "dairy-free",
+        "omega-3"
+      ]
+    },
+    "lc_italian_antipasto_plate": {
+      "name": "Italian Antipasto Plate",
+      "description": "A curated plate of salami, fresh mozzarella, marinated artichoke hearts, olives, and roasted red peppers",
+      "calories": 395,
+      "protein": 22.0,
+      "carbs": 10.0,
+      "fat": 30.0,
+      "fiber": 3.0,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "2 oz Genoa salami, sliced",
+        "2 oz fresh mozzarella, sliced",
+        "4 marinated artichoke heart quarters",
+        "6 Castelvetrano olives",
+        "2 tbsp roasted red pepper strips",
+        "1 tbsp olive oil",
+        "1 tsp dried Italian herbs",
+        "Freshly ground black pepper"
+      ],
+      "instructions": [
+        "Arrange salami and mozzarella slices in overlapping rows on a plate.",
+        "Add artichoke hearts, olives, and roasted red pepper strips around the meats and cheese.",
+        "Drizzle with olive oil and sprinkle with Italian herbs and black pepper.",
+        "Serve at room temperature for best flavor."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "lunch",
+        "no-cook",
+        "high-protein"
+      ]
+    },
+    "lc_breakfast_sausage_patties_avo": {
+      "name": "Breakfast Sausage Patties with Avocado",
+      "description": "Homemade seasoned pork sausage patties served with mashed avocado and a fried egg",
+      "calories": 460,
+      "protein": 28.0,
+      "carbs": 8.0,
+      "fat": 36.0,
+      "fiber": 5.0,
+      "prepTime": 8,
+      "cookTime": 12,
+      "ingredients": [
+        "4 oz ground pork",
+        "1/2 tsp dried sage",
+        "1/4 tsp fennel seeds, crushed",
+        "1/4 tsp garlic powder",
+        "1/4 tsp onion powder",
+        "Pinch of red pepper flakes",
+        "1 large egg",
+        "1/2 avocado, mashed",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Mix ground pork with sage, fennel, garlic powder, onion powder, red pepper flakes, salt, and pepper. Form into 2 patties.",
+        "Heat olive oil in a skillet over medium heat. Cook sausage patties 4 minutes per side until browned and cooked through.",
+        "In the same skillet, fry the egg to desired doneness.",
+        "Plate the sausage patties, top with mashed avocado and fried egg. Season with salt and pepper."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "breakfast",
+        "dairy-free"
+      ]
+    },
+    "lc_cheesy_broccoli_egg_muffins": {
+      "name": "Cheesy Broccoli Egg Muffins",
+      "description": "Portable egg muffins packed with broccoli and cheddar cheese, perfect for meal prep mornings",
+      "calories": 290,
+      "protein": 22.0,
+      "carbs": 5.0,
+      "fat": 20.0,
+      "fiber": 1.5,
+      "prepTime": 10,
+      "cookTime": 22,
+      "ingredients": [
+        "6 large eggs",
+        "1 cup finely chopped broccoli florets",
+        "2 oz shredded cheddar cheese",
+        "2 tbsp whole milk",
+        "1/4 tsp garlic powder",
+        "Salt and pepper to taste",
+        "Cooking spray"
+      ],
+      "instructions": [
+        "Preheat oven to 350F. Spray a 6-cup muffin tin generously with cooking spray.",
+        "Whisk eggs, milk, garlic powder, salt, and pepper in a bowl.",
+        "Divide broccoli evenly among muffin cups, then pour egg mixture over the top, filling each about 3/4 full.",
+        "Sprinkle cheddar cheese on top of each.",
+        "Bake for 20-22 minutes until eggs are set and tops are lightly golden. Cool 2 minutes before removing."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "breakfast",
+        "vegetarian",
+        "meal-prep"
+      ]
+    },
+    "lc_prosciutto_melon_skewers": {
+      "name": "Prosciutto & Melon Skewers",
+      "description": "Thin prosciutto wrapped around small cantaloupe cubes on skewers with fresh mint",
+      "calories": 145,
+      "protein": 10.0,
+      "carbs": 9.0,
+      "fat": 7.0,
+      "fiber": 1.0,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "2 oz prosciutto, torn into strips",
+        "1/2 cup cantaloupe, cubed small",
+        "4 small fresh mint leaves",
+        "1/2 tsp balsamic glaze",
+        "Toothpicks or small skewers"
+      ],
+      "instructions": [
+        "Wrap a strip of prosciutto around each cantaloupe cube.",
+        "Thread onto toothpicks or small skewers, tucking a mint leaf on each.",
+        "Arrange on a plate and drizzle lightly with balsamic glaze.",
+        "Serve immediately as a refreshing snack or appetizer."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "snack",
+        "no-cook",
+        "dairy-free"
+      ]
+    },
+    "lc_southwest_chicken_stuffed_pepper": {
+      "name": "Southwest Chicken Stuffed Peppers",
+      "description": "Mini sweet peppers stuffed with shredded chicken, black beans, pepper jack cheese, and a touch of cumin",
+      "calories": 370,
+      "protein": 34.0,
+      "carbs": 18.0,
+      "fat": 18.0,
+      "fiber": 5.0,
+      "prepTime": 12,
+      "cookTime": 18,
+      "ingredients": [
+        "6 mini sweet peppers, halved and seeded",
+        "5 oz cooked chicken breast, shredded",
+        "2 tbsp canned black beans, rinsed",
+        "2 oz pepper jack cheese, shredded",
+        "2 tbsp salsa (no sugar added)",
+        "1/2 tsp cumin",
+        "1/4 tsp chili powder",
+        "1 tbsp fresh cilantro, chopped",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375F. Arrange pepper halves cut-side up on a baking sheet.",
+        "Mix shredded chicken with black beans, salsa, cumin, chili powder, and salt.",
+        "Fill each pepper half with the chicken mixture and top with pepper jack cheese.",
+        "Bake for 15-18 minutes until peppers are tender and cheese is melted and bubbly.",
+        "Garnish with fresh cilantro and serve."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "lunch"
+      ]
+    },
+    "lc_berry_protein_smoothie": {
+      "name": "Berry Protein Smoothie",
+      "description": "Thick low-carb smoothie with mixed berries, collagen protein, almond milk, and a spoonful of almond butter",
+      "calories": 250,
+      "protein": 20.0,
+      "carbs": 14.0,
+      "fat": 12.0,
+      "fiber": 4.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1/3 cup frozen mixed berries",
+        "1 scoop (10g) collagen peptides",
+        "1 cup unsweetened almond milk",
+        "1 tbsp almond butter",
+        "1/4 avocado",
+        "3 ice cubes"
+      ],
+      "instructions": [
+        "Add almond milk, frozen berries, avocado, and almond butter to a blender.",
+        "Add collagen peptides and ice cubes.",
+        "Blend on high for 45-60 seconds until smooth and creamy.",
+        "Pour into a glass and serve immediately."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "breakfast",
+        "no-cook",
+        "dairy-free"
+      ]
+    },
+    "lc_western_scramble": {
+      "name": "Western Scramble",
+      "description": "Scrambled eggs loaded with diced ham, green bell pepper, onion, and melted cheddar cheese",
+      "calories": 395,
+      "protein": 30.0,
+      "carbs": 7.0,
+      "fat": 28.0,
+      "fiber": 1.5,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "3 large eggs",
+        "2 oz diced ham",
+        "1/4 cup diced green bell pepper",
+        "2 tbsp diced yellow onion",
+        "1 oz shredded cheddar cheese",
+        "1 tbsp butter",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Melt butter in a non-stick skillet over medium heat. Saute ham, bell pepper, and onion for 3 minutes until vegetables soften.",
+        "Whisk eggs with salt and pepper, pour into the skillet, and gently stir with a spatula.",
+        "When eggs are nearly set, sprinkle cheddar on top and fold eggs over.",
+        "Cook 30 more seconds until cheese melts, then slide onto a plate."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "high-protein",
+        "breakfast"
+      ]
+    },
+    "lc_cream_cheese_pancakes": {
+      "name": "Cream Cheese Pancakes",
+      "description": "Flourless two-ingredient pancakes made from eggs and cream cheese, served with butter and a few fresh blueberries",
+      "calories": 320,
+      "protein": 18.0,
+      "carbs": 8.0,
+      "fat": 24.0,
+      "fiber": 0.5,
+      "prepTime": 5,
+      "cookTime": 8,
+      "ingredients": [
+        "3 large eggs",
+        "3 oz cream cheese, softened",
+        "1/2 tsp cinnamon",
+        "1 tbsp butter for cooking",
+        "2 tbsp fresh blueberries",
+        "1 tsp sugar-free maple syrup (optional)"
+      ],
+      "instructions": [
+        "Blend eggs, cream cheese, and cinnamon in a blender until smooth.",
+        "Melt butter on a griddle or non-stick pan over medium-low heat.",
+        "Pour small rounds of batter (about 3 inches) and cook 2 minutes until bubbles form and edges set.",
+        "Flip carefully and cook 1 more minute. These are delicate, so use a thin spatula.",
+        "Stack pancakes, top with fresh blueberries and a drizzle of sugar-free syrup if desired."
+      ],
+      "tags": [
+        "low-carb",
+        "gluten-free",
+        "breakfast",
+        "vegetarian"
+      ]
+    }
+  },
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "lc_spinach_feta_omelet",
+          "lunch": "lc_grilled_chicken_caesar_bowl",
+          "dinner": "lc_zucchini_noodle_bolognese",
+          "snack": "lc_string_cheese_almonds"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "lc_avocado_bacon_eggs",
+          "lunch": "lc_tuna_stuffed_avocado",
+          "dinner": "lc_lemon_herb_salmon",
+          "snack": "lc_deviled_eggs"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "lc_western_scramble",
+          "lunch": "lc_cobb_salad",
+          "dinner": "lc_chicken_broccoli_alfredo",
+          "snack": "lc_guacamole_veggie_dippers"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "lc_greek_yogurt_berry_bowl",
+          "lunch": "lc_ham_cheese_lettuce_wrap",
+          "dinner": "lc_thai_basil_beef_lettuce_cups",
+          "snack": "lc_cheese_pepperoni_crisps"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "lc_smoked_salmon_cream_cheese_roll",
+          "lunch": "lc_buffalo_chicken_bowl",
+          "dinner": "lc_shrimp_scampi_zoodles",
+          "snack": "lc_bacon_wrapped_jalapenos"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "lc_mushroom_swiss_egg_cups",
+          "lunch": "lc_mediterranean_chicken_plate",
+          "dinner": "lc_steak_chimichurri",
+          "snack": "lc_almond_butter_celery"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "lc_coconut_chia_pudding",
+          "lunch": "lc_egg_salad_lettuce_cups",
+          "dinner": "lc_stuffed_bell_pepper",
+          "snack": "lc_cucumber_turkey_bites"
+        }
+      ]
+    },
+    {
+      "weekNumber": 2,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "lc_cheesy_broccoli_egg_muffins",
+          "lunch": "lc_asian_chicken_cabbage_salad",
+          "dinner": "lc_cauliflower_fried_rice",
+          "snack": "lc_mixed_nuts_dark_chocolate"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "lc_avocado_bacon_eggs",
+          "lunch": "lc_turkey_taco_lettuce_wraps",
+          "dinner": "lc_pork_chop_green_beans",
+          "snack": "lc_edamame_sea_salt"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "lc_western_scramble",
+          "lunch": "lc_broccoli_cheddar_soup",
+          "dinner": "lc_caprese_chicken",
+          "snack": "lc_string_cheese_almonds"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "lc_spinach_feta_omelet",
+          "lunch": "lc_blt_turkey_roll_up",
+          "dinner": "lc_chicken_coconut_curry",
+          "snack": "lc_cucumber_turkey_bites"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "lc_berry_protein_smoothie",
+          "lunch": "lc_salmon_avocado_bowl",
+          "dinner": "lc_spicy_sausage_cabbage_skillet",
+          "snack": "lc_deviled_eggs"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "lc_sausage_pepper_scramble",
+          "lunch": "lc_italian_antipasto_plate",
+          "dinner": "lc_blackened_cod_slaw",
+          "snack": "lc_guacamole_veggie_dippers"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "lc_mushroom_swiss_egg_cups",
+          "lunch": "lc_grilled_chicken_caesar_bowl",
+          "dinner": "lc_herb_roasted_chicken_thighs",
+          "snack": "lc_bacon_wrapped_jalapenos"
+        }
+      ]
+    },
+    {
+      "weekNumber": 3,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "lc_greek_yogurt_berry_bowl",
+          "lunch": "lc_southwest_chicken_stuffed_pepper",
+          "dinner": "lc_caprese_chicken",
+          "snack": "lc_cheese_pepperoni_crisps"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "lc_smoked_salmon_cream_cheese_roll",
+          "lunch": "lc_cobb_salad",
+          "dinner": "lc_blackened_cod_slaw",
+          "snack": "lc_prosciutto_melon_skewers"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "lc_coconut_chia_pudding",
+          "lunch": "lc_egg_salad_lettuce_cups",
+          "dinner": "lc_shrimp_scampi_zoodles",
+          "snack": "lc_almond_butter_celery"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "lc_cheesy_broccoli_egg_muffins",
+          "lunch": "lc_buffalo_chicken_bowl",
+          "dinner": "lc_chicken_coconut_curry",
+          "snack": "lc_edamame_sea_salt"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "lc_cream_cheese_pancakes",
+          "lunch": "lc_ham_cheese_lettuce_wrap",
+          "dinner": "lc_pork_chop_green_beans",
+          "snack": "lc_mixed_nuts_dark_chocolate"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "lc_breakfast_sausage_patties_avo",
+          "lunch": "lc_mediterranean_chicken_plate",
+          "dinner": "lc_lemon_herb_salmon",
+          "snack": "lc_prosciutto_melon_skewers"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "lc_berry_protein_smoothie",
+          "lunch": "lc_tuna_stuffed_avocado",
+          "dinner": "lc_steak_chimichurri",
+          "snack": "lc_cucumber_turkey_bites"
+        }
+      ]
+    },
+    {
+      "weekNumber": 4,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "lc_sausage_pepper_scramble",
+          "lunch": "lc_asian_chicken_cabbage_salad",
+          "dinner": "lc_thai_basil_beef_lettuce_cups",
+          "snack": "lc_deviled_eggs"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "lc_mushroom_swiss_egg_cups",
+          "lunch": "lc_salmon_avocado_bowl",
+          "dinner": "lc_stuffed_bell_pepper",
+          "snack": "lc_string_cheese_almonds"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "lc_spinach_feta_omelet",
+          "lunch": "lc_broccoli_cheddar_soup",
+          "dinner": "lc_chicken_coconut_curry",
+          "snack": "lc_bacon_wrapped_jalapenos"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "lc_greek_yogurt_berry_bowl",
+          "lunch": "lc_blt_turkey_roll_up",
+          "dinner": "lc_blackened_cod_slaw",
+          "snack": "lc_guacamole_veggie_dippers"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "lc_cheesy_broccoli_egg_muffins",
+          "lunch": "lc_turkey_taco_lettuce_wraps",
+          "dinner": "lc_pork_chop_green_beans",
+          "snack": "lc_prosciutto_melon_skewers"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "lc_smoked_salmon_cream_cheese_roll",
+          "lunch": "lc_italian_antipasto_plate",
+          "dinner": "lc_herb_roasted_chicken_thighs",
+          "snack": "lc_almond_butter_celery"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "lc_cream_cheese_pancakes",
+          "lunch": "lc_southwest_chicken_stuffed_pepper",
+          "dinner": "lc_zucchini_noodle_bolognese",
+          "snack": "lc_cheese_pepperoni_crisps"
+        }
+      ]
+    }
+  ]
+}

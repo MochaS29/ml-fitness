@@ -1,0 +1,1738 @@
+{
+  "dietType": "mediterranean",
+  "displayName": "Mediterranean",
+  "description": "Heart-healthy diet rich in fruits, vegetables, whole grains, olive oil, and lean proteins from the Mediterranean region",
+  "benefits": [
+    "Reduces heart disease risk",
+    "Supports brain health",
+    "Anti-inflammatory properties",
+    "Promotes longevity",
+    "Rich in antioxidants"
+  ],
+  "restrictions": [
+    "Limited red meat",
+    "Moderate dairy",
+    "No processed foods",
+    "Minimal refined sugar"
+  ],
+  "meals": {
+    "med_greek_yogurt_parfait": {
+      "name": "Greek Yogurt Parfait with Honey and Walnuts",
+      "description": "Creamy Greek yogurt layered with golden honey, crunchy walnuts, and fresh mixed berries",
+      "calories": 310,
+      "protein": 20.0,
+      "carbs": 34.0,
+      "fat": 12.0,
+      "fiber": 3.5,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1 cup plain Greek yogurt",
+        "2 tbsp raw honey",
+        "1/4 cup chopped walnuts",
+        "1/2 cup mixed berries (blueberries, raspberries)",
+        "1 tbsp ground flaxseed"
+      ],
+      "instructions": [
+        "Spoon half the Greek yogurt into a bowl or glass.",
+        "Layer with half the berries and a drizzle of honey.",
+        "Add the remaining yogurt, top with remaining berries, walnuts, and flaxseed.",
+        "Drizzle with the rest of the honey and serve immediately."
+      ],
+      "tags": ["vegetarian", "gluten-free", "quick", "high-protein", "no-cook"]
+    },
+    "med_shakshuka": {
+      "name": "Shakshuka with Crusty Bread",
+      "description": "Eggs poached in a spiced tomato and pepper sauce, served with warm crusty whole wheat bread for dipping",
+      "calories": 385,
+      "protein": 19.0,
+      "carbs": 38.0,
+      "fat": 18.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "2 large eggs",
+        "1 cup canned crushed tomatoes",
+        "1/2 red bell pepper, diced",
+        "1/4 yellow onion, diced",
+        "2 cloves garlic, minced",
+        "1 tsp cumin",
+        "1/2 tsp smoked paprika",
+        "1 tbsp extra virgin olive oil",
+        "2 slices whole wheat crusty bread",
+        "Fresh parsley for garnish",
+        "Pinch of red pepper flakes"
+      ],
+      "instructions": [
+        "Heat olive oil in a skillet over medium heat. Saute onion and bell pepper until softened, about 5 minutes.",
+        "Add garlic, cumin, paprika, and red pepper flakes. Cook for 1 minute until fragrant.",
+        "Pour in crushed tomatoes, stir well, and simmer for 10 minutes until slightly thickened.",
+        "Make two wells in the sauce and crack an egg into each. Cover and cook for 6-8 minutes until egg whites are set.",
+        "Garnish with fresh parsley and serve with crusty bread for dipping."
+      ],
+      "tags": ["vegetarian", "high-protein", "middle-eastern"]
+    },
+    "med_avocado_egg_toast": {
+      "name": "Mediterranean Avocado Toast with Poached Egg",
+      "description": "Whole grain toast topped with mashed avocado, a perfectly poached egg, cherry tomatoes, and a sprinkle of za'atar",
+      "calories": 345,
+      "protein": 14.0,
+      "carbs": 30.0,
+      "fat": 20.0,
+      "fiber": 8.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "2 slices whole grain bread",
+        "1/2 ripe avocado",
+        "1 large egg",
+        "6 cherry tomatoes, halved",
+        "1 tsp za'atar seasoning",
+        "1 tsp extra virgin olive oil",
+        "1 tsp white vinegar",
+        "Pinch of sea salt and black pepper",
+        "Squeeze of lemon juice"
+      ],
+      "instructions": [
+        "Toast the whole grain bread until golden and crisp.",
+        "Mash the avocado with lemon juice, salt, and pepper. Spread onto toast slices.",
+        "Bring a small pot of water to a gentle simmer, add vinegar, and poach the egg for 3-4 minutes.",
+        "Top toast with halved cherry tomatoes and the poached egg.",
+        "Drizzle with olive oil and sprinkle with za'atar seasoning."
+      ],
+      "tags": ["vegetarian", "high-fiber", "quick"]
+    },
+    "med_spinach_feta_omelette": {
+      "name": "Spinach and Feta Omelette",
+      "description": "Fluffy omelette stuffed with wilted baby spinach, crumbled feta cheese, and sun-dried tomatoes",
+      "calories": 295,
+      "protein": 22.0,
+      "carbs": 6.0,
+      "fat": 21.0,
+      "fiber": 2.0,
+      "prepTime": 5,
+      "cookTime": 8,
+      "ingredients": [
+        "3 large eggs",
+        "1 cup baby spinach",
+        "1 oz crumbled feta cheese",
+        "3 sun-dried tomato halves, chopped",
+        "1 tsp extra virgin olive oil",
+        "Pinch of dried oregano",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Whisk eggs with a pinch of salt, pepper, and oregano.",
+        "Heat olive oil in a non-stick skillet over medium heat.",
+        "Pour in eggs and cook until edges begin to set, about 2 minutes.",
+        "Add spinach, feta, and sun-dried tomatoes to one half of the omelette.",
+        "Fold the omelette over, cook 1 more minute, and slide onto a plate."
+      ],
+      "tags": ["vegetarian", "gluten-free", "low-carb", "quick", "high-protein", "keto-friendly"]
+    },
+    "med_overnight_oats": {
+      "name": "Mediterranean Overnight Oats",
+      "description": "Creamy overnight oats with figs, pistachios, and a drizzle of honey, inspired by the flavors of Greece",
+      "calories": 370,
+      "protein": 13.0,
+      "carbs": 52.0,
+      "fat": 13.0,
+      "fiber": 7.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1/2 cup rolled oats",
+        "1/2 cup plain Greek yogurt",
+        "1/2 cup unsweetened almond milk",
+        "2 dried figs, chopped",
+        "2 tbsp shelled pistachios",
+        "1 tbsp honey",
+        "1/2 tsp cinnamon",
+        "1 tsp chia seeds"
+      ],
+      "instructions": [
+        "Combine oats, Greek yogurt, almond milk, chia seeds, and cinnamon in a jar or container.",
+        "Stir well, cover, and refrigerate overnight or at least 6 hours.",
+        "In the morning, top with chopped figs and pistachios.",
+        "Drizzle with honey and enjoy cold or at room temperature."
+      ],
+      "tags": ["vegetarian", "meal-prep", "high-fiber", "no-cook"]
+    },
+    "med_turkish_egg_bowl": {
+      "name": "Turkish Eggs (Cilbir)",
+      "description": "Soft poached eggs nestled in garlicky yogurt, topped with Aleppo pepper butter and fresh dill",
+      "calories": 330,
+      "protein": 18.0,
+      "carbs": 20.0,
+      "fat": 21.0,
+      "fiber": 2.0,
+      "prepTime": 5,
+      "cookTime": 12,
+      "ingredients": [
+        "2 large eggs",
+        "3/4 cup plain Greek yogurt",
+        "1 small clove garlic, minced",
+        "1 tbsp unsalted butter",
+        "1 tsp Aleppo pepper (or paprika)",
+        "1 slice whole wheat pita bread",
+        "Fresh dill for garnish",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Mix Greek yogurt with minced garlic and a pinch of salt. Spread onto a shallow bowl.",
+        "Bring water to a gentle simmer and poach eggs for 3-4 minutes until whites are set.",
+        "Place poached eggs on top of the yogurt.",
+        "Melt butter in a small pan, add Aleppo pepper, and swirl for 30 seconds.",
+        "Drizzle the pepper butter over the eggs, garnish with dill, and serve with warm pita."
+      ],
+      "tags": ["vegetarian", "high-protein", "middle-eastern"]
+    },
+    "med_fig_ricotta_toast": {
+      "name": "Fig and Ricotta Toast with Honey",
+      "description": "Toasted whole grain bread with creamy ricotta, sliced fresh figs, honey, and a scattering of toasted almonds",
+      "calories": 320,
+      "protein": 12.0,
+      "carbs": 42.0,
+      "fat": 13.0,
+      "fiber": 5.0,
+      "prepTime": 5,
+      "cookTime": 3,
+      "ingredients": [
+        "2 slices whole grain bread",
+        "1/4 cup part-skim ricotta cheese",
+        "2 fresh figs, sliced (or 3 dried figs)",
+        "1 tbsp sliced almonds, toasted",
+        "1 tbsp honey",
+        "Pinch of sea salt",
+        "Fresh mint leaves"
+      ],
+      "instructions": [
+        "Toast whole grain bread until golden.",
+        "Spread ricotta evenly over each slice.",
+        "Arrange fig slices on top of the ricotta.",
+        "Sprinkle with toasted almonds, drizzle with honey, add a pinch of sea salt, and garnish with mint."
+      ],
+      "tags": ["vegetarian", "quick", "no-cook"]
+    },
+    "med_veggie_frittata": {
+      "name": "Mediterranean Vegetable Frittata",
+      "description": "Oven-baked egg frittata loaded with zucchini, roasted red peppers, Kalamata olives, and herbs",
+      "calories": 275,
+      "protein": 19.0,
+      "carbs": 8.0,
+      "fat": 19.0,
+      "fiber": 2.5,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "4 large eggs",
+        "1/2 small zucchini, diced",
+        "1/4 cup roasted red peppers, chopped",
+        "6 Kalamata olives, sliced",
+        "1 oz crumbled feta cheese",
+        "1 tbsp extra virgin olive oil",
+        "1 tbsp fresh basil, chopped",
+        "1/4 tsp dried thyme",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Heat olive oil in an oven-safe skillet over medium heat.",
+        "Saute zucchini for 3 minutes until lightly golden.",
+        "Whisk eggs with thyme, salt, and pepper. Pour over zucchini.",
+        "Scatter roasted red peppers, olives, and feta over the top.",
+        "Cook on stovetop for 2 minutes, then transfer to oven and bake 12-15 minutes until set.",
+        "Let cool slightly, garnish with basil, and slice into wedges."
+      ],
+      "tags": ["vegetarian", "gluten-free", "low-carb", "meal-prep", "high-protein"]
+    },
+    "med_whole_wheat_pancakes": {
+      "name": "Whole Wheat Pancakes with Orange and Olive Oil",
+      "description": "Light and fluffy whole wheat pancakes infused with fresh orange zest, drizzled with olive oil and topped with citrus segments",
+      "calories": 355,
+      "protein": 11.0,
+      "carbs": 48.0,
+      "fat": 14.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "3/4 cup whole wheat flour",
+        "1 large egg",
+        "1/2 cup milk",
+        "1 tbsp extra virgin olive oil",
+        "1 tbsp honey",
+        "Zest of 1 orange",
+        "1/2 orange, segmented",
+        "1/2 tsp baking powder",
+        "Pinch of salt"
+      ],
+      "instructions": [
+        "Whisk together flour, baking powder, and salt in a bowl.",
+        "In another bowl, beat egg with milk, olive oil, honey, and orange zest.",
+        "Combine wet and dry ingredients, stirring until just mixed (a few lumps are fine).",
+        "Heat a non-stick pan over medium heat. Pour 1/4 cup batter per pancake.",
+        "Cook until bubbles form on the surface, flip, and cook another 1-2 minutes.",
+        "Serve topped with orange segments and an extra drizzle of honey."
+      ],
+      "tags": ["vegetarian", "italian"]
+    },
+    "med_labneh_bowl": {
+      "name": "Labneh Breakfast Bowl",
+      "description": "Thick strained yogurt (labneh) served with olive oil, za'atar, cucumber, tomato, and warm flatbread",
+      "calories": 290,
+      "protein": 14.0,
+      "carbs": 28.0,
+      "fat": 15.0,
+      "fiber": 3.5,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1/2 cup labneh (or thick Greek yogurt)",
+        "1/4 cucumber, diced",
+        "4 cherry tomatoes, quartered",
+        "1 tbsp extra virgin olive oil",
+        "1 tsp za'atar seasoning",
+        "1 small whole wheat pita",
+        "Fresh mint leaves",
+        "Pinch of sea salt"
+      ],
+      "instructions": [
+        "Spread labneh in a shallow bowl, creating a slight well in the center.",
+        "Drizzle generously with olive oil and sprinkle za'atar over the top.",
+        "Arrange diced cucumber and cherry tomatoes around the bowl.",
+        "Garnish with fresh mint and a pinch of sea salt.",
+        "Serve with warm pita bread torn into pieces for scooping."
+      ],
+      "tags": ["vegetarian", "quick", "no-cook", "middle-eastern"]
+    },
+    "med_banana_walnut_oatmeal": {
+      "name": "Warm Oatmeal with Banana, Walnuts, and Cinnamon",
+      "description": "Hearty steel-cut oats cooked with sliced banana, toasted walnuts, a touch of cinnamon, and a drizzle of tahini",
+      "calories": 395,
+      "protein": 12.0,
+      "carbs": 55.0,
+      "fat": 16.0,
+      "fiber": 7.5,
+      "prepTime": 5,
+      "cookTime": 15,
+      "ingredients": [
+        "1/2 cup steel-cut oats",
+        "1 cup water",
+        "1/2 cup milk",
+        "1 medium banana, sliced",
+        "2 tbsp walnuts, roughly chopped",
+        "1 tbsp tahini",
+        "1/2 tsp cinnamon",
+        "1 tsp honey"
+      ],
+      "instructions": [
+        "Bring water and milk to a boil in a saucepan. Add oats and reduce to a simmer.",
+        "Cook for 12-15 minutes, stirring occasionally, until oats are tender and creamy.",
+        "Pour into a bowl and top with sliced banana and chopped walnuts.",
+        "Drizzle with tahini and honey, and dust with cinnamon."
+      ],
+      "tags": ["vegetarian", "high-fiber", "meal-prep"]
+    },
+    "med_smoked_salmon_plate": {
+      "name": "Smoked Salmon Breakfast Plate",
+      "description": "Silky smoked salmon with cream cheese, capers, red onion, and whole grain crackers — an elegant morning spread",
+      "calories": 340,
+      "protein": 24.0,
+      "carbs": 22.0,
+      "fat": 18.0,
+      "fiber": 3.0,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "3 oz smoked salmon",
+        "2 tbsp cream cheese (or Neufchatel)",
+        "1 tbsp capers, drained",
+        "2 thin slices red onion",
+        "6 whole grain crackers",
+        "1 tsp fresh dill",
+        "Squeeze of lemon juice",
+        "Freshly cracked black pepper"
+      ],
+      "instructions": [
+        "Arrange smoked salmon slices on a plate.",
+        "Place small dollops of cream cheese alongside the salmon.",
+        "Scatter capers and red onion slices over the plate.",
+        "Squeeze fresh lemon juice over the salmon and garnish with dill.",
+        "Serve with whole grain crackers on the side."
+      ],
+      "tags": ["high-protein", "omega-3", "quick", "no-cook"]
+    },
+    "med_greek_salad": {
+      "name": "Classic Greek Salad",
+      "description": "Crisp cucumbers, ripe tomatoes, red onion, Kalamata olives, and feta cheese dressed in olive oil and red wine vinegar",
+      "calories": 285,
+      "protein": 8.0,
+      "carbs": 16.0,
+      "fat": 22.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 0,
+      "ingredients": [
+        "2 cups chopped romaine lettuce",
+        "1/2 English cucumber, chopped",
+        "1 cup cherry tomatoes, halved",
+        "1/4 red onion, thinly sliced",
+        "10 Kalamata olives",
+        "1.5 oz feta cheese, cubed",
+        "2 tbsp extra virgin olive oil",
+        "1 tbsp red wine vinegar",
+        "1/2 tsp dried oregano",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Combine romaine, cucumber, tomatoes, red onion, and olives in a large bowl.",
+        "Whisk together olive oil, red wine vinegar, oregano, salt, and pepper.",
+        "Drizzle the dressing over the salad and toss gently.",
+        "Top with cubed feta cheese and serve immediately."
+      ],
+      "tags": ["vegetarian", "gluten-free", "low-carb", "quick", "no-cook"]
+    },
+    "med_lentil_soup": {
+      "name": "Red Lentil Soup with Lemon",
+      "description": "Velvety Turkish-style red lentil soup finished with a bright squeeze of lemon and a swirl of olive oil",
+      "calories": 310,
+      "protein": 18.0,
+      "carbs": 45.0,
+      "fat": 7.0,
+      "fiber": 12.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "1 cup red lentils, rinsed",
+        "1/2 yellow onion, diced",
+        "1 carrot, diced",
+        "2 cloves garlic, minced",
+        "3 cups vegetable broth",
+        "1 tsp cumin",
+        "1/2 tsp turmeric",
+        "1 tbsp extra virgin olive oil",
+        "Juice of 1/2 lemon",
+        "Salt and pepper to taste",
+        "Fresh parsley for garnish"
+      ],
+      "instructions": [
+        "Heat olive oil in a large pot over medium heat. Saute onion and carrot for 5 minutes.",
+        "Add garlic, cumin, and turmeric. Cook for 1 minute until fragrant.",
+        "Add lentils and vegetable broth. Bring to a boil, then reduce heat and simmer for 20-25 minutes until lentils are very soft.",
+        "Use an immersion blender to partially puree the soup (leave some texture).",
+        "Stir in lemon juice, season with salt and pepper, and serve with a drizzle of olive oil and parsley."
+      ],
+      "tags": ["vegan", "gluten-free", "high-fiber", "high-protein", "meal-prep", "middle-eastern"]
+    },
+    "med_grilled_chicken_wrap": {
+      "name": "Grilled Chicken and Hummus Wrap",
+      "description": "Warm whole wheat wrap filled with seasoned grilled chicken, creamy hummus, crunchy vegetables, and fresh herbs",
+      "calories": 445,
+      "protein": 35.0,
+      "carbs": 40.0,
+      "fat": 16.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "5 oz boneless skinless chicken breast",
+        "1 large whole wheat tortilla (10-inch)",
+        "3 tbsp hummus",
+        "1/4 cup shredded romaine lettuce",
+        "4 slices cucumber",
+        "3 cherry tomatoes, halved",
+        "2 tbsp pickled red onion",
+        "1 tsp extra virgin olive oil",
+        "1/2 tsp za'atar seasoning",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken breast with za'atar, salt, and pepper. Brush with olive oil.",
+        "Grill or pan-sear chicken over medium-high heat for 5-6 minutes per side until cooked through (165°F internal).",
+        "Let chicken rest for 3 minutes, then slice into strips.",
+        "Spread hummus across the center of the tortilla.",
+        "Layer chicken strips, lettuce, cucumber, tomatoes, and pickled onion on top.",
+        "Fold the sides in and roll tightly into a wrap."
+      ],
+      "tags": ["high-protein", "meal-prep"]
+    },
+    "med_tuna_nicoise": {
+      "name": "Tuna Nicoise Salad",
+      "description": "A French Riviera classic with seared tuna, green beans, boiled egg, olives, and potatoes in a Dijon vinaigrette",
+      "calories": 480,
+      "protein": 38.0,
+      "carbs": 28.0,
+      "fat": 24.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 15,
+      "ingredients": [
+        "5 oz fresh tuna steak",
+        "1 large egg, hard-boiled",
+        "1/2 cup green beans, trimmed",
+        "4 small red potatoes, halved",
+        "6 Nicoise or Kalamata olives",
+        "4 cherry tomatoes, halved",
+        "2 cups mixed greens",
+        "1 tbsp Dijon mustard",
+        "2 tbsp extra virgin olive oil",
+        "1 tbsp red wine vinegar",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Boil potatoes until fork-tender, about 10 minutes. Blanch green beans for 3 minutes. Drain and cool.",
+        "Season tuna with salt and pepper. Sear in a hot skillet for 2 minutes per side for medium-rare.",
+        "Whisk together Dijon mustard, olive oil, red wine vinegar, salt, and pepper for the dressing.",
+        "Arrange mixed greens on a plate. Top with sliced potatoes, green beans, tomatoes, olives, and halved egg.",
+        "Slice tuna and place on top. Drizzle with vinaigrette."
+      ],
+      "tags": ["high-protein", "omega-3", "gluten-free", "french"]
+    },
+    "med_falafel_bowl": {
+      "name": "Falafel Bowl with Tahini Sauce",
+      "description": "Crispy baked falafel served over a bed of fluffy couscous with pickled turnips, fresh vegetables, and creamy tahini drizzle",
+      "calories": 510,
+      "protein": 19.0,
+      "carbs": 62.0,
+      "fat": 22.0,
+      "fiber": 11.0,
+      "prepTime": 20,
+      "cookTime": 25,
+      "ingredients": [
+        "1 can (15 oz) chickpeas, drained (makes 8 falafel)",
+        "1/4 cup fresh parsley",
+        "2 cloves garlic",
+        "1 tsp cumin",
+        "1/2 cup whole wheat couscous",
+        "1/4 cup diced cucumber",
+        "1/4 cup diced tomato",
+        "2 tbsp tahini",
+        "1 tbsp lemon juice",
+        "1 tbsp extra virgin olive oil",
+        "2 tbsp water",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Pulse chickpeas, parsley, garlic, cumin, and salt in a food processor until a coarse paste forms.",
+        "Shape mixture into 8 small patties. Place on a lined baking sheet and brush with olive oil.",
+        "Bake for 20-25 minutes, flipping halfway, until golden and crisp.",
+        "Prepare couscous according to package directions and fluff with a fork.",
+        "Whisk tahini with lemon juice and water to make a drizzle sauce.",
+        "Assemble bowl with couscous, 4 falafel, cucumber, tomato, and tahini sauce."
+      ],
+      "tags": ["vegan", "high-fiber", "meal-prep", "middle-eastern"]
+    },
+    "med_caprese_panini": {
+      "name": "Caprese Panini",
+      "description": "Pressed sandwich with fresh mozzarella, ripe tomato, basil leaves, and a balsamic glaze on ciabatta",
+      "calories": 420,
+      "protein": 21.0,
+      "carbs": 40.0,
+      "fat": 20.0,
+      "fiber": 3.0,
+      "prepTime": 5,
+      "cookTime": 8,
+      "ingredients": [
+        "1 whole wheat ciabatta roll, halved",
+        "3 oz fresh mozzarella, sliced",
+        "1 medium tomato, sliced",
+        "4 large fresh basil leaves",
+        "1 tbsp balsamic glaze",
+        "1 tsp extra virgin olive oil",
+        "Pinch of sea salt and black pepper"
+      ],
+      "instructions": [
+        "Brush the cut sides of the ciabatta with olive oil.",
+        "Layer mozzarella, tomato slices, and basil on the bottom half.",
+        "Season with salt and pepper, drizzle with balsamic glaze, and place the top on.",
+        "Press in a panini press or grill pan with a heavy skillet on top for 3-4 minutes per side until golden and cheese melts."
+      ],
+      "tags": ["vegetarian", "italian", "quick"]
+    },
+    "med_chicken_souvlaki_plate": {
+      "name": "Chicken Souvlaki Plate",
+      "description": "Herb-marinated grilled chicken skewers served with warm pita, tzatziki, and a bright tomato-cucumber salad",
+      "calories": 490,
+      "protein": 40.0,
+      "carbs": 35.0,
+      "fat": 20.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 12,
+      "ingredients": [
+        "6 oz boneless skinless chicken breast, cubed",
+        "1 tbsp extra virgin olive oil",
+        "1 tbsp lemon juice",
+        "1 tsp dried oregano",
+        "1 clove garlic, minced",
+        "1 whole wheat pita",
+        "3 tbsp tzatziki sauce",
+        "1/4 cup diced tomato",
+        "1/4 cup diced cucumber",
+        "1/4 small red onion, sliced",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Marinate chicken cubes in olive oil, lemon juice, oregano, garlic, salt, and pepper for at least 10 minutes.",
+        "Thread chicken onto skewers and grill or pan-sear over medium-high heat for 10-12 minutes, turning occasionally.",
+        "Warm the pita in the pan for 30 seconds per side.",
+        "Toss tomato, cucumber, and red onion with a squeeze of lemon for a quick salad.",
+        "Serve skewers with pita, tzatziki, and the side salad."
+      ],
+      "tags": ["high-protein", "greek"]
+    },
+    "med_white_bean_tuna_salad": {
+      "name": "Tuscan White Bean and Tuna Salad",
+      "description": "Hearty Italian-inspired salad of cannellini beans, olive oil-packed tuna, red onion, and fresh herbs in a lemon dressing",
+      "calories": 365,
+      "protein": 28.0,
+      "carbs": 30.0,
+      "fat": 15.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 can (5 oz) tuna in olive oil, drained",
+        "3/4 cup canned cannellini beans, rinsed",
+        "1/4 red onion, thinly sliced",
+        "1 stalk celery, diced",
+        "1 tbsp capers",
+        "2 cups arugula",
+        "1 tbsp extra virgin olive oil",
+        "1 tbsp fresh lemon juice",
+        "1 tbsp chopped fresh parsley",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Combine cannellini beans, tuna, red onion, celery, and capers in a bowl.",
+        "Whisk together olive oil, lemon juice, salt, and pepper.",
+        "Pour dressing over the bean mixture and toss gently.",
+        "Serve over a bed of arugula and garnish with parsley."
+      ],
+      "tags": ["high-protein", "omega-3", "gluten-free", "quick", "no-cook", "italian", "meal-prep"]
+    },
+    "med_stuffed_pepper_halves": {
+      "name": "Quinoa-Stuffed Bell Pepper Halves",
+      "description": "Colorful bell peppers filled with herbed quinoa, chickpeas, sun-dried tomatoes, and topped with crumbled feta",
+      "calories": 390,
+      "protein": 16.0,
+      "carbs": 50.0,
+      "fat": 15.0,
+      "fiber": 9.0,
+      "prepTime": 15,
+      "cookTime": 30,
+      "ingredients": [
+        "2 bell pepper halves (any color)",
+        "1/2 cup cooked quinoa",
+        "1/4 cup canned chickpeas, rinsed",
+        "3 sun-dried tomato halves, chopped",
+        "1 oz crumbled feta cheese",
+        "2 tbsp chopped fresh parsley",
+        "1 tbsp extra virgin olive oil",
+        "1/2 tsp cumin",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Place pepper halves cut-side up on a baking sheet.",
+        "Mix cooked quinoa with chickpeas, sun-dried tomatoes, parsley, olive oil, cumin, salt, and pepper.",
+        "Divide the quinoa mixture evenly between the pepper halves.",
+        "Top with crumbled feta cheese.",
+        "Bake for 25-30 minutes until peppers are tender and filling is heated through."
+      ],
+      "tags": ["vegetarian", "gluten-free", "high-fiber", "meal-prep"]
+    },
+    "med_fattoush_salad": {
+      "name": "Fattoush Salad with Sumac Dressing",
+      "description": "Crunchy Lebanese bread salad with toasted pita chips, radishes, fresh herbs, and a tangy sumac vinaigrette",
+      "calories": 295,
+      "protein": 8.0,
+      "carbs": 32.0,
+      "fat": 16.0,
+      "fiber": 6.0,
+      "prepTime": 15,
+      "cookTime": 8,
+      "ingredients": [
+        "1 whole wheat pita, torn into pieces",
+        "2 cups chopped romaine lettuce",
+        "1/2 cup diced cucumber",
+        "1/2 cup diced tomato",
+        "3 radishes, thinly sliced",
+        "2 green onions, sliced",
+        "2 tbsp chopped fresh mint",
+        "2 tbsp chopped fresh parsley",
+        "2 tbsp extra virgin olive oil",
+        "1 tbsp lemon juice",
+        "1 tsp ground sumac",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Spread pita pieces on a baking sheet and toast for 6-8 minutes until crisp.",
+        "Combine romaine, cucumber, tomato, radishes, green onions, mint, and parsley in a large bowl.",
+        "Whisk together olive oil, lemon juice, sumac, and salt for the dressing.",
+        "Add toasted pita chips to the salad and drizzle with dressing.",
+        "Toss gently and serve immediately while pita is still crunchy."
+      ],
+      "tags": ["vegan", "high-fiber", "middle-eastern"]
+    },
+    "med_sardine_toast": {
+      "name": "Sardine Toast with Lemon and Arugula",
+      "description": "Mediterranean-style open-faced toast topped with olive oil sardines, peppery arugula, and a squeeze of lemon",
+      "calories": 315,
+      "protein": 22.0,
+      "carbs": 24.0,
+      "fat": 16.0,
+      "fiber": 4.0,
+      "prepTime": 5,
+      "cookTime": 3,
+      "ingredients": [
+        "2 slices whole grain sourdough bread",
+        "1 can (3.75 oz) sardines in olive oil",
+        "1 cup baby arugula",
+        "1/2 lemon, juiced",
+        "1 tsp Dijon mustard",
+        "Thinly sliced red onion",
+        "Freshly cracked black pepper",
+        "Pinch of red pepper flakes"
+      ],
+      "instructions": [
+        "Toast the sourdough slices until golden and crisp.",
+        "Spread a thin layer of Dijon mustard on each slice.",
+        "Arrange sardines on top of the toast, gently pressing with a fork.",
+        "Top with arugula, red onion slices, and a squeeze of lemon.",
+        "Finish with cracked black pepper and red pepper flakes."
+      ],
+      "tags": ["high-protein", "omega-3", "quick"]
+    },
+    "med_grilled_halloumi_salad": {
+      "name": "Grilled Halloumi and Watermelon Salad",
+      "description": "A summery combination of seared halloumi cheese and juicy watermelon with mint, arugula, and balsamic reduction",
+      "calories": 340,
+      "protein": 17.0,
+      "carbs": 22.0,
+      "fat": 22.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 6,
+      "ingredients": [
+        "3 oz halloumi cheese, sliced into 1/4-inch planks",
+        "1 cup cubed watermelon",
+        "2 cups baby arugula",
+        "6 fresh mint leaves, torn",
+        "1 tbsp balsamic glaze",
+        "1 tsp extra virgin olive oil",
+        "Pinch of sea salt",
+        "Freshly cracked black pepper"
+      ],
+      "instructions": [
+        "Heat a non-stick skillet or grill pan over medium-high heat.",
+        "Sear halloumi slices for 2-3 minutes per side until golden brown.",
+        "Arrange arugula on a plate and scatter watermelon cubes over the top.",
+        "Place grilled halloumi on the salad.",
+        "Drizzle with olive oil and balsamic glaze, scatter mint leaves, and season with salt and pepper."
+      ],
+      "tags": ["vegetarian", "gluten-free", "quick", "greek"]
+    },
+    "med_grilled_salmon": {
+      "name": "Herb-Crusted Grilled Salmon",
+      "description": "Wild-caught salmon fillet crusted with fresh herbs, garlic, and lemon, served alongside roasted asparagus",
+      "calories": 455,
+      "protein": 42.0,
+      "carbs": 12.0,
+      "fat": 27.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "6 oz wild-caught salmon fillet",
+        "1 bunch asparagus (about 8 spears), trimmed",
+        "2 tbsp extra virgin olive oil",
+        "2 cloves garlic, minced",
+        "1 tbsp fresh dill, chopped",
+        "1 tbsp fresh parsley, chopped",
+        "1/2 lemon, juiced",
+        "Lemon wedges for serving",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat grill or oven to 400°F. Mix garlic, dill, parsley, 1 tbsp olive oil, lemon juice, salt, and pepper.",
+        "Pat salmon dry and spread the herb mixture over the top.",
+        "Toss asparagus with remaining olive oil, salt, and pepper.",
+        "Grill salmon skin-side down for 12-15 minutes (or bake) until it flakes easily.",
+        "Grill asparagus alongside for 6-8 minutes, turning once.",
+        "Serve salmon with asparagus and lemon wedges."
+      ],
+      "tags": ["high-protein", "omega-3", "gluten-free", "low-carb"]
+    },
+    "med_chicken_orzo": {
+      "name": "Lemon Chicken with Orzo and Spinach",
+      "description": "Tender pan-seared chicken thighs with lemony orzo pasta, wilted spinach, and a scattering of toasted pine nuts",
+      "calories": 520,
+      "protein": 38.0,
+      "carbs": 46.0,
+      "fat": 20.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "5 oz boneless skinless chicken thigh",
+        "3/4 cup whole wheat orzo",
+        "2 cups fresh baby spinach",
+        "1 tbsp pine nuts",
+        "2 tbsp extra virgin olive oil",
+        "2 cloves garlic, minced",
+        "Juice of 1 lemon",
+        "Zest of 1/2 lemon",
+        "1/2 cup chicken broth",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Cook orzo according to package directions. Drain and set aside.",
+        "Season chicken thigh with salt, pepper, and lemon zest. Sear in 1 tbsp olive oil for 5-6 minutes per side. Set aside to rest.",
+        "In the same pan, add remaining olive oil and garlic. Cook 30 seconds.",
+        "Add spinach, chicken broth, and lemon juice. Stir until spinach wilts.",
+        "Toss in cooked orzo and pine nuts. Slice chicken and serve on top."
+      ],
+      "tags": ["high-protein", "greek"]
+    },
+    "med_shrimp_pasta": {
+      "name": "Garlic Shrimp Pasta with Cherry Tomatoes",
+      "description": "Al dente whole wheat linguine tossed with sauteed garlic shrimp, blistered cherry tomatoes, white wine, and fresh basil",
+      "calories": 475,
+      "protein": 32.0,
+      "carbs": 52.0,
+      "fat": 15.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "5 oz large shrimp, peeled and deveined",
+        "3 oz whole wheat linguine",
+        "1 cup cherry tomatoes, halved",
+        "3 cloves garlic, sliced",
+        "2 tbsp extra virgin olive oil",
+        "2 tbsp dry white wine",
+        "1/4 tsp red pepper flakes",
+        "Fresh basil leaves",
+        "1 tbsp grated Parmesan",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Cook linguine according to package directions until al dente. Reserve 1/4 cup pasta water before draining.",
+        "Heat olive oil in a large skillet. Add garlic and red pepper flakes, cook 30 seconds.",
+        "Add shrimp and cook 2-3 minutes per side until pink. Remove and set aside.",
+        "Add cherry tomatoes to the skillet and cook until they blister, about 3 minutes. Add white wine and simmer 1 minute.",
+        "Toss in pasta, shrimp, and a splash of pasta water. Stir to combine.",
+        "Serve topped with fresh basil and Parmesan."
+      ],
+      "tags": ["high-protein", "omega-3", "italian"]
+    },
+    "med_lamb_kofta": {
+      "name": "Lamb Kofta with Yogurt Sauce",
+      "description": "Spiced ground lamb kebabs grilled to perfection, served with cooling yogurt sauce and a tabbouleh side",
+      "calories": 505,
+      "protein": 34.0,
+      "carbs": 28.0,
+      "fat": 28.0,
+      "fiber": 5.0,
+      "prepTime": 20,
+      "cookTime": 12,
+      "ingredients": [
+        "5 oz ground lamb",
+        "1/4 small onion, grated",
+        "1 clove garlic, minced",
+        "1 tsp cumin",
+        "1/2 tsp coriander",
+        "1/4 tsp cinnamon",
+        "2 tbsp fresh parsley, chopped",
+        "1/4 cup bulgur wheat, cooked",
+        "1/2 cup chopped parsley and tomato (for tabbouleh)",
+        "3 tbsp plain Greek yogurt",
+        "1 tsp lemon juice",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Mix ground lamb with grated onion, garlic, cumin, coriander, cinnamon, parsley, salt, and pepper.",
+        "Shape the mixture around skewers into elongated oval shapes.",
+        "Grill or pan-sear kofta over medium-high heat for 5-6 minutes per side until cooked through.",
+        "Mix yogurt with lemon juice and a pinch of salt for the sauce.",
+        "Toss cooked bulgur with chopped parsley, tomato, and a drizzle of olive oil.",
+        "Serve kofta with tabbouleh and yogurt sauce."
+      ],
+      "tags": ["high-protein", "middle-eastern"]
+    },
+    "med_baked_cod": {
+      "name": "Baked Cod with Olive Tapenade",
+      "description": "Flaky white cod baked under a savory olive tapenade crust, served with roasted cherry tomatoes and green beans",
+      "calories": 360,
+      "protein": 36.0,
+      "carbs": 14.0,
+      "fat": 18.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "6 oz cod fillet",
+        "2 tbsp olive tapenade",
+        "1 cup cherry tomatoes",
+        "1 cup green beans, trimmed",
+        "1 tbsp extra virgin olive oil",
+        "1 clove garlic, minced",
+        "1 tsp fresh thyme leaves",
+        "Lemon wedges",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Place cod on a parchment-lined baking sheet.",
+        "Spread olive tapenade evenly over the top of the cod.",
+        "Arrange cherry tomatoes and green beans around the fish. Toss vegetables with olive oil, garlic, thyme, salt, and pepper.",
+        "Bake for 18-20 minutes until cod flakes easily and vegetables are tender.",
+        "Serve with lemon wedges."
+      ],
+      "tags": ["high-protein", "gluten-free", "low-carb"]
+    },
+    "med_eggplant_parmesan": {
+      "name": "Lightened Eggplant Parmesan",
+      "description": "Baked (not fried) eggplant rounds layered with marinara, fresh mozzarella, and Parmesan, served with a side salad",
+      "calories": 380,
+      "protein": 18.0,
+      "carbs": 32.0,
+      "fat": 22.0,
+      "fiber": 9.0,
+      "prepTime": 15,
+      "cookTime": 35,
+      "ingredients": [
+        "1 medium eggplant, sliced into 1/2-inch rounds",
+        "3/4 cup marinara sauce",
+        "2 oz fresh mozzarella, sliced",
+        "2 tbsp grated Parmesan cheese",
+        "1/4 cup whole wheat panko breadcrumbs",
+        "1 tbsp extra virgin olive oil",
+        "1 large egg, beaten",
+        "Fresh basil for garnish",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Salt eggplant slices and let sit 10 minutes, then pat dry.",
+        "Dip eggplant rounds in beaten egg, then coat with panko breadcrumbs.",
+        "Place on an oiled baking sheet and bake for 20 minutes, flipping halfway, until golden.",
+        "Layer baked eggplant in a baking dish with marinara and mozzarella slices.",
+        "Sprinkle with Parmesan and bake 10-12 more minutes until cheese is bubbly.",
+        "Garnish with fresh basil and serve."
+      ],
+      "tags": ["vegetarian", "high-fiber", "italian"]
+    },
+    "med_moroccan_chicken": {
+      "name": "Moroccan Chicken Tagine",
+      "description": "Aromatic braised chicken with preserved lemons, green olives, and warm spices over fluffy couscous",
+      "calories": 540,
+      "protein": 36.0,
+      "carbs": 48.0,
+      "fat": 22.0,
+      "fiber": 6.0,
+      "prepTime": 15,
+      "cookTime": 40,
+      "ingredients": [
+        "5 oz boneless skinless chicken thighs",
+        "1/2 preserved lemon, pulp discarded, rind chopped (or zest of 1 lemon)",
+        "8 green olives, halved",
+        "1/2 onion, diced",
+        "2 cloves garlic, minced",
+        "1 tsp ground ginger",
+        "1/2 tsp turmeric",
+        "1/2 tsp cinnamon",
+        "1/2 cup chicken broth",
+        "1/2 cup whole wheat couscous",
+        "1 tbsp extra virgin olive oil",
+        "Fresh cilantro for garnish",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken with ginger, turmeric, cinnamon, salt, and pepper.",
+        "Heat olive oil in a tagine or Dutch oven. Brown chicken on both sides, about 3 minutes per side. Remove.",
+        "Saute onion until softened. Add garlic and cook 30 seconds.",
+        "Return chicken to the pot, add broth, preserved lemon, and olives. Cover and simmer 30 minutes.",
+        "Prepare couscous according to package directions.",
+        "Serve chicken and sauce over couscous, garnished with cilantro."
+      ],
+      "tags": ["high-protein", "north-african"]
+    },
+    "med_pasta_puttanesca": {
+      "name": "Pasta Puttanesca",
+      "description": "Bold and briny whole wheat spaghetti with tomatoes, capers, Kalamata olives, anchovies, and garlic",
+      "calories": 430,
+      "protein": 16.0,
+      "carbs": 58.0,
+      "fat": 16.0,
+      "fiber": 8.0,
+      "prepTime": 5,
+      "cookTime": 20,
+      "ingredients": [
+        "3 oz whole wheat spaghetti",
+        "1 can (14 oz) diced tomatoes",
+        "2 anchovy fillets, minced",
+        "10 Kalamata olives, halved",
+        "2 tbsp capers, drained",
+        "3 cloves garlic, sliced",
+        "1/4 tsp red pepper flakes",
+        "2 tbsp extra virgin olive oil",
+        "Fresh parsley for garnish"
+      ],
+      "instructions": [
+        "Cook spaghetti according to package directions. Reserve 1/4 cup pasta water.",
+        "Heat olive oil in a large pan. Add garlic, anchovies, and red pepper flakes. Cook until anchovies dissolve.",
+        "Add diced tomatoes, olives, and capers. Simmer 12-15 minutes until sauce thickens.",
+        "Toss drained pasta with the sauce, adding pasta water as needed for consistency.",
+        "Garnish with fresh parsley and serve."
+      ],
+      "tags": ["italian", "high-fiber", "quick"]
+    },
+    "med_stuffed_grape_leaves": {
+      "name": "Stuffed Grape Leaves (Dolma) with Rice",
+      "description": "Tender grape leaves filled with herbed rice, pine nuts, and currants, braised in lemon broth",
+      "calories": 280,
+      "protein": 6.0,
+      "carbs": 42.0,
+      "fat": 11.0,
+      "fiber": 4.0,
+      "prepTime": 30,
+      "cookTime": 45,
+      "ingredients": [
+        "12 jarred grape leaves, rinsed",
+        "1/2 cup long-grain rice, uncooked",
+        "2 tbsp pine nuts, toasted",
+        "1 tbsp dried currants",
+        "2 tbsp fresh dill, chopped",
+        "2 tbsp fresh mint, chopped",
+        "1 tbsp extra virgin olive oil",
+        "1/4 onion, finely diced",
+        "Juice of 1 lemon",
+        "1 cup water",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Saute onion in olive oil until soft. Add rice, pine nuts, currants, dill, mint, salt, and pepper. Stir for 1 minute.",
+        "Place a grape leaf flat, vein-side up. Add 1 tbsp filling near the stem end.",
+        "Fold sides inward, then roll tightly from stem to tip. Repeat with remaining leaves.",
+        "Arrange rolls seam-side down in a pot. Add lemon juice and water.",
+        "Place a plate on top to keep them submerged. Cover and simmer 40-45 minutes until rice is cooked.",
+        "Let cool slightly and serve warm or at room temperature."
+      ],
+      "tags": ["vegan", "greek", "middle-eastern"]
+    },
+    "med_sea_bass": {
+      "name": "Pan-Seared Sea Bass with Caponata",
+      "description": "Crispy-skinned sea bass served over Sicilian caponata - a sweet and sour eggplant relish with tomatoes and capers",
+      "calories": 410,
+      "protein": 34.0,
+      "carbs": 18.0,
+      "fat": 23.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 25,
+      "ingredients": [
+        "6 oz sea bass fillet (skin-on)",
+        "1 cup diced eggplant",
+        "1/2 cup diced tomato",
+        "1/4 cup diced celery",
+        "2 tbsp diced red onion",
+        "1 tbsp capers",
+        "6 green olives, chopped",
+        "1 tbsp red wine vinegar",
+        "1 tsp honey",
+        "2 tbsp extra virgin olive oil",
+        "Fresh basil leaves",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat 1 tbsp olive oil in a skillet. Saute eggplant for 5 minutes until golden. Add celery and onion, cook 3 minutes.",
+        "Add tomato, capers, olives, vinegar, and honey. Simmer 10 minutes until thickened. Season and set aside.",
+        "Pat sea bass dry, season with salt and pepper. Heat remaining olive oil in a clean skillet over medium-high heat.",
+        "Place fish skin-side down and cook 4 minutes until skin is crispy. Flip and cook 2-3 minutes more.",
+        "Spoon caponata onto a plate, place sea bass on top, and garnish with basil."
+      ],
+      "tags": ["high-protein", "gluten-free", "low-carb", "italian"]
+    },
+    "med_chicken_shawarma_bowl": {
+      "name": "Chicken Shawarma Rice Bowl",
+      "description": "Warmly spiced chicken shawarma over brown rice with pickled onions, fresh herbs, and garlic sauce",
+      "calories": 530,
+      "protein": 38.0,
+      "carbs": 50.0,
+      "fat": 19.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 15,
+      "ingredients": [
+        "6 oz boneless skinless chicken thighs, sliced",
+        "3/4 cup cooked brown rice",
+        "1 tbsp extra virgin olive oil",
+        "1 tsp cumin",
+        "1/2 tsp turmeric",
+        "1/2 tsp paprika",
+        "1/4 tsp cinnamon",
+        "1/4 cup pickled red onions",
+        "2 tbsp plain Greek yogurt",
+        "1 small clove garlic, minced",
+        "1 tbsp lemon juice",
+        "Fresh parsley and cucumber slices",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Mix cumin, turmeric, paprika, cinnamon, salt, and pepper. Toss chicken slices with the spice mix and olive oil.",
+        "Sear chicken in a hot skillet for 4-5 minutes per side until cooked through and slightly charred.",
+        "Mix Greek yogurt with garlic, lemon juice, and a pinch of salt for the sauce.",
+        "Assemble bowl with brown rice, sliced chicken, pickled onions, and cucumber.",
+        "Drizzle garlic yogurt sauce over the top and garnish with parsley."
+      ],
+      "tags": ["high-protein", "middle-eastern", "meal-prep"]
+    },
+    "med_mushroom_risotto": {
+      "name": "Wild Mushroom Risotto",
+      "description": "Creamy arborio rice slowly cooked with a medley of wild mushrooms, finished with Parmesan and fresh thyme",
+      "calories": 440,
+      "protein": 14.0,
+      "carbs": 58.0,
+      "fat": 17.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "3/4 cup arborio rice",
+        "1.5 cups mixed mushrooms (cremini, shiitake, oyster), sliced",
+        "1/4 cup dry white wine",
+        "2 cups warm vegetable broth",
+        "1/4 small onion, finely diced",
+        "1 clove garlic, minced",
+        "2 tbsp grated Parmesan cheese",
+        "1 tbsp unsalted butter",
+        "1 tbsp extra virgin olive oil",
+        "1 tsp fresh thyme leaves",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a wide pan. Saute mushrooms until golden, about 5 minutes. Remove and set aside.",
+        "In the same pan, add butter and saute onion until translucent. Add garlic, cook 30 seconds.",
+        "Add arborio rice and stir for 1 minute until coated. Pour in wine and stir until absorbed.",
+        "Add warm broth one ladle at a time, stirring frequently, waiting for each addition to be absorbed before adding the next (about 18-20 minutes).",
+        "Stir in mushrooms, Parmesan, and thyme. Season with salt and pepper.",
+        "Serve immediately while creamy."
+      ],
+      "tags": ["vegetarian", "italian", "comfort-food"]
+    },
+    "med_grilled_swordfish": {
+      "name": "Grilled Swordfish with Salsa Verde",
+      "description": "Meaty swordfish steak grilled and topped with a vibrant Italian salsa verde of parsley, capers, and anchovy",
+      "calories": 420,
+      "protein": 40.0,
+      "carbs": 8.0,
+      "fat": 26.0,
+      "fiber": 2.0,
+      "prepTime": 15,
+      "cookTime": 10,
+      "ingredients": [
+        "6 oz swordfish steak",
+        "1/2 cup fresh flat-leaf parsley, packed",
+        "1 tbsp capers",
+        "1 anchovy fillet",
+        "1 small clove garlic",
+        "3 tbsp extra virgin olive oil",
+        "1 tbsp red wine vinegar",
+        "1 cup roasted zucchini slices",
+        "Lemon wedges",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Make salsa verde: pulse parsley, capers, anchovy, garlic, 2 tbsp olive oil, and vinegar in a mini food processor until chunky.",
+        "Brush swordfish with remaining olive oil and season with salt and pepper.",
+        "Grill over medium-high heat for 4-5 minutes per side until firm and opaque.",
+        "Serve swordfish with a generous spoonful of salsa verde and roasted zucchini on the side."
+      ],
+      "tags": ["high-protein", "omega-3", "gluten-free", "low-carb", "italian"]
+    },
+    "med_spanakopita_bake": {
+      "name": "Spanakopita (Greek Spinach Pie)",
+      "description": "Layers of flaky phyllo pastry encasing a savory filling of spinach, feta, and dill - a Greek taverna classic",
+      "calories": 365,
+      "protein": 16.0,
+      "carbs": 30.0,
+      "fat": 22.0,
+      "fiber": 4.0,
+      "prepTime": 20,
+      "cookTime": 35,
+      "ingredients": [
+        "4 sheets phyllo dough, thawed",
+        "3 cups fresh spinach, chopped",
+        "2 oz crumbled feta cheese",
+        "1/4 cup ricotta cheese",
+        "1 large egg, beaten",
+        "2 green onions, sliced",
+        "2 tbsp fresh dill, chopped",
+        "2 tbsp extra virgin olive oil (for brushing)",
+        "1/4 tsp nutmeg",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Wilt spinach in a pan, squeeze out excess water, and let cool.",
+        "Mix spinach with feta, ricotta, egg, green onions, dill, nutmeg, salt, and pepper.",
+        "Layer 2 sheets of phyllo in a small baking dish, brushing each with olive oil.",
+        "Spread the spinach filling evenly over the phyllo.",
+        "Top with remaining 2 phyllo sheets, brushing each with olive oil. Tuck edges under.",
+        "Score the top into portions and bake 30-35 minutes until golden and crisp."
+      ],
+      "tags": ["vegetarian", "greek"]
+    },
+    "med_hummus_plate": {
+      "name": "Loaded Hummus Plate",
+      "description": "Silky homemade hummus topped with spiced chickpeas, pine nuts, and olive oil, served with warm pita and crudites",
+      "calories": 245,
+      "protein": 10.0,
+      "carbs": 28.0,
+      "fat": 12.0,
+      "fiber": 7.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1/3 cup hummus",
+        "2 tbsp canned chickpeas, roasted",
+        "1 tbsp pine nuts, toasted",
+        "1 tsp extra virgin olive oil",
+        "Pinch of paprika",
+        "1/2 whole wheat pita, cut into triangles",
+        "4 baby carrots",
+        "4 slices cucumber",
+        "2 celery sticks"
+      ],
+      "instructions": [
+        "Spread hummus in a shallow bowl, creating a well in the center.",
+        "Top with roasted chickpeas and toasted pine nuts.",
+        "Drizzle with olive oil and dust with paprika.",
+        "Arrange pita triangles and crudites around the plate for dipping."
+      ],
+      "tags": ["vegan", "high-fiber", "quick", "no-cook", "middle-eastern"]
+    },
+    "med_mixed_nuts_dried_fruit": {
+      "name": "Mediterranean Trail Mix",
+      "description": "A satisfying handful of roasted almonds, pistachios, walnuts, dried apricots, and dark chocolate chips",
+      "calories": 210,
+      "protein": 6.0,
+      "carbs": 18.0,
+      "fat": 14.0,
+      "fiber": 3.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "10 raw almonds",
+        "10 shelled pistachios",
+        "4 walnut halves",
+        "3 dried apricots, chopped",
+        "1 tbsp dark chocolate chips (70% cacao)",
+        "Pinch of sea salt"
+      ],
+      "instructions": [
+        "Combine all nuts, dried apricots, and chocolate chips in a small container.",
+        "Sprinkle with a pinch of sea salt.",
+        "Toss gently and enjoy as a portable snack."
+      ],
+      "tags": ["vegan", "gluten-free", "quick", "no-cook", "meal-prep"]
+    },
+    "med_stuffed_dates": {
+      "name": "Almond-Stuffed Dates with Dark Chocolate",
+      "description": "Plump Medjool dates filled with marcona almonds and drizzled with melted dark chocolate - a sweet Mediterranean treat",
+      "calories": 195,
+      "protein": 4.0,
+      "carbs": 30.0,
+      "fat": 9.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 2,
+      "ingredients": [
+        "4 Medjool dates, pitted",
+        "4 marcona almonds (or regular almonds)",
+        "1/2 oz dark chocolate (70% cacao)",
+        "Pinch of flaky sea salt"
+      ],
+      "instructions": [
+        "Pit each date and press an almond into the center.",
+        "Melt dark chocolate in a microwave in 15-second intervals, stirring between each.",
+        "Drizzle melted chocolate over the stuffed dates.",
+        "Sprinkle with flaky sea salt and let chocolate set for 5 minutes before serving."
+      ],
+      "tags": ["vegetarian", "gluten-free", "quick"]
+    },
+    "med_tzatziki_veggies": {
+      "name": "Tzatziki with Fresh Vegetable Sticks",
+      "description": "Cool and creamy cucumber-yogurt dip paired with an assortment of colorful fresh vegetable crudites",
+      "calories": 135,
+      "protein": 8.0,
+      "carbs": 14.0,
+      "fat": 6.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1/2 cup plain Greek yogurt",
+        "1/4 cup grated cucumber, squeezed dry",
+        "1 small clove garlic, minced",
+        "1 tsp extra virgin olive oil",
+        "1 tsp fresh dill, chopped",
+        "1 tsp lemon juice",
+        "5 baby carrots",
+        "1/2 bell pepper, sliced",
+        "4 slices cucumber",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Grate cucumber and squeeze out excess moisture with a clean towel.",
+        "Mix yogurt, cucumber, garlic, olive oil, dill, lemon juice, and salt.",
+        "Refrigerate for at least 15 minutes to let flavors meld.",
+        "Serve in a bowl surrounded by carrot sticks, bell pepper slices, and cucumber rounds."
+      ],
+      "tags": ["vegetarian", "gluten-free", "low-calorie", "quick", "no-cook"]
+    },
+    "med_marinated_olives": {
+      "name": "Warm Marinated Olives with Herbs",
+      "description": "A bowl of mixed olives gently warmed with citrus zest, rosemary, garlic, and red pepper flakes",
+      "calories": 155,
+      "protein": 1.0,
+      "carbs": 4.0,
+      "fat": 16.0,
+      "fiber": 2.0,
+      "prepTime": 5,
+      "cookTime": 5,
+      "ingredients": [
+        "1/2 cup mixed olives (Kalamata, Castelvetrano, Nicoise)",
+        "1 tbsp extra virgin olive oil",
+        "1 strip orange zest",
+        "1 strip lemon zest",
+        "1 sprig fresh rosemary",
+        "1 clove garlic, lightly crushed",
+        "Pinch of red pepper flakes"
+      ],
+      "instructions": [
+        "Combine olives, olive oil, citrus zests, rosemary, garlic, and red pepper flakes in a small saucepan.",
+        "Warm over low heat for 4-5 minutes, stirring occasionally, until fragrant.",
+        "Transfer to a small serving bowl and enjoy warm or at room temperature."
+      ],
+      "tags": ["vegan", "gluten-free", "low-carb", "quick"]
+    },
+    "med_bruschetta": {
+      "name": "Classic Tomato Bruschetta",
+      "description": "Crispy toasted baguette slices topped with a fresh tomato, basil, and garlic mixture drizzled with balsamic vinegar",
+      "calories": 180,
+      "protein": 5.0,
+      "carbs": 24.0,
+      "fat": 8.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 5,
+      "ingredients": [
+        "3 slices whole wheat baguette",
+        "2 ripe Roma tomatoes, diced",
+        "4 fresh basil leaves, chiffonade",
+        "1 clove garlic (one for rubbing, one minced)",
+        "1 tbsp extra virgin olive oil",
+        "1 tsp balsamic vinegar",
+        "Pinch of sea salt and black pepper"
+      ],
+      "instructions": [
+        "Toast baguette slices until golden and crisp.",
+        "Rub each slice with a cut garlic clove.",
+        "Mix diced tomatoes with minced garlic, basil, olive oil, balsamic vinegar, salt, and pepper.",
+        "Spoon the tomato mixture onto the toasted bread and serve immediately."
+      ],
+      "tags": ["vegan", "italian", "quick"]
+    },
+    "med_labneh_balls": {
+      "name": "Labneh Balls in Olive Oil and Herbs",
+      "description": "Tangy strained yogurt rolled into balls, preserved in olive oil with dried herbs, served with crackers",
+      "calories": 175,
+      "protein": 7.0,
+      "carbs": 10.0,
+      "fat": 13.0,
+      "fiber": 1.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1/4 cup labneh, chilled and firm",
+        "2 tbsp extra virgin olive oil",
+        "1/2 tsp dried za'atar",
+        "1/2 tsp dried mint",
+        "Pinch of Aleppo pepper",
+        "4 whole grain crackers"
+      ],
+      "instructions": [
+        "Roll chilled labneh into small balls (about 1 inch each).",
+        "Place in a small bowl and cover with olive oil.",
+        "Sprinkle with za'atar, dried mint, and Aleppo pepper.",
+        "Serve with whole grain crackers for spreading."
+      ],
+      "tags": ["vegetarian", "gluten-free", "quick", "no-cook", "middle-eastern"]
+    },
+    "med_roasted_chickpeas": {
+      "name": "Spiced Roasted Chickpeas",
+      "description": "Crispy oven-roasted chickpeas seasoned with cumin, smoked paprika, and a touch of cayenne - addictively crunchy",
+      "calories": 165,
+      "protein": 8.0,
+      "carbs": 22.0,
+      "fat": 6.0,
+      "fiber": 6.0,
+      "prepTime": 5,
+      "cookTime": 30,
+      "ingredients": [
+        "1 can (15 oz) chickpeas, drained and patted very dry",
+        "1 tbsp extra virgin olive oil",
+        "1 tsp smoked paprika",
+        "1/2 tsp cumin",
+        "1/4 tsp garlic powder",
+        "Pinch of cayenne pepper",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Pat chickpeas thoroughly dry with paper towels.",
+        "Toss chickpeas with olive oil, paprika, cumin, garlic powder, cayenne, and salt.",
+        "Spread in a single layer on a parchment-lined baking sheet.",
+        "Roast for 25-30 minutes, shaking the pan halfway through, until crispy.",
+        "Let cool for 5 minutes (they crisp up further as they cool). Store in an open container."
+      ],
+      "tags": ["vegan", "gluten-free", "high-fiber", "meal-prep"]
+    },
+    "med_caprese_skewers": {
+      "name": "Caprese Skewers with Balsamic Glaze",
+      "description": "Mini skewers of cherry tomatoes, fresh mozzarella balls, and basil leaves drizzled with aged balsamic",
+      "calories": 160,
+      "protein": 10.0,
+      "carbs": 6.0,
+      "fat": 11.0,
+      "fiber": 1.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "6 cherry tomatoes",
+        "6 mini fresh mozzarella balls (bocconcini)",
+        "6 fresh basil leaves",
+        "1 tbsp balsamic glaze",
+        "1 tsp extra virgin olive oil",
+        "Pinch of sea salt and black pepper",
+        "6 small skewers or toothpicks"
+      ],
+      "instructions": [
+        "Thread one basil leaf, one mozzarella ball, and one cherry tomato onto each skewer.",
+        "Arrange on a plate and drizzle with olive oil and balsamic glaze.",
+        "Season with sea salt and freshly cracked pepper.",
+        "Serve immediately as an elegant appetizer or snack."
+      ],
+      "tags": ["vegetarian", "gluten-free", "low-carb", "quick", "no-cook", "italian"]
+    },
+    "med_fig_walnut_bites": {
+      "name": "Fig and Walnut Energy Bites",
+      "description": "No-bake energy bites made with dried figs, walnuts, oats, and a hint of cinnamon - perfect for on-the-go fuel",
+      "calories": 185,
+      "protein": 4.0,
+      "carbs": 26.0,
+      "fat": 8.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 0,
+      "ingredients": [
+        "6 dried figs, stems removed",
+        "1/4 cup walnuts",
+        "2 tbsp rolled oats",
+        "1 tbsp honey",
+        "1/2 tsp cinnamon",
+        "1 tbsp unsweetened shredded coconut",
+        "Pinch of salt"
+      ],
+      "instructions": [
+        "Place figs, walnuts, oats, honey, cinnamon, and salt in a food processor.",
+        "Pulse until the mixture forms a sticky, cohesive dough.",
+        "Roll into 4 small balls (about 1 tablespoon each).",
+        "Roll each ball in shredded coconut.",
+        "Refrigerate for at least 30 minutes before serving. Store in the fridge for up to 1 week."
+      ],
+      "tags": ["vegetarian", "meal-prep", "no-cook"]
+    },
+    "med_tabbouleh_bowl": {
+      "name": "Tabbouleh Grain Bowl with Grilled Vegetables",
+      "description": "Vibrant Lebanese tabbouleh with extra bulgur, charred zucchini, eggplant, and a tahini-lemon drizzle",
+      "calories": 375,
+      "protein": 12.0,
+      "carbs": 48.0,
+      "fat": 17.0,
+      "fiber": 10.0,
+      "prepTime": 15,
+      "cookTime": 10,
+      "ingredients": [
+        "1/2 cup bulgur wheat",
+        "1 cup fresh flat-leaf parsley, finely chopped",
+        "1/4 cup fresh mint, chopped",
+        "1/2 small zucchini, sliced lengthwise",
+        "1/4 small eggplant, sliced",
+        "2 Roma tomatoes, diced",
+        "2 green onions, sliced",
+        "2 tbsp extra virgin olive oil",
+        "1 tbsp tahini",
+        "Juice of 1 lemon",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Soak bulgur in boiling water for 15 minutes, then drain and fluff with a fork.",
+        "Brush zucchini and eggplant slices with 1 tbsp olive oil. Grill or pan-sear for 3-4 minutes per side until charred.",
+        "Toss bulgur with parsley, mint, tomatoes, green onions, remaining olive oil, and half the lemon juice.",
+        "Whisk tahini with remaining lemon juice and 1 tbsp water for the drizzle.",
+        "Arrange tabbouleh in a bowl, top with grilled vegetables, and drizzle with tahini sauce."
+      ],
+      "tags": ["vegan", "high-fiber", "middle-eastern", "meal-prep"]
+    },
+    "med_olive_oil_cake_bites": {
+      "name": "Mini Olive Oil and Citrus Cake Bites",
+      "description": "Tender little cakes made with extra virgin olive oil, fresh orange juice, and almond flour - a wholesome Mediterranean sweet",
+      "calories": 170,
+      "protein": 3.0,
+      "carbs": 20.0,
+      "fat": 9.0,
+      "fiber": 1.5,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "1/4 cup almond flour",
+        "1/4 cup whole wheat flour",
+        "2 tbsp extra virgin olive oil",
+        "2 tbsp fresh orange juice",
+        "1 tbsp honey",
+        "1 large egg",
+        "Zest of 1/2 orange",
+        "1/4 tsp baking powder",
+        "Pinch of salt",
+        "Powdered sugar for dusting (optional)"
+      ],
+      "instructions": [
+        "Preheat oven to 350°F. Grease a mini muffin tin or line with papers.",
+        "Whisk together almond flour, whole wheat flour, baking powder, and salt.",
+        "In a separate bowl, beat egg with olive oil, orange juice, honey, and orange zest.",
+        "Fold wet ingredients into dry until just combined.",
+        "Divide batter among 4 mini muffin cups. Bake 16-18 minutes until golden and a toothpick comes out clean.",
+        "Let cool and dust lightly with powdered sugar if desired."
+      ],
+      "tags": ["vegetarian", "quick"]
+    }
+  },
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "med_greek_yogurt_parfait",
+          "lunch": "med_greek_salad",
+          "dinner": "med_grilled_salmon",
+          "snack": "med_hummus_plate"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "med_shakshuka",
+          "lunch": "med_grilled_chicken_wrap",
+          "dinner": "med_pasta_puttanesca",
+          "snack": "med_mixed_nuts_dried_fruit"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "med_avocado_egg_toast",
+          "lunch": "med_lentil_soup",
+          "dinner": "med_chicken_orzo",
+          "snack": "med_tzatziki_veggies"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "med_spinach_feta_omelette",
+          "lunch": "med_falafel_bowl",
+          "dinner": "med_baked_cod",
+          "snack": "med_stuffed_dates"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "med_overnight_oats",
+          "lunch": "med_tuna_nicoise",
+          "dinner": "med_lamb_kofta",
+          "snack": "med_bruschetta"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "med_veggie_frittata",
+          "lunch": "med_caprese_panini",
+          "dinner": "med_shrimp_pasta",
+          "snack": "med_marinated_olives"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "med_fig_ricotta_toast",
+          "lunch": "med_chicken_souvlaki_plate",
+          "dinner": "med_moroccan_chicken",
+          "snack": "med_roasted_chickpeas"
+        }
+      ]
+    },
+    {
+      "weekNumber": 2,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "med_turkish_egg_bowl",
+          "lunch": "med_white_bean_tuna_salad",
+          "dinner": "med_eggplant_parmesan",
+          "snack": "med_caprese_skewers"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "med_banana_walnut_oatmeal",
+          "lunch": "med_fattoush_salad",
+          "dinner": "med_grilled_salmon",
+          "snack": "med_hummus_plate"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "med_smoked_salmon_plate",
+          "lunch": "med_stuffed_pepper_halves",
+          "dinner": "med_chicken_shawarma_bowl",
+          "snack": "med_fig_walnut_bites"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "med_greek_yogurt_parfait",
+          "lunch": "med_sardine_toast",
+          "dinner": "med_sea_bass",
+          "snack": "med_tzatziki_veggies"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "med_shakshuka",
+          "lunch": "med_grilled_halloumi_salad",
+          "dinner": "med_mushroom_risotto",
+          "snack": "med_mixed_nuts_dried_fruit"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "med_whole_wheat_pancakes",
+          "lunch": "med_greek_salad",
+          "dinner": "med_grilled_swordfish",
+          "snack": "med_stuffed_dates"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "med_labneh_bowl",
+          "lunch": "med_lentil_soup",
+          "dinner": "med_spanakopita_bake",
+          "snack": "med_labneh_balls"
+        }
+      ]
+    },
+    {
+      "weekNumber": 3,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "med_overnight_oats",
+          "lunch": "med_chicken_souvlaki_plate",
+          "dinner": "med_shrimp_pasta",
+          "snack": "med_roasted_chickpeas"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "med_spinach_feta_omelette",
+          "lunch": "med_falafel_bowl",
+          "dinner": "med_baked_cod",
+          "snack": "med_bruschetta"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "med_avocado_egg_toast",
+          "lunch": "med_tabbouleh_bowl",
+          "dinner": "med_moroccan_chicken",
+          "snack": "med_marinated_olives"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "med_fig_ricotta_toast",
+          "lunch": "med_grilled_chicken_wrap",
+          "dinner": "med_pasta_puttanesca",
+          "snack": "med_caprese_skewers"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "med_turkish_egg_bowl",
+          "lunch": "med_white_bean_tuna_salad",
+          "dinner": "med_lamb_kofta",
+          "snack": "med_hummus_plate"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "med_veggie_frittata",
+          "lunch": "med_grilled_halloumi_salad",
+          "dinner": "med_sea_bass",
+          "snack": "med_mixed_nuts_dried_fruit"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "med_banana_walnut_oatmeal",
+          "lunch": "med_stuffed_grape_leaves",
+          "dinner": "med_chicken_orzo",
+          "snack": "med_fig_walnut_bites"
+        }
+      ]
+    },
+    {
+      "weekNumber": 4,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "med_smoked_salmon_plate",
+          "lunch": "med_lentil_soup",
+          "dinner": "med_grilled_swordfish",
+          "snack": "med_tzatziki_veggies"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "med_labneh_bowl",
+          "lunch": "med_caprese_panini",
+          "dinner": "med_chicken_shawarma_bowl",
+          "snack": "med_olive_oil_cake_bites"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "med_whole_wheat_pancakes",
+          "lunch": "med_fattoush_salad",
+          "dinner": "med_mushroom_risotto",
+          "snack": "med_roasted_chickpeas"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "med_greek_yogurt_parfait",
+          "lunch": "med_sardine_toast",
+          "dinner": "med_eggplant_parmesan",
+          "snack": "med_marinated_olives"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "med_overnight_oats",
+          "lunch": "med_stuffed_pepper_halves",
+          "dinner": "med_grilled_salmon",
+          "snack": "med_labneh_balls"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "med_shakshuka",
+          "lunch": "med_greek_salad",
+          "dinner": "med_spanakopita_bake",
+          "snack": "med_bruschetta"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "med_fig_ricotta_toast",
+          "lunch": "med_stuffed_grape_leaves",
+          "dinner": "med_shrimp_pasta",
+          "snack": "med_caprese_skewers"
+        }
+      ]
+    }
+  ]
+}
