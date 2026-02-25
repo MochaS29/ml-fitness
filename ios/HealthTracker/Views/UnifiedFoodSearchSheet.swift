@@ -29,15 +29,44 @@ struct UnifiedFoodSearchSheet: View {
         if searchText.isEmpty {
             return []
         }
-        return dataManager.searchFoodDatabase(searchText)
+        return sortByRelevance(dataManager.searchFoodDatabase(searchText), query: searchText)
     }
 
     // Phase 2: USDA API results, deduplicated against local
     var onlineResults: [FoodItem] {
         let localNames = Set(localResults.map { $0.name.lowercased() })
-        return usdaResults
+        let filtered = usdaResults
             .map { $0.toFoodItem() }
             .filter { !localNames.contains($0.name.lowercased()) }
+        return sortByRelevance(filtered, query: searchText)
+    }
+
+    /// Rank results so closest matches to the query appear first.
+    private func sortByRelevance(_ foods: [FoodItem], query: String) -> [FoodItem] {
+        let q = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else { return foods }
+
+        return foods.sorted { a, b in
+            relevanceScore(a.name, query: q) < relevanceScore(b.name, query: q)
+        }
+    }
+
+    /// Lower score = better match.
+    private func relevanceScore(_ name: String, query: String) -> Int {
+        let lower = name.lowercased()
+        // Exact match
+        if lower == query { return 0 }
+        // Name starts with query (e.g. "Latte" matches "Latte, iced")
+        if lower.hasPrefix(query) { return 1 }
+        // A word in the name starts with query (e.g. "Coffee, Latte" — "Latte" is a word start)
+        let words = lower.components(separatedBy: CharacterSet.alphanumerics.inverted)
+        if words.contains(where: { $0.hasPrefix(query) }) { return 2 }
+        // Any word starts with query
+        if words.contains(where: { $0.contains(query) }) { return 3 }
+        // Substring match anywhere
+        if lower.contains(query) { return 4 }
+        // No direct match (shouldn't normally happen since these are search results)
+        return 5
     }
 
     var recentFoods: [FoodItem] {
