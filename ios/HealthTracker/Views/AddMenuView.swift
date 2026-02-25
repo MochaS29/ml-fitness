@@ -311,7 +311,6 @@ struct ExerciseSearchView: View {
     @State private var searchText = ""
     @State private var selectedExercise: ExerciseTemplateModel?
     @State private var duration: String = "30"
-    @State private var showingAddForm = false
     
     let selectedDate: Date
     private let exerciseDB = ExerciseDatabase.shared
@@ -343,7 +342,6 @@ struct ExerciseSearchView: View {
                 List(searchResults, id: \.name) { exercise in
                     Button(action: {
                         selectedExercise = exercise
-                        showingAddForm = true
                     }) {
                         HStack {
                             VStack(alignment: .leading) {
@@ -371,16 +369,14 @@ struct ExerciseSearchView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingAddForm) {
-                if let exercise = selectedExercise {
-                    ExerciseEntryForm(
-                        exercise: exercise,
-                        selectedDate: selectedDate,
-                        onSave: { duration in
-                            saveExercise(exercise, duration: duration)
-                        }
-                    )
-                }
+            .sheet(item: $selectedExercise) { exercise in
+                ExerciseEntryForm(
+                    exercise: exercise,
+                    selectedDate: selectedDate,
+                    onSave: { duration in
+                        saveExercise(exercise, duration: duration)
+                    }
+                )
             }
         }
     }
