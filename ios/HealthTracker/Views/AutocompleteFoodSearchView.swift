@@ -88,7 +88,44 @@ struct AutocompleteFoodSearchView: View {
             }
             .prefix(20)
 
-        return recentMatches + Array(databaseMatches) + Array(usdaFoodItems)
+        let combined = recentMatches + Array(databaseMatches) + Array(usdaFoodItems)
+        return sortByRelevance(combined, query: searchText)
+    }
+
+    /// Rank results so closest matches to the query appear first.
+    private func sortByRelevance(_ foods: [FoodItem], query: String) -> [FoodItem] {
+        let q = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else { return foods }
+
+        return foods.sorted { a, b in
+            relevanceScore(a.name, query: q) < relevanceScore(b.name, query: q)
+        }
+    }
+
+    /// Lower score = better match.
+    /// Uses a two-part score: (tier * 100 + lengthPenalty) so shorter/simpler names
+    /// rank above long compound names within the same match tier.
+    private func relevanceScore(_ name: String, query: String) -> Int {
+        let lower = name.lowercased()
+        let words = lower.components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
+        // Length penalty: shorter names are more likely to be the "real" item
+        let lengthPenalty = min(words.count, 99)
+
+        // Tier 0: Exact match ("latte" == "latte")
+        if lower == query { return 0 }
+        // Tier 1: Name is query + minor qualifier ("latte, iced" — few words)
+        if lower.hasPrefix(query) && words.count <= 3 { return 100 + lengthPenalty }
+        // Tier 2: A word in the name matches query exactly ("Coffee, Latte" — "latte" is a word)
+        if words.contains(query) { return 200 + lengthPenalty }
+        // Tier 3: Name starts with query but it's a long compound name
+        // ("Latte Blended Greek Yogurt" — query is a flavor prefix, not the product)
+        if lower.hasPrefix(query) { return 300 + lengthPenalty }
+        // Tier 4: A word starts with query
+        if words.contains(where: { $0.hasPrefix(query) }) { return 400 + lengthPenalty }
+        // Tier 5: Substring match anywhere
+        if lower.contains(query) { return 500 + lengthPenalty }
+        // Tier 6: No direct match
+        return 600 + lengthPenalty
     }
 
     // Suggested foods based on time of day
