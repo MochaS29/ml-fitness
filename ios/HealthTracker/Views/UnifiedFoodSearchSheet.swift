@@ -47,34 +47,57 @@ struct UnifiedFoodSearchSheet: View {
         guard !q.isEmpty else { return foods }
 
         return foods.sorted { a, b in
-            relevanceScore(a.name, query: q) < relevanceScore(b.name, query: q)
+            let tierA = relevanceScore(a.name, query: q)
+            let tierB = relevanceScore(b.name, query: q)
+            if tierA != tierB { return tierA < tierB }
+            // Within same tier, prefer items with calorie data over 0-cal (bad data)
+            if (a.calories > 0) != (b.calories > 0) { return a.calories > 0 }
+            // Then prefer shorter names
+            return a.name.count < b.name.count
         }
     }
 
     /// Lower score = better match.
-    /// Uses a two-part score: (tier * 100 + lengthPenalty) so shorter/simpler names
-    /// rank above long compound names within the same match tier.
+    /// Distinguishes whole-word matches from prefix-of-word matches:
+    /// "Egg whites" (query "egg" is a whole word) ranks above "Eggnog" (prefix of another word).
     private func relevanceScore(_ name: String, query: String) -> Int {
         let lower = name.lowercased()
         let words = lower.components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
-        // Length penalty: shorter names are more likely to be the "real" item
-        let lengthPenalty = min(words.count, 99)
 
-        // Tier 0: Exact match ("latte" == "latte")
+        // Tier 0: Exact match
         if lower == query { return 0 }
-        // Tier 1: Name is query + minor qualifier ("latte, iced" — few words)
-        if lower.hasPrefix(query) && words.count <= 3 { return 100 + lengthPenalty }
-        // Tier 2: A word in the name matches query exactly ("Coffee, Latte" — "latte" is a word)
-        if words.contains(query) { return 200 + lengthPenalty }
-        // Tier 3: Name starts with query but it's a long compound name
-        // ("Latte Blended Greek Yogurt" — query is a flavor prefix, not the product)
-        if lower.hasPrefix(query) { return 300 + lengthPenalty }
-        // Tier 4: A word starts with query
-        if words.contains(where: { $0.hasPrefix(query) }) { return 400 + lengthPenalty }
-        // Tier 5: Substring match anywhere
-        if lower.contains(query) { return 500 + lengthPenalty }
-        // Tier 6: No direct match
-        return 600 + lengthPenalty
+
+        // Check if query appears as a whole word at the start of the name
+        // (not as a prefix of a longer word like "egg" in "eggnog")
+        let queryIsWordAtStart: Bool = {
+            guard lower.hasPrefix(query) else { return false }
+            if lower.count == query.count { return true }
+            let nextIdx = lower.index(lower.startIndex, offsetBy: query.count)
+            let nextChar = lower[nextIdx]
+            if !nextChar.isLetter { return true } // "Egg whites" — space after "egg"
+            // Allow simple plural: "eggs" for "egg"
+            if nextChar == "s" {
+                let afterS = lower.index(after: nextIdx)
+                return afterS >= lower.endIndex || !lower[afterS].isLetter
+            }
+            return false
+        }()
+
+        // Tier 1: Query is a whole word at start of a short name ("Egg whites", "Eggs, whole")
+        if queryIsWordAtStart && words.count <= 3 { return 1 }
+        // Tier 2: Query is an exact word in a short name ("Coffee, Latte" for "latte")
+        if words.contains(query) && words.count <= 3 { return 2 }
+        // Tier 3: Query is a whole word at start of a longer name ("Latte Blended Greek Yogurt")
+        if queryIsWordAtStart { return 3 }
+        // Tier 4: Query is an exact word in a longer name
+        if words.contains(query) { return 4 }
+        // Tier 5: Name starts with query as prefix of a word ("Eggnog" for "egg")
+        if lower.hasPrefix(query) { return 5 }
+        // Tier 6: A word starts with query
+        if words.contains(where: { $0.hasPrefix(query) }) { return 6 }
+        // Tier 7: Substring match
+        if lower.contains(query) { return 7 }
+        return 8
     }
 
     var recentFoods: [FoodItem] {
