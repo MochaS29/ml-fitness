@@ -197,8 +197,10 @@ class UnifiedDataManager: ObservableObject {
         servingSize: String,
         servingUnit: String,
         nutrients: [String: Double],
-        barcode: String? = nil
+        barcode: String? = nil,
+        date: Date? = nil
     ) {
+        let entryDate = date ?? Date()
         let entry = SupplementEntry(context: context)
         entry.id = UUID()
         entry.name = name
@@ -207,7 +209,8 @@ class UnifiedDataManager: ObservableObject {
         entry.servingUnit = servingUnit
         entry.nutrients = nutrients
         // entry.barcode = barcode  // Uncomment when field is added
-        entry.timestamp = Date()
+        entry.timestamp = entryDate
+        entry.date = entryDate
 
         saveContext()
     }
@@ -525,5 +528,90 @@ class UnifiedDataManager: ObservableObject {
             fat: 0,
             mealType: mealType
         )
+    }
+
+    // MARK: - Copy from Previous Day
+
+    func fetchFoodEntries(for date: Date, mealType: MealType? = nil) -> [FoodEntry] {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        let request: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
+        if let mealType = mealType {
+            request.predicate = NSPredicate(
+                format: "timestamp >= %@ AND timestamp < %@ AND mealType == %@",
+                startOfDay as NSDate, endOfDay as NSDate, mealType.rawValue
+            )
+        } else {
+            request.predicate = NSPredicate(
+                format: "timestamp >= %@ AND timestamp < %@",
+                startOfDay as NSDate, endOfDay as NSDate
+            )
+        }
+        request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
+
+        return (try? context.fetch(request)) ?? []
+    }
+
+    func fetchSupplementEntries(for date: Date) -> [SupplementEntry] {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        let request: NSFetchRequest<SupplementEntry> = SupplementEntry.fetchRequest()
+        request.predicate = NSPredicate(
+            format: "timestamp >= %@ AND timestamp < %@",
+            startOfDay as NSDate, endOfDay as NSDate
+        )
+        request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
+
+        return (try? context.fetch(request)) ?? []
+    }
+
+    @discardableResult
+    func copyFoodEntries(from sourceDate: Date, to targetDate: Date, mealTypes: [MealType]) -> Int {
+        var count = 0
+        for mealType in mealTypes {
+            let entries = fetchFoodEntries(for: sourceDate, mealType: mealType)
+            for entry in entries {
+                addFoodEntry(
+                    name: entry.name ?? "Unknown",
+                    brand: entry.brand,
+                    calories: entry.calories,
+                    protein: entry.protein,
+                    carbs: entry.carbs,
+                    fat: entry.fat,
+                    fiber: entry.fiber,
+                    sugar: entry.sugar,
+                    sodium: entry.sodium,
+                    servingSize: entry.servingSize ?? "1",
+                    servingUnit: entry.servingUnit ?? "serving",
+                    mealType: mealType,
+                    barcode: entry.barcode,
+                    date: targetDate
+                )
+                count += 1
+            }
+        }
+        return count
+    }
+
+    @discardableResult
+    func copySupplementEntries(from sourceDate: Date, to targetDate: Date) -> Int {
+        let entries = fetchSupplementEntries(for: sourceDate)
+        var count = 0
+        for entry in entries {
+            addSupplementEntry(
+                name: entry.name ?? "Unknown",
+                brand: entry.brand,
+                servingSize: entry.servingSize ?? "1",
+                servingUnit: entry.servingUnit ?? "serving",
+                nutrients: entry.nutrients ?? [:],
+                date: targetDate
+            )
+            count += 1
+        }
+        return count
     }
 }
