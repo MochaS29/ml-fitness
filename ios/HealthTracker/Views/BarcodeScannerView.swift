@@ -12,10 +12,10 @@ struct BarcodeScannerView: View {
     @State private var showingError = false
     @State private var isLoading = false
     @State private var servingMultiplier: Double = 1.0
-    
+
     let selectedDate: Date
     let mealType: MealType?
-    
+
     var body: some View {
         NavigationView {
             ZStack {

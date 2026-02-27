@@ -126,8 +126,9 @@ Temporary Items
 # !Assets.xcassets/**/*
 # !**/*.appiconset/**/*
 
-# Large Database Files (already in your .gitignore)
+# Large Database Files
 Resources/Databases/FoodData_Central_csv*
+SupplementScraper/usda_data/
 
 # Development Environment
 .vscode/

@@ -19,7 +19,7 @@
 ```
 NEW YEAR, NEW YOU! Transform your health journey with ML Fitness - now featuring AI-powered meal scanning that identifies food from photos instantly.
 
-Just $6.99 one-time. No subscriptions. No monthly fees. Ever.
+Pay once, own it forever. No subscriptions. No monthly fees. Ever.
 
 Simply snap a photo of your meal and our AI instantly calculates calories, protein, carbs, and fat. No more tedious manual logging or searching through databases. It's the fastest way to track what you eat.
 
@@ -123,25 +123,25 @@ calorie,photo,scanner,AI,food,tracker,nutrition,weight,loss,fitness,macro,meal,n
 
 ## Promotional Text (170 characters)
 ```
-NEW: Snap a photo of your meal and instantly get calories! AI-powered food scanner + complete nutrition tracking. $6.99 one-time. No subscriptions. Your data, your device.
+NEW: Snap a photo of your meal and instantly get calories! AI-powered food scanner + complete nutrition tracking. Pay once, own forever. No subscriptions ever.
 ```
 
 ---
 
-## What's New (Version 1.6.0)
+## What's New (Version 2.0.1)
 ```
 NEW YEAR, NEW YOU - Major Update!
 
-📸 AI-POWERED MEAL SCANNER
+AI-POWERED MEAL SCANNER
 Just snap a photo of your food and our AI instantly identifies it and calculates calories, protein, carbs, and fat. No more manual searching or guessing portions!
 
 ALSO NEW:
-• Enhanced barcode scanning for food & supplements
-• Improved iPad experience with full-screen views
-• Faster performance and smoother animations
-• Real-time weight tracking on dashboard
+- Enhanced barcode scanning for food and supplements
+- Improved iPad experience with full-screen views
+- Faster performance and smoother animations
+- Real-time weight tracking on dashboard
 
-Start your health journey for just $6.99 - no subscriptions, ever.
+One-time purchase - no subscriptions, ever.
 ```
 
 ---
@@ -249,13 +249,13 @@ The app stores all data locally on the user's device. No personal information, h
 ## Pricing
 
 ### Business Model
-**Paid App** - $6.99 (One-time purchase, no subscriptions)
+**Paid App** - One-time purchase, no subscriptions
 
 ### Value Proposition
 - No monthly fees (competitors charge $10-20/month)
 - All features included
 - Privacy-focused (data stays on device)
-- New Year, New You launch pricing
+- Price set in App Store Connect (can be adjusted anytime)
 
 ### In-App Purchases
 None currently
@@ -265,10 +265,10 @@ None currently
 ## Build Information
 
 ### Version Number
-**1.6.0**
+**2.0.0**
 
 ### Build Number
-**6**
+**7**
 
 ### Bundle ID
 Check in Xcode (likely: com.mochasmindlab.HealthTracker)
