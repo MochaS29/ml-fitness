@@ -126,6 +126,9 @@ Temporary Items
 # !Assets.xcassets/**/*
 # !**/*.appiconset/**/*
 
+# API Keys / Secrets
+**/Secrets.plist
+
 # Large Database Files
 Resources/Databases/FoodData_Central_csv*
 SupplementScraper/usda_data/

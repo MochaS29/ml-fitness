@@ -37,7 +37,7 @@ class MealAnalysisService: ObservableObject {
     @Published var lastAnalysis: MealAnalysis?
 
     // Anthropic Claude API Configuration
-    private let anthropicApiKey = ProcessInfo.processInfo.environment["ANTHROPIC_API_KEY"] ?? ""
+    private let anthropicApiKey = SecretsManager.anthropicAPIKey
     private let anthropicEndpoint = "https://api.anthropic.com/v1/messages"
 
     private init() {}
