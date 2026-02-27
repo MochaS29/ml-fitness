@@ -241,6 +241,7 @@ The app stores all user data locally on the device using Core Data. No personal 
 
 ### Free Tier
 - Manual food logging and search (53K+ database)
+- Copy from Previous Day (duplicate meals from any date)
 - Water tracking with reminders
 - Weight tracking with graphs
 - Basic exercise logging
@@ -254,7 +255,6 @@ The app stores all user data locally on the device using Core Data. No personal 
 - Supplement tracking with RDA analysis
 - Advanced analytics and insights
 - Grocery list generation
-- Copy from Previous Day
 
 ### In-App Purchases
 | Product | Type | Price |
@@ -272,7 +272,7 @@ The app stores all user data locally on the device using Core Data. No personal 
 **7**
 
 ### Bundle ID
-com.mochasmindlab.HealthTracker
+com.mindlabs.healthtracker
 
 ### Minimum iOS Version
 iOS 15.0
