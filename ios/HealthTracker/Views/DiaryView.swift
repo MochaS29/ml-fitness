@@ -11,7 +11,6 @@ struct DiaryView: View {
     @State private var showingWaterEntry = false
     @State private var showingSupplementEntry = false
     @State private var selectedMealType: MealType = .breakfast
-    @State private var showingCopyFromPreviousDay = false
     @State private var dailySummary = DailySummary()
     
     // Fetch requests for selected date
@@ -106,15 +105,11 @@ struct DiaryView: View {
                     onSupplementTap: {
                         showingAddMenu = false
                         showingSupplementEntry = true
-                    },
-                    onCopyPreviousDayTap: {
-                        showingAddMenu = false
-                        showingCopyFromPreviousDay = true
                     }
                 )
             }
             .sheet(isPresented: $showingFoodSearch) {
-                UnifiedFoodSearchSheet(mealType: selectedMealType)
+                UnifiedFoodSearchSheet(mealType: selectedMealType, targetDate: selectedDate)
             }
             .sheet(isPresented: $showingExerciseSearch) {
                 ExerciseEntrySheet()
@@ -123,10 +118,7 @@ struct DiaryView: View {
                 WaterEntrySheet()
             }
             .sheet(isPresented: $showingSupplementEntry) {
-                ManualSupplementEntryView()
-            }
-            .sheet(isPresented: $showingCopyFromPreviousDay) {
-                CopyFromPreviousDayView(targetDate: selectedDate)
+                ManualSupplementEntryView(targetDate: selectedDate)
             }
             .onChange(of: selectedDate) {
                 updateFetchRequests()

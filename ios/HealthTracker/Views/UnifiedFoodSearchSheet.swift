@@ -11,6 +11,7 @@ struct UnifiedFoodSearchSheet: View {
     @State private var selectedMealType: MealType
     @State private var showingManualEntry = false
     @State private var showingBarcode = false
+    @State private var showingCopyFromPreviousDay = false
     @FocusState private var isSearchFocused: Bool
 
     // USDA API state
@@ -19,9 +20,11 @@ struct UnifiedFoodSearchSheet: View {
     @State private var searchTask: Task<Void, Never>?
 
     private let usdaService = USDAFoodService.shared
+    private let targetDate: Date
 
-    init(mealType: MealType = .snack) {
+    init(mealType: MealType = .snack, targetDate: Date = Date()) {
         self._selectedMealType = State(initialValue: mealType)
+        self.targetDate = targetDate
     }
 
     // Phase 1: Instant local results (SQLite + recent + cached)
@@ -145,7 +148,23 @@ struct UnifiedFoodSearchSheet: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
-                .padding(.bottom)
+                .padding(.bottom, 8)
+
+                // Copy from Previous Day
+                Button(action: { showingCopyFromPreviousDay = true }) {
+                    HStack {
+                        Image(systemName: "doc.on.doc")
+                            .font(.subheadline)
+                        Text("Copy from Previous Day")
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 8)
 
                 // Results List
                 List {
@@ -251,6 +270,9 @@ struct UnifiedFoodSearchSheet: View {
                     dismiss()
                 }
             )
+        }
+        .sheet(isPresented: $showingCopyFromPreviousDay) {
+            CopyFromPreviousDayView(targetDate: targetDate)
         }
         .sheet(isPresented: $showingBarcode) {
             ProFeatureGate {

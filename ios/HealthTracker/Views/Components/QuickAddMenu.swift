@@ -7,7 +7,6 @@ struct QuickAddMenu: View {
     let onExerciseTap: () -> Void
     let onWaterTap: () -> Void
     let onSupplementTap: () -> Void
-    var onCopyPreviousDayTap: (() -> Void)? = nil
 
     var body: some View {
         NavigationView {
@@ -74,24 +73,6 @@ struct QuickAddMenu: View {
                             Image(systemName: "pills.fill")
                                 .foregroundColor(.purple)
                                 .frame(width: 30)
-                        }
-                    }
-
-                    if let onCopyPreviousDayTap = onCopyPreviousDayTap {
-                        Button(action: onCopyPreviousDayTap) {
-                            Label {
-                                VStack(alignment: .leading) {
-                                    Text("Copy Previous Day")
-                                        .foregroundColor(.primary)
-                                    Text("Duplicate meals from another day")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            } icon: {
-                                Image(systemName: "doc.on.doc")
-                                    .foregroundColor(.brown)
-                                    .frame(width: 30)
-                            }
                         }
                     }
                 }

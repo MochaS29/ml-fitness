@@ -5,6 +5,8 @@ struct ManualSupplementEntryView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var profileManager: UserProfileManager
 
+    var targetDate: Date = Date()
+
     @State private var supplementName = ""
     @State private var brand = ""
     @State private var servingSize = "1 tablet"
@@ -12,11 +14,27 @@ struct ManualSupplementEntryView: View {
     @State private var showingNutrientPicker = false
     @State private var showingSupplementSelection = false
     @State private var showingBarcodeScanner = false
+    @State private var showingCopyFromPreviousDay = false
     @State private var selectedSupplement: Supplement?
 
     var body: some View {
         NavigationView {
             Form {
+                Section {
+                    Button(action: { showingCopyFromPreviousDay = true }) {
+                        HStack {
+                            Image(systemName: "doc.on.doc")
+                                .foregroundColor(.purple)
+                            Text("Copy from Previous Day")
+                                .foregroundColor(.blue)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 Section("Select Supplement") {
                     Button(action: { showingSupplementSelection = true }) {
                         HStack {
@@ -86,6 +104,9 @@ struct ManualSupplementEntryView: View {
                     }
                     .disabled(supplementName.isEmpty)
                 }
+            }
+            .sheet(isPresented: $showingCopyFromPreviousDay) {
+                CopyFromPreviousDayView(targetDate: targetDate)
             }
             .sheet(isPresented: $showingNutrientPicker) {
                 NutrientPickerView { nutrient in
@@ -196,8 +217,8 @@ struct ManualSupplementEntryView: View {
         newSupplement.brand = brand.isEmpty ? nil : brand
         newSupplement.servingSize = servingSize
         newSupplement.servingUnit = "serving"
-        newSupplement.timestamp = Date()
-        newSupplement.date = Date()
+        newSupplement.timestamp = targetDate
+        newSupplement.date = targetDate
 
         // Convert nutrients to dictionary
         var nutrientDict: [String: Double] = [:]
