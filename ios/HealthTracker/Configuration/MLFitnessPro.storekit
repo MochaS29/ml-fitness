@@ -11,12 +11,12 @@
       "localizations" : [
         {
           "description" : "Unlock all Pro features — AI scanner, barcode scanner, full meal plans, supplements, and more.",
-          "displayName" : "ML Fitness Pro",
+          "displayName" : "MindLab Fitness Pro",
           "locale" : "en_US"
         }
       ],
       "productID" : "com.mochasmindlab.HealthTracker.pro",
-      "referenceName" : "ML Fitness Pro",
+      "referenceName" : "MindLab Fitness Pro",
       "type" : "NonConsumable"
     }
   ],

@@ -138,18 +138,23 @@ struct ExerciseEntrySheet: View {
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        if !exerciseName.isEmpty,
-                           let durationInt = Int(duration),
-                           let caloriesDouble = Double(calories) {
-                            dataManager.addExerciseEntry(
-                                name: exerciseName,
-                                category: selectedCategory,
-                                duration: durationInt,
-                                caloriesBurned: caloriesDouble,
-                                notes: notes.isEmpty ? nil : notes
-                            )
+                    Button("Add") {
+                        if !exerciseName.isEmpty {
+                            let durationInt = Int(duration) ?? 30
+                            let caloriesDouble = Double(calories) ?? 0
+                            let name = exerciseName
+                            let category = selectedCategory
+                            let noteText = notes.isEmpty ? nil : notes
                             dismiss()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                                dataManager.addExerciseEntry(
+                                    name: name,
+                                    category: category,
+                                    duration: durationInt,
+                                    caloriesBurned: caloriesDouble,
+                                    notes: noteText
+                                )
+                            }
                         }
                     }
                     .disabled(exerciseName.isEmpty)
@@ -160,12 +165,15 @@ struct ExerciseEntrySheet: View {
 
     private func quickAddButton(_ name: String, minutes: Int, calories: Double, category: String) -> some View {
         Button(action: {
-            dataManager.quickAddExercise(
-                name: name.components(separatedBy: " - ").first ?? name,
-                minutes: minutes,
-                calories: calories
-            )
+            let exerciseName = name.components(separatedBy: " - ").first ?? name
             dismiss()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                dataManager.quickAddExercise(
+                    name: exerciseName,
+                    minutes: minutes,
+                    calories: calories
+                )
+            }
         }) {
             HStack {
                 Image(systemName: category == "Cardio" ? "figure.run" : "dumbbell")

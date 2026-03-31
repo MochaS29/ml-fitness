@@ -74,6 +74,14 @@ struct DiaryView: View {
                         
                         // Notes Section
                         notesSection
+
+                        // Data source citation
+                        Text("Nutrition data sourced from USDA FoodData Central (fdc.nal.usda.gov). For informational purposes only — not medical advice.")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                            .padding(.top, 8)
                     }
                     .padding(.bottom, 100)
                 }

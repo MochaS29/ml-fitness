@@ -11,6 +11,7 @@ struct WeightTrackingView: View {
     @State private var selectedTimeRange = TimeRange.week
     @State private var weightHistory: [WeightDataPoint] = []
     @State private var isHealthKitAuthorized = false
+    @State private var selectedTab = 0
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \WeightEntry.timestamp, ascending: false)],
@@ -19,65 +20,72 @@ struct WeightTrackingView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Current Weight Card
-                    CurrentWeightCard(
-                        currentWeight: latestWeight,
-                        showingAddWeight: $showingAddWeight
-                    )
-                    .cardStyle()
-                    
-                    // Time Range Selector
-                    Picker("Time Range", selection: $selectedTimeRange) {
-                        ForEach(TimeRange.allCases, id: \.self) { range in
-                            Text(range.rawValue).tag(range)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal)
-                    
-                    // Weight Chart
-                    if !filteredWeights.isEmpty {
-                        WeightChartView(
-                            weights: filteredWeights,
-                            timeRange: selectedTimeRange
-                        )
-                        .cardStyle()
-                        .frame(height: 300)
-                    }
-                    
-                    // Statistics
-                    WeightStatisticsCard(
-                        weights: filteredWeights,
-                        timeRange: selectedTimeRange
-                    )
-                    .cardStyle()
-                    
-                    // Weight History
-                    WeightHistoryCard(weights: Array(weights.prefix(10)))
-                        .cardStyle()
-                    
-                    // HealthKit Integration
-                    HealthKitCard(
-                        isAuthorized: $isHealthKitAuthorized,
-                        onConnect: connectHealthKit
-                    )
-                    .cardStyle()
+            VStack(spacing: 0) {
+                Picker("Section", selection: $selectedTab) {
+                    Text("Weight").tag(0)
+                    Text("Measurements").tag(1)
                 }
+                .pickerStyle(.segmented)
                 .padding()
+
+                if selectedTab == 0 {
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            CurrentWeightCard(
+                                currentWeight: latestWeight,
+                                showingAddWeight: $showingAddWeight
+                            )
+                            .cardStyle()
+
+                            Picker("Time Range", selection: $selectedTimeRange) {
+                                ForEach(TimeRange.allCases, id: \.self) { range in
+                                    Text(range.rawValue).tag(range)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .padding(.horizontal)
+
+                            if !filteredWeights.isEmpty {
+                                WeightChartView(
+                                    weights: filteredWeights,
+                                    timeRange: selectedTimeRange
+                                )
+                                .cardStyle()
+                                .frame(height: 300)
+                            }
+
+                            WeightStatisticsCard(
+                                weights: filteredWeights,
+                                timeRange: selectedTimeRange
+                            )
+                            .cardStyle()
+
+                            WeightHistoryCard(weights: Array(weights.prefix(10)))
+                                .cardStyle()
+
+                            HealthKitCard(
+                                isAuthorized: $isHealthKitAuthorized,
+                                onConnect: connectHealthKit
+                            )
+                            .cardStyle()
+                        }
+                        .padding()
+                    }
+                } else {
+                    BodyMeasurementsView()
+                }
             }
-            .navigationTitle("Weight Tracking")
+            .navigationTitle(selectedTab == 0 ? "Weight Tracking" : "Body Measurements")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Done") {
-                        dismiss()
-                    }
+                    Button("Done") { dismiss() }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showingAddWeight = true }) {
-                        Image(systemName: "plus")
+                if selectedTab == 0 {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: { showingAddWeight = true }) {
+                            Image(systemName: "plus")
+                        }
                     }
                 }
             }
@@ -85,7 +93,6 @@ struct WeightTrackingView: View {
                 AddWeightView()
             }
             .onAppear {
-                // Delay heavy operations to prevent UI blocking
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     loadWeightHistory()
                 }

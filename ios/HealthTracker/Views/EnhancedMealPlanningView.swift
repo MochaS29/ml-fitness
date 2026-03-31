@@ -1721,6 +1721,7 @@ struct MealPlanSelectorView: View {
                                     .foregroundColor(.secondary)
                                 }
                                 .cornerRadius(12)
+                                .allowsHitTesting(false)
                             )
                         }
                     }

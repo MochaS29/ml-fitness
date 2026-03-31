@@ -69,7 +69,7 @@ struct MoreView: View {
                     .padding(.vertical, 8)
                 }
                 
-                // ML Fitness Pro
+                // MindLab Fitness Pro
                 Section {
                     if storeManager.isPro {
                         HStack(spacing: 12) {
@@ -77,7 +77,7 @@ struct MoreView: View {
                                 .font(.title2)
                                 .foregroundColor(.wellnessGreen)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("ML Fitness Pro")
+                                Text("MindLab Fitness Pro")
                                     .font(.headline)
                                 Text("All features unlocked")
                                     .font(.caption)
@@ -310,6 +310,14 @@ struct MoreView: View {
                             icon: "questionmark.circle.fill",
                             title: "Help & Support",
                             color: Color(red: 139/255, green: 69/255, blue: 19/255)
+                        )
+                    }
+
+                    NavigationLink(destination: DataSourcesView()) {
+                        MoreMenuItem(
+                            icon: "doc.text.fill",
+                            title: "Data Sources & Disclaimer",
+                            color: .blue
                         )
                     }
 

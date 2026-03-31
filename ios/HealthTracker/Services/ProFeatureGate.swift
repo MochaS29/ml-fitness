@@ -40,7 +40,7 @@ struct LockedFeatureView: View {
                 .font(.title2)
                 .fontWeight(.bold)
 
-            Text("Upgrade to ML Fitness Pro to access this feature.")
+            Text("Upgrade to MindLab Fitness Pro to access this feature.")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

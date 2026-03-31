@@ -14,7 +14,7 @@ struct PaywallView: View {
                             .font(.system(size: 70))
                             .foregroundColor(.wellnessGreen)
 
-                        Text("ML Fitness Pro")
+                        Text("MindLab Fitness Pro")
                             .font(.largeTitle)
                             .fontWeight(.bold)
 

@@ -101,7 +101,7 @@ struct DashboardView: View {
             WeightTrackingView()
         }
         .sheet(isPresented: $showingExerciseDetail) {
-            ExerciseTrackingView()
+            ExerciseDetailView()
         }
         .sheet(isPresented: $showingWaterDetail) {
             WaterTrackingView()
@@ -281,7 +281,7 @@ struct DashboardView: View {
                 sparklineData: viewModel.exerciseSparkline
             )
             .onTapGesture {
-                showingExerciseQuickAdd = true
+                showingExerciseDetail = true
             }
             
             MetricCardWithTrend(
@@ -396,6 +396,9 @@ struct DashboardView: View {
                         .font(.headline)
                         .foregroundColor(.deepCharcoal)
                     Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
                 .padding(.bottom, 4)
 
@@ -406,7 +409,7 @@ struct DashboardView: View {
                     )
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.green, .mint],
+                            colors: [.orange, .yellow],
                             startPoint: .top,
                             endPoint: .bottom
                         )
@@ -419,6 +422,9 @@ struct DashboardView: View {
             .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+            .onTapGesture {
+                showingExerciseDetail = true
+            }
 
             // Nutrition Distribution Chart
             VStack(alignment: .leading, spacing: 12) {
@@ -574,6 +580,12 @@ struct DashboardView: View {
             .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+
+            Text("Recommendations are based on general guidelines from the USDA Dietary Guidelines for Americans and WHO physical activity recommendations. This app is not a substitute for professional medical advice.")
+                .font(.caption2)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.top, 4)
         }
     }
     

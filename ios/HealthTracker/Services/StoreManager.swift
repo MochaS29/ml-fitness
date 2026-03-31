@@ -45,10 +45,12 @@ class StoreManager: ObservableObject {
     func loadProducts() async {
         do {
             purchaseState = .loading
+            print("[StoreManager] Loading products for ID: \(Self.proProductID)")
             products = try await Product.products(for: [Self.proProductID])
+            print("[StoreManager] Loaded \(products.count) products: \(products.map { "\($0.id) - \($0.displayPrice)" })")
             purchaseState = .idle
         } catch {
-            print("Failed to load products: \(error)")
+            print("[StoreManager] Failed to load products: \(error)")
             purchaseState = .failed("Failed to load products.")
         }
     }
@@ -57,9 +59,11 @@ class StoreManager: ObservableObject {
 
     func purchase() async {
         guard let product = products.first else {
-            purchaseState = .failed("Product not available.")
+            print("[StoreManager] Purchase failed - no products loaded. Count: \(products.count)")
+            purchaseState = .failed("Product not available. Please check your connection and try again.")
             return
         }
+        print("[StoreManager] Purchasing: \(product.id) for \(product.displayPrice)")
 
         do {
             purchaseState = .purchasing

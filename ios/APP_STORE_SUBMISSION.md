@@ -2,11 +2,14 @@
 
 ## App Information
 
-### App Name
-**ML Fitness**
+### App Name (in App Store Connect)
+**Fitness & Calorie Tracker** _(25 characters)_
 
 ### Subtitle (30 characters max)
-**AI Calorie & Macro Tracker**
+**AI Meal Scanner & Planner** _(25 characters)_
+
+### Home Screen Name (CFBundleDisplayName)
+**MindLab Fitness**
 
 ### Categories
 - **Primary**: Health & Fitness
@@ -19,7 +22,7 @@
 ```
 Track calories effortlessly. Snap a photo of your meal and AI identifies every food with calories, protein, carbs, and fat — instantly. Or search our database of 53,000+ foods. No tedious manual logging.
 
-ML Fitness is the all-in-one nutrition and fitness tracker that respects your privacy and your wallet. Download free, unlock Pro for the full experience — no subscriptions, ever.
+MindLab Fitness is the all-in-one nutrition and fitness tracker that respects your privacy and your wallet. Download free, unlock Pro for the full experience — no subscriptions, ever.
 
 KEY FEATURES
 
@@ -69,7 +72,7 @@ SMART DASHBOARD
 - Progress charts and weekly trends
 - Profile photo and personalized greeting
 
-WHY ML FITNESS
+WHY MINDLAB FITNESS
 
 PRIVACY FIRST — All data stays on your device. No accounts, no cloud uploads, no tracking.
 
@@ -163,12 +166,12 @@ Pro features are unlocked via a one-time in-app purchase (non-consumable). Free 
 
 ### Support URL
 ```
-https://mochasmindlab.com/support
+https://mochasmindlab.com/support.html
 ```
 
 ### Privacy Policy URL
 ```
-https://mochasmindlab.com/privacy
+https://mochasmindlab.com/privacy.html
 ```
 
 ### Marketing URL (optional)
@@ -259,7 +262,7 @@ The app stores all user data locally on the device using Core Data. No personal 
 ### In-App Purchases
 | Product | Type | Price |
 |---------|------|-------|
-| ML Fitness Pro | Non-consumable | $6.99 (one-time) |
+| MindLab Fitness Pro | Non-consumable | $6.99 (one-time) |
 
 ---
 
