@@ -88,25 +88,25 @@ struct FoodScanResultsView: View {
                         HStack(spacing: 20) {
                             NutritionSummaryItem(
                                 label: "Calories",
-                                value: "0",
+                                value: "\(Int(totalNutrition.calories))",
                                 color: Color(red: 127/255, green: 176/255, blue: 105/255)
                             )
-                            
+
                             NutritionSummaryItem(
                                 label: "Protein",
-                                value: "0",
+                                value: "\(Int(totalNutrition.protein))g",
                                 color: .blue
                             )
-                            
+
                             NutritionSummaryItem(
                                 label: "Carbs",
-                                value: "0",
+                                value: "\(Int(totalNutrition.carbs))g",
                                 color: .orange
                             )
-                            
+
                             NutritionSummaryItem(
                                 label: "Fat",
-                                value: "0",
+                                value: "\(Int(totalNutrition.fat))g",
                                 color: .purple
                             )
                         }

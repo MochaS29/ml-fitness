@@ -12,10 +12,10 @@ struct BarcodeScannerView: View {
     @State private var showingError = false
     @State private var isLoading = false
     @State private var servingMultiplier: Double = 1.0
-    
+
     let selectedDate: Date
     let mealType: MealType?
-    
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -321,7 +321,7 @@ struct CameraPreview: UIViewControllerRepresentable {
 }
 
 class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
-    var scannerService: BarcodeScannerService?
+    weak var scannerService: BarcodeScannerService?
     private var captureSession: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
     
@@ -403,6 +403,22 @@ class BarcodeScannerViewController: UIViewController, AVCaptureMetadataOutputObj
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         previewLayer?.frame = view.layer.bounds
+    }
+    
+    deinit {
+        captureSession?.stopRunning()
+        
+        // Remove all inputs and outputs
+        captureSession?.inputs.forEach { input in
+            captureSession?.removeInput(input)
+        }
+        captureSession?.outputs.forEach { output in
+            captureSession?.removeOutput(output)
+        }
+        
+        previewLayer?.removeFromSuperlayer()
+        previewLayer = nil
+        captureSession = nil
     }
 }
 

@@ -97,23 +97,32 @@ struct ProfileView: View {
 
 struct ProfileHeaderView: View {
     let profile: UserProfile
-    
+    @EnvironmentObject var profileManager: UserProfileManager
+
     var body: some View {
         HStack {
-            Image(systemName: "person.circle.fill")
-                .font(.system(size: 60))
-                .foregroundColor(.accentColor)
-            
+            if let avatar = profileManager.avatarImage {
+                Image(uiImage: avatar)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 60, height: 60)
+                    .clipShape(Circle())
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.accentColor)
+            }
+
             VStack(alignment: .leading) {
                 Text(profile.name)
                     .font(.title2)
                     .fontWeight(.bold)
-                
+
                 Text("Member since \(profile.createdAt, style: .date)")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
         }
         .padding(.vertical, 10)
@@ -138,7 +147,7 @@ struct ProfileInfoRow: View {
 struct EditProfileView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var profileManager: UserProfileManager
-    
+
     @State private var name = ""
     @State private var gender = Gender.female
     @State private var birthDate = Date()
@@ -148,10 +157,54 @@ struct EditProfileView: View {
     @State private var isPregnant = false
     @State private var pregnancyTrimester: PregnancyTrimester?
     @State private var isBreastfeeding = false
-    
+
+    @State private var showingCamera = false
+    @State private var showingPhotoLibrary = false
+    @State private var showingAvatarGrid = false
+    @State private var pickedImage: UIImage?
+
     var body: some View {
         NavigationView {
             Form {
+                Section("Profile Photo") {
+                    HStack {
+                        Spacer()
+                        if let avatar = profileManager.avatarImage {
+                            Image(uiImage: avatar)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .clipShape(Circle())
+                        } else {
+                            Image(systemName: "person.circle.fill")
+                                .font(.system(size: 80))
+                                .foregroundColor(.accentColor)
+                        }
+                        Spacer()
+                    }
+                    .padding(.vertical, 8)
+
+                    Button(action: { showingCamera = true }) {
+                        Label("Take Photo", systemImage: "camera")
+                    }
+
+                    Button(action: { showingPhotoLibrary = true }) {
+                        Label("Choose from Library", systemImage: "photo.on.rectangle")
+                    }
+
+                    Button(action: { showingAvatarGrid = true }) {
+                        Label("Choose Avatar", systemImage: "person.crop.square")
+                    }
+
+                    if profileManager.avatarType != "none" {
+                        Button(role: .destructive, action: {
+                            profileManager.removeAvatar()
+                        }) {
+                            Label("Remove Photo", systemImage: "trash")
+                        }
+                    }
+                }
+
                 Section("Basic Information") {
                     TextField("Name", text: $name)
                     
@@ -237,6 +290,21 @@ struct EditProfileView: View {
             .onAppear {
                 loadCurrentProfile()
             }
+            .sheet(isPresented: $showingCamera) {
+                CameraImagePicker(selectedImage: $pickedImage, sourceType: .camera)
+            }
+            .sheet(isPresented: $showingPhotoLibrary) {
+                CameraImagePicker(selectedImage: $pickedImage, sourceType: .photoLibrary)
+            }
+            .sheet(isPresented: $showingAvatarGrid) {
+                AvatarGridView()
+            }
+            .onChange(of: pickedImage) { newImage in
+                if let image = newImage {
+                    profileManager.savePhotoAvatar(image)
+                    pickedImage = nil
+                }
+            }
         }
     }
     
@@ -272,7 +340,7 @@ struct MultipleSelectionRow: View {
     let title: String
     let isSelected: Bool
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             HStack {
@@ -282,6 +350,66 @@ struct MultipleSelectionRow: View {
                 if isSelected {
                     Image(systemName: "checkmark")
                         .foregroundColor(.accentColor)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Avatar Grid View
+
+struct AvatarGridView: View {
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var profileManager: UserProfileManager
+
+    private let columns = [
+        GridItem(.adaptive(minimum: 80, maximum: 100), spacing: 16)
+    ]
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 16) {
+                    ForEach(BundledAvatar.all) { avatar in
+                        Button(action: {
+                            profileManager.selectBundledAvatar(avatar.id)
+                            presentationMode.wrappedValue.dismiss()
+                        }) {
+                            VStack(spacing: 6) {
+                                ZStack {
+                                    Circle()
+                                        .fill(avatar.color.opacity(0.15))
+                                        .frame(width: 70, height: 70)
+                                    Image(systemName: avatar.sfSymbol)
+                                        .font(.system(size: 28))
+                                        .foregroundColor(avatar.color)
+                                }
+                                .overlay(
+                                    Circle()
+                                        .stroke(
+                                            profileManager.avatarType == "bundled:\(avatar.id)"
+                                                ? avatar.color : Color.clear,
+                                            lineWidth: 3
+                                        )
+                                        .frame(width: 74, height: 74)
+                                )
+
+                                Text(avatar.name)
+                                    .font(.caption2)
+                                    .foregroundColor(.primary)
+                            }
+                        }
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("Choose Avatar")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
                 }
             }
         }

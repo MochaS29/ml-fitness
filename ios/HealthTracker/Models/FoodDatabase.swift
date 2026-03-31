@@ -231,33 +231,54 @@ class FoodDatabase {
         guard !query.isEmpty else { return [] }
 
         let searchQuery = query.lowercased()
+        let queryTerms = searchQuery.split(separator: " ").map(String.init)
 
         // Combine regular foods with supplements if requested
         let searchableItems = includeSupplements ? foods + getSupplementsAsFoodItems() : foods
 
-        return searchableItems.filter { food in
-            food.name.lowercased().contains(searchQuery) ||
-            (food.brand?.lowercased().contains(searchQuery) ?? false)
-        }.sorted { first, second in
-            // Prioritize common foods
-            if first.isCommon && !second.isCommon { return true }
-            if !first.isCommon && second.isCommon { return false }
-            
-            // Then prioritize exact matches
-            let firstExact = first.name.lowercased() == searchQuery
-            let secondExact = second.name.lowercased() == searchQuery
-            if firstExact && !secondExact { return true }
-            if !firstExact && secondExact { return false }
-            
-            // Then prioritize starts with
-            let firstStarts = first.name.lowercased().hasPrefix(searchQuery)
-            let secondStarts = second.name.lowercased().hasPrefix(searchQuery)
-            if firstStarts && !secondStarts { return true }
-            if !firstStarts && secondStarts { return false }
-            
-            // Finally alphabetical
-            return first.name < second.name
+        // Score each food item against the query terms
+        let scored: [(food: FoodItem, score: Int)] = searchableItems.compactMap { food in
+            let nameLower = food.name.lowercased()
+            let brandLower = food.brand?.lowercased() ?? ""
+
+            // All query terms must match somewhere (name or brand)
+            let allMatch = queryTerms.allSatisfy { term in
+                nameLower.contains(term) || brandLower.contains(term)
+            }
+            guard allMatch else { return nil }
+
+            var score = 0
+
+            // Exact full match
+            if nameLower == searchQuery { score += 100 }
+
+            // Name starts with full query
+            if nameLower.hasPrefix(searchQuery) { score += 50 }
+
+            // Each term that starts a word boundary gets bonus
+            for term in queryTerms {
+                // Word-boundary match: term appears at start of a word in the name
+                let words = nameLower.split(separator: " ").map(String.init)
+                if words.contains(where: { $0.hasPrefix(term) }) {
+                    score += 20
+                }
+                if words.contains(where: { $0 == term }) {
+                    score += 10
+                }
+            }
+
+            // Common food bonus
+            if food.isCommon { score += 15 }
+
+            // Shorter names rank higher (more specific match)
+            score += max(0, 30 - nameLower.count)
+
+            return (food, score)
         }
+
+        return scored
+            .sorted { $0.score > $1.score }
+            .map { $0.food }
     }
     
     func getFoodsByCategory(_ category: FoodCategory) -> [FoodItem] {

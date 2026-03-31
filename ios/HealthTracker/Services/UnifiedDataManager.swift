@@ -64,8 +64,10 @@ class UnifiedDataManager: ObservableObject {
         servingUnit: String = "serving",
         mealType: MealType = .snack,
         barcode: String? = nil,
-        imageData: Data? = nil
+        imageData: Data? = nil,
+        date: Date? = nil
     ) {
+        let entryDate = date ?? Date()
         let entry = FoodEntry(context: context)
         entry.id = UUID()
         entry.name = name
@@ -81,8 +83,8 @@ class UnifiedDataManager: ObservableObject {
         entry.servingUnit = servingUnit
         entry.mealType = mealType.rawValue
         entry.barcode = barcode
-        entry.timestamp = Date()
-        entry.date = Date()
+        entry.timestamp = entryDate
+        entry.date = entryDate
 
         // Store image data if the field exists
         // entry.photoData = imageData  // Uncomment when field is added
@@ -195,8 +197,10 @@ class UnifiedDataManager: ObservableObject {
         servingSize: String,
         servingUnit: String,
         nutrients: [String: Double],
-        barcode: String? = nil
+        barcode: String? = nil,
+        date: Date? = nil
     ) {
+        let entryDate = date ?? Date()
         let entry = SupplementEntry(context: context)
         entry.id = UUID()
         entry.name = name
@@ -205,7 +209,8 @@ class UnifiedDataManager: ObservableObject {
         entry.servingUnit = servingUnit
         entry.nutrients = nutrients
         // entry.barcode = barcode  // Uncomment when field is added
-        entry.timestamp = Date()
+        entry.timestamp = entryDate
+        entry.date = entryDate
 
         saveContext()
     }
@@ -323,30 +328,123 @@ class UnifiedDataManager: ObservableObject {
     // MARK: - Search Functions
 
     func searchFoodDatabase(_ query: String) -> [FoodItem] {
-        // First check recent entries
+        guard !query.isEmpty else { return [] }
+
+        // 1. Recent foods that match
         let recentFoods = getRecentFoods()
         let recentMatches = recentFoods.filter {
             $0.name.localizedCaseInsensitiveContains(query)
         }
 
-        // Then check main database
-        let databaseMatches = FoodDatabase.shared.searchFoods(query)
+        // 2. Local SQLite database (FTS5 search — fast, ~25K foods)
+        let localMatches = LocalFoodDatabase.shared.searchFoods(query, limit: 30)
+
+        // 3. Cached USDA API foods from CoreData
+        let cachedMatches = searchCachedFoods(query)
 
         // Combine and deduplicate
         var allMatches = recentMatches
-        for dbFood in databaseMatches {
-            if !allMatches.contains(where: { $0.name == dbFood.name && $0.brand == dbFood.brand }) {
-                allMatches.append(dbFood)
+        var seen = Set(recentMatches.map { "\($0.name.lowercased())|\($0.brand?.lowercased() ?? "")" })
+
+        for food in localMatches {
+            let key = "\(food.name.lowercased())|\(food.brand?.lowercased() ?? "")"
+            if !seen.contains(key) {
+                seen.insert(key)
+                allMatches.append(food)
+            }
+        }
+
+        for food in cachedMatches {
+            let key = "\(food.name.lowercased())|\(food.brand?.lowercased() ?? "")"
+            if !seen.contains(key) {
+                seen.insert(key)
+                allMatches.append(food)
             }
         }
 
         return Array(allMatches.prefix(50))
     }
 
+    /// Cache a USDA API food result into CoreData for offline access.
+    func cacheFoodItem(_ food: FoodItem) {
+        // Check if already cached
+        let request: NSFetchRequest<CustomFood> = CustomFood.fetchRequest()
+        request.predicate = NSPredicate(format: "name ==[cd] %@ AND brand ==[cd] %@",
+                                        food.name, food.brand ?? "")
+        request.fetchLimit = 1
+
+        if let existing = try? context.fetch(request), !existing.isEmpty {
+            return // Already cached
+        }
+
+        let cached = CustomFood(context: context)
+        cached.id = UUID()
+        cached.name = food.name
+        cached.brand = food.brand
+        cached.category = food.category.rawValue
+        cached.servingSize = food.servingSize
+        cached.servingUnit = food.servingUnit
+        cached.calories = food.calories
+        cached.protein = food.protein
+        cached.carbs = food.carbs
+        cached.fat = food.fat
+        cached.fiber = food.fiber
+        cached.sugar = food.sugar ?? 0
+        cached.sodium = food.sodium ?? 0
+        cached.cholesterol = food.cholesterol ?? 0
+        cached.saturatedFat = food.saturatedFat ?? 0
+        cached.barcode = food.barcode
+        cached.source = "usda_api"
+        cached.isUserCreated = false
+        cached.createdDate = Date()
+
+        do {
+            try context.save()
+        } catch {
+            print("Error caching food item: \(error)")
+        }
+    }
+
+    /// Search cached USDA API foods in CoreData.
+    func searchCachedFoods(_ query: String) -> [FoodItem] {
+        let request: NSFetchRequest<CustomFood> = CustomFood.fetchRequest()
+        request.predicate = NSPredicate(
+            format: "(name CONTAINS[cd] %@ OR brand CONTAINS[cd] %@) AND source == %@",
+            query, query, "usda_api"
+        )
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        request.fetchLimit = 15
+
+        guard let results = try? context.fetch(request) else { return [] }
+
+        return results.compactMap { cached -> FoodItem? in
+            guard let name = cached.name else { return nil }
+            let category = FoodCategory(rawValue: cached.category ?? "") ?? .other
+            return FoodItem(
+                name: name,
+                brand: cached.brand,
+                category: category,
+                servingSize: cached.servingSize ?? "1",
+                servingUnit: cached.servingUnit ?? "serving",
+                calories: cached.calories,
+                protein: cached.protein,
+                carbs: cached.carbs,
+                fat: cached.fat,
+                fiber: cached.fiber,
+                sugar: cached.sugar,
+                sodium: cached.sodium,
+                cholesterol: cached.cholesterol,
+                saturatedFat: cached.saturatedFat,
+                barcode: cached.barcode,
+                isCommon: false
+            )
+        }
+    }
+
     func getRecentFoods() -> [FoodItem] {
         let request: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
-        request.fetchLimit = 20
+        request.fetchLimit = 50
 
         guard let entries = try? context.fetch(request) else { return [] }
 
@@ -378,7 +476,7 @@ class UnifiedDataManager: ObservableObject {
                 )
                 uniqueFoods.append(foodItem)
 
-                if uniqueFoods.count >= 10 { break }
+                if uniqueFoods.count >= 15 { break }
             }
         }
 
@@ -430,5 +528,90 @@ class UnifiedDataManager: ObservableObject {
             fat: 0,
             mealType: mealType
         )
+    }
+
+    // MARK: - Copy from Previous Day
+
+    func fetchFoodEntries(for date: Date, mealType: MealType? = nil) -> [FoodEntry] {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        let request: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
+        if let mealType = mealType {
+            request.predicate = NSPredicate(
+                format: "timestamp >= %@ AND timestamp < %@ AND mealType == %@",
+                startOfDay as NSDate, endOfDay as NSDate, mealType.rawValue
+            )
+        } else {
+            request.predicate = NSPredicate(
+                format: "timestamp >= %@ AND timestamp < %@",
+                startOfDay as NSDate, endOfDay as NSDate
+            )
+        }
+        request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
+
+        return (try? context.fetch(request)) ?? []
+    }
+
+    func fetchSupplementEntries(for date: Date) -> [SupplementEntry] {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        let request: NSFetchRequest<SupplementEntry> = SupplementEntry.fetchRequest()
+        request.predicate = NSPredicate(
+            format: "timestamp >= %@ AND timestamp < %@",
+            startOfDay as NSDate, endOfDay as NSDate
+        )
+        request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
+
+        return (try? context.fetch(request)) ?? []
+    }
+
+    @discardableResult
+    func copyFoodEntries(from sourceDate: Date, to targetDate: Date, mealTypes: [MealType]) -> Int {
+        var count = 0
+        for mealType in mealTypes {
+            let entries = fetchFoodEntries(for: sourceDate, mealType: mealType)
+            for entry in entries {
+                addFoodEntry(
+                    name: entry.name ?? "Unknown",
+                    brand: entry.brand,
+                    calories: entry.calories,
+                    protein: entry.protein,
+                    carbs: entry.carbs,
+                    fat: entry.fat,
+                    fiber: entry.fiber,
+                    sugar: entry.sugar,
+                    sodium: entry.sodium,
+                    servingSize: entry.servingSize ?? "1",
+                    servingUnit: entry.servingUnit ?? "serving",
+                    mealType: mealType,
+                    barcode: entry.barcode,
+                    date: targetDate
+                )
+                count += 1
+            }
+        }
+        return count
+    }
+
+    @discardableResult
+    func copySupplementEntries(from sourceDate: Date, to targetDate: Date) -> Int {
+        let entries = fetchSupplementEntries(for: sourceDate)
+        var count = 0
+        for entry in entries {
+            addSupplementEntry(
+                name: entry.name ?? "Unknown",
+                brand: entry.brand,
+                servingSize: entry.servingSize ?? "1",
+                servingUnit: entry.servingUnit ?? "serving",
+                nutrients: entry.nutrients ?? [:],
+                date: targetDate
+            )
+            count += 1
+        }
+        return count
     }
 }

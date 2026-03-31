@@ -1,26 +1,46 @@
 import SwiftUI
+import WatchConnectivity
 
 @main
 struct HealthTrackerApp: App {
     @StateObject private var userProfileManager = UserProfileManager()
     @StateObject private var achievementManager = AchievementManager.shared
     @StateObject private var waterReminderService = WaterReminderService.shared
+    @StateObject private var phoneConnectivity = PhoneConnectivityManager.shared
+    @StateObject private var storeManager = StoreManager.shared
     @State private var showMainApp = false
     @State private var showQuickSetup = false
+
+    // Check if running UI tests
+    private var isUITesting: Bool {
+        ProcessInfo.processInfo.arguments.contains("UI_TESTING")
+    }
+
+    private var shouldSkipOnboarding: Bool {
+        ProcessInfo.processInfo.arguments.contains("SKIP_ONBOARDING")
+    }
 
     init() {
         // Initialize water reminder service to set up notification delegate
         _ = WaterReminderService.shared
+        // Initialize Watch Connectivity
+        _ = PhoneConnectivityManager.shared
     }
 
     var body: some Scene {
         WindowGroup {
-            if showMainApp || userProfileManager.hasCompletedOnboarding {
+            if showMainApp || userProfileManager.hasCompletedOnboarding || shouldSkipOnboarding {
                 ContentView()
                     .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
                     .environmentObject(userProfileManager)
                     .environmentObject(achievementManager)
+                    .environmentObject(phoneConnectivity)
+                    .environmentObject(storeManager)
                     .accentColor(Color.mochaBrown)
+                    .onAppear {
+                        // Send initial data to watch
+                        phoneConnectivity.sendDailyUpdate()
+                    }
             } else if showQuickSetup {
                 QuickSetupView(showMainApp: $showMainApp)
                     .environmentObject(userProfileManager)

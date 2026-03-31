@@ -2,6 +2,7 @@ import SwiftUI
 import Charts
 
 struct DashboardView: View {
+    @EnvironmentObject var profileManager: UserProfileManager
     @StateObject private var viewModel = DashboardViewModel()
     @State private var selectedTimeRange = TimeRange.week
     @State private var showingAIInsightDetail = false
@@ -100,13 +101,15 @@ struct DashboardView: View {
             WeightTrackingView()
         }
         .sheet(isPresented: $showingExerciseDetail) {
-            ExerciseTrackingView()
+            ExerciseDetailView()
         }
         .sheet(isPresented: $showingWaterDetail) {
             WaterTrackingView()
         }
         .sheet(isPresented: $showingSupplementDetail) {
-            EnhancedSupplementTrackingView()
+            ProFeatureGate {
+                EnhancedSupplementTrackingView()
+            }
         }
         .sheet(isPresented: $showingStepDetail) {
             StepDetailsView()
@@ -127,15 +130,29 @@ struct DashboardView: View {
     private var headerSection: some View {
         VStack(spacing: 12) {
             // Welcome Message with AI Touch
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Hello, \(viewModel.userName)!")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.deepCharcoal)
+            HStack(spacing: 12) {
+                if let avatar = profileManager.avatarImage {
+                    Image(uiImage: avatar)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .font(.system(size: 36))
+                        .foregroundColor(.accentColor)
+                }
 
-                Text(viewModel.aiGreeting)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Hello, \(viewModel.userName)!")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.deepCharcoal)
+
+                    Text(viewModel.aiGreeting)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
             }
             
             // Overall Health Score with AI Analysis
@@ -264,7 +281,7 @@ struct DashboardView: View {
                 sparklineData: viewModel.exerciseSparkline
             )
             .onTapGesture {
-                showingExerciseQuickAdd = true
+                showingExerciseDetail = true
             }
             
             MetricCardWithTrend(
@@ -379,6 +396,9 @@ struct DashboardView: View {
                         .font(.headline)
                         .foregroundColor(.deepCharcoal)
                     Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
                 .padding(.bottom, 4)
 
@@ -389,7 +409,7 @@ struct DashboardView: View {
                     )
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.green, .mint],
+                            colors: [.orange, .yellow],
                             startPoint: .top,
                             endPoint: .bottom
                         )
@@ -402,6 +422,9 @@ struct DashboardView: View {
             .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+            .onTapGesture {
+                showingExerciseDetail = true
+            }
 
             // Nutrition Distribution Chart
             VStack(alignment: .leading, spacing: 12) {
@@ -557,6 +580,12 @@ struct DashboardView: View {
             .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+
+            Text("Recommendations are based on general guidelines from the USDA Dietary Guidelines for Americans and WHO physical activity recommendations. This app is not a substitute for professional medical advice.")
+                .font(.caption2)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.top, 4)
         }
     }
     

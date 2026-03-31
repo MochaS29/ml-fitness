@@ -30,13 +30,12 @@ struct SupplementTrackingView: View {
                     List {
                         Section {
                             VStack(spacing: 12) {
-                                // Barcode scanner temporarily disabled - coming in next release
-                                // HStack {
-                                //     Button(action: { showingBarcodeScanner = true }) {
-                                //         Label("Scan Barcode", systemImage: "barcode.viewfinder")
-                                //     }
-                                //     .buttonStyle(.borderedProminent)
-                                // }
+                                HStack {
+                                    Button(action: { showingBarcodeScanner = true }) {
+                                        Label("Scan Barcode", systemImage: "barcode.viewfinder")
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                }
 
                                 Button(action: { showingScanner = true }) {
                                     Label("Scan Label", systemImage: "camera.viewfinder")

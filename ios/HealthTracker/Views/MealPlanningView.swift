@@ -53,7 +53,9 @@ struct MealPlanningView: View {
                 AddMealPlanView(selectedDate: selectedDate)
             }
             .sheet(isPresented: $showingGroceryList) {
-                GroceryListGeneratorView()
+                ProFeatureGate {
+                    GroceryListGeneratorView()
+                }
             }
             .sheet(isPresented: $showingGenerateSuggestions) {
                 GenerateMealSuggestionsView(selectedDate: selectedDate)

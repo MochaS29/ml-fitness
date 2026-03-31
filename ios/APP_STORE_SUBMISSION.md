@@ -2,131 +2,134 @@
 
 ## App Information
 
-### App Name
-**ML Fitness**
+### App Name (in App Store Connect)
+**Fitness & Calorie Tracker** _(25 characters)_
 
 ### Subtitle (30 characters max)
-**Track Nutrition & Fitness**
+**AI Meal Scanner & Planner** _(25 characters)_
+
+### Home Screen Name (CFBundleDisplayName)
+**MindLab Fitness**
 
 ### Categories
 - **Primary**: Health & Fitness
-- **Secondary**: Medical
+- **Secondary**: Food & Drink
 
 ---
 
 ## App Description (4000 characters)
 
 ```
-Transform your health journey with ML Fitness - the comprehensive wellness companion that makes nutrition and fitness tracking effortless and insightful.
+Track calories effortlessly. Snap a photo of your meal and AI identifies every food with calories, protein, carbs, and fat — instantly. Or search our database of 53,000+ foods. No tedious manual logging.
 
-Whether you're managing your weight, optimizing nutrition, or building healthy habits, ML Fitness provides all the tools you need in one beautifully designed app that respects your privacy. Your data never leaves your device.
+MindLab Fitness is the all-in-one nutrition and fitness tracker that respects your privacy and your wallet. Download free, unlock Pro for the full experience — no subscriptions, ever.
 
-━━━ KEY FEATURES ━━━
+KEY FEATURES
 
-📊 SMART DASHBOARD
-• View all health metrics at a glance
-• Track progress with beautiful charts
-• Get personalized insights and trends
-• Celebrate achievements with milestone rewards
+AI MEAL SCANNER
+- Snap a photo of any meal
+- AI identifies foods and calculates nutrition instantly
+- Adjust portions and save to your diary
+- Powered by Claude AI for accurate results
 
-🍎 NUTRITION TRACKING MADE EASY
-• Extensive food database with 1000+ items
-• Barcode scanner for instant logging
-• Create custom foods and recipes
-• Track calories, macros, vitamins & minerals
-• Visual meal photos for easy recall
+SMART FOOD SEARCH
+- 53,000+ foods from the USDA database
+- Barcode scanner for packaged foods and supplements
+- Recent foods for quick re-logging
+- Copy entire meals from a previous day — no re-entering
 
-💪 COMPLETE FITNESS LOGGING
-• Log any exercise or activity
-• Automatic calorie burn calculations
-• Integration with Apple Health
-• Track workout trends over time
+COMPLETE FOOD DIARY
+- Track breakfast, lunch, dinner, and snacks
+- Copy from Previous Day to duplicate meals in one tap
+- Daily calorie, protein, carb, and fat totals
+- Navigate between dates to review your history
 
-⚖️ WEIGHT MANAGEMENT
-• Log daily measurements
-• View progress graphs
-• Set and track goal weights
-• See weekly and monthly trends
+8 MEAL PLANS WITH 400+ RECIPES
+- Mediterranean, Keto, Vegetarian, Vegan, Paleo, Whole30, Intermittent Fasting, Family Friendly
+- Full 4-week plans with real recipes and nutrition data
+- Ingredients, instructions, and macro breakdowns
+- Grocery list generation
 
-💊 SUPPLEMENT TRACKING
-• Comprehensive vitamin database
-• Set dosage reminders
-• Track compliance rates
-• Barcode scanning support
+SUPPLEMENT TRACKING
+- Comprehensive vitamin and mineral database
+- Personalized RDA analysis based on your profile
+- Barcode scanning for quick supplement entry
+- Copy supplements from previous days
 
-💧 HYDRATION MONITOR
-• Quick water logging
-• Visual progress indicators
-• Customizable daily goals
-• Smart reminders
+FITNESS & WEIGHT TRACKING
+- Log any exercise or activity
+- Automatic calorie burn estimates
+- Daily weight logging with trend graphs
+- Apple Health integration for steps and workouts
 
-📅 MEAL PLANNING
-• 4-week meal plan templates
-• Automated shopping lists
-• Healthy recipe collection
-• Calorie-balanced suggestions
+HYDRATION MONITOR
+- Quick water logging with visual glass tracker
+- Customizable daily goals
+- Smart reminders to stay hydrated
 
-📈 DETAILED ANALYTICS
-• Weekly and monthly reports
-• Macro and micro nutrient breakdowns
-• Pattern recognition insights
-• Export data for healthcare providers
+SMART DASHBOARD
+- All your metrics at a glance — calories, macros, steps, water, weight
+- Progress charts and weekly trends
+- Profile photo and personalized greeting
 
-━━━ WHY CHOOSE ML FITNESS ━━━
+WHY MINDLAB FITNESS
 
-✓ PRIVACY FIRST - Your data stays on YOUR device. No accounts, no cloud uploads, no tracking.
+PRIVACY FIRST — All data stays on your device. No accounts, no cloud uploads, no tracking.
 
-✓ WORKS OFFLINE - Full functionality without internet connection
+WORKS OFFLINE — Full functionality without internet (except AI meal scanning and online food search).
 
-✓ UNIVERSAL APP - Seamless experience on iPhone and iPad
+NO SUBSCRIPTIONS — Pay once for Pro, own it forever. Competitors charge $10-20 per month.
 
-✓ APPLE HEALTH SYNC - Automatic step counting and workout integration
+UNIVERSAL — Optimized for iPhone and iPad.
 
-✓ INTUITIVE DESIGN - Clean, modern interface that's easy to navigate
+APPLE HEALTH — Automatic step counting and workout sync.
 
-✓ NO SUBSCRIPTIONS - All features included, no hidden costs
+Perfect for weight loss, muscle building, meal prep, managing health conditions, or simply eating better. Start your journey today.
 
-✓ ACCESSIBILITY - Full VoiceOver support and Dynamic Type
-
-━━━ PERFECT FOR ━━━
-
-• Weight loss and management
-• Muscle building and fitness
-• Managing health conditions
-• Improving eating habits
-• Tracking medication compliance
-• Staying hydrated
-• Meal prep enthusiasts
-• Anyone wanting better health insights
-
-Start your journey to better health today. Download ML Fitness and take control of your wellness with confidence and privacy.
-
-Note: This app integrates with Apple Health to sync step data and workouts. All health data remains private and secure on your device.
+Note: AI meal scanning and online food search require an internet connection. All other features work offline. Integrates with Apple Health for steps and workouts.
 ```
 
 ---
 
 ## Keywords (100 characters)
 ```
-calorie,counter,diet,food,tracker,nutrition,weight,loss,water,health,fitness,macro,meal,vitamin
+calorie,tracker,food,diary,macro,counter,meal,plan,scanner,AI,nutrition,barcode,diet,fasting,weight
 ```
 
 ---
 
 ## Promotional Text (170 characters)
 ```
-Your private health companion. Track nutrition, exercise, weight & more. All data stays on device. No ads, no tracking, just results. Works offline!
+NEW: AI meal scanner + 53K food database + 8 meal plans with 400 recipes. Copy meals from previous days. Free to download, Pro unlock. No subscriptions.
 ```
 
 ---
 
-## What's New (Version 1.5)
+## What's New (Version 2.0.0)
 ```
-• Enhanced iPad navigation - Full screen views without sidebars
-• Improved dashboard with real-time weight tracking
-• Demo data generator for easy app exploration
-• Bug fixes and performance improvements
-• Optimized for iOS 17 and iPhone 15 series
+Major Update — Completely Rebuilt!
+
+AI MEAL SCANNER
+Snap a photo of your meal and get instant calories and macros. Powered by Claude AI.
+
+53,000+ FOOD DATABASE
+Massively expanded search with USDA data. Find any food instantly.
+
+COPY FROM PREVIOUS DAY
+Duplicate yesterday's meals and supplements in one tap. No more re-entering the same foods.
+
+8 COMPLETE MEAL PLANS
+400+ real recipes across Mediterranean, Keto, Vegetarian, Vegan, Paleo, Whole30, IF, and Family Friendly — all with full 4-week plans.
+
+ALSO NEW:
+- Enhanced barcode scanning for food and supplements
+- Profile photo and avatar
+- Improved supplement tracking with RDA analysis
+- Smarter food search with relevance ranking
+- New app icon
+- Performance improvements throughout
+
+Free to download. Unlock Pro for the full experience — no subscriptions, ever.
 ```
 
 ---
@@ -140,18 +143,16 @@ Your private health companion. Track nutrition, exercise, weight & more. All dat
 ```
 This app does not require user registration or login. All features work immediately upon download.
 
-To test with sample data:
-1. Open the app
-2. Go to More tab
-3. Tap "Generate Demo Data" (if enabled in build)
-
 The app uses:
 - HealthKit for reading step data and syncing workouts
-- Camera for barcode scanning (supplements/food)
-- Photo Library for meal photos
-- Notifications for reminders
+- Camera for barcode scanning (supplements/food) and AI meal scanning
+- Photo Library for profile photos and meal images
+- Notifications for hydration and supplement reminders
+- Network access for AI meal scanning (Anthropic Claude API) and food database searches (USDA FoodData Central API)
 
-All data is stored locally using Core Data. No information is transmitted to external servers except optional food database searches (USDA).
+All personal data is stored locally using Core Data. Food photos sent for AI analysis are not stored on any server. Online food searches query the public USDA database.
+
+Pro features are unlocked via a one-time in-app purchase (non-consumable). Free users can access basic food logging, water tracking, weight tracking, exercise logging, and the dashboard.
 ```
 
 ### Contact Information
@@ -165,12 +166,12 @@ All data is stored locally using Core Data. No information is transmitted to ext
 
 ### Support URL
 ```
-https://mochasmindlab.com/support
+https://mochasmindlab.com/support.html
 ```
 
 ### Privacy Policy URL
 ```
-https://mochasmindlab.com/privacy
+https://mochasmindlab.com/privacy.html
 ```
 
 ### Marketing URL (optional)
@@ -198,67 +199,86 @@ Content Descriptions:
 
 ## Screenshots Required
 
-### iPhone 6.7" Display
-✅ Located in: `~/Desktop/health App shots/iPhone_6.5_inch/`
+### iPhone 6.7" Display (iPhone 15 Pro Max)
+- Screenshot 1: Dashboard — daily summary with calories, macros, steps, water
+- Screenshot 2: Food Diary — meal sections with entries and calorie totals
+- Screenshot 3: AI Meal Scanner — photo analysis with detected foods
+- Screenshot 4: Food Search — search results with 53K database
+- Screenshot 5: Meal Plans — recipe view with nutrition breakdown
+- Screenshot 6: Copy from Previous Day — selecting meals to duplicate
+
+### iPhone 6.5" Display (iPhone 11 Pro Max)
+- Same screenshots as 6.7" (scaled)
+
+### iPad Pro 12.9" (optional but recommended)
 - Screenshot 1: Dashboard
 - Screenshot 2: Food Diary
-- Screenshot 3: Meal Planning
-- Screenshot 4: Progress Charts
-- Screenshot 5: Exercise Tracking
-- Screenshot 6: Settings/Features
-
-### iPad Pro 12.9"
-✅ Located in: `~/Desktop/health App shots/iPad_12.9_inch/`
-- Screenshot 1: Dashboard
-- Screenshot 2: Food Entry
-- Screenshot 3: Analytics
-- Screenshot 4: Meal Planning
+- Screenshot 3: Meal Plans
+- Screenshot 4: Food Search
 
 ---
 
 ## App Privacy
 
 ### Data Collection
-**No data collected** - All information stays on device
+**Data Used to Track You**: None
+**Data Linked to You**: None
 
-### Privacy Nutrition Labels
-- **Data Not Collected**: We don't collect any data from this app
-- **Data Not Linked to You**: N/A
-- **Data Linked to You**: N/A
+### Data Not Collected
+We do not collect any personally identifiable data.
+
+### Network Usage Disclosure
+- **AI Meal Scanning**: Food photos are sent to Anthropic's Claude API for analysis. Images are processed in real-time and not stored by the API provider.
+- **Food Search**: Search queries are sent to the USDA FoodData Central API to retrieve nutrition data. No personal information is included.
+- All other app functionality works entirely offline.
 
 ### Privacy Policy Summary
-The app stores all data locally on the user's device. No personal information, health data, or usage analytics are collected or transmitted to any servers.
+The app stores all user data locally on the device using Core Data. No personal information, health data, or usage analytics are collected or transmitted to any servers. Food photos sent for AI analysis are processed in real-time and not retained.
 
 ---
 
 ## Pricing
 
 ### Business Model
-**Paid App** or **Free** (Your choice)
+**Free App** with one-time Pro in-app purchase (non-consumable)
 
-Suggested Pricing Tiers:
-- Free (with all features)
-- $2.99 (Premium feel, no subscriptions)
-- $4.99 (Professional health app tier)
+### Free Tier
+- Manual food logging and search (53K+ database)
+- Copy from Previous Day (duplicate meals from any date)
+- Water tracking with reminders
+- Weight tracking with graphs
+- Basic exercise logging
+- Dashboard with calorie, macro, and step summaries
+- Goal setting
+
+### Pro Tier (one-time purchase)
+- AI meal photo scanner
+- Barcode scanning (food + supplements)
+- Full meal plan library (8 plans, 400+ recipes)
+- Supplement tracking with RDA analysis
+- Advanced analytics and insights
+- Grocery list generation
 
 ### In-App Purchases
-None currently
+| Product | Type | Price |
+|---------|------|-------|
+| MindLab Fitness Pro | Non-consumable | $6.99 (one-time) |
 
 ---
 
 ## Build Information
 
 ### Version Number
-**1.5**
+**2.0.0**
 
 ### Build Number
-**5**
+**7**
 
 ### Bundle ID
-Check in Xcode (likely: com.mochasmindlab.HealthTracker)
+com.mindlabs.healthtracker
 
 ### Minimum iOS Version
-iOS 16.0
+iOS 15.0
 
 ### Device Support
 - iPhone
@@ -271,7 +291,7 @@ iOS 16.0
 
 ## Copyright
 ```
-© 2025 Mocha's MindLab Inc. All rights reserved.
+© 2026 Mocha's MindLab Inc. All rights reserved.
 ```
 
 ---
@@ -279,16 +299,22 @@ iOS 16.0
 ## SUBMISSION CHECKLIST
 
 Before submitting:
+- [x] App description and What's New drafted
+- [x] Keywords optimized (100 chars)
+- [x] Promotional text written
+- [x] App icon updated (heart + pulse logo)
+- [x] IAP implemented (StoreKit 2)
+- [x] API keys configured (SecretsManager)
 - [ ] Archive build and upload to App Store Connect
-- [ ] All screenshots uploaded
-- [ ] App description and keywords entered
-- [ ] Support and privacy URLs are live
+- [ ] All screenshots captured and uploaded
+- [ ] Support and privacy URLs are live and updated
 - [ ] Contact information verified
 - [ ] Age rating questionnaire completed
-- [ ] Pricing tier selected
+- [ ] IAP product created in App Store Connect
+- [ ] Pricing changed from Paid to Free in App Store Connect
 - [ ] Build selected for review
 - [ ] Submit for review
 
 ---
 
-*Ready for submission! All materials prepared.*
+*Materials updated February 27, 2026.*

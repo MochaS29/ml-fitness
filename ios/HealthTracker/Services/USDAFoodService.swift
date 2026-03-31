@@ -156,28 +156,32 @@ struct USDAServiceFoodResponse: Codable {
     let foodNutrients: [USDAServiceNutrient]
 
     func toUSDAFood() -> USDAFoodItem {
-        // Extract nutrients from the response
-        let calories = foodNutrients.first(where: { $0.nutrientName == "Energy" })?.value ?? 0
-        let protein = foodNutrients.first(where: { $0.nutrientName == "Protein" })?.value ?? 0
-        let carbs = foodNutrients.first(where: { $0.nutrientName == "Carbohydrate, by difference" })?.value ?? 0
-        let fat = foodNutrients.first(where: { $0.nutrientName == "Total lipid (fat)" })?.value ?? 0
-        let fiber = foodNutrients.first(where: { $0.nutrientName == "Fiber, total dietary" })?.value
-        let sugar = foodNutrients.first(where: { $0.nutrientName == "Sugars, total including NLEA" })?.value
-        let sodium = foodNutrients.first(where: { $0.nutrientName == "Sodium, Na" })?.value
+        // Extract nutrients from the response (USDA values are always per 100g)
+        let calsPer100 = foodNutrients.first(where: { $0.nutrientName == "Energy" })?.value ?? 0
+        let protPer100 = foodNutrients.first(where: { $0.nutrientName == "Protein" })?.value ?? 0
+        let carbsPer100 = foodNutrients.first(where: { $0.nutrientName == "Carbohydrate, by difference" })?.value ?? 0
+        let fatPer100 = foodNutrients.first(where: { $0.nutrientName == "Total lipid (fat)" })?.value ?? 0
+        let fiberPer100 = foodNutrients.first(where: { $0.nutrientName == "Fiber, total dietary" })?.value
+        let sugarPer100 = foodNutrients.first(where: { $0.nutrientName == "Sugars, total including NLEA" })?.value
+        let sodiumPer100 = foodNutrients.first(where: { $0.nutrientName == "Sodium, Na" })?.value
+
+        // Scale from per-100g to the actual serving size
+        let serving = servingSize ?? 100
+        let scale = serving / 100.0
 
         return USDAFoodItem(
             fdcId: fdcId,
             name: description,
             brand: brandName ?? brandOwner,
-            servingSize: servingSize ?? 100,
+            servingSize: serving,
             servingUnit: servingSizeUnit ?? "g",
-            calories: calories,
-            protein: protein,
-            carbs: carbs,
-            fat: fat,
-            fiber: fiber,
-            sugar: sugar,
-            sodium: sodium
+            calories: calsPer100 * scale,
+            protein: protPer100 * scale,
+            carbs: carbsPer100 * scale,
+            fat: fatPer100 * scale,
+            fiber: fiberPer100.map { $0 * scale },
+            sugar: sugarPer100.map { $0 * scale },
+            sodium: sodiumPer100.map { $0 * scale }
         )
     }
 }

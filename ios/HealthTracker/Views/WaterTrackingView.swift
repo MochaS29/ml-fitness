@@ -255,6 +255,9 @@ struct WaterTrackingView: View {
         do {
             try viewContext.save()
 
+            // Send update to Apple Watch
+            PhoneConnectivityManager.shared.sendDailyUpdate()
+
             // Sync with reminder service
             reminderService.addWaterIntake(amount)
 

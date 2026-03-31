@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		46D708D72F699FCE00C98AD6 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46D708D62F699FCE00C98AD6 /* StoreKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		462395CE2E2B57A6009E7459 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,12 +25,30 @@
 			remoteGlobalIDString = 462395B82E2B57A5009E7459;
 			remoteInfo = HealthTracker;
 		};
+		46E246002F11883F009020E2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 462395B12E2B57A5009E7459 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 46E245F22F11883E009020E2;
+			remoteInfo = "HealthTracker Watch App Watch App";
+		};
+		46E2460A2F118840009020E2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 462395B12E2B57A5009E7459 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 46E245F22F11883E009020E2;
+			remoteInfo = "HealthTracker Watch App Watch App";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		462395B92E2B57A5009E7459 /* HealthTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		462395CD2E2B57A6009E7459 /* HealthTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HealthTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		462395D72E2B57A6009E7459 /* HealthTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HealthTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		46D708D62F699FCE00C98AD6 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		46E245F32F11883E009020E2 /* HealthTracker Watch App Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HealthTracker Watch App Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		46E245FF2F11883F009020E2 /* HealthTracker Watch App Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HealthTracker Watch App Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		46E246092F118840009020E2 /* HealthTracker Watch App Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HealthTracker Watch App Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -65,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46D708D72F699FCE00C98AD6 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +105,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		46E245F02F11883E009020E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E245FC2F11883F009020E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E246062F118840009020E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -91,6 +135,7 @@
 				462395BB2E2B57A5009E7459 /* HealthTracker */,
 				462395D02E2B57A6009E7459 /* HealthTrackerTests */,
 				462395DA2E2B57A6009E7459 /* HealthTrackerUITests */,
+				46D708D52F699FCE00C98AD6 /* Frameworks */,
 				462395BA2E2B57A5009E7459 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -101,8 +146,19 @@
 				462395B92E2B57A5009E7459 /* HealthTracker.app */,
 				462395CD2E2B57A6009E7459 /* HealthTrackerTests.xctest */,
 				462395D72E2B57A6009E7459 /* HealthTrackerUITests.xctest */,
+				46E245F32F11883E009020E2 /* HealthTracker Watch App Watch App.app */,
+				46E245FF2F11883F009020E2 /* HealthTracker Watch App Watch AppTests.xctest */,
+				46E246092F118840009020E2 /* HealthTracker Watch App Watch AppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		46D708D52F699FCE00C98AD6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				46D708D62F699FCE00C98AD6 /* StoreKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -176,6 +232,65 @@
 			productReference = 462395D72E2B57A6009E7459 /* HealthTrackerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		46E245F22F11883E009020E2 /* HealthTracker Watch App Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 46E2461B2F118840009020E2 /* Build configuration list for PBXNativeTarget "HealthTracker Watch App Watch App" */;
+			buildPhases = (
+				46E245EF2F11883E009020E2 /* Sources */,
+				46E245F02F11883E009020E2 /* Frameworks */,
+				46E245F12F11883E009020E2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "HealthTracker Watch App Watch App";
+			packageProductDependencies = (
+			);
+			productName = "HealthTracker Watch App Watch App";
+			productReference = 46E245F32F11883E009020E2 /* HealthTracker Watch App Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		46E245FE2F11883F009020E2 /* HealthTracker Watch App Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 46E2461C2F118840009020E2 /* Build configuration list for PBXNativeTarget "HealthTracker Watch App Watch AppTests" */;
+			buildPhases = (
+				46E245FB2F11883F009020E2 /* Sources */,
+				46E245FC2F11883F009020E2 /* Frameworks */,
+				46E245FD2F11883F009020E2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				46E246012F11883F009020E2 /* PBXTargetDependency */,
+			);
+			name = "HealthTracker Watch App Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "HealthTracker Watch App Watch AppTests";
+			productReference = 46E245FF2F11883F009020E2 /* HealthTracker Watch App Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		46E246082F118840009020E2 /* HealthTracker Watch App Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 46E2461D2F118840009020E2 /* Build configuration list for PBXNativeTarget "HealthTracker Watch App Watch AppUITests" */;
+			buildPhases = (
+				46E246052F118840009020E2 /* Sources */,
+				46E246062F118840009020E2 /* Frameworks */,
+				46E246072F118840009020E2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				46E2460B2F118840009020E2 /* PBXTargetDependency */,
+			);
+			name = "HealthTracker Watch App Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "HealthTracker Watch App Watch AppUITests";
+			productReference = 46E246092F118840009020E2 /* HealthTracker Watch App Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -183,7 +298,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1640;
+				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					462395B82E2B57A5009E7459 = {
@@ -201,6 +316,17 @@
 					462395D62E2B57A6009E7459 = {
 						CreatedOnToolsVersion = 16.4;
 						TestTargetID = 462395B82E2B57A5009E7459;
+					};
+					46E245F22F11883E009020E2 = {
+						CreatedOnToolsVersion = 26.1.1;
+					};
+					46E245FE2F11883F009020E2 = {
+						CreatedOnToolsVersion = 26.1.1;
+						TestTargetID = 46E245F22F11883E009020E2;
+					};
+					46E246082F118840009020E2 = {
+						CreatedOnToolsVersion = 26.1.1;
+						TestTargetID = 46E245F22F11883E009020E2;
 					};
 				};
 			};
@@ -221,6 +347,9 @@
 				462395B82E2B57A5009E7459 /* HealthTracker */,
 				462395CC2E2B57A6009E7459 /* HealthTrackerTests */,
 				462395D62E2B57A6009E7459 /* HealthTrackerUITests */,
+				46E245F22F11883E009020E2 /* HealthTracker Watch App Watch App */,
+				46E245FE2F11883F009020E2 /* HealthTracker Watch App Watch AppTests */,
+				46E246082F118840009020E2 /* HealthTracker Watch App Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -241,6 +370,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		462395D52E2B57A6009E7459 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E245F12F11883E009020E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E245FD2F11883F009020E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E246072F118840009020E2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -271,6 +421,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		46E245EF2F11883E009020E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E245FB2F11883F009020E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E246052F118840009020E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -284,6 +455,16 @@
 			target = 462395B82E2B57A5009E7459 /* HealthTracker */;
 			targetProxy = 462395D82E2B57A6009E7459 /* PBXContainerItemProxy */;
 		};
+		46E246012F11883F009020E2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 46E245F22F11883E009020E2 /* HealthTracker Watch App Watch App */;
+			targetProxy = 46E246002F11883F009020E2 /* PBXContainerItemProxy */;
+		};
+		46E2460B2F118840009020E2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 46E245F22F11883E009020E2 /* HealthTracker Watch App Watch App */;
+			targetProxy = 46E2460A2F118840009020E2 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -293,13 +474,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HealthTracker/HealthTracker.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 69QZW8NWFJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HealthTracker/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "ML Fitness Pro";
+				INFOPLIST_KEY_CFBundleDisplayName = "MindLab Fitness";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to scan supplement labels and food items";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthTracker needs access to read your health data to track your fitness progress.";
@@ -314,9 +496,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindlabs.healthtracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -329,13 +512,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HealthTracker/HealthTracker.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 69QZW8NWFJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HealthTracker/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "ML Fitness Pro";
+				INFOPLIST_KEY_CFBundleDisplayName = "MindLab Fitness";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to scan supplement labels and food items";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthTracker needs access to read your health data to track your fitness progress.";
@@ -350,9 +534,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindlabs.healthtracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -485,11 +670,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 8987ZQZ4V6;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = MMT.HealthTrackerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -504,11 +689,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 8987ZQZ4V6;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = MMT.HealthTrackerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -522,10 +707,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 8987ZQZ4V6;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = MMT.HealthTrackerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -539,16 +724,168 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 8987ZQZ4V6;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = MMT.HealthTrackerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = HealthTracker;
+			};
+			name = Release;
+		};
+		46E246152F118840009020E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 7;
+				DEVELOPMENT_TEAM = 69QZW8NWFJ;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "HealthTracker Watch App";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.mindlabs.healthtracker;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mindlabs.healthtracker.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.6;
+			};
+			name = Debug;
+		};
+		46E246162F118840009020E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 7;
+				DEVELOPMENT_TEAM = 69QZW8NWFJ;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "HealthTracker Watch App";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.mindlabs.healthtracker;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mindlabs.healthtracker.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.6;
+			};
+			name = Release;
+		};
+		46E246172F118840009020E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mindlabs.healthtracker.watchkitapp.HealthTracker-Watch-App-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HealthTracker Watch App Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HealthTracker Watch App Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.1;
+			};
+			name = Debug;
+		};
+		46E246182F118840009020E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mindlabs.healthtracker.watchkitapp.HealthTracker-Watch-App-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HealthTracker Watch App Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HealthTracker Watch App Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.1;
+			};
+			name = Release;
+		};
+		46E246192F118840009020E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mindlabs.healthtracker.watchkitapp.HealthTracker-Watch-App-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "HealthTracker Watch App Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.1;
+			};
+			name = Debug;
+		};
+		46E2461A2F118840009020E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mindlabs.healthtracker.watchkitapp.HealthTracker-Watch-App-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "HealthTracker Watch App Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.1;
 			};
 			name = Release;
 		};
@@ -587,6 +924,33 @@
 			buildConfigurations = (
 				462395E92E2B57A6009E7459 /* Debug */,
 				462395EA2E2B57A6009E7459 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		46E2461B2F118840009020E2 /* Build configuration list for PBXNativeTarget "HealthTracker Watch App Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46E246152F118840009020E2 /* Debug */,
+				46E246162F118840009020E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		46E2461C2F118840009020E2 /* Build configuration list for PBXNativeTarget "HealthTracker Watch App Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46E246172F118840009020E2 /* Debug */,
+				46E246182F118840009020E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		46E2461D2F118840009020E2 /* Build configuration list for PBXNativeTarget "HealthTracker Watch App Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46E246192F118840009020E2 /* Debug */,
+				46E2461A2F118840009020E2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

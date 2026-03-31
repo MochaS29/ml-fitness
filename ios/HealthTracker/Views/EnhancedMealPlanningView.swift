@@ -136,7 +136,7 @@ struct EmptyPlanBanner: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Select a Meal Plan")
                         .font(.headline)
-                    Text("Choose from 5 different diet types")
+                    Text("Choose from 8 different diet types")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -157,6 +157,8 @@ struct EmptyPlanBanner: View {
 struct TodaysMealView: View {
     @ObservedObject var manager: MealPlanManager
     @Binding var showingMealDetail: Meal?
+    @StateObject private var dataManager = UnifiedDataManager.shared
+    @State private var showingAddedAllAlert = false
 
     private var todaysMeals: DailyMealPlan? {
         guard let weekPlan = manager.getCurrentWeekPlan() else { return nil }
@@ -196,6 +198,21 @@ struct TodaysMealView: View {
                     }
                     .padding(.horizontal)
 
+                    // Add All to Diary button
+                    Button(action: { addAllToDiary(meals) }) {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Add All to Diary")
+                                .fontWeight(.medium)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color.wellnessGreen)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                    }
+                    .padding(.horizontal)
+
                     // Meal cards
                     MealCard(meal: meals.breakfast, mealType: "Breakfast", icon: "sunrise.fill", color: .orange) {
                         showingMealDetail = meals.breakfast
@@ -231,6 +248,36 @@ struct TodaysMealView: View {
                     .padding()
             }
         }
+        .alert("Added to Diary", isPresented: $showingAddedAllAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("All meals for today have been added to your food diary.")
+        }
+    }
+
+    private func addAllToDiary(_ day: DailyMealPlan) {
+        addMealEntry(day.breakfast, type: .breakfast)
+        addMealEntry(day.lunch, type: .lunch)
+        addMealEntry(day.dinner, type: .dinner)
+        for snack in day.snacks {
+            addMealEntry(snack, type: .snack)
+        }
+        showingAddedAllAlert = true
+    }
+
+    private func addMealEntry(_ meal: Meal, type: MealType) {
+        dataManager.addFoodEntry(
+            name: meal.name,
+            calories: Double(meal.calories),
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            fiber: 0,
+            sugar: 0,
+            sodium: 0,
+            servingSize: "1 serving",
+            mealType: type
+        )
     }
 }
 
@@ -455,7 +502,14 @@ struct NutritionBadge: View {
 // MARK: - Weekly View
 struct WeeklyMealView: View {
     @ObservedObject var manager: MealPlanManager
+    @EnvironmentObject var storeManager: StoreManager
     @Binding var showingMealDetail: Meal?
+    @State private var showingPaywall = false
+
+    /// Free users can only view week 1
+    private var isWeekLocked: Bool {
+        !storeManager.isPro && manager.currentWeek > 1
+    }
 
     var body: some View {
         ScrollView {
@@ -475,8 +529,15 @@ struct WeeklyMealView: View {
 
                         Spacer()
 
-                        Text("Week \(manager.currentWeek)")
-                            .font(.headline)
+                        HStack(spacing: 6) {
+                            Text("Week \(manager.currentWeek)")
+                                .font(.headline)
+                            if isWeekLocked {
+                                Image(systemName: "lock.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
 
                         Spacer()
 
@@ -492,13 +553,41 @@ struct WeeklyMealView: View {
                     }
                     .padding()
 
-                    ForEach(weekPlan.days) { day in
-                        DayMealSummaryCard(day: day) { meal in
-                            showingMealDetail = meal
+                    if isWeekLocked {
+                        // Show locked overlay for weeks 2-4 for free users
+                        VStack(spacing: 16) {
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 40))
+                                .foregroundColor(.secondary)
+                            Text("Week \(manager.currentWeek) requires Pro")
+                                .font(.headline)
+                            Text("Upgrade to access all weekly meal plans.")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Button(action: { showingPaywall = true }) {
+                                Text("Upgrade to Pro")
+                                    .fontWeight(.semibold)
+                                    .padding(.horizontal, 24)
+                                    .padding(.vertical, 10)
+                                    .background(Color.wellnessGreen)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(12)
+                            }
+                        }
+                        .padding(.vertical, 40)
+                    } else {
+                        ForEach(weekPlan.days) { day in
+                            DayMealSummaryCard(day: day) { meal in
+                                showingMealDetail = meal
+                            }
                         }
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+                .environmentObject(storeManager)
         }
     }
 }
@@ -507,6 +596,8 @@ struct DayMealSummaryCard: View {
     let day: DailyMealPlan
     let onMealTap: (Meal) -> Void
     @State private var isExpanded = false
+    @StateObject private var dataManager = UnifiedDataManager.shared
+    @State private var showingAddedAlert = false
 
     var totalCalories: Int {
         day.breakfast.calories + day.lunch.calories + day.dinner.calories +
@@ -527,6 +618,20 @@ struct DayMealSummaryCard: View {
                     }
 
                     Spacer()
+
+                    Button(action: { addDayToDiary() }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Add Day")
+                        }
+                        .font(.caption)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.wellnessGreen)
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                    }
+                    .buttonStyle(PlainButtonStyle())
 
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                         .foregroundColor(.secondary)
@@ -556,6 +661,48 @@ struct DayMealSummaryCard: View {
         }
         .cornerRadius(12)
         .padding(.horizontal)
+        .alert("Added to Diary", isPresented: $showingAddedAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("All meals for \(day.dayName) have been added to your food diary.")
+        }
+    }
+
+    private func addDayToDiary() {
+        let targetDate = dateForDayName(day.dayName)
+        addMealEntry(day.breakfast, type: .breakfast, on: targetDate)
+        addMealEntry(day.lunch, type: .lunch, on: targetDate)
+        addMealEntry(day.dinner, type: .dinner, on: targetDate)
+        for snack in day.snacks {
+            addMealEntry(snack, type: .snack, on: targetDate)
+        }
+        showingAddedAlert = true
+    }
+
+    private func addMealEntry(_ meal: Meal, type: MealType, on date: Date) {
+        dataManager.addFoodEntry(
+            name: meal.name,
+            calories: Double(meal.calories),
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            fiber: 0,
+            sugar: 0,
+            sodium: 0,
+            servingSize: "1 serving",
+            mealType: type,
+            date: date
+        )
+    }
+
+    private func dateForDayName(_ name: String) -> Date {
+        let calendar = Calendar.current
+        let today = Date()
+        let weekday = calendar.component(.weekday, from: today)
+        let dayMap = ["Monday": 2, "Tuesday": 3, "Wednesday": 4, "Thursday": 5, "Friday": 6, "Saturday": 7, "Sunday": 1]
+        let targetWeekday = dayMap[name] ?? weekday
+        let diff = targetWeekday - weekday
+        return calendar.date(byAdding: .day, value: diff, to: today) ?? today
     }
 }
 
@@ -1524,18 +1671,58 @@ struct WeekOverviewCard: View {
 // MARK: - Meal Plan Selector
 struct MealPlanSelectorView: View {
     @ObservedObject var manager: MealPlanManager
+    @EnvironmentObject var storeManager: StoreManager
     @Environment(\.dismiss) private var dismiss
+    @State private var showingPaywall = false
 
     private let planData = MealPlanData.shared
+
+    /// Free users can only access Mediterranean
+    private func isPlanFree(_ plan: MealPlanType) -> Bool {
+        plan.id == "mediterranean"
+    }
 
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 16) {
+                    if !storeManager.isPro {
+                        HStack {
+                            Image(systemName: "info.circle")
+                                .foregroundColor(.mindfulTeal)
+                            Text("Free plan: Mediterranean. Upgrade to Pro for all diets.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding()
+                        .background(Color(UIColor.secondarySystemGroupedBackground))
+                        .cornerRadius(10)
+                    }
+
                     ForEach(planData.allMealPlans) { plan in
-                        PlanTypeCard(plan: plan, isSelected: manager.selectedPlanType?.id == plan.id) {
-                            manager.selectPlan(plan.id)
-                            dismiss()
+                        if storeManager.isPro || isPlanFree(plan) {
+                            PlanTypeCard(plan: plan, isSelected: manager.selectedPlanType?.id == plan.id) {
+                                manager.selectPlan(plan.id)
+                                dismiss()
+                            }
+                        } else {
+                            // Locked plan card
+                            PlanTypeCard(plan: plan, isSelected: false) {
+                                showingPaywall = true
+                            }
+                            .overlay(
+                                ZStack {
+                                    Color(UIColor.systemBackground).opacity(0.6)
+                                    HStack {
+                                        Image(systemName: "lock.fill")
+                                        Text("Pro")
+                                            .fontWeight(.semibold)
+                                    }
+                                    .foregroundColor(.secondary)
+                                }
+                                .cornerRadius(12)
+                                .allowsHitTesting(false)
+                            )
                         }
                     }
                 }
@@ -1547,6 +1734,10 @@ struct MealPlanSelectorView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Cancel") { dismiss() }
                 }
+            }
+            .sheet(isPresented: $showingPaywall) {
+                PaywallView()
+                    .environmentObject(storeManager)
             }
         }
     }
@@ -1908,7 +2099,7 @@ struct NoPlanSelectedView: View {
                 .font(.title2)
                 .fontWeight(.semibold)
 
-            Text("Choose from 5 different diet types with full monthly menus")
+            Text("Choose from 8 different diet types with full monthly menus")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

@@ -186,9 +186,9 @@ struct BarcodeCameraView: UIViewControllerRepresentable {
 // MARK: - Barcode Scanner View Controller
 
 class SupplementBarcodeScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
-    var scanner: BarcodeScanner?
-    var captureSession: AVCaptureSession!
-    var previewLayer: AVCaptureVideoPreviewLayer!
+    weak var scanner: BarcodeScanner?
+    var captureSession: AVCaptureSession?
+    var previewLayer: AVCaptureVideoPreviewLayer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -199,7 +199,7 @@ class SupplementBarcodeScannerViewController: UIViewController, AVCaptureMetadat
         super.viewWillAppear(animated)
         if captureSession?.isRunning == false {
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                self?.captureSession.startRunning()
+                self?.captureSession?.startRunning()
             }
         }
     }
@@ -207,7 +207,7 @@ class SupplementBarcodeScannerViewController: UIViewController, AVCaptureMetadat
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if captureSession?.isRunning == true {
-            captureSession.stopRunning()
+            captureSession?.stopRunning()
         }
     }
 
@@ -223,7 +223,7 @@ class SupplementBarcodeScannerViewController: UIViewController, AVCaptureMetadat
             return
         }
 
-        if captureSession.canAddInput(videoInput) {
+        if let captureSession = captureSession, captureSession.canAddInput(videoInput) {
             captureSession.addInput(videoInput)
         } else {
             return
@@ -231,7 +231,7 @@ class SupplementBarcodeScannerViewController: UIViewController, AVCaptureMetadat
 
         let metadataOutput = AVCaptureMetadataOutput()
 
-        if captureSession.canAddOutput(metadataOutput) {
+        if let captureSession = captureSession, captureSession.canAddOutput(metadataOutput) {
             captureSession.addOutput(metadataOutput)
 
             metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
@@ -240,15 +240,19 @@ class SupplementBarcodeScannerViewController: UIViewController, AVCaptureMetadat
             return
         }
 
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.frame = view.layer.bounds
-        previewLayer.videoGravity = .resizeAspectFill
-        view.layer.addSublayer(previewLayer)
+        if let captureSession = captureSession {
+            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+            previewLayer?.frame = view.layer.bounds
+            previewLayer?.videoGravity = .resizeAspectFill
+            if let previewLayer = previewLayer {
+                view.layer.addSublayer(previewLayer)
+            }
+        }
 
         scanner?.captureSession = captureSession
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            self?.captureSession.startRunning()
+            self?.captureSession?.startRunning()
         }
     }
 
@@ -262,6 +266,22 @@ class SupplementBarcodeScannerViewController: UIViewController, AVCaptureMetadat
 
             scanner?.lastScannedCode = stringValue
         }
+    }
+    
+    deinit {
+        captureSession?.stopRunning()
+        
+        // Remove all inputs and outputs
+        captureSession?.inputs.forEach { input in
+            captureSession?.removeInput(input)
+        }
+        captureSession?.outputs.forEach { output in
+            captureSession?.removeOutput(output)
+        }
+        
+        previewLayer?.removeFromSuperlayer()
+        previewLayer = nil
+        captureSession = nil
     }
 }
 
@@ -297,20 +317,33 @@ struct SupplementDetailsView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     // Product Image
                     if let imageURL = supplement.imageURL, let url = URL(string: imageURL) {
-                        AsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                        } placeholder: {
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Color.gray.opacity(0.2))
-                                .overlay(
-                                    Image(systemName: "photo")
-                                        .font(.largeTitle)
-                                        .foregroundColor(.gray)
-                                )
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(maxHeight: 200)
+                            case .failure(_):
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(height: 200)
+                                    .overlay(
+                                        Image(systemName: "photo.fill")
+                                            .font(.largeTitle)
+                                            .foregroundColor(.gray)
+                                    )
+                            case .empty:
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(height: 200)
+                                    .overlay(
+                                        ProgressView()
+                                    )
+                            @unknown default:
+                                EmptyView()
+                            }
                         }
-                        .frame(maxHeight: 200)
                         .cornerRadius(8)
                     }
 

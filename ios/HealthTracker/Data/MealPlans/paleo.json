@@ -1,0 +1,1681 @@
+{
+  "dietType": "paleo",
+  "displayName": "Paleo",
+  "description": "Ancestral eating pattern focusing on whole, unprocessed foods — meats, fish, vegetables, fruits, nuts, and seeds",
+  "benefits": [
+    "Reduced inflammation",
+    "Improved blood sugar control",
+    "Weight loss support",
+    "Increased energy",
+    "Better digestion",
+    "Clearer skin"
+  ],
+  "restrictions": [
+    "No grains or legumes",
+    "No dairy products",
+    "No processed foods",
+    "No refined sugar",
+    "No artificial ingredients",
+    "No seed oils"
+  ],
+  "meals": {
+    "paleo_sweet_potato_hash": {
+      "name": "Sweet Potato Breakfast Hash",
+      "description": "Hearty skillet hash with diced sweet potatoes, ground pork, bell peppers, and fresh herbs",
+      "calories": 445,
+      "protein": 28.0,
+      "carbs": 34.0,
+      "fat": 22.0,
+      "fiber": 5.5,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "1 medium sweet potato, peeled and diced (150g)",
+        "5 oz ground pork",
+        "1/2 red bell pepper, diced",
+        "1/4 yellow onion, diced",
+        "1 tbsp avocado oil",
+        "1/2 tsp smoked paprika",
+        "1/4 tsp garlic powder",
+        "2 tbsp fresh parsley, chopped",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Heat avocado oil in a large cast iron skillet over medium-high heat.",
+        "Add diced sweet potato and cook for 8-10 minutes, stirring occasionally, until fork-tender and lightly browned.",
+        "Push sweet potatoes to the side and add ground pork, breaking it apart. Cook for 5 minutes until no longer pink.",
+        "Add bell pepper, onion, paprika, and garlic powder. Cook for 3-4 minutes until vegetables soften.",
+        "Season with salt and pepper, toss everything together, and garnish with fresh parsley."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "breakfast"]
+    },
+    "paleo_veggie_egg_scramble": {
+      "name": "Veggie-Loaded Egg Scramble",
+      "description": "Fluffy scrambled eggs packed with spinach, mushrooms, tomatoes, and fresh basil",
+      "calories": 365,
+      "protein": 24.0,
+      "carbs": 8.0,
+      "fat": 27.0,
+      "fiber": 2.5,
+      "prepTime": 5,
+      "cookTime": 8,
+      "ingredients": [
+        "3 large eggs",
+        "1 cup fresh spinach",
+        "4 white mushrooms, sliced",
+        "1/2 roma tomato, diced",
+        "1 tbsp ghee",
+        "5 fresh basil leaves, torn",
+        "1/4 tsp onion powder",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Melt ghee in a non-stick skillet over medium heat.",
+        "Add sliced mushrooms and cook for 3 minutes until they release their moisture and turn golden.",
+        "Add spinach and diced tomato, stirring until spinach wilts, about 1 minute.",
+        "Whisk eggs with onion powder, salt, and pepper. Pour into the skillet and gently scramble with a spatula for 2-3 minutes until just set.",
+        "Remove from heat, top with torn basil, and serve immediately."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "breakfast", "quick"]
+    },
+    "paleo_banana_pancakes": {
+      "name": "Banana Egg Pancakes",
+      "description": "Simple two-ingredient pancakes made with ripe bananas and eggs, topped with fresh berries and walnuts",
+      "calories": 390,
+      "protein": 18.0,
+      "carbs": 38.0,
+      "fat": 19.0,
+      "fiber": 5.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "2 ripe bananas (200g)",
+        "3 large eggs",
+        "1 tbsp coconut oil",
+        "1/4 cup fresh blueberries",
+        "2 tbsp chopped walnuts",
+        "1/2 tsp cinnamon",
+        "Pinch of sea salt"
+      ],
+      "instructions": [
+        "Mash bananas in a bowl until smooth. Whisk in eggs, cinnamon, and sea salt until well combined.",
+        "Heat coconut oil in a non-stick skillet over medium-low heat.",
+        "Pour batter in 3-inch rounds (about 2 tbsp each). Cook for 2 minutes until edges set and small bubbles form.",
+        "Flip gently and cook another 1-2 minutes until golden brown.",
+        "Stack pancakes and top with blueberries and chopped walnuts."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "breakfast"]
+    },
+    "paleo_avocado_bacon_eggs": {
+      "name": "Avocado Bacon and Eggs",
+      "description": "Crispy bacon strips alongside perfectly fried eggs served on a bed of sliced avocado",
+      "calories": 510,
+      "protein": 26.0,
+      "carbs": 9.0,
+      "fat": 42.0,
+      "fiber": 7.0,
+      "prepTime": 3,
+      "cookTime": 12,
+      "ingredients": [
+        "3 strips uncured bacon (sugar-free)",
+        "2 large eggs",
+        "1 medium avocado, sliced",
+        "1 tsp coconut oil",
+        "1/4 tsp everything bagel seasoning (no seed oils)",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Place bacon strips in a cold skillet and cook over medium heat for 8-10 minutes, flipping halfway, until crispy. Transfer to a paper towel-lined plate.",
+        "Pour off most of the bacon fat and add coconut oil to the skillet. Crack eggs into the pan and fry for 3-4 minutes until whites are set.",
+        "Arrange avocado slices on a plate, top with fried eggs and bacon strips.",
+        "Season with everything bagel seasoning, salt, and pepper."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "breakfast", "high-fat", "quick"]
+    },
+    "paleo_sausage_frittata": {
+      "name": "Sausage and Pepper Frittata",
+      "description": "Oven-baked frittata loaded with Italian sausage, roasted peppers, onions, and fresh oregano",
+      "calories": 420,
+      "protein": 30.0,
+      "carbs": 10.0,
+      "fat": 29.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "6 oz Italian pork sausage (sugar-free, no additives)",
+        "5 large eggs",
+        "1/2 red bell pepper, sliced",
+        "1/2 green bell pepper, sliced",
+        "1/4 red onion, sliced",
+        "1 tbsp avocado oil",
+        "1 tsp dried oregano",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Heat avocado oil in an oven-safe skillet over medium heat.",
+        "Remove sausage from casing and cook, crumbling with a spoon, for 5 minutes until browned. Add bell peppers and onion, cooking 3 more minutes.",
+        "Whisk eggs with oregano, salt, and pepper. Pour over the sausage and vegetables, gently tilting the pan to distribute evenly.",
+        "Transfer skillet to the oven and bake for 12-15 minutes until eggs are fully set and the top is lightly golden.",
+        "Let cool for 2 minutes, slice into wedges, and serve. Yields 2 servings."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "breakfast", "meal-prep"]
+    },
+    "paleo_coconut_chia_pudding": {
+      "name": "Coconut Chia Pudding",
+      "description": "Creamy overnight chia pudding made with full-fat coconut milk, topped with mango and toasted coconut flakes",
+      "calories": 350,
+      "protein": 8.0,
+      "carbs": 28.0,
+      "fat": 24.0,
+      "fiber": 10.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "3 tbsp chia seeds",
+        "3/4 cup full-fat coconut milk",
+        "1/4 cup water",
+        "1/2 cup diced mango",
+        "1 tbsp unsweetened toasted coconut flakes",
+        "1/2 tsp vanilla extract",
+        "Pinch of sea salt"
+      ],
+      "instructions": [
+        "In a jar or bowl, whisk together chia seeds, coconut milk, water, vanilla extract, and sea salt.",
+        "Cover and refrigerate for at least 4 hours or overnight, stirring once after the first 30 minutes to prevent clumping.",
+        "When ready to serve, stir the pudding and add a splash of coconut milk if too thick.",
+        "Top with diced mango and toasted coconut flakes."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "breakfast", "no-cook", "meal-prep"]
+    },
+    "paleo_smoked_salmon_plate": {
+      "name": "Smoked Salmon Breakfast Plate",
+      "description": "Wild-caught smoked salmon served with sliced cucumber, capers, red onion, and avocado",
+      "calories": 380,
+      "protein": 28.0,
+      "carbs": 11.0,
+      "fat": 26.0,
+      "fiber": 6.0,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "4 oz wild-caught smoked salmon",
+        "1/2 medium avocado, sliced",
+        "1/2 English cucumber, sliced",
+        "2 tbsp capers, drained",
+        "2 thin slices red onion",
+        "1 tbsp extra virgin olive oil",
+        "1 tsp fresh lemon juice",
+        "Fresh dill sprigs"
+      ],
+      "instructions": [
+        "Arrange smoked salmon on one side of a plate.",
+        "Fan avocado slices and cucumber slices alongside the salmon.",
+        "Scatter capers and red onion rings over the plate.",
+        "Drizzle with olive oil and lemon juice, then garnish with fresh dill."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "breakfast", "no-cook", "omega-3"]
+    },
+    "paleo_turkey_breakfast_muffins": {
+      "name": "Turkey Sausage Egg Muffins",
+      "description": "Portable egg muffins baked with ground turkey, sun-dried tomatoes, and fresh spinach",
+      "calories": 310,
+      "protein": 26.0,
+      "carbs": 6.0,
+      "fat": 20.0,
+      "fiber": 1.5,
+      "prepTime": 10,
+      "cookTime": 22,
+      "ingredients": [
+        "6 large eggs",
+        "6 oz ground turkey",
+        "1 cup fresh spinach, chopped",
+        "3 tbsp sun-dried tomatoes (oil-packed), chopped",
+        "1/4 tsp garlic powder",
+        "1/2 tsp Italian seasoning",
+        "Coconut oil spray for greasing",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 350°F. Grease a 6-cup muffin tin with coconut oil spray.",
+        "In a skillet over medium heat, brown the ground turkey for 5 minutes, breaking it into small pieces. Season with garlic powder and Italian seasoning.",
+        "Divide cooked turkey, chopped spinach, and sun-dried tomatoes evenly among the muffin cups.",
+        "Whisk eggs with salt and pepper, then pour evenly into each cup, filling about 3/4 full.",
+        "Bake for 18-20 minutes until eggs are set and tops are lightly golden. Cool 2 minutes before removing. Yields 6 muffins (3 per serving)."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "breakfast", "meal-prep", "portable"]
+    },
+    "paleo_plantain_egg_bowl": {
+      "name": "Fried Plantain Egg Bowl",
+      "description": "Pan-fried sweet plantains with scrambled eggs, black olives, and a drizzle of chimichurri",
+      "calories": 435,
+      "protein": 20.0,
+      "carbs": 40.0,
+      "fat": 23.0,
+      "fiber": 3.5,
+      "prepTime": 8,
+      "cookTime": 12,
+      "ingredients": [
+        "1 ripe plantain, peeled and sliced on the bias",
+        "3 large eggs",
+        "2 tbsp coconut oil",
+        "6 black olives, sliced",
+        "1 tbsp chimichurri sauce",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Heat 1 tbsp coconut oil in a skillet over medium heat. Add plantain slices and fry 2-3 minutes per side until golden and caramelized. Transfer to a plate.",
+        "Add remaining coconut oil to the skillet. Scramble eggs over medium-low heat for 2-3 minutes until just set.",
+        "Arrange fried plantains and scrambled eggs in a bowl. Top with sliced olives.",
+        "Drizzle chimichurri over the top and sprinkle with salt."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "breakfast"]
+    },
+    "paleo_berry_smoothie_bowl": {
+      "name": "Mixed Berry Smoothie Bowl",
+      "description": "Thick blended bowl of mixed berries and coconut cream, topped with sliced almonds, hemp seeds, and fresh fruit",
+      "calories": 375,
+      "protein": 12.0,
+      "carbs": 36.0,
+      "fat": 22.0,
+      "fiber": 9.0,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "1 cup frozen mixed berries (strawberries, blueberries, raspberries)",
+        "1/2 frozen banana",
+        "1/4 cup coconut cream",
+        "2 tbsp almond butter",
+        "1 tbsp hemp seeds",
+        "2 tbsp sliced almonds",
+        "1/4 cup fresh strawberries, sliced"
+      ],
+      "instructions": [
+        "Blend frozen mixed berries, frozen banana, coconut cream, and 2 tbsp water in a high-speed blender until thick and smooth. The consistency should be thicker than a smoothie.",
+        "Pour into a bowl and smooth the top with a spoon.",
+        "Top with almond butter, sliced almonds, hemp seeds, and fresh strawberry slices.",
+        "Serve immediately before it melts."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "breakfast", "no-cook", "vegan"]
+    },
+    "paleo_zucchini_hash_browns": {
+      "name": "Zucchini Hash Browns with Eggs",
+      "description": "Crispy shredded zucchini patties pan-fried in ghee, served with two sunny-side-up eggs",
+      "calories": 385,
+      "protein": 22.0,
+      "carbs": 12.0,
+      "fat": 28.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "2 medium zucchini, shredded (about 2 cups)",
+        "2 large eggs",
+        "1 tbsp tapioca starch",
+        "2 tbsp ghee",
+        "1/4 tsp garlic powder",
+        "1/4 tsp onion powder",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Place shredded zucchini in a clean kitchen towel and squeeze out as much moisture as possible.",
+        "Toss zucchini with tapioca starch, garlic powder, onion powder, salt, and pepper. Form into 4 small patties.",
+        "Heat 1 tbsp ghee in a skillet over medium-high heat. Cook patties 3-4 minutes per side until crispy and golden.",
+        "In a separate pan, heat remaining ghee and fry eggs sunny-side-up for 3 minutes.",
+        "Plate hash brown patties topped with the eggs. Season with additional salt and pepper."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "breakfast", "low-carb"]
+    },
+    "paleo_pork_apple_patties": {
+      "name": "Pork and Apple Breakfast Patties",
+      "description": "Savory-sweet breakfast sausage patties made with ground pork, grated apple, sage, and a touch of maple",
+      "calories": 340,
+      "protein": 24.0,
+      "carbs": 12.0,
+      "fat": 22.0,
+      "fiber": 1.5,
+      "prepTime": 10,
+      "cookTime": 10,
+      "ingredients": [
+        "8 oz ground pork",
+        "1/2 Granny Smith apple, peeled and finely grated",
+        "1 tsp dried sage",
+        "1/2 tsp ground cinnamon",
+        "1/4 tsp ground nutmeg",
+        "1 tbsp coconut oil",
+        "1/2 tsp sea salt",
+        "1/4 tsp black pepper"
+      ],
+      "instructions": [
+        "In a bowl, combine ground pork, grated apple, sage, cinnamon, nutmeg, salt, and pepper. Mix gently until just combined.",
+        "Form mixture into 4 patties, about 1/2 inch thick.",
+        "Heat coconut oil in a skillet over medium heat. Cook patties for 4-5 minutes per side until golden brown and cooked through (internal temp 160°F).",
+        "Rest for 1 minute before serving. Pair with fresh fruit or a side of greens."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "breakfast", "meal-prep"]
+    },
+    "paleo_grilled_chicken_salad": {
+      "name": "Grilled Chicken Power Salad",
+      "description": "Herb-marinated grilled chicken over mixed greens with avocado, cherry tomatoes, pecans, and lemon vinaigrette",
+      "calories": 485,
+      "protein": 38.0,
+      "carbs": 14.0,
+      "fat": 32.0,
+      "fiber": 7.0,
+      "prepTime": 15,
+      "cookTime": 14,
+      "ingredients": [
+        "6 oz boneless skinless chicken breast",
+        "4 cups mixed greens",
+        "1/2 avocado, diced",
+        "8 cherry tomatoes, halved",
+        "2 tbsp chopped pecans",
+        "1 tbsp extra virgin olive oil",
+        "1 tbsp avocado oil",
+        "1 tbsp fresh lemon juice",
+        "1 tsp dried Italian herbs",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Marinate chicken breast with avocado oil, Italian herbs, salt, and pepper for at least 10 minutes.",
+        "Grill chicken over medium-high heat for 6-7 minutes per side until internal temperature reaches 165°F. Let rest 5 minutes, then slice.",
+        "Arrange mixed greens on a plate. Top with sliced chicken, diced avocado, cherry tomatoes, and pecans.",
+        "Whisk olive oil and lemon juice together with a pinch of salt. Drizzle over the salad."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch", "high-protein"]
+    },
+    "paleo_tuna_stuffed_avocado": {
+      "name": "Tuna-Stuffed Avocados",
+      "description": "Ripe avocado halves filled with wild-caught tuna mixed with celery, red onion, and a tangy lemon-olive oil dressing",
+      "calories": 430,
+      "protein": 30.0,
+      "carbs": 12.0,
+      "fat": 30.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 can (5 oz) wild-caught albacore tuna, drained",
+        "1 large avocado, halved and pitted",
+        "1 celery stalk, finely diced",
+        "2 tbsp red onion, finely diced",
+        "1 tbsp extra virgin olive oil",
+        "1 tbsp fresh lemon juice",
+        "1 tsp Dijon mustard",
+        "Salt and black pepper to taste",
+        "Paprika for garnish"
+      ],
+      "instructions": [
+        "In a bowl, flake the drained tuna with a fork. Add diced celery and red onion.",
+        "Whisk together olive oil, lemon juice, and Dijon mustard. Pour over tuna mixture and toss to combine.",
+        "Season with salt and pepper. Spoon the tuna salad into each avocado half.",
+        "Sprinkle with paprika and serve immediately."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch", "no-cook", "omega-3"]
+    },
+    "paleo_lettuce_wrap_burgers": {
+      "name": "Lettuce Wrap Burgers",
+      "description": "Juicy grass-fed beef patties wrapped in crisp butter lettuce with tomato, pickles, and special sauce",
+      "calories": 520,
+      "protein": 36.0,
+      "carbs": 10.0,
+      "fat": 38.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 10,
+      "ingredients": [
+        "6 oz grass-fed ground beef (85/15)",
+        "4 large butter lettuce leaves",
+        "2 slices tomato",
+        "4 dill pickle slices",
+        "1/4 red onion, sliced into rings",
+        "2 tbsp paleo mayo (avocado oil based)",
+        "1 tsp yellow mustard",
+        "1/2 tsp garlic powder",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Season ground beef with garlic powder, salt, and pepper. Form into 2 patties about 3/4 inch thick.",
+        "Cook patties in a skillet over medium-high heat for 4-5 minutes per side for medium doneness.",
+        "Mix paleo mayo and mustard together for the special sauce.",
+        "Stack two lettuce leaves for each burger. Place a patty on each, top with tomato, pickles, onion rings, and special sauce.",
+        "Wrap lettuce around the burger and secure with a toothpick if needed."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch", "high-protein"]
+    },
+    "paleo_shrimp_cauliflower_rice": {
+      "name": "Garlic Shrimp Cauliflower Rice Bowl",
+      "description": "Sauteed garlic shrimp served over seasoned cauliflower rice with snap peas, carrots, and coconut aminos",
+      "calories": 360,
+      "protein": 32.0,
+      "carbs": 18.0,
+      "fat": 18.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "6 oz large shrimp, peeled and deveined",
+        "2 cups riced cauliflower",
+        "1/2 cup sugar snap peas, trimmed",
+        "1 medium carrot, julienned",
+        "3 cloves garlic, minced",
+        "2 tbsp coconut aminos",
+        "1 tbsp avocado oil",
+        "1 tsp sesame oil (cold-pressed)",
+        "1/2 tsp ground ginger",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Heat avocado oil in a large skillet or wok over high heat. Add shrimp and cook 2 minutes per side until pink. Remove and set aside.",
+        "In the same pan, add garlic and ginger. Stir for 30 seconds until fragrant.",
+        "Add cauliflower rice, snap peas, and carrots. Cook for 4-5 minutes, stirring frequently.",
+        "Add coconut aminos and sesame oil. Toss to combine, then return shrimp to the pan.",
+        "Cook another minute to heat through. Season with salt and serve in bowls."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch", "low-carb"]
+    },
+    "paleo_chicken_zoodle_soup": {
+      "name": "Chicken Zoodle Soup",
+      "description": "Comforting chicken soup made with zucchini noodles, carrots, celery, and fresh herbs in a savory bone broth",
+      "calories": 320,
+      "protein": 34.0,
+      "carbs": 14.0,
+      "fat": 14.0,
+      "fiber": 3.5,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "6 oz chicken breast, diced",
+        "2 medium zucchini, spiralized",
+        "2 cups chicken bone broth",
+        "1 large carrot, diced",
+        "2 celery stalks, diced",
+        "1/2 yellow onion, diced",
+        "1 tbsp avocado oil",
+        "1 bay leaf",
+        "1 tsp dried thyme",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Heat avocado oil in a large pot over medium heat. Add diced chicken and cook 5 minutes until browned. Remove and set aside.",
+        "In the same pot, saute onion, carrot, and celery for 4 minutes until softened.",
+        "Pour in bone broth, add bay leaf and thyme. Bring to a boil, then reduce to a simmer for 12 minutes.",
+        "Return chicken to the pot. Add spiralized zucchini noodles and cook for 2-3 minutes until just tender.",
+        "Remove bay leaf, season with salt and pepper, and ladle into bowls."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch", "low-carb", "comfort-food"]
+    },
+    "paleo_thai_chicken_salad": {
+      "name": "Thai Chicken Salad",
+      "description": "Shredded chicken tossed with crunchy cabbage, mango, cilantro, and cashews in a zesty lime-coconut dressing",
+      "calories": 460,
+      "protein": 34.0,
+      "carbs": 22.0,
+      "fat": 26.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 0,
+      "ingredients": [
+        "5 oz cooked chicken breast, shredded",
+        "2 cups napa cabbage, shredded",
+        "1/2 cup red cabbage, shredded",
+        "1/3 cup diced mango",
+        "3 tbsp roasted cashews",
+        "2 tbsp fresh cilantro, chopped",
+        "2 tbsp coconut aminos",
+        "1 tbsp fresh lime juice",
+        "1 tbsp almond butter",
+        "1 tsp sesame oil (cold-pressed)"
+      ],
+      "instructions": [
+        "In a large bowl, combine both cabbages, shredded chicken, mango, and cilantro.",
+        "Whisk together coconut aminos, lime juice, almond butter, and sesame oil until smooth to make the dressing.",
+        "Pour dressing over the salad and toss thoroughly to coat.",
+        "Top with roasted cashews and serve."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "lunch", "no-cook"]
+    },
+    "paleo_steak_sweet_potato_bowl": {
+      "name": "Steak and Sweet Potato Bowl",
+      "description": "Sliced grass-fed sirloin over roasted sweet potato cubes with arugula, pickled onions, and chimichurri",
+      "calories": 530,
+      "protein": 36.0,
+      "carbs": 32.0,
+      "fat": 28.0,
+      "fiber": 5.5,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "6 oz grass-fed sirloin steak",
+        "1 medium sweet potato, cubed (150g)",
+        "2 cups arugula",
+        "2 tbsp chimichurri sauce",
+        "2 tbsp quick-pickled red onion",
+        "1 tbsp avocado oil",
+        "1/2 tsp smoked paprika",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Toss sweet potato cubes with half the avocado oil, smoked paprika, salt, and pepper. Roast for 20-22 minutes until tender and caramelized.",
+        "Season steak with salt and pepper. Heat remaining avocado oil in a skillet over high heat. Sear steak 3-4 minutes per side for medium-rare. Rest 5 minutes, then slice against the grain.",
+        "Arrange arugula in a bowl. Top with roasted sweet potato and sliced steak.",
+        "Drizzle with chimichurri and garnish with pickled red onion."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch", "high-protein"]
+    },
+    "paleo_turkey_collard_wraps": {
+      "name": "Turkey Collard Green Wraps",
+      "description": "Sliced turkey breast rolled in blanched collard greens with avocado, bacon, and sprouts",
+      "calories": 395,
+      "protein": 32.0,
+      "carbs": 10.0,
+      "fat": 26.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 5,
+      "ingredients": [
+        "4 oz sliced deli turkey breast (nitrate-free)",
+        "2 large collard green leaves, stems trimmed",
+        "1/2 avocado, mashed",
+        "2 strips cooked uncured bacon",
+        "1/4 cup broccoli sprouts",
+        "1 tsp Dijon mustard",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Blanch collard leaves in boiling water for 30 seconds, then immediately transfer to ice water. Pat completely dry.",
+        "Lay collard leaves flat. Shave down the thick center stem with a knife so the leaves roll easily.",
+        "Spread mashed avocado and Dijon mustard over each leaf. Layer turkey slices, bacon, and sprouts.",
+        "Roll tightly like a burrito, tucking in the sides. Slice in half diagonally and serve."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch", "low-carb"]
+    },
+    "paleo_blt_sweet_potato_toast": {
+      "name": "BLT Sweet Potato Toast",
+      "description": "Thick slices of roasted sweet potato topped with bacon, lettuce, tomato, and avocado mayo",
+      "calories": 410,
+      "protein": 18.0,
+      "carbs": 30.0,
+      "fat": 26.0,
+      "fiber": 5.5,
+      "prepTime": 5,
+      "cookTime": 25,
+      "ingredients": [
+        "1 large sweet potato, sliced lengthwise into 1/2-inch planks",
+        "3 strips uncured bacon",
+        "2 leaves romaine lettuce",
+        "3 slices tomato",
+        "2 tbsp paleo mayo (avocado oil based)",
+        "1 tbsp avocado oil",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Brush sweet potato planks with avocado oil, season with salt, and bake 20-22 minutes, flipping halfway, until tender with crisp edges.",
+        "Meanwhile, cook bacon in a skillet until crispy. Drain on paper towels.",
+        "Spread paleo mayo on each sweet potato toast.",
+        "Layer lettuce, tomato slices, and bacon on top. Season with pepper and serve open-faced."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch"]
+    },
+    "paleo_salmon_avocado_bowl": {
+      "name": "Salmon Poke-Style Bowl",
+      "description": "Cubed fresh salmon tossed in coconut aminos with cucumber, avocado, pickled ginger, and sesame over cauliflower rice",
+      "calories": 480,
+      "protein": 34.0,
+      "carbs": 16.0,
+      "fat": 32.0,
+      "fiber": 6.0,
+      "prepTime": 15,
+      "cookTime": 5,
+      "ingredients": [
+        "6 oz sushi-grade wild salmon, cubed",
+        "1.5 cups riced cauliflower",
+        "1/2 avocado, sliced",
+        "1/3 cup cucumber, diced",
+        "1 tbsp coconut aminos",
+        "1 tsp sesame oil (cold-pressed)",
+        "1 tsp pickled ginger",
+        "1 tsp sesame seeds",
+        "1/2 tsp avocado oil"
+      ],
+      "instructions": [
+        "Saute cauliflower rice in avocado oil over medium heat for 4-5 minutes until tender. Transfer to a bowl.",
+        "Toss cubed salmon with coconut aminos and sesame oil. Let marinate for 5 minutes.",
+        "Arrange marinated salmon, avocado slices, diced cucumber, and pickled ginger over the cauliflower rice.",
+        "Sprinkle with sesame seeds and serve immediately."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "lunch", "omega-3"]
+    },
+    "paleo_egg_drop_soup": {
+      "name": "Paleo Egg Drop Soup",
+      "description": "Silky bone broth egg drop soup with shiitake mushrooms, bok choy, and green onions",
+      "calories": 220,
+      "protein": 18.0,
+      "carbs": 8.0,
+      "fat": 13.0,
+      "fiber": 1.5,
+      "prepTime": 5,
+      "cookTime": 12,
+      "ingredients": [
+        "3 large eggs",
+        "3 cups chicken bone broth",
+        "4 shiitake mushrooms, sliced",
+        "1 cup bok choy, chopped",
+        "2 green onions, sliced",
+        "1 tsp coconut aminos",
+        "1/2 tsp ground ginger",
+        "1 tsp tapioca starch mixed with 1 tbsp water",
+        "Salt and white pepper to taste"
+      ],
+      "instructions": [
+        "Bring bone broth to a boil in a pot. Add mushrooms, ginger, and coconut aminos. Simmer for 5 minutes.",
+        "Add bok choy and cook 2 minutes until wilted. Stir in the tapioca starch slurry to slightly thicken the broth.",
+        "Beat eggs in a small bowl. While stirring the soup in a circular motion, slowly drizzle in the beaten eggs to form silky ribbons.",
+        "Remove from heat immediately. Season with salt and white pepper, garnish with sliced green onions."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch", "low-calorie", "quick"]
+    },
+    "paleo_mediterranean_plate": {
+      "name": "Mediterranean Lamb Plate",
+      "description": "Seasoned ground lamb over roasted vegetables with olives, fresh mint, and a tahini-lemon drizzle",
+      "calories": 510,
+      "protein": 30.0,
+      "carbs": 18.0,
+      "fat": 36.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "5 oz ground lamb",
+        "1 cup zucchini, sliced into half-moons",
+        "1/2 cup cherry tomatoes, halved",
+        "1/4 cup Kalamata olives, halved",
+        "1 tbsp tahini",
+        "1 tbsp fresh lemon juice",
+        "1 tbsp avocado oil",
+        "1 tsp ground cumin",
+        "1/2 tsp ground coriander",
+        "Fresh mint leaves for garnish"
+      ],
+      "instructions": [
+        "Heat avocado oil in a skillet over medium-high heat. Cook ground lamb with cumin and coriander for 6-7 minutes until browned. Drain any excess fat.",
+        "In the same pan, add zucchini slices and cook 4-5 minutes until tender with slight char. Add cherry tomatoes for the last minute.",
+        "Arrange vegetables on a plate, top with seasoned lamb and olives.",
+        "Whisk tahini with lemon juice and 1 tbsp water. Drizzle over the plate and garnish with fresh mint."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "lunch"]
+    },
+    "paleo_herb_roasted_salmon": {
+      "name": "Herb-Crusted Roasted Salmon",
+      "description": "Wild-caught salmon fillet with a fresh herb crust, served alongside roasted asparagus and lemon wedges",
+      "calories": 480,
+      "protein": 40.0,
+      "carbs": 8.0,
+      "fat": 32.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "6 oz wild-caught salmon fillet",
+        "1 bunch asparagus (about 12 spears), trimmed",
+        "2 tbsp fresh parsley, finely chopped",
+        "1 tbsp fresh dill, finely chopped",
+        "1 clove garlic, minced",
+        "2 tbsp avocado oil",
+        "1 tbsp fresh lemon juice",
+        "Lemon wedges for serving",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Line a baking sheet with parchment paper.",
+        "Mix parsley, dill, garlic, 1 tbsp avocado oil, lemon juice, salt, and pepper into a paste. Press the herb mixture onto the top of the salmon fillet.",
+        "Toss asparagus with remaining avocado oil, salt, and pepper. Arrange around the salmon on the baking sheet.",
+        "Roast for 15-18 minutes until salmon flakes easily and asparagus is tender-crisp.",
+        "Serve with fresh lemon wedges."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "dinner", "omega-3"]
+    },
+    "paleo_chicken_thigh_sweet_potato": {
+      "name": "Crispy Chicken Thighs with Mashed Sweet Potato",
+      "description": "Pan-seared chicken thighs with crispy skin over silky coconut mashed sweet potatoes and sauteed green beans",
+      "calories": 560,
+      "protein": 36.0,
+      "carbs": 34.0,
+      "fat": 30.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "2 bone-in skin-on chicken thighs (about 8 oz total)",
+        "1 large sweet potato, peeled and cubed",
+        "1 cup green beans, trimmed",
+        "2 tbsp coconut milk (full-fat)",
+        "1 tbsp ghee",
+        "1 tbsp avocado oil",
+        "1 tsp garlic powder",
+        "1/2 tsp smoked paprika",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Pat chicken thighs very dry with paper towels. Season generously with garlic powder, smoked paprika, salt, and pepper.",
+        "Heat avocado oil in a cast iron skillet over medium heat. Place chicken skin-side down and cook for 12-15 minutes without moving until skin is deeply golden and crispy. Flip and cook 10 more minutes until cooked through (165°F).",
+        "Meanwhile, boil sweet potato cubes in salted water for 12-15 minutes until fork tender. Drain and mash with coconut milk, half the ghee, salt, and pepper.",
+        "In a separate pan, saute green beans in remaining ghee for 4-5 minutes until bright green and tender-crisp.",
+        "Plate mashed sweet potato, top with chicken thighs, and serve green beans alongside."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "dinner", "comfort-food"]
+    },
+    "paleo_beef_stir_fry": {
+      "name": "Beef and Broccoli Stir-Fry",
+      "description": "Tender strips of flank steak stir-fried with broccoli, bell peppers, and water chestnuts in a savory coconut aminos sauce",
+      "calories": 470,
+      "protein": 38.0,
+      "carbs": 16.0,
+      "fat": 28.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 10,
+      "ingredients": [
+        "6 oz flank steak, sliced thin against the grain",
+        "2 cups broccoli florets",
+        "1/2 red bell pepper, sliced",
+        "1/4 cup sliced water chestnuts",
+        "3 tbsp coconut aminos",
+        "2 cloves garlic, minced",
+        "1 tbsp avocado oil",
+        "1 tsp sesame oil (cold-pressed)",
+        "1/2 tsp ground ginger",
+        "1 tsp tapioca starch"
+      ],
+      "instructions": [
+        "Toss sliced steak with 1 tbsp coconut aminos and tapioca starch. Let sit 10 minutes.",
+        "Heat avocado oil in a wok or large skillet over high heat until smoking. Sear steak strips for 2 minutes until browned. Remove and set aside.",
+        "Add broccoli, bell pepper, and water chestnuts to the wok. Stir-fry for 3-4 minutes. Add garlic and ginger, cooking 30 seconds more.",
+        "Return beef to the wok. Add remaining coconut aminos and sesame oil. Toss everything together for 1 minute.",
+        "Serve immediately over cauliflower rice if desired."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "dinner", "high-protein", "quick"]
+    },
+    "paleo_stuffed_bell_peppers": {
+      "name": "Stuffed Bell Peppers",
+      "description": "Colorful bell peppers filled with seasoned ground beef, cauliflower rice, tomatoes, and fresh herbs, baked until tender",
+      "calories": 450,
+      "protein": 32.0,
+      "carbs": 20.0,
+      "fat": 28.0,
+      "fiber": 5.5,
+      "prepTime": 15,
+      "cookTime": 35,
+      "ingredients": [
+        "2 large bell peppers (any color), halved and seeded",
+        "6 oz grass-fed ground beef",
+        "1 cup riced cauliflower",
+        "1/2 cup diced tomatoes (canned, no sugar added)",
+        "1/4 cup yellow onion, diced",
+        "2 cloves garlic, minced",
+        "1 tbsp avocado oil",
+        "1 tsp ground cumin",
+        "1/2 tsp chili powder",
+        "2 tbsp fresh cilantro, chopped"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Place pepper halves cut-side up in a baking dish.",
+        "Heat avocado oil in a skillet. Cook ground beef and onion for 6 minutes until browned. Add garlic, cumin, and chili powder, cooking 1 more minute.",
+        "Stir in cauliflower rice and diced tomatoes. Cook 3 minutes until cauliflower is tender. Season with salt and pepper.",
+        "Divide the filling among the pepper halves, packing it in generously.",
+        "Cover with foil and bake 25 minutes. Remove foil and bake 5 more minutes. Garnish with cilantro."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "dinner", "meal-prep"]
+    },
+    "paleo_lemon_garlic_shrimp": {
+      "name": "Lemon Garlic Shrimp with Zoodles",
+      "description": "Succulent shrimp sauteed in garlic and lemon butter served over spiralized zucchini noodles with cherry tomatoes",
+      "calories": 380,
+      "protein": 34.0,
+      "carbs": 14.0,
+      "fat": 22.0,
+      "fiber": 3.5,
+      "prepTime": 10,
+      "cookTime": 10,
+      "ingredients": [
+        "8 oz large shrimp, peeled and deveined",
+        "3 medium zucchini, spiralized",
+        "8 cherry tomatoes, halved",
+        "4 cloves garlic, minced",
+        "2 tbsp ghee",
+        "2 tbsp fresh lemon juice",
+        "1 tbsp fresh parsley, chopped",
+        "Red pepper flakes to taste",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Heat 1 tbsp ghee in a large skillet over medium-high heat. Add shrimp in a single layer and cook 2 minutes per side until pink. Remove and set aside.",
+        "Add remaining ghee, garlic, and red pepper flakes. Cook 30 seconds until fragrant.",
+        "Add zucchini noodles and cherry tomatoes. Toss for 2-3 minutes until zoodles are just tender.",
+        "Return shrimp to the pan, squeeze lemon juice over everything, and toss to combine.",
+        "Plate and garnish with fresh parsley."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "dinner", "low-carb", "quick"]
+    },
+    "paleo_pork_chops_applesauce": {
+      "name": "Pan-Seared Pork Chops with Cinnamon Applesauce",
+      "description": "Thick-cut bone-in pork chops seared to golden perfection, served with homemade chunky cinnamon applesauce and roasted Brussels sprouts",
+      "calories": 520,
+      "protein": 38.0,
+      "carbs": 28.0,
+      "fat": 28.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "1 bone-in pork chop (8 oz)",
+        "2 medium apples, peeled, cored, and diced",
+        "2 cups Brussels sprouts, halved",
+        "2 tbsp avocado oil",
+        "1/2 tsp cinnamon",
+        "1/4 tsp nutmeg",
+        "2 tbsp water",
+        "1 tsp dried rosemary",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Toss Brussels sprouts with 1 tbsp avocado oil, salt, and pepper. Roast for 20-25 minutes until crispy.",
+        "Meanwhile, simmer diced apples with water, cinnamon, and nutmeg in a small saucepan over medium-low heat for 15 minutes, mashing lightly with a fork for a chunky sauce.",
+        "Pat pork chop dry and season with rosemary, salt, and pepper. Heat remaining avocado oil in an oven-safe skillet over high heat.",
+        "Sear pork chop 3 minutes per side until golden crust forms. Transfer skillet to oven for 8-10 minutes until internal temp reaches 145°F. Rest 5 minutes.",
+        "Serve pork chop with applesauce and roasted Brussels sprouts."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "dinner"]
+    },
+    "paleo_coconut_curry_chicken": {
+      "name": "Coconut Curry Chicken",
+      "description": "Tender chicken simmered in a rich coconut milk curry with sweet potatoes, spinach, and warming spices",
+      "calories": 510,
+      "protein": 36.0,
+      "carbs": 28.0,
+      "fat": 28.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "6 oz boneless skinless chicken thighs, cubed",
+        "1 cup full-fat coconut milk",
+        "1 small sweet potato, peeled and cubed (120g)",
+        "2 cups fresh spinach",
+        "1/2 yellow onion, diced",
+        "2 cloves garlic, minced",
+        "1 tbsp coconut oil",
+        "1 tbsp curry powder",
+        "1/2 tsp turmeric",
+        "1/2 tsp ground ginger",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Heat coconut oil in a large pot over medium heat. Saute onion for 3 minutes, then add garlic, curry powder, turmeric, and ginger. Stir 1 minute until fragrant.",
+        "Add cubed chicken and cook 4 minutes until lightly browned on all sides.",
+        "Pour in coconut milk and add sweet potato cubes. Bring to a simmer and cook covered for 18-20 minutes until sweet potato is tender and chicken is cooked through.",
+        "Stir in spinach and cook 2 minutes until wilted. Season with salt.",
+        "Serve in bowls, optionally over cauliflower rice."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "dinner", "comfort-food"]
+    },
+    "paleo_balsamic_glazed_steak": {
+      "name": "Balsamic Glazed Steak with Roasted Vegetables",
+      "description": "Grass-fed ribeye steak with a balsamic reduction, accompanied by roasted root vegetables and fresh arugula",
+      "calories": 580,
+      "protein": 40.0,
+      "carbs": 22.0,
+      "fat": 36.0,
+      "fiber": 4.5,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "7 oz grass-fed ribeye steak",
+        "1 medium beet, peeled and cubed",
+        "1 large carrot, cut into chunks",
+        "1/2 cup parsnips, cubed",
+        "3 tbsp balsamic vinegar",
+        "2 tbsp avocado oil",
+        "1 cup arugula",
+        "1 tsp dried thyme",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Toss beet, carrot, and parsnips with 1 tbsp avocado oil, thyme, salt, and pepper. Spread on a baking sheet and roast for 22-25 minutes until tender.",
+        "Simmer balsamic vinegar in a small saucepan over medium heat for 5-6 minutes until reduced by half to a glaze consistency.",
+        "Pat steak dry and season generously. Heat remaining avocado oil in a cast iron skillet over high heat. Sear 4 minutes per side for medium-rare. Rest 5 minutes.",
+        "Slice steak against the grain. Arrange over arugula with roasted vegetables.",
+        "Drizzle balsamic glaze over the steak and vegetables."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "dinner", "high-protein", "date-night"]
+    },
+    "paleo_turkey_meatballs_marinara": {
+      "name": "Turkey Meatballs with Roasted Tomato Marinara",
+      "description": "Baked turkey meatballs in a slow-roasted cherry tomato marinara, served over spaghetti squash",
+      "calories": 440,
+      "protein": 34.0,
+      "carbs": 24.0,
+      "fat": 24.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 35,
+      "ingredients": [
+        "8 oz ground turkey",
+        "1/2 spaghetti squash",
+        "2 cups cherry tomatoes",
+        "3 cloves garlic, minced",
+        "1 tbsp almond flour",
+        "1 large egg",
+        "2 tbsp avocado oil",
+        "1 tsp Italian seasoning",
+        "1/2 tsp onion powder",
+        "2 tbsp fresh basil, torn",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Halve spaghetti squash, scoop seeds, brush with 1/2 tbsp avocado oil, and roast cut-side down for 30-35 minutes until tender.",
+        "Mix ground turkey, egg, almond flour, Italian seasoning, onion powder, salt, and pepper. Form into 12 small meatballs.",
+        "Heat 1 tbsp avocado oil in an oven-safe skillet. Brown meatballs on all sides for 4-5 minutes. Add cherry tomatoes, garlic, and remaining avocado oil around the meatballs.",
+        "Transfer skillet to the oven and bake 15 minutes. Tomatoes will burst and form a sauce. Smash them lightly with a fork.",
+        "Scrape spaghetti squash strands with a fork. Serve meatballs and marinara over the squash, garnished with fresh basil."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "dinner", "meal-prep"]
+    },
+    "paleo_grilled_mahi_tacos": {
+      "name": "Grilled Mahi Mahi Tacos",
+      "description": "Blackened mahi mahi in jicama shell tacos with mango salsa, shredded cabbage, and creamy avocado crema",
+      "calories": 420,
+      "protein": 34.0,
+      "carbs": 26.0,
+      "fat": 20.0,
+      "fiber": 8.0,
+      "prepTime": 15,
+      "cookTime": 10,
+      "ingredients": [
+        "6 oz mahi mahi fillet",
+        "4 round jicama slices (1/4-inch thick, as taco shells)",
+        "1/2 cup shredded purple cabbage",
+        "1/3 cup diced mango",
+        "2 tbsp diced red onion",
+        "1 tbsp fresh cilantro, chopped",
+        "1/2 avocado",
+        "1 tbsp fresh lime juice",
+        "1 tsp blackening seasoning (sugar-free)",
+        "1 tbsp avocado oil"
+      ],
+      "instructions": [
+        "Rub mahi mahi with blackening seasoning and avocado oil. Grill or pan-sear over high heat for 4-5 minutes per side until cooked through and flaky. Break into chunks.",
+        "Make mango salsa by combining diced mango, red onion, cilantro, and half the lime juice.",
+        "Blend avocado with remaining lime juice and 1 tbsp water for the crema.",
+        "Assemble tacos: place jicama rounds on a plate, top each with shredded cabbage, mahi mahi chunks, mango salsa, and a drizzle of avocado crema."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "dinner", "seafood"]
+    },
+    "paleo_slow_cooker_pot_roast": {
+      "name": "Slow Cooker Pot Roast",
+      "description": "Fork-tender grass-fed chuck roast slow-cooked with carrots, parsnips, and onions in an herb-infused bone broth",
+      "calories": 540,
+      "protein": 42.0,
+      "carbs": 22.0,
+      "fat": 30.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 480,
+      "ingredients": [
+        "8 oz grass-fed chuck roast",
+        "2 large carrots, cut into 2-inch pieces",
+        "1 large parsnip, cut into chunks",
+        "1 yellow onion, quartered",
+        "1 cup beef bone broth",
+        "3 cloves garlic, smashed",
+        "2 sprigs fresh rosemary",
+        "2 sprigs fresh thyme",
+        "1 tbsp avocado oil",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Season chuck roast generously with salt and pepper. Heat avocado oil in a skillet over high heat and sear roast 3 minutes per side until deeply browned.",
+        "Place onion quarters, carrots, parsnips, and garlic in the bottom of a slow cooker.",
+        "Set the seared roast on top of the vegetables. Add bone broth, rosemary, and thyme.",
+        "Cook on low for 7-8 hours until the meat is fall-apart tender.",
+        "Remove herb sprigs. Serve roast with vegetables and cooking liquid spooned over the top."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "dinner", "slow-cooker", "meal-prep"]
+    },
+    "paleo_tuscan_chicken": {
+      "name": "Tuscan Chicken with Sun-Dried Tomatoes",
+      "description": "Pan-seared chicken breasts in a creamy coconut milk sauce with sun-dried tomatoes, spinach, and garlic",
+      "calories": 490,
+      "protein": 40.0,
+      "carbs": 12.0,
+      "fat": 32.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "6 oz chicken breast, butterflied",
+        "1/2 cup full-fat coconut milk",
+        "1/4 cup sun-dried tomatoes (oil-packed), drained and sliced",
+        "2 cups fresh spinach",
+        "3 cloves garlic, minced",
+        "1 tbsp avocado oil",
+        "1 tbsp nutritional yeast",
+        "1/2 tsp dried basil",
+        "1/2 tsp dried oregano",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken with salt, pepper, basil, and oregano. Heat avocado oil in a skillet over medium-high heat. Cook chicken 5-6 minutes per side until golden and cooked through (165°F). Remove and set aside.",
+        "In the same skillet, saute garlic for 30 seconds. Add sun-dried tomatoes and cook 1 minute.",
+        "Pour in coconut milk and nutritional yeast, stirring until combined. Simmer 3-4 minutes until slightly thickened.",
+        "Add spinach and stir until wilted. Return chicken to the pan and spoon sauce over it.",
+        "Serve with the creamy Tuscan sauce ladled generously on top."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "dinner", "high-protein"]
+    },
+    "paleo_lamb_burger_patties": {
+      "name": "Herb-Spiced Lamb Burgers with Caramelized Onions",
+      "description": "Seasoned lamb patties topped with sweet caramelized onions, arugula, and a zesty lemon-tahini sauce",
+      "calories": 530,
+      "protein": 32.0,
+      "carbs": 14.0,
+      "fat": 38.0,
+      "fiber": 3.0,
+      "prepTime": 12,
+      "cookTime": 18,
+      "ingredients": [
+        "6 oz ground lamb",
+        "1 large yellow onion, thinly sliced",
+        "1 cup arugula",
+        "1 tbsp tahini",
+        "1 tbsp fresh lemon juice",
+        "1 tbsp avocado oil",
+        "1 tbsp ghee",
+        "1 tsp ground cumin",
+        "1/2 tsp ground coriander",
+        "1/4 tsp cinnamon",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Heat ghee in a skillet over medium-low heat. Add sliced onions with a pinch of salt. Cook slowly for 12-15 minutes, stirring occasionally, until deeply golden and caramelized.",
+        "Meanwhile, mix ground lamb with cumin, coriander, cinnamon, salt, and pepper. Form into 2 patties.",
+        "Heat avocado oil in a separate skillet over medium-high heat. Cook lamb patties 4-5 minutes per side for medium.",
+        "Whisk tahini with lemon juice and 1 tbsp water for the sauce.",
+        "Plate lamb patties on a bed of arugula, top with caramelized onions, and drizzle with lemon-tahini sauce."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "dinner"]
+    },
+    "paleo_sheet_pan_sausage_veggies": {
+      "name": "Sheet Pan Sausage and Vegetables",
+      "description": "Italian sausages roasted alongside sweet potatoes, Brussels sprouts, and red onion with rosemary and garlic",
+      "calories": 500,
+      "protein": 28.0,
+      "carbs": 32.0,
+      "fat": 28.0,
+      "fiber": 6.5,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "2 links Italian pork sausage (sugar-free, about 6 oz)",
+        "1 medium sweet potato, cubed",
+        "1.5 cups Brussels sprouts, halved",
+        "1/2 red onion, cut into wedges",
+        "2 tbsp avocado oil",
+        "3 cloves garlic, smashed",
+        "1 tbsp fresh rosemary, chopped",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Line a large baking sheet with parchment paper.",
+        "Spread sweet potato cubes, Brussels sprouts, red onion wedges, and garlic on the sheet pan. Drizzle with avocado oil, season with rosemary, salt, and pepper. Toss to coat.",
+        "Nestle sausage links among the vegetables.",
+        "Roast for 28-30 minutes, flipping sausages halfway through, until sausages are cooked (160°F) and vegetables are golden and tender.",
+        "Let rest 3 minutes, slice sausages, and serve everything together."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "dinner", "sheet-pan", "meal-prep"]
+    },
+    "paleo_guacamole_veggie_sticks": {
+      "name": "Classic Guacamole with Veggie Sticks",
+      "description": "Chunky fresh guacamole with lime and cilantro, served with crisp jicama sticks, bell pepper strips, and cucumber rounds",
+      "calories": 245,
+      "protein": 4.0,
+      "carbs": 18.0,
+      "fat": 19.0,
+      "fiber": 9.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 ripe avocado",
+        "1/2 cup jicama sticks",
+        "1/2 red bell pepper, cut into strips",
+        "1/2 cucumber, sliced into rounds",
+        "2 tbsp red onion, finely diced",
+        "1 tbsp fresh lime juice",
+        "1 tbsp fresh cilantro, chopped",
+        "1/4 jalapeño, seeded and minced",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Halve the avocado and scoop flesh into a bowl. Mash with a fork to desired consistency (leave it chunky).",
+        "Fold in red onion, cilantro, jalapeño, and lime juice. Season with salt.",
+        "Arrange jicama sticks, bell pepper strips, and cucumber rounds on a plate alongside the guacamole.",
+        "Serve immediately for best flavor and color."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "snack", "no-cook", "vegan"]
+    },
+    "paleo_trail_mix": {
+      "name": "Paleo Trail Mix",
+      "description": "Crunchy homemade trail mix with raw almonds, walnuts, pumpkin seeds, coconut chips, and dark chocolate chunks",
+      "calories": 310,
+      "protein": 10.0,
+      "carbs": 16.0,
+      "fat": 26.0,
+      "fiber": 4.5,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "2 tbsp raw almonds",
+        "2 tbsp walnut halves",
+        "1 tbsp raw pumpkin seeds",
+        "1 tbsp unsweetened coconut chips",
+        "1 tbsp sunflower seeds",
+        "1 tbsp dark chocolate chips (85%+ cacao, dairy-free)",
+        "1 tbsp dried cranberries (no sugar added, apple juice sweetened)"
+      ],
+      "instructions": [
+        "Combine all nuts, seeds, coconut chips, chocolate chips, and cranberries in a small bowl or jar.",
+        "Toss gently to mix evenly.",
+        "Portion into a small container or snack bag. Keeps well for up to 1 week at room temperature."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "snack", "no-cook", "portable", "meal-prep"]
+    },
+    "paleo_hard_boiled_eggs_everything": {
+      "name": "Everything Seasoned Hard-Boiled Eggs",
+      "description": "Perfectly cooked hard-boiled eggs sprinkled with everything bagel seasoning and served with cherry tomatoes",
+      "calories": 190,
+      "protein": 14.0,
+      "carbs": 4.0,
+      "fat": 13.0,
+      "fiber": 1.0,
+      "prepTime": 2,
+      "cookTime": 12,
+      "ingredients": [
+        "2 large eggs",
+        "1 tsp everything bagel seasoning",
+        "6 cherry tomatoes",
+        "Flaky sea salt to taste"
+      ],
+      "instructions": [
+        "Place eggs in a saucepan and cover with cold water by 1 inch. Bring to a rolling boil over high heat.",
+        "Remove from heat, cover with a lid, and let sit for exactly 10 minutes.",
+        "Transfer eggs to an ice bath for 3 minutes, then peel.",
+        "Slice eggs in half, sprinkle with everything bagel seasoning and flaky salt. Serve with cherry tomatoes."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "snack", "quick", "portable"]
+    },
+    "paleo_apple_almond_butter": {
+      "name": "Apple Slices with Almond Butter",
+      "description": "Crisp apple slices paired with creamy almond butter and a sprinkle of cinnamon and hemp seeds",
+      "calories": 275,
+      "protein": 8.0,
+      "carbs": 28.0,
+      "fat": 16.0,
+      "fiber": 6.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "1 medium apple (Honeycrisp or Fuji), cored and sliced",
+        "2 tbsp almond butter (no added sugar or oils)",
+        "1 tsp hemp seeds",
+        "Pinch of cinnamon"
+      ],
+      "instructions": [
+        "Core the apple and slice into wedges.",
+        "Arrange apple slices on a plate. Drizzle or dollop almond butter alongside for dipping.",
+        "Sprinkle hemp seeds and cinnamon over the almond butter."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "snack", "no-cook", "quick"]
+    },
+    "paleo_coconut_energy_balls": {
+      "name": "Coconut Date Energy Balls",
+      "description": "No-bake energy balls made with Medjool dates, almond butter, coconut flakes, and a touch of vanilla",
+      "calories": 280,
+      "protein": 6.0,
+      "carbs": 32.0,
+      "fat": 16.0,
+      "fiber": 4.5,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "4 Medjool dates, pitted",
+        "2 tbsp almond butter",
+        "3 tbsp unsweetened shredded coconut",
+        "1 tbsp coconut oil, melted",
+        "1/2 tsp vanilla extract",
+        "Pinch of sea salt",
+        "1 tbsp unsweetened cocoa powder (optional)"
+      ],
+      "instructions": [
+        "Add dates, almond butter, 2 tbsp shredded coconut, coconut oil, vanilla, and salt to a food processor. Pulse until a sticky dough forms.",
+        "Roll mixture into 6 small balls (about 1 tablespoon each).",
+        "Roll balls in the remaining shredded coconut to coat.",
+        "Refrigerate for at least 30 minutes to firm up. Store in the fridge for up to 1 week. Makes 6 balls (3 per serving)."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "snack", "no-cook", "meal-prep", "portable"]
+    },
+    "paleo_beef_jerky_homemade": {
+      "name": "Homemade Beef Jerky",
+      "description": "Thinly sliced grass-fed beef marinated in coconut aminos, garlic, and smoked paprika, then oven-dried until chewy",
+      "calories": 220,
+      "protein": 28.0,
+      "carbs": 6.0,
+      "fat": 9.0,
+      "fiber": 0.5,
+      "prepTime": 15,
+      "cookTime": 240,
+      "ingredients": [
+        "6 oz grass-fed flank steak, sliced very thin against the grain",
+        "2 tbsp coconut aminos",
+        "1 tsp smoked paprika",
+        "1/2 tsp garlic powder",
+        "1/2 tsp onion powder",
+        "1/4 tsp black pepper",
+        "1/4 tsp ground ginger"
+      ],
+      "instructions": [
+        "Freeze steak for 30 minutes to make slicing easier. Slice into 1/8-inch thin strips against the grain.",
+        "Combine coconut aminos, smoked paprika, garlic powder, onion powder, pepper, and ginger in a bowl. Add beef strips and toss to coat. Marinate for at least 2 hours or overnight in the fridge.",
+        "Preheat oven to 175°F. Line baking sheets with parchment and place a wire rack on top. Lay beef strips in a single layer.",
+        "Bake for 3.5-4 hours, flipping halfway, until jerky is dry but still pliable.",
+        "Cool completely before storing in an airtight container. Keeps for 1-2 weeks. Serves 2."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "snack", "meal-prep", "portable", "high-protein"]
+    },
+    "paleo_sweet_potato_chips": {
+      "name": "Baked Sweet Potato Chips",
+      "description": "Paper-thin sweet potato rounds baked until perfectly crispy, seasoned with sea salt and rosemary",
+      "calories": 195,
+      "protein": 2.0,
+      "carbs": 30.0,
+      "fat": 8.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "1 large sweet potato, sliced paper-thin (use a mandoline)",
+        "1 tbsp avocado oil",
+        "1 tsp fresh rosemary, finely chopped",
+        "1/2 tsp flaky sea salt"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Line two baking sheets with parchment paper.",
+        "Toss sweet potato slices with avocado oil until evenly coated.",
+        "Arrange slices in a single layer on baking sheets (do not overlap).",
+        "Bake for 10 minutes, flip each chip, then bake another 10-12 minutes, watching closely to prevent burning. Some chips may finish before others — remove those early.",
+        "Immediately sprinkle with rosemary and sea salt while still hot. Chips will continue to crisp as they cool."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "snack", "vegan"]
+    },
+    "paleo_prosciutto_wrapped_dates": {
+      "name": "Prosciutto-Wrapped Dates with Pecans",
+      "description": "Sweet Medjool dates stuffed with toasted pecans and wrapped in salty prosciutto, then baked until crispy",
+      "calories": 265,
+      "protein": 10.0,
+      "carbs": 28.0,
+      "fat": 14.0,
+      "fiber": 3.5,
+      "prepTime": 8,
+      "cookTime": 12,
+      "ingredients": [
+        "6 Medjool dates, pitted",
+        "6 pecan halves, lightly toasted",
+        "3 thin slices prosciutto, halved lengthwise",
+        "Pinch of flaky sea salt"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Line a baking sheet with parchment paper.",
+        "Stuff each pitted date with a toasted pecan half.",
+        "Wrap each stuffed date tightly with a half-slice of prosciutto.",
+        "Place seam-side down on the baking sheet. Bake for 10-12 minutes until prosciutto is crispy.",
+        "Sprinkle with flaky sea salt and let cool 2 minutes before serving. Makes 6 pieces (3 per serving)."
+      ],
+      "tags": ["paleo", "gluten-free", "dairy-free", "grain-free", "snack"]
+    },
+    "paleo_cucumber_salmon_bites": {
+      "name": "Cucumber Smoked Salmon Bites",
+      "description": "Thick cucumber rounds topped with smoked salmon, avocado cream, capers, and fresh dill",
+      "calories": 200,
+      "protein": 16.0,
+      "carbs": 8.0,
+      "fat": 12.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 English cucumber, cut into 1/2-inch rounds (about 12 rounds)",
+        "3 oz wild-caught smoked salmon",
+        "1/4 avocado, mashed",
+        "1 tbsp capers",
+        "1 tsp fresh lemon juice",
+        "Fresh dill sprigs for garnish",
+        "Black pepper to taste"
+      ],
+      "instructions": [
+        "Slice cucumber into thick rounds and arrange on a plate or platter.",
+        "Mix mashed avocado with lemon juice and a pinch of pepper for the cream.",
+        "Spread a small amount of avocado cream on each cucumber round.",
+        "Top with a piece of smoked salmon, a few capers, and a sprig of dill."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "snack", "no-cook", "omega-3"]
+    },
+    "paleo_plantain_chips_salsa": {
+      "name": "Crispy Plantain Chips with Fresh Salsa",
+      "description": "Thin-sliced green plantain chips baked until golden, served with a bright fresh tomato and jalapeño salsa",
+      "calories": 230,
+      "protein": 3.0,
+      "carbs": 36.0,
+      "fat": 10.0,
+      "fiber": 3.5,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "1 green plantain, peeled and thinly sliced",
+        "1 tbsp coconut oil, melted",
+        "2 roma tomatoes, diced",
+        "2 tbsp red onion, finely diced",
+        "1 tbsp fresh cilantro, chopped",
+        "1/2 jalapeño, seeded and minced",
+        "1 tbsp fresh lime juice",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Toss plantain slices with melted coconut oil and salt.",
+        "Spread in a single layer on a parchment-lined baking sheet. Bake 8 minutes, flip, and bake another 8-10 minutes until golden and crispy.",
+        "While chips bake, combine diced tomatoes, red onion, cilantro, jalapeño, lime juice, and salt for the fresh salsa.",
+        "Serve warm plantain chips with the salsa on the side."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "snack", "vegan"]
+    },
+    "paleo_chicken_avocado_wrap": {
+      "name": "Chicken Avocado Lettuce Wraps",
+      "description": "Seasoned shredded chicken with creamy avocado, pico de gallo, and lime crema wrapped in crisp romaine leaves",
+      "calories": 410,
+      "protein": 34.0,
+      "carbs": 14.0,
+      "fat": 24.0,
+      "fiber": 7.0,
+      "prepTime": 12,
+      "cookTime": 0,
+      "ingredients": [
+        "5 oz cooked chicken breast, shredded",
+        "1/2 avocado, sliced",
+        "4 large romaine lettuce leaves",
+        "1/4 cup diced tomato",
+        "2 tbsp diced red onion",
+        "1 tbsp fresh cilantro, chopped",
+        "1 tbsp fresh lime juice",
+        "1 tbsp paleo mayo (avocado oil based)",
+        "1/2 tsp ground cumin",
+        "Salt and black pepper to taste"
+      ],
+      "instructions": [
+        "Toss shredded chicken with cumin, half the lime juice, salt, and pepper.",
+        "Mix paleo mayo with remaining lime juice for the crema.",
+        "Combine diced tomato, red onion, and cilantro for a quick pico de gallo.",
+        "Divide chicken and avocado slices among the romaine leaves. Top with pico and drizzle with lime crema.",
+        "Fold and eat like tacos."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch", "no-cook", "quick"]
+    },
+    "paleo_cauliflower_chili": {
+      "name": "Smoky Beef and Sweet Potato Chili",
+      "description": "Hearty no-bean chili with grass-fed ground beef, sweet potato chunks, fire-roasted tomatoes, and smoky spices",
+      "calories": 470,
+      "protein": 32.0,
+      "carbs": 30.0,
+      "fat": 24.0,
+      "fiber": 6.5,
+      "prepTime": 10,
+      "cookTime": 35,
+      "ingredients": [
+        "6 oz grass-fed ground beef",
+        "1 small sweet potato, peeled and diced (120g)",
+        "1/2 cup fire-roasted diced tomatoes (canned, no sugar added)",
+        "1/2 cup beef bone broth",
+        "1/4 yellow onion, diced",
+        "2 cloves garlic, minced",
+        "1 tbsp avocado oil",
+        "1 tbsp chili powder",
+        "1 tsp ground cumin",
+        "1/2 tsp smoked paprika",
+        "Sliced green onion for garnish"
+      ],
+      "instructions": [
+        "Heat avocado oil in a pot over medium-high heat. Brown ground beef with onion for 5-6 minutes, breaking into pieces. Drain excess fat.",
+        "Add garlic, chili powder, cumin, and smoked paprika. Stir for 1 minute until fragrant.",
+        "Add diced sweet potato, fire-roasted tomatoes, and bone broth. Stir to combine.",
+        "Bring to a boil, reduce heat to low, cover, and simmer for 25 minutes until sweet potato is tender.",
+        "Season with salt and pepper. Ladle into a bowl and garnish with sliced green onion."
+      ],
+      "tags": ["paleo", "whole30-compatible", "gluten-free", "dairy-free", "grain-free", "lunch", "comfort-food", "meal-prep"]
+    }
+  },
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "paleo_sweet_potato_hash",
+          "lunch": "paleo_grilled_chicken_salad",
+          "dinner": "paleo_herb_roasted_salmon",
+          "snack": "paleo_guacamole_veggie_sticks"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "paleo_veggie_egg_scramble",
+          "lunch": "paleo_tuna_stuffed_avocado",
+          "dinner": "paleo_beef_stir_fry",
+          "snack": "paleo_apple_almond_butter"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "paleo_banana_pancakes",
+          "lunch": "paleo_shrimp_cauliflower_rice",
+          "dinner": "paleo_chicken_thigh_sweet_potato",
+          "snack": "paleo_trail_mix"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "paleo_avocado_bacon_eggs",
+          "lunch": "paleo_lettuce_wrap_burgers",
+          "dinner": "paleo_stuffed_bell_peppers",
+          "snack": "paleo_hard_boiled_eggs_everything"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "paleo_sausage_frittata",
+          "lunch": "paleo_chicken_zoodle_soup",
+          "dinner": "paleo_lemon_garlic_shrimp",
+          "snack": "paleo_coconut_energy_balls"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "paleo_coconut_chia_pudding",
+          "lunch": "paleo_thai_chicken_salad",
+          "dinner": "paleo_pork_chops_applesauce",
+          "snack": "paleo_prosciutto_wrapped_dates"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "paleo_smoked_salmon_plate",
+          "lunch": "paleo_steak_sweet_potato_bowl",
+          "dinner": "paleo_coconut_curry_chicken",
+          "snack": "paleo_beef_jerky_homemade"
+        }
+      ]
+    },
+    {
+      "weekNumber": 2,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "paleo_turkey_breakfast_muffins",
+          "lunch": "paleo_salmon_avocado_bowl",
+          "dinner": "paleo_balsamic_glazed_steak",
+          "snack": "paleo_cucumber_salmon_bites"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "paleo_plantain_egg_bowl",
+          "lunch": "paleo_turkey_collard_wraps",
+          "dinner": "paleo_turkey_meatballs_marinara",
+          "snack": "paleo_sweet_potato_chips"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "paleo_berry_smoothie_bowl",
+          "lunch": "paleo_mediterranean_plate",
+          "dinner": "paleo_grilled_mahi_tacos",
+          "snack": "paleo_guacamole_veggie_sticks"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "paleo_zucchini_hash_browns",
+          "lunch": "paleo_egg_drop_soup",
+          "dinner": "paleo_slow_cooker_pot_roast",
+          "snack": "paleo_trail_mix"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "paleo_pork_apple_patties",
+          "lunch": "paleo_blt_sweet_potato_toast",
+          "dinner": "paleo_tuscan_chicken",
+          "snack": "paleo_plantain_chips_salsa"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "paleo_avocado_bacon_eggs",
+          "lunch": "paleo_grilled_chicken_salad",
+          "dinner": "paleo_lamb_burger_patties",
+          "snack": "paleo_apple_almond_butter"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "paleo_sweet_potato_hash",
+          "lunch": "paleo_tuna_stuffed_avocado",
+          "dinner": "paleo_sheet_pan_sausage_veggies",
+          "snack": "paleo_coconut_energy_balls"
+        }
+      ]
+    },
+    {
+      "weekNumber": 3,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "paleo_sausage_frittata",
+          "lunch": "paleo_shrimp_cauliflower_rice",
+          "dinner": "paleo_coconut_curry_chicken",
+          "snack": "paleo_hard_boiled_eggs_everything"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "paleo_coconut_chia_pudding",
+          "lunch": "paleo_chicken_avocado_wrap",
+          "dinner": "paleo_herb_roasted_salmon",
+          "snack": "paleo_beef_jerky_homemade"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "paleo_veggie_egg_scramble",
+          "lunch": "paleo_steak_sweet_potato_bowl",
+          "dinner": "paleo_lemon_garlic_shrimp",
+          "snack": "paleo_prosciutto_wrapped_dates"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "paleo_banana_pancakes",
+          "lunch": "paleo_cauliflower_chili",
+          "dinner": "paleo_stuffed_bell_peppers",
+          "snack": "paleo_guacamole_veggie_sticks"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "paleo_smoked_salmon_plate",
+          "lunch": "paleo_chicken_zoodle_soup",
+          "dinner": "paleo_balsamic_glazed_steak",
+          "snack": "paleo_sweet_potato_chips"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "paleo_turkey_breakfast_muffins",
+          "lunch": "paleo_salmon_avocado_bowl",
+          "dinner": "paleo_pork_chops_applesauce",
+          "snack": "paleo_cucumber_salmon_bites"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "paleo_plantain_egg_bowl",
+          "lunch": "paleo_mediterranean_plate",
+          "dinner": "paleo_slow_cooker_pot_roast",
+          "snack": "paleo_trail_mix"
+        }
+      ]
+    },
+    {
+      "weekNumber": 4,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "paleo_berry_smoothie_bowl",
+          "lunch": "paleo_turkey_collard_wraps",
+          "dinner": "paleo_beef_stir_fry",
+          "snack": "paleo_apple_almond_butter"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "paleo_zucchini_hash_browns",
+          "lunch": "paleo_blt_sweet_potato_toast",
+          "dinner": "paleo_grilled_mahi_tacos",
+          "snack": "paleo_coconut_energy_balls"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "paleo_pork_apple_patties",
+          "lunch": "paleo_egg_drop_soup",
+          "dinner": "paleo_tuscan_chicken",
+          "snack": "paleo_plantain_chips_salsa"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "paleo_avocado_bacon_eggs",
+          "lunch": "paleo_grilled_chicken_salad",
+          "dinner": "paleo_turkey_meatballs_marinara",
+          "snack": "paleo_hard_boiled_eggs_everything"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "paleo_sweet_potato_hash",
+          "lunch": "paleo_salmon_avocado_bowl",
+          "dinner": "paleo_chicken_thigh_sweet_potato",
+          "snack": "paleo_beef_jerky_homemade"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "paleo_coconut_chia_pudding",
+          "lunch": "paleo_tuna_stuffed_avocado",
+          "dinner": "paleo_lamb_burger_patties",
+          "snack": "paleo_prosciutto_wrapped_dates"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "paleo_sausage_frittata",
+          "lunch": "paleo_lettuce_wrap_burgers",
+          "dinner": "paleo_sheet_pan_sausage_veggies",
+          "snack": "paleo_cucumber_salmon_bites"
+        }
+      ]
+    }
+  ]
+}

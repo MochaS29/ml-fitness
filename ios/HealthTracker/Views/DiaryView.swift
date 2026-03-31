@@ -74,6 +74,14 @@ struct DiaryView: View {
                         
                         // Notes Section
                         notesSection
+
+                        // Data source citation
+                        Text("Nutrition data sourced from USDA FoodData Central (fdc.nal.usda.gov). For informational purposes only — not medical advice.")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                            .padding(.top, 8)
                     }
                     .padding(.bottom, 100)
                 }
@@ -109,7 +117,7 @@ struct DiaryView: View {
                 )
             }
             .sheet(isPresented: $showingFoodSearch) {
-                UnifiedFoodSearchSheet(mealType: selectedMealType)
+                UnifiedFoodSearchSheet(mealType: selectedMealType, targetDate: selectedDate)
             }
             .sheet(isPresented: $showingExerciseSearch) {
                 ExerciseEntrySheet()
@@ -118,7 +126,7 @@ struct DiaryView: View {
                 WaterEntrySheet()
             }
             .sheet(isPresented: $showingSupplementEntry) {
-                ManualSupplementEntryView()
+                ManualSupplementEntryView(targetDate: selectedDate)
             }
             .onChange(of: selectedDate) {
                 updateFetchRequests()
@@ -488,6 +496,8 @@ struct DiaryView: View {
         do {
             try viewContext.save()
             updateDailySummary()
+            // Send update to Apple Watch
+            PhoneConnectivityManager.shared.sendDailyUpdate()
         } catch {
             print("Error saving food entry: \(error)")
         }
@@ -500,6 +510,8 @@ struct DiaryView: View {
         do {
             try viewContext.save()
             updateDailySummary()
+            // Send update to Apple Watch
+            PhoneConnectivityManager.shared.sendDailyUpdate()
         } catch {
             print("Error deleting food entry: \(error)")
         }
@@ -510,6 +522,8 @@ struct DiaryView: View {
         do {
             try viewContext.save()
             updateDailySummary()
+            // Send update to Apple Watch
+            PhoneConnectivityManager.shared.sendDailyUpdate()
         } catch {
             print("Error deleting exercise entry: \(error)")
         }
@@ -520,6 +534,8 @@ struct DiaryView: View {
         do {
             try viewContext.save()
             updateDailySummary()
+            // Send update to Apple Watch
+            PhoneConnectivityManager.shared.sendDailyUpdate()
         } catch {
             print("Error deleting supplement entry: \(error)")
         }

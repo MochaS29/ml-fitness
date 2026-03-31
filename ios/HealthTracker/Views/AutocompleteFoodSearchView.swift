@@ -52,7 +52,7 @@ struct AutocompleteFoodSearchView: View {
                     isCommon: false
                 ))
 
-                if uniqueFoods.count >= 10 { break }  // Limit recent foods to 10
+                if uniqueFoods.count >= 15 { break }  // Limit recent foods to 15
             }
         }
 
@@ -71,13 +71,13 @@ struct AutocompleteFoodSearchView: View {
             ($0.brand?.localizedCaseInsensitiveContains(searchText) ?? false)
         }
 
-        // Then check the food database
-        let databaseMatches = FoodDatabase.shared.searchFoods(searchText)
+        // Then check the local SQLite food database (FTS5 search)
+        let databaseMatches = LocalFoodDatabase.shared.searchFoods(searchText, limit: 20)
             .filter { food in
                 // Don't include if already in recent matches
                 !recentMatches.contains { $0.name == food.name && $0.brand == food.brand }
             }
-            .prefix(10)  // Limit database results
+            .prefix(20)  // Limit database results
 
         // Add USDA results converted to FoodItem
         let usdaFoodItems = usdaResults.map { $0.toFoodItem() }
@@ -86,9 +86,69 @@ struct AutocompleteFoodSearchView: View {
                 !recentMatches.contains { $0.name == food.name && $0.brand == food.brand } &&
                 !databaseMatches.contains { $0.name == food.name && $0.brand == food.brand }
             }
-            .prefix(10)
+            .prefix(20)
 
-        return recentMatches + Array(databaseMatches) + Array(usdaFoodItems)
+        let combined = recentMatches + Array(databaseMatches) + Array(usdaFoodItems)
+        return sortByRelevance(combined, query: searchText)
+    }
+
+    /// Rank results so closest matches to the query appear first.
+    private func sortByRelevance(_ foods: [FoodItem], query: String) -> [FoodItem] {
+        let q = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else { return foods }
+
+        return foods.sorted { a, b in
+            let tierA = relevanceScore(a.name, query: q)
+            let tierB = relevanceScore(b.name, query: q)
+            if tierA != tierB { return tierA < tierB }
+            // Within same tier, prefer items with calorie data over 0-cal (bad data)
+            if (a.calories > 0) != (b.calories > 0) { return a.calories > 0 }
+            // Then prefer shorter names
+            return a.name.count < b.name.count
+        }
+    }
+
+    /// Lower score = better match.
+    /// Distinguishes whole-word matches from prefix-of-word matches:
+    /// "Egg whites" (query "egg" is a whole word) ranks above "Eggnog" (prefix of another word).
+    private func relevanceScore(_ name: String, query: String) -> Int {
+        let lower = name.lowercased()
+        let words = lower.components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
+
+        // Tier 0: Exact match
+        if lower == query { return 0 }
+
+        // Check if query appears as a whole word at the start of the name
+        // (not as a prefix of a longer word like "egg" in "eggnog")
+        let queryIsWordAtStart: Bool = {
+            guard lower.hasPrefix(query) else { return false }
+            if lower.count == query.count { return true }
+            let nextIdx = lower.index(lower.startIndex, offsetBy: query.count)
+            let nextChar = lower[nextIdx]
+            if !nextChar.isLetter { return true } // "Egg whites" — space after "egg"
+            // Allow simple plural: "eggs" for "egg"
+            if nextChar == "s" {
+                let afterS = lower.index(after: nextIdx)
+                return afterS >= lower.endIndex || !lower[afterS].isLetter
+            }
+            return false
+        }()
+
+        // Tier 1: Query is a whole word at start of a short name ("Egg whites", "Eggs, whole")
+        if queryIsWordAtStart && words.count <= 3 { return 1 }
+        // Tier 2: Query is an exact word in a short name ("Coffee, Latte" for "latte")
+        if words.contains(query) && words.count <= 3 { return 2 }
+        // Tier 3: Query is a whole word at start of a longer name ("Latte Blended Greek Yogurt")
+        if queryIsWordAtStart { return 3 }
+        // Tier 4: Query is an exact word in a longer name
+        if words.contains(query) { return 4 }
+        // Tier 5: Name starts with query as prefix of a word ("Eggnog" for "egg")
+        if lower.hasPrefix(query) { return 5 }
+        // Tier 6: A word starts with query
+        if words.contains(where: { $0.hasPrefix(query) }) { return 6 }
+        // Tier 7: Substring match
+        if lower.contains(query) { return 7 }
+        return 8
     }
 
     // Suggested foods based on time of day
@@ -114,7 +174,7 @@ struct AutocompleteFoodSearchView: View {
                             .autocorrectionDisabled()
                             .textInputAutocapitalization(.words)
                             .focused($isSearchFieldFocused)
-                            .onChange(of: searchText) { _, newValue in
+                            .onChange(of: searchText) { newValue in
                                 isSearching = !newValue.isEmpty
                                 if !newValue.isEmpty {
                                     searchUSDA(newValue)
@@ -194,7 +254,7 @@ struct AutocompleteFoodSearchView: View {
                                 }
                             }
                         }
-                        .frame(maxHeight: 300)
+                        .frame(maxHeight: 500)
                         .background(Color(.systemBackground))
                         .cornerRadius(10)
                         .shadow(radius: 5)

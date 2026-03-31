@@ -13,6 +13,7 @@ struct AddMenuView: View {
     @State private var showingSupplementAdd = false
     @State private var showingWeightEntry = false
     @State private var showingWaterEntry = false
+    @State private var showingMealScanner = false
     
     var body: some View {
         NavigationView {
@@ -34,7 +35,9 @@ struct AddMenuView: View {
             }
         }
         .sheet(isPresented: $showingBarcodeScanner) {
-            BarcodeScannerView(selectedDate: selectedDate, mealType: selectedMealType)
+            ProFeatureGate {
+                BarcodeScannerView(selectedDate: selectedDate, mealType: selectedMealType)
+            }
         }
         .sheet(isPresented: $showingExerciseSearch) {
             ExerciseSearchView(selectedDate: selectedDate)
@@ -47,6 +50,11 @@ struct AddMenuView: View {
         }
         .sheet(isPresented: $showingWaterEntry) {
             QuickWaterAddView(selectedDate: selectedDate)
+        }
+        .sheet(isPresented: $showingMealScanner) {
+            ProFeatureGate {
+                MealPhotoAnalyzerView()
+            }
         }
     }
     
@@ -68,7 +76,12 @@ struct AddMenuView: View {
                     Label("Search Food Database", systemImage: "magnifyingglass")
                         .foregroundColor(.primary)
                 }
-                
+
+                Button(action: { showingMealScanner = true }) {
+                    Label("Scan Meal with Camera", systemImage: "camera.fill")
+                        .foregroundColor(.primary)
+                }
+
                 // Barcode scanner temporarily disabled - coming in next release
                 // Button(action: { showingBarcodeScanner = true }) {
                 //     Label("Scan Barcode", systemImage: "barcode.viewfinder")
@@ -298,7 +311,6 @@ struct ExerciseSearchView: View {
     @State private var searchText = ""
     @State private var selectedExercise: ExerciseTemplateModel?
     @State private var duration: String = "30"
-    @State private var showingAddForm = false
     
     let selectedDate: Date
     private let exerciseDB = ExerciseDatabase.shared
@@ -330,7 +342,6 @@ struct ExerciseSearchView: View {
                 List(searchResults, id: \.name) { exercise in
                     Button(action: {
                         selectedExercise = exercise
-                        showingAddForm = true
                     }) {
                         HStack {
                             VStack(alignment: .leading) {
@@ -358,16 +369,14 @@ struct ExerciseSearchView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingAddForm) {
-                if let exercise = selectedExercise {
-                    ExerciseEntryForm(
-                        exercise: exercise,
-                        selectedDate: selectedDate,
-                        onSave: { duration in
-                            saveExercise(exercise, duration: duration)
-                        }
-                    )
-                }
+            .sheet(item: $selectedExercise) { exercise in
+                ExerciseEntryForm(
+                    exercise: exercise,
+                    selectedDate: selectedDate,
+                    onSave: { duration in
+                        saveExercise(exercise, duration: duration)
+                    }
+                )
             }
         }
     }

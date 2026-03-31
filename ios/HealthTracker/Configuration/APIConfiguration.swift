@@ -1,8 +1,23 @@
 import Foundation
 
 struct APIConfiguration {
+    // MARK: - AI Vision API (Meal Scanner)
+
+    struct Anthropic {
+        static let baseURL = "https://api.anthropic.com/v1"
+        static var apiKey: String { SecretsManager.anthropicAPIKey }
+
+        struct Endpoints {
+            static let messages = "/messages"
+        }
+
+        static var isConfigured: Bool {
+            !apiKey.isEmpty
+        }
+    }
+
     // MARK: - Food Recognition APIs (Image Analysis)
-    
+
     // Nutritionix - Best for image recognition + database
     struct Nutritionix {
         static let baseURL = "https://trackapi.nutritionix.com/v2"
@@ -43,7 +58,7 @@ struct APIConfiguration {
     // USDA FoodData Central - Largest free database (1.9M+ foods)
     struct USDA {
         static let baseURL = "https://api.nal.usda.gov/fdc/v1"
-        static let apiKey = ProcessInfo.processInfo.environment["USDA_API_KEY"] ?? "DEMO_KEY" // Works with demo key
+        static var apiKey: String { SecretsManager.usdaAPIKey }
         
         struct Endpoints {
             static let search = "/foods/search"
