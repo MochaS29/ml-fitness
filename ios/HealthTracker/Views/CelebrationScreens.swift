@@ -181,7 +181,8 @@ class AchievementDetector: ObservableObject {
     }
 
     private func triggerCelebration(_ achievement: CelebrationAchievement) {
-        DispatchQueue.main.async {
+        // Delay slightly so any presenting sheet has time to dismiss before confetti appears
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             self.currentAchievement = achievement
             self.showingCelebration = true
         }

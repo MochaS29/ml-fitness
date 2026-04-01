@@ -13,6 +13,9 @@ struct DiaryView: View {
     @State private var selectedMealType: MealType = .breakfast
     @State private var dailySummary = DailySummary()
     @State private var nutritionExpanded = true
+    @State private var showingGoalsSetup = false
+    @State private var showingShareSheet = false
+    @State private var shareText = ""
     
     // Fetch requests for selected date
     @FetchRequest private var foodEntries: FetchedResults<FoodEntry>
@@ -56,6 +59,29 @@ struct DiaryView: View {
                     .padding(.horizontal)
                     .padding(.vertical, 12)
                 
+                // Goal setup prompt (shown when calorie goal is at default 0)
+                let calorieGoalSet = UserDefaults.standard.integer(forKey: "calorieGoal") > 0
+                if !calorieGoalSet {
+                    Button(action: { showingGoalsSetup = true }) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "target")
+                                .foregroundColor(.orange)
+                            Text("Set your calorie & nutrition goals for accurate tracking")
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                                .multilineTextAlignment(.leading)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(Color.orange.opacity(0.1))
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 // Entry List
                 ScrollView {
                     VStack(spacing: 16) {
@@ -94,6 +120,14 @@ struct DiaryView: View {
             .navigationTitle("Diary")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        shareText = generateDiaryShareText()
+                        showingShareSheet = true
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showingAddMenu = true }) {
                         Image(systemName: "plus")
@@ -131,6 +165,12 @@ struct DiaryView: View {
             }
             .sheet(isPresented: $showingSupplementEntry) {
                 ManualSupplementEntryView(targetDate: selectedDate)
+            }
+            .sheet(isPresented: $showingGoalsSetup) {
+                SimpleGoalsView()
+            }
+            .sheet(isPresented: $showingShareSheet) {
+                ShareSheet(items: [shareText])
             }
             .onChange(of: selectedDate) {
                 updateFetchRequests()
@@ -176,34 +216,38 @@ struct DiaryView: View {
     }
     
     private var dailySummaryView: some View {
-        HStack(spacing: 20) {
-            SummaryMetric(
-                title: "Calories",
-                value: "\(Int(dailySummary.calories))",
-                subtitle: "/ \(Int(dailySummary.calorieGoal))",
-                color: Color(red: 127/255, green: 176/255, blue: 105/255)
-            )
+        let remaining = dailySummary.caloriesRemaining
+        let remainingColor: Color = remaining < 0 ? .red : Color(red: 127/255, green: 176/255, blue: 105/255)
+        return VStack(spacing: 8) {
+            HStack(spacing: 20) {
+                SummaryMetric(
+                    title: "Eaten",
+                    value: "\(Int(dailySummary.calories))",
+                    subtitle: "/ \(Int(dailySummary.calorieGoal))",
+                    color: Color(red: 127/255, green: 176/255, blue: 105/255)
+                )
 
-            SummaryMetric(
-                title: "Protein",
-                value: "\(Int(dailySummary.protein))",
-                subtitle: "/ \(Int(dailySummary.proteinGoal))g",
-                color: Color(red: 74/255, green: 155/255, blue: 155/255)
-            )
+                SummaryMetric(
+                    title: "Burned",
+                    value: "\(Int(dailySummary.caloriesBurned))",
+                    subtitle: "cal",
+                    color: .orange
+                )
 
-            SummaryMetric(
-                title: "Exercise",
-                value: "\(Int(dailySummary.exerciseMinutes))",
-                subtitle: "min",
-                color: .orange
-            )
+                SummaryMetric(
+                    title: "Remaining",
+                    value: "\(Int(abs(remaining)))",
+                    subtitle: remaining < 0 ? "over" : "left",
+                    color: remainingColor
+                )
 
-            SummaryMetric(
-                title: "Water",
-                value: "\(Int(calculateTodaysWaterOunces()))",
-                subtitle: "oz",
-                color: .blue
-            )
+                SummaryMetric(
+                    title: "Protein",
+                    value: "\(Int(dailySummary.protein))",
+                    subtitle: "/ \(Int(dailySummary.proteinGoal))g",
+                    color: Color(red: 74/255, green: 155/255, blue: 155/255)
+                )
+            }
         }
         .padding()
         .background(Color(UIColor.secondarySystemGroupedBackground))
@@ -253,6 +297,24 @@ struct DiaryView: View {
                     }
                 }
                 .background(Color(UIColor.secondarySystemGroupedBackground))
+            } else {
+                Button(action: {
+                    selectedMealType = mealType
+                    showingFoodSearch = true
+                }) {
+                    HStack {
+                        Image(systemName: "plus.circle")
+                            .foregroundColor(.secondary)
+                        Text("Add \(mealTypeDisplayName(mealType).lowercased())...")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+                }
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .buttonStyle(.plain)
             }
         }
         .cornerRadius(12)
@@ -564,6 +626,47 @@ struct DiaryView: View {
         .padding(.horizontal)
     }
 
+    private func generateDiaryShareText() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .full
+        var lines: [String] = []
+        lines.append("📊 MindLab Fitness — \(dateFormatter.string(from: selectedDate))")
+        lines.append("")
+
+        // Calories summary
+        let goal = UserDefaults.standard.integer(forKey: "calorieGoal") > 0 ? UserDefaults.standard.integer(forKey: "calorieGoal") : 2000
+        let burned = Int(exerciseEntries.reduce(0) { $0 + $1.caloriesBurned })
+        lines.append("🔥 Calories: \(Int(totalCalories)) eaten · \(burned) burned · \(max(0, goal + burned - Int(totalCalories))) remaining")
+
+        // Food entries
+        for mealType in MealType.allCases {
+            let entries = foodEntries.filter { $0.mealType == mealType.rawValue }
+            if !entries.isEmpty {
+                lines.append("")
+                lines.append("\(mealTypeDisplayName(mealType)):")
+                for e in entries {
+                    lines.append("  • \(e.name ?? "Unknown") — \(Int(e.calories)) cal")
+                }
+            }
+        }
+
+        // Exercise
+        if !exerciseEntries.isEmpty {
+            lines.append("")
+            lines.append("🏃 Exercise:")
+            for e in exerciseEntries {
+                lines.append("  • \(e.name ?? "Unknown") — \(e.duration) min · \(Int(e.caloriesBurned)) cal")
+            }
+        }
+
+        // Macros
+        lines.append("")
+        lines.append("Macros: P \(String(format: "%.0f", totalProtein))g · C \(String(format: "%.0f", totalCarbs))g · F \(String(format: "%.0f", totalFat))g")
+        lines.append("")
+        lines.append("Logged with MindLab Fitness")
+        return lines.joined(separator: "\n")
+    }
+
     private func adjustDate(by days: Int) {
         if let newDate = Calendar.current.date(byAdding: .day, value: days, to: selectedDate) {
             selectedDate = newDate
@@ -585,6 +688,7 @@ struct DiaryView: View {
         // Calculate totals from actual data
         dailySummary.calories = foodEntries.reduce(0) { $0 + $1.calories }
         dailySummary.protein = foodEntries.reduce(0) { $0 + $1.protein }
+        dailySummary.caloriesBurned = exerciseEntries.reduce(0) { $0 + $1.caloriesBurned }
         dailySummary.exerciseMinutes = Double(exerciseEntries.reduce(0) { $0 + Int($1.duration) })
         dailySummary.waterOunces = calculateTodaysWaterOunces()
 
@@ -684,10 +788,15 @@ struct DiaryView: View {
 struct DailySummary {
     var calories: Double = 0
     var calorieGoal: Double = 2000
+    var caloriesBurned: Double = 0
     var protein: Double = 0
     var proteinGoal: Double = 50
     var exerciseMinutes: Double = 0
     var waterOunces: Double = 0
+
+    var caloriesRemaining: Double {
+        calorieGoal + caloriesBurned - calories
+    }
 }
 
 struct SummaryMetric: View {

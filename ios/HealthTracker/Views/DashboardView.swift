@@ -4,6 +4,7 @@ import Charts
 struct DashboardView: View {
     @EnvironmentObject var profileManager: UserProfileManager
     @StateObject private var viewModel = DashboardViewModel()
+    @StateObject private var streakManager = LoggingStreakManager.shared
     @State private var selectedTimeRange = TimeRange.week
     @State private var showingAIInsightDetail = false
     @State private var selectedInsight: AIInsight?
@@ -19,6 +20,7 @@ struct DashboardView: View {
     @State private var showingAllInsights = false
     @State private var showingReminders = false
     @State private var showingNutritionDetail = false
+    @State private var showingQuickLog = false
     @State private var widgetsEnabled = false
 
     enum TimeRange: String, CaseIterable {
@@ -45,6 +47,11 @@ struct DashboardView: View {
                 if widgetsEnabled {
                     // AI Insights Carousel (from Option 4)
                     aiInsightsSection
+
+                    // Logging Streak
+                    if streakManager.currentStreak > 0 {
+                        streakCard
+                    }
 
                     // Key Metrics Cards with Trends (from Option 3)
                     metricsOverview
@@ -79,6 +86,20 @@ struct DashboardView: View {
             .padding()
         }
         .background(Color(UIColor.systemGroupedBackground))
+        .overlay(alignment: .bottomTrailing) {
+            Button(action: { showingQuickLog = true }) {
+                Image(systemName: "plus")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+                    .frame(width: 56, height: 56)
+                    .background(Color.accentColor)
+                    .clipShape(Circle())
+                    .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
+            }
+            .padding(.trailing, 20)
+            .padding(.bottom, 28)
+        }
         .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
@@ -134,6 +155,9 @@ struct DashboardView: View {
         .sheet(isPresented: $showingNutritionDetail) {
             NutritionDetailView()
         }
+        .sheet(isPresented: $showingQuickLog) {
+            AddMenuView(selectedDate: Date())
+        }
     }
 
     // MARK: - Quick Reminders Strip
@@ -175,6 +199,47 @@ struct DashboardView: View {
             .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
         }
         .buttonStyle(.plain)
+    }
+
+    // MARK: - Streak Card
+
+    private var streakCard: some View {
+        let streak = streakManager.currentStreak
+        let emoji: String
+        switch streak {
+        case 1...2: emoji = "🌱"
+        case 3...6: emoji = "🔥"
+        case 7...13: emoji = "⚡️"
+        case 14...29: emoji = "🏅"
+        default: emoji = "🏆"
+        }
+        return HStack(spacing: 14) {
+            Text(emoji)
+                .font(.system(size: 32))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("\(streak)-Day Logging Streak!")
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+                Text(streak == 1 ? "Great start — log again tomorrow to build your streak." : "You've logged food \(streak) days in a row. Keep it up!")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            Spacer()
+        }
+        .padding()
+        .background(
+            LinearGradient(
+                colors: [Color.orange.opacity(0.15), Color.yellow.opacity(0.1)],
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+        )
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+        )
     }
 
     // MARK: - Header Section

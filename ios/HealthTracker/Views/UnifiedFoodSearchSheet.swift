@@ -7,11 +7,14 @@ import CoreData
 struct UnifiedFoodSearchSheet: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var dataManager = UnifiedDataManager.shared
+    @StateObject private var favourites = FavouriteFoodsManager.shared
     @State private var searchText = ""
     @State private var selectedMealType: MealType
     @State private var showingManualEntry = false
     @State private var showingBarcode = false
     @State private var showingCopyFromPreviousDay = false
+    @State private var pendingFood: FoodItem?
+    @State private var servingMultiplier: Double = 1.0
     @FocusState private var isSearchFocused: Bool
 
     // USDA API state
@@ -107,6 +110,35 @@ struct UnifiedFoodSearchSheet: View {
         return dataManager.getRecentFoods()
     }
 
+    // Recent foods filtered to current meal type (last 10 entries for this meal type)
+    var mealTypeRecentFoods: [FoodItem] {
+        let context = PersistenceController.shared.container.viewContext
+        let request: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
+        request.predicate = NSPredicate(format: "mealType == %@", selectedMealType.rawValue)
+        request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        request.fetchLimit = 50
+        guard let entries = try? context.fetch(request) else { return [] }
+        var seen = Set<String>()
+        var results: [FoodItem] = []
+        for entry in entries {
+            let key = "\(entry.name ?? "")-\(entry.brand ?? "")"
+            guard !seen.contains(key), let name = entry.name else { continue }
+            seen.insert(key)
+            results.append(FoodItem(
+                name: name, brand: entry.brand,
+                category: .other,
+                servingSize: entry.servingSize ?? "1",
+                servingUnit: entry.servingUnit ?? "serving",
+                calories: entry.calories, protein: entry.protein,
+                carbs: entry.carbs, fat: entry.fat, fiber: entry.fiber,
+                sugar: entry.sugar, sodium: entry.sodium,
+                cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: false
+            ))
+            if results.count == 10 { break }
+        }
+        return results
+    }
+
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
@@ -192,8 +224,8 @@ struct UnifiedFoodSearchSheet: View {
                         if !localResults.isEmpty {
                             Section("Local Results") {
                                 ForEach(localResults.prefix(50), id: \.id) { food in
-                                    FoodRowView(food: food) {
-                                        addFood(food)
+                                    FoodRowView(food: food, isFavourite: favourites.isFavourite(food), onStar: { favourites.toggle(food) }) {
+                                        selectFood(food)
                                     }
                                 }
                             }
@@ -213,22 +245,46 @@ struct UnifiedFoodSearchSheet: View {
                         } else if !onlineResults.isEmpty {
                             Section("Online Results") {
                                 ForEach(onlineResults.prefix(30), id: \.id) { food in
-                                    FoodRowView(food: food) {
-                                        addFood(food, fromUSDA: true)
+                                    FoodRowView(food: food, isFavourite: favourites.isFavourite(food), onStar: { favourites.toggle(food) }) {
+                                        selectFood(food, fromUSDA: true)
                                     }
                                 }
                             }
                         }
                     } else {
-                        Section("Recent Foods") {
-                            if recentFoods.isEmpty {
-                                Text("No recent foods yet")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            } else {
-                                ForEach(recentFoods, id: \.id) { food in
-                                    FoodRowView(food: food) {
-                                        addFood(food)
+                        // Favourites section
+                        if !favourites.favourites.isEmpty {
+                            Section("Favourites") {
+                                ForEach(favourites.favourites) { fav in
+                                    let food = fav.toFoodItem()
+                                    FoodRowView(food: food, isFavourite: true, onStar: { favourites.toggle(food) }) {
+                                        selectFood(food)
+                                    }
+                                }
+                            }
+                        }
+
+                        // Recent for this meal type
+                        let mealRecents = mealTypeRecentFoods
+                        if !mealRecents.isEmpty {
+                            Section("Recent for \(selectedMealType.rawValue)") {
+                                ForEach(mealRecents, id: \.id) { food in
+                                    FoodRowView(food: food, isFavourite: favourites.isFavourite(food), onStar: { favourites.toggle(food) }) {
+                                        selectFood(food)
+                                    }
+                                }
+                            }
+                        } else {
+                            Section("Recent Foods") {
+                                if recentFoods.isEmpty {
+                                    Text("No recent foods yet")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    ForEach(recentFoods.prefix(10), id: \.id) { food in
+                                        FoodRowView(food: food, isFavourite: favourites.isFavourite(food), onStar: { favourites.toggle(food) }) {
+                                            selectFood(food)
+                                        }
                                     }
                                 }
                             }
@@ -236,8 +292,8 @@ struct UnifiedFoodSearchSheet: View {
 
                         Section("Common Foods") {
                             ForEach(commonQuickAddFoods, id: \.id) { food in
-                                FoodRowView(food: food) {
-                                    addFood(food)
+                                FoodRowView(food: food, isFavourite: favourites.isFavourite(food), onStar: { favourites.toggle(food) }) {
+                                    selectFood(food)
                                 }
                             }
                         }
@@ -253,6 +309,15 @@ struct UnifiedFoodSearchSheet: View {
             .onChange(of: searchText) {
                 onSearchTextChanged(searchText)
             }
+        }
+        .sheet(item: $pendingFood) { food in
+            ServingSizeSheet(
+                food: food,
+                multiplier: $servingMultiplier,
+                onAdd: { addFood(food, multiplier: servingMultiplier) },
+                onCancel: { pendingFood = nil }
+            )
+            .presentationDetents([.medium])
         }
         .sheet(isPresented: $showingManualEntry) {
             ManualFoodEntrySheet(
@@ -289,11 +354,32 @@ struct UnifiedFoodSearchSheet: View {
 
     // MARK: - Actions
 
-    private func addFood(_ food: FoodItem, fromUSDA: Bool = false) {
-        if fromUSDA {
-            dataManager.cacheFoodItem(food)
+    private func selectFood(_ food: FoodItem, fromUSDA: Bool = false) {
+        servingMultiplier = 1.0
+        if fromUSDA { dataManager.cacheFoodItem(food) }
+        pendingFood = food
+    }
+
+    private func addFood(_ food: FoodItem, multiplier: Double = 1.0) {
+        if multiplier == 1.0 {
+            dataManager.addFoodFromDatabase(food, mealType: selectedMealType)
+        } else {
+            dataManager.addFoodEntry(
+                name: food.name,
+                brand: food.brand,
+                calories: food.calories * multiplier,
+                protein: food.protein * multiplier,
+                carbs: food.carbs * multiplier,
+                fat: food.fat * multiplier,
+                fiber: food.fiber * multiplier,
+                sugar: (food.sugar ?? 0) * multiplier,
+                sodium: (food.sodium ?? 0) * multiplier,
+                servingSize: food.servingSize,
+                servingUnit: food.servingUnit,
+                mealType: selectedMealType,
+                barcode: food.barcode
+            )
         }
-        dataManager.addFoodFromDatabase(food, mealType: selectedMealType)
         dismiss()
     }
 
@@ -353,45 +439,189 @@ struct UnifiedFoodSearchSheet: View {
 
 struct FoodRowView: View {
     let food: FoodItem
+    var isFavourite: Bool = false
+    var onStar: (() -> Void)? = nil
     let onTap: () -> Void
 
     var body: some View {
-        Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text(food.name)
-                        .font(.headline)
-                        .foregroundColor(.primary)
+        HStack {
+            Button(action: onTap) {
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text(food.name)
+                            .font(.headline)
+                            .foregroundColor(.primary)
 
+                        if let brand = food.brand {
+                            Text(brand)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+
+                        Spacer()
+
+                        Text("\(Int(food.calories)) cal")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.orange)
+                    }
+
+                    HStack(spacing: 15) {
+                        MacroLabel(value: food.protein, label: "P", color: .red)
+                        MacroLabel(value: food.carbs, label: "C", color: .blue)
+                        MacroLabel(value: food.fat, label: "F", color: .green)
+
+                        Spacer()
+
+                        Text("\(food.servingSize) \(food.servingUnit)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+            .buttonStyle(.plain)
+
+            if let onStar = onStar {
+                Button(action: onStar) {
+                    Image(systemName: isFavourite ? "star.fill" : "star")
+                        .foregroundColor(isFavourite ? .yellow : .gray)
+                        .font(.system(size: 16))
+                }
+                .buttonStyle(.plain)
+                .padding(.leading, 4)
+            }
+        }
+    }
+}
+
+// MARK: - Serving Size Sheet
+
+struct ServingSizeSheet: View {
+    let food: FoodItem
+    @Binding var multiplier: Double
+    let onAdd: () -> Void
+    let onCancel: () -> Void
+
+    private var adjCalories: Double { food.calories * multiplier }
+    private var adjProtein: Double { food.protein * multiplier }
+    private var adjCarbs: Double { food.carbs * multiplier }
+    private var adjFat: Double { food.fat * multiplier }
+
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 24) {
+                // Food name
+                VStack(spacing: 4) {
+                    Text(food.name)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
                     if let brand = food.brand {
                         Text(brand)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
-
-                    Spacer()
-
-                    Text("\(Int(food.calories)) cal")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.orange)
-                }
-
-                HStack(spacing: 15) {
-                    MacroLabel(value: food.protein, label: "P", color: .red)
-                    MacroLabel(value: food.carbs, label: "C", color: .blue)
-                    MacroLabel(value: food.fat, label: "F", color: .green)
-
-                    Spacer()
-
-                    Text("\(food.servingSize) \(food.servingUnit)")
+                    Text("Per serving: \(food.servingSize) \(food.servingUnit)")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
+                .padding(.top)
+
+                // Serving stepper
+                VStack(spacing: 8) {
+                    Text("Number of Servings")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    HStack(spacing: 24) {
+                        Button(action: {
+                            if multiplier > 0.25 { multiplier = (multiplier - 0.25).rounded(toPlaces: 2) }
+                        }) {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.title)
+                                .foregroundColor(.accentColor)
+                        }
+                        Text(String(format: "%.2f", multiplier))
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .frame(minWidth: 64)
+                        Button(action: {
+                            multiplier = (multiplier + 0.25).rounded(toPlaces: 2)
+                        }) {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title)
+                                .foregroundColor(.accentColor)
+                        }
+                    }
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(12)
+
+                // Adjusted nutrition
+                HStack(spacing: 0) {
+                    ServingNutrientCell(label: "Calories", value: adjCalories, format: "%.0f", color: .orange)
+                    Divider().frame(height: 40)
+                    ServingNutrientCell(label: "Protein", value: adjProtein, format: "%.1fg", color: .blue)
+                    Divider().frame(height: 40)
+                    ServingNutrientCell(label: "Carbs", value: adjCarbs, format: "%.1fg", color: .green)
+                    Divider().frame(height: 40)
+                    ServingNutrientCell(label: "Fat", value: adjFat, format: "%.1fg", color: .yellow)
+                }
+                .padding()
+                .background(Color(.secondarySystemGroupedBackground))
+                .cornerRadius(12)
+
+                Spacer()
+
+                Button(action: onAdd) {
+                    Text("Add to Diary")
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.accentColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                }
+                .padding(.horizontal)
+                .padding(.bottom)
             }
-            .padding(.vertical, 4)
+            .padding(.horizontal)
+            .navigationTitle("Adjust Serving")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel", action: onCancel)
+                }
+            }
         }
-        .buttonStyle(.plain)
+    }
+}
+
+private struct ServingNutrientCell: View {
+    let label: String
+    let value: Double
+    let format: String
+    let color: Color
+
+    var body: some View {
+        VStack(spacing: 2) {
+            Text(String(format: format, value))
+                .font(.subheadline)
+                .fontWeight(.bold)
+                .foregroundColor(color)
+            Text(label)
+                .font(.caption2)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+private extension Double {
+    func rounded(toPlaces places: Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
     }
 }
 

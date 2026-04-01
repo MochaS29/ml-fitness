@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreData
 
 // MARK: - Water Entry Sheet
 struct WaterEntrySheet: View {
@@ -81,11 +82,43 @@ struct ExerciseEntrySheet: View {
     @StateObject private var dataManager = UnifiedDataManager.shared
     @State private var exerciseName = ""
     @State private var duration = "30"
-    @State private var calories = "150"
+    @State private var calories = ""
     @State private var selectedCategory = "Cardio"
     @State private var notes = ""
+    @State private var caloriesManuallyEdited = false
 
     let categories = ["Cardio", "Strength", "Flexibility", "Sports", "Other"]
+
+    // MET-based calorie estimate (70 kg default weight)
+    private var estimatedCalories: Int {
+        let mins = Double(duration) ?? 30
+        let met: Double
+        switch selectedCategory {
+        case "Cardio":    met = 7.5
+        case "Strength":  met = 5.0
+        case "Flexibility": met = 3.0
+        case "Sports":    met = 7.0
+        default:          met = 5.0
+        }
+        return Int((met * 70.0 * mins) / 60.0)
+    }
+
+    private var recentExercises: [(name: String, category: String, duration: Int, calories: Double)] {
+        let context = PersistenceController.shared.container.viewContext
+        let request: NSFetchRequest<ExerciseEntry> = ExerciseEntry.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        request.fetchLimit = 50
+        guard let entries = try? context.fetch(request) else { return [] }
+        var seen = Set<String>()
+        var results: [(name: String, category: String, duration: Int, calories: Double)] = []
+        for e in entries {
+            guard let name = e.name, !seen.contains(name) else { continue }
+            seen.insert(name)
+            results.append((name: name, category: e.category ?? "Other", duration: Int(e.duration), calories: e.caloriesBurned))
+            if results.count == 5 { break }
+        }
+        return results
+    }
 
     var body: some View {
         NavigationView {
@@ -98,6 +131,11 @@ struct ExerciseEntrySheet: View {
                             Text(category).tag(category)
                         }
                     }
+                    .onChange(of: selectedCategory) {
+                        if !caloriesManuallyEdited {
+                            calories = "\(estimatedCalories)"
+                        }
+                    }
 
                     HStack {
                         TextField("Duration", text: $duration)
@@ -105,12 +143,54 @@ struct ExerciseEntrySheet: View {
                         Text("minutes")
                             .foregroundColor(.secondary)
                     }
+                    .onChange(of: duration) {
+                        if !caloriesManuallyEdited {
+                            calories = "\(estimatedCalories)"
+                        }
+                    }
 
                     HStack {
-                        TextField("Calories", text: $calories)
+                        TextField("Calories burned (est. \(estimatedCalories))", text: $calories)
                             .keyboardType(.numberPad)
-                        Text("burned")
+                            .onChange(of: calories) {
+                                caloriesManuallyEdited = true
+                            }
+                        Text("cal")
                             .foregroundColor(.secondary)
+                    }
+                }
+
+                // Recent exercises
+                let recents = recentExercises
+                if !recents.isEmpty {
+                    Section("Recent Exercises") {
+                        ForEach(recents, id: \.name) { recent in
+                            Button(action: {
+                                exerciseName = recent.name
+                                selectedCategory = recent.category
+                                duration = "\(recent.duration)"
+                                calories = "\(Int(recent.calories))"
+                                caloriesManuallyEdited = true
+                            }) {
+                                HStack {
+                                    Image(systemName: recent.category == "Cardio" ? "figure.run" : "dumbbell")
+                                        .foregroundColor(.green)
+                                        .frame(width: 20)
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(recent.name)
+                                            .foregroundColor(.primary)
+                                            .font(.subheadline)
+                                        Text("\(recent.duration) min · \(Int(recent.calories)) cal")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "arrow.up.left")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -130,6 +210,9 @@ struct ExerciseEntrySheet: View {
             }
             .navigationTitle("Add Exercise")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                calories = "\(estimatedCalories)"
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
@@ -141,7 +224,7 @@ struct ExerciseEntrySheet: View {
                     Button("Add") {
                         if !exerciseName.isEmpty {
                             let durationInt = Int(duration) ?? 30
-                            let caloriesDouble = Double(calories) ?? 0
+                            let caloriesDouble = Double(calories) ?? Double(estimatedCalories)
                             let name = exerciseName
                             let category = selectedCategory
                             let noteText = notes.isEmpty ? nil : notes
