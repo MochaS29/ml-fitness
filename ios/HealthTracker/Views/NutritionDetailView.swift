@@ -124,7 +124,6 @@ struct NutritionDetailView: View {
                 .font(.headline)
                 .foregroundColor(.primary)
 
-            let divisor = selectedTab == 0 ? 1.0 : dayCount
             let showAvg = selectedTab > 0
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {

@@ -250,8 +250,8 @@ struct UnifiedFoodSearchSheet: View {
             .onAppear {
                 isSearchFocused = true
             }
-            .onChange(of: searchText) { newValue in
-                onSearchTextChanged(newValue)
+            .onChange(of: searchText) {
+                onSearchTextChanged(searchText)
             }
         }
         .sheet(isPresented: $showingManualEntry) {

@@ -80,8 +80,8 @@ struct BarcodeScannerView: View {
                     }
                 }
             }
-            .onChange(of: scanner.scannedBarcode) { barcode in
-                if let barcode = barcode {
+            .onChange(of: scanner.scannedBarcode) {
+                if let barcode = scanner.scannedBarcode {
                     handleScannedBarcode(barcode)
                 }
             }
