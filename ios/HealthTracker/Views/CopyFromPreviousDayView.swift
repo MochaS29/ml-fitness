@@ -195,7 +195,7 @@ struct CopyFromPreviousDayView: View {
                     Button("Cancel") { dismiss() }
                 }
             }
-            .onChange(of: sourceDate) { _ in
+            .onChange(of: sourceDate) {
                 loadSourceData()
             }
             .onAppear {

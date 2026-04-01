@@ -96,7 +96,7 @@ class RecipeImportService {
         
         // Download and save image if available
         if let imageURL = recipeData.imageURL {
-            Task {
+            Task { [recipe] in
                 if let imageData = try? await downloadImage(from: imageURL) {
                     await MainActor.run {
                         recipe.imageData = imageData

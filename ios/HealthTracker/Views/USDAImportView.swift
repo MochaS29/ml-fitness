@@ -149,7 +149,7 @@ struct USDAImportView: View {
         importMessage = "Preparing import..."
         
         // Create a background context for import
-        let importContext = PersistenceController.shared.container.newBackgroundContext()
+        _ = PersistenceController.shared.container.newBackgroundContext()
         
         Task {
             do {

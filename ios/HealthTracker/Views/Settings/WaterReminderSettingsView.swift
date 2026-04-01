@@ -86,7 +86,7 @@ struct WaterReminderSettingsView: View {
                                 Text(option.0).tag(option.1)
                             }
                         }
-                        .onChange(of: reminderService.reminderInterval) { _ in
+                        .onChange(of: reminderService.reminderInterval) {
                             reminderService.saveSettings()
                             reminderService.scheduleReminders()
                         }
@@ -143,7 +143,7 @@ struct WaterReminderSettingsView: View {
                                 .font(.caption)
                         }
                         .tint(Color.mindfulTeal)
-                        .onChange(of: reminderService.dailyGoal) { _ in
+                        .onChange(of: reminderService.dailyGoal) {
                             reminderService.saveSettings()
                         }
 

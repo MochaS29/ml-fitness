@@ -38,10 +38,10 @@ class PhoneConnectivityManager: NSObject, ObservableObject {
             let foodEntries = try context.fetch(foodRequest)
             let waterEntries = try context.fetch(waterRequest)
 
-            let totalCalories = foodEntries.reduce(0.0) { $0 + Double($1.calories ?? 0) }
-            let totalProtein = foodEntries.reduce(0.0) { $0 + Double($1.protein ?? 0) }
-            let totalCarbs = foodEntries.reduce(0.0) { $0 + Double($1.carbs ?? 0) }
-            let totalFat = foodEntries.reduce(0.0) { $0 + Double($1.fat ?? 0) }
+            let totalCalories = foodEntries.reduce(0.0) { $0 + $1.calories }
+            let totalProtein = foodEntries.reduce(0.0) { $0 + $1.protein }
+            let totalCarbs = foodEntries.reduce(0.0) { $0 + $1.carbs }
+            let totalFat = foodEntries.reduce(0.0) { $0 + $1.fat }
             let totalWater = waterEntries.reduce(0.0) { $0 + Double($1.amount) }
 
             let dailyData: [String: Any] = [

@@ -804,7 +804,7 @@ struct MonthlyOverviewView: View {
         .onAppear {
             fetchFoodEntries()
         }
-        .onChange(of: displayMonth) { _ in
+        .onChange(of: displayMonth) {
             fetchFoodEntries()
         }
         .sheet(isPresented: $showingDayDetail) {
@@ -984,10 +984,12 @@ struct CalendarGridView: View {
             case "Lunch" where !mealDots.hasLunch:
                 mealDots.hasLunch = true
                 dayMealCount += 1
-            case "Dinner", "Supper" where !mealDots.hasDinner:
+            case "Dinner" where !mealDots.hasDinner,
+                 "Supper" where !mealDots.hasDinner:
                 mealDots.hasDinner = true
                 dayMealCount += 1
-            case "Snack", "Snacks" where !mealDots.hasSnack:
+            case "Snack" where !mealDots.hasSnack,
+                 "Snacks" where !mealDots.hasSnack:
                 mealDots.hasSnack = true
                 dayMealCount += 1
             default:

@@ -200,10 +200,9 @@ class DemoDataGenerator {
         let calendar = Calendar.current
         let currentWeight = 170.0 // Current weight showing on dashboard
         let startingWeight = 180.0 // Starting weight 30 days ago
-        let goalWeight = 160.0 // Goal weight
+        _ = 160.0 // Goal weight (unused)
 
         // Generate weight entries every 2-3 days showing gradual loss
-        var previousWeight = startingWeight
         for dayOffset in [28, 25, 22, 19, 16, 14, 11, 8, 5, 3, 0] {
             guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: startDate) else { continue }
 
@@ -236,7 +235,6 @@ class DemoDataGenerator {
                 entry.notes = "Halfway to goal weight"
             }
 
-            previousWeight = weight
         }
     }
     
@@ -249,7 +247,7 @@ class DemoDataGenerator {
 
             // Generate 6-8 water entries throughout the day
             let numEntries = Int.random(in: 6...8)
-            let targetOunces = 64 // Daily goal
+            let _ = 64 // Daily goal (unused)
 
             for entryNum in 0..<numEntries {
                 // Spread entries throughout the day

@@ -38,7 +38,7 @@ extension CustomRecipe {
     var instructionsList: [Instruction] {
         get {
             // Convert string array to Instruction objects
-            guard let instructions = instructions as? [String] else { return [] }
+            guard let instructions else { return [] }
             return instructions.enumerated().map { index, instruction in
                 Instruction(stepNumber: index + 1, instruction: instruction, duration: nil, imageUrl: nil, tips: nil)
             }

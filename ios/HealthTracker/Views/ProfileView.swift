@@ -69,8 +69,8 @@ struct ProfileView: View {
                             }
                             .pickerStyle(SegmentedPickerStyle())
                             .frame(width: 150)
-                            .onChange(of: stepCounter.distanceUnit) { newUnit in
-                                stepCounter.setDistanceUnit(newUnit)
+                            .onChange(of: stepCounter.distanceUnit) {
+                                stepCounter.setDistanceUnit(stepCounter.distanceUnit)
                             }
                         }
 
@@ -299,8 +299,8 @@ struct EditProfileView: View {
             .sheet(isPresented: $showingAvatarGrid) {
                 AvatarGridView()
             }
-            .onChange(of: pickedImage) { newImage in
-                if let image = newImage {
+            .onChange(of: pickedImage) {
+                if let image = pickedImage {
                     profileManager.savePhotoAvatar(image)
                     pickedImage = nil
                 }

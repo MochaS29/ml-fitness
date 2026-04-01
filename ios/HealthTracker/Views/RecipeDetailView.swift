@@ -181,10 +181,10 @@ struct RecipeDetailView: View {
                                 NutritionItem(label: "Protein", value: "0", unit: "g")
                                 NutritionItem(label: "Carbs", value: "0", unit: "g")
                                 NutritionItem(label: "Fat", value: "0", unit: "g")
-                                if let fiber = nutrition.fiber {
+                                if nutrition.fiber != nil {
                                     NutritionItem(label: "Fiber", value: "0", unit: "g")
                                 }
-                                if let sodium = nutrition.sodium {
+                                if nutrition.sodium != nil {
                                     NutritionItem(label: "Sodium", value: "0", unit: "mg")
                                 }
                             }

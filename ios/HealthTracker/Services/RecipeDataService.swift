@@ -167,7 +167,7 @@ class RecipeDataService: ObservableObject {
         return recipes.filter { recipe in
             guard let name = recipe.name else { return false }
             let nameMatch = name.localizedCaseInsensitiveContains(keyword)
-            let tagMatch = recipe.tags?.contains { ($0 as? String)?.localizedCaseInsensitiveContains(keyword) ?? false } ?? false
+            let tagMatch = recipe.tags?.contains { $0.localizedCaseInsensitiveContains(keyword) } ?? false
             return nameMatch || tagMatch
         }
     }
@@ -323,16 +323,16 @@ struct RecipeData: Codable {
         )
 
         // Convert ingredients from string array
-        self.ingredients = (customRecipe.ingredients as? [String] ?? []).map {
+        self.ingredients = (customRecipe.ingredients ?? []).map {
             IngredientData(name: $0, amount: 1, unit: "", category: nil)
         }
 
         // Convert instructions
-        self.instructions = (customRecipe.instructions as? [String] ?? []).enumerated().map { index, instruction in
+        self.instructions = (customRecipe.instructions ?? []).enumerated().map { index, instruction in
             InstructionData(step: index + 1, description: instruction, duration: nil)
         }
 
-        self.dietaryTags = customRecipe.tags as? [String] ?? []
+        self.dietaryTags = customRecipe.tags ?? []
         self.mealPlans = []
         self.imageUrl = nil
         self.source = customRecipe.source

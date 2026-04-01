@@ -174,10 +174,10 @@ struct AutocompleteFoodSearchView: View {
                             .autocorrectionDisabled()
                             .textInputAutocapitalization(.words)
                             .focused($isSearchFieldFocused)
-                            .onChange(of: searchText) { newValue in
-                                isSearching = !newValue.isEmpty
-                                if !newValue.isEmpty {
-                                    searchUSDA(newValue)
+                            .onChange(of: searchText) {
+                                isSearching = !searchText.isEmpty
+                                if !searchText.isEmpty {
+                                    searchUSDA(searchText)
                                 } else {
                                     usdaResults = []
                                 }

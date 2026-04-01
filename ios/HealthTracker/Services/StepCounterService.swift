@@ -58,7 +58,7 @@ class StepCounterService: ObservableObject {
         } else {
             // Default based on locale
             let locale = Locale.current
-            let isMetric = locale.usesMetricSystem
+            let isMetric = locale.measurementSystem == .metric
             distanceUnit = isMetric ? .kilometers : .miles
         }
     }
