@@ -17,6 +17,8 @@ struct DashboardView: View {
     @State private var showingStepGoal = false
     @State private var showingExerciseQuickAdd = false
     @State private var showingAllInsights = false
+    @State private var showingReminders = false
+    @State private var showingNutritionDetail = false
     @State private var widgetsEnabled = false
 
     enum TimeRange: String, CaseIterable {
@@ -55,6 +57,9 @@ struct DashboardView: View {
 
                     // AI Recommendations (from Option 4)
                     aiRecommendationsSection
+
+                    // Quick Reminders Access
+                    quickRemindersStrip
 
                     // Detailed Analytics (from Option 3)
                     detailedAnalyticsSection
@@ -123,8 +128,55 @@ struct DashboardView: View {
         .sheet(isPresented: $showingAllInsights) {
             AllInsightsView(insights: viewModel.aiInsights)
         }
+        .sheet(isPresented: $showingReminders) {
+            RemindersView()
+        }
+        .sheet(isPresented: $showingNutritionDetail) {
+            NutritionDetailView()
+        }
     }
-    
+
+    // MARK: - Quick Reminders Strip
+
+    private var quickRemindersStrip: some View {
+        let settings = SmartReminderSettings.shared
+        let activeCount = [settings.waterEnabled, settings.stepsEnabled, settings.mealsEnabled, settings.exerciseEnabled, settings.weightEnabled].filter { $0 }.count
+
+        return Button(action: { showingReminders = true }) {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Color.mindfulTeal.opacity(0.15))
+                        .frame(width: 36, height: 36)
+                    Image(systemName: activeCount > 0 ? "bell.badge.fill" : "bell.fill")
+                        .foregroundColor(.mindfulTeal)
+                        .font(.system(size: 16))
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Reminders")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    Text(activeCount > 0 ? "\(activeCount) active reminder\(activeCount == 1 ? "" : "s")" : "Tap to set up reminders")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+        }
+        .buttonStyle(.plain)
+    }
+
     // MARK: - Header Section
     
     private var headerSection: some View {
@@ -426,60 +478,74 @@ struct DashboardView: View {
                 showingExerciseDetail = true
             }
 
-            // Nutrition Distribution Chart
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Nutrition Distribution")
-                    .font(.headline)
-                    .foregroundColor(.deepCharcoal)
-                
-                Chart {
-                    ForEach(viewModel.nutritionData) { item in
-                        SectorMark(
-                            angle: .value("Value", item.value),
-                            innerRadius: .ratio(0.6),
-                            angularInset: 2
-                        )
-                        .foregroundStyle(item.color)
-                        .cornerRadius(4)
-                        .opacity(animateCharts ? 1 : 0)
+            // Nutrition Distribution Chart (tappable)
+            Button(action: { showingNutritionDetail = true }) {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Nutrition Distribution")
+                            .font(.headline)
+                            .foregroundColor(.deepCharcoal)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
-                }
-                .frame(height: 200)
-                .chartBackground { chartProxy in
-                    GeometryReader { geometry in
-                        VStack {
-                            Text("\(viewModel.todayCalories)")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                            Text("calories")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
-                    }
-                }
-                
-                // Legend
-                HStack(spacing: 20) {
-                    ForEach(viewModel.nutritionData) { item in
-                        HStack(spacing: 4) {
-                            Circle()
-                                .fill(item.color)
-                                .frame(width: 12, height: 12)
-                            Text(item.name)
-                                .font(.caption)
-                            Text("\(Int(item.percentage))%")
-                                .font(.caption)
-                                .fontWeight(.semibold)
+
+                    Chart {
+                        ForEach(viewModel.nutritionData) { item in
+                            SectorMark(
+                                angle: .value("Value", item.value),
+                                innerRadius: .ratio(0.6),
+                                angularInset: 2
+                            )
+                            .foregroundStyle(item.color)
+                            .cornerRadius(4)
+                            .opacity(animateCharts ? 1 : 0)
                         }
                     }
+                    .frame(height: 200)
+                    .chartBackground { chartProxy in
+                        GeometryReader { geometry in
+                            VStack {
+                                Text("\(viewModel.todayCalories)")
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                                Text("calories")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                        }
+                    }
+
+                    // Legend
+                    HStack(spacing: 20) {
+                        ForEach(viewModel.nutritionData) { item in
+                            HStack(spacing: 4) {
+                                Circle()
+                                    .fill(item.color)
+                                    .frame(width: 12, height: 12)
+                                Text(item.name)
+                                    .font(.caption)
+                                Text("\(Int(item.percentage))%")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+
+                    Text("Tap for detailed day / week / month breakdown")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
-                .padding(.horizontal)
+                .padding()
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .cornerRadius(16)
+                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
             }
-            .padding()
-            .background(Color(UIColor.secondarySystemGroupedBackground))
-            .cornerRadius(16)
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
+            .buttonStyle(.plain)
             
             // Weekly Trend Chart
             VStack(alignment: .leading, spacing: 12) {

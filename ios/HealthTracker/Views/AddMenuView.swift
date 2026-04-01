@@ -29,10 +29,7 @@ struct AddMenuView: View {
                 }
         }
         .sheet(isPresented: $showingFoodSearch) {
-            AutocompleteFoodSearchView { foodItem in
-                addFoodEntry(foodItem: foodItem)
-                dismiss()
-            }
+            UnifiedFoodSearchSheet(mealType: selectedMealType, targetDate: selectedDate)
         }
         .sheet(isPresented: $showingBarcodeScanner) {
             ProFeatureGate {
@@ -82,11 +79,10 @@ struct AddMenuView: View {
                         .foregroundColor(.primary)
                 }
 
-                // Barcode scanner temporarily disabled - coming in next release
-                // Button(action: { showingBarcodeScanner = true }) {
-                //     Label("Scan Barcode", systemImage: "barcode.viewfinder")
-                //         .foregroundColor(.primary)
-                // }
+                Button(action: { showingBarcodeScanner = true }) {
+                    Label("Scan Barcode", systemImage: "barcode.viewfinder")
+                        .foregroundColor(.primary)
+                }
             }
             
             // Exercise Section
@@ -117,29 +113,6 @@ struct AddMenuView: View {
         }
     }
     
-    private func addFoodEntry(foodItem: FoodItem) {
-        let entry = FoodEntry(context: viewContext)
-        entry.id = UUID()
-        entry.name = foodItem.name
-        entry.brand = foodItem.brand
-        entry.calories = foodItem.calories
-        entry.protein = foodItem.protein
-        entry.carbs = foodItem.carbs
-        entry.fat = foodItem.fat
-        entry.fiber = foodItem.fiber
-        entry.sugar = foodItem.sugar ?? 0
-        entry.sodium = foodItem.sodium ?? 0
-        entry.servingSize = foodItem.servingSize
-        entry.servingUnit = foodItem.servingUnit
-        entry.timestamp = selectedDate
-        entry.mealType = selectedMealType.rawValue
-        
-        do {
-            try viewContext.save()
-        } catch {
-            print("Error saving food entry: \(error)")
-        }
-    }
 }
 
 // Quick water add view
