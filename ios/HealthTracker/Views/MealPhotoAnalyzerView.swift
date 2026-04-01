@@ -141,13 +141,18 @@ struct MealPhotoAnalyzerView: View {
     private func saveToFoodDiary() {
         guard let analysis = analysisResult else { return }
 
-        analysisService.saveAnalysisToFoodEntry(
-            analysis: analysis,
-            image: selectedImage,
-            context: viewContext
-        )
-
-        dismiss()
+        do {
+            try analysisService.saveAnalysisToFoodEntry(
+                analysis: analysis,
+                image: selectedImage,
+                mealType: mealType,
+                context: viewContext
+            )
+            dismiss()
+        } catch {
+            errorMessage = "Failed to save to diary: \(error.localizedDescription)"
+            showingError = true
+        }
     }
 }
 
