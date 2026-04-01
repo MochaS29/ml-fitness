@@ -98,29 +98,31 @@ class USDAFoodImporter {
         for i in stride(from: 0, to: foods.count, by: batchSize) {
             let batch = Array(foods[i..<min(i + batchSize, foods.count)])
             
-            try await viewContext.perform {
+            let ctx = viewContext
+            let mapping = nutrientMapping
+            try await ctx.perform {
                 for food in batch {
                     // Create CustomFood entity
-                    let customFood = CustomFood(context: self.viewContext)
+                    let customFood = CustomFood(context: ctx)
                     customFood.id = UUID()
                     customFood.name = food.description
                     customFood.source = "USDA"
                     customFood.fdcId = Int32(food.fdcId)
                     customFood.isUserCreated = false
                     customFood.createdDate = Date()
-                    
+
                     // Get nutrients for this food
                     let nutrientsForFood = foodNutrients.filter { $0.fdcId == food.fdcId }
-                    
+
                     // Aggregate nutrients
                     var nutrientData: [String: Double] = [:]
-                    
+
                     for foodNutrient in nutrientsForFood {
-                        if let mappedName = self.nutrientMapping[foodNutrient.nutrientId] {
+                        if let mappedName = mapping[foodNutrient.nutrientId] {
                             nutrientData[mappedName] = foodNutrient.amount
                         }
                     }
-                    
+
                     // Set basic macros
                     customFood.calories = nutrientData["calories"] ?? 0
                     customFood.protein = nutrientData["protein"] ?? 0
@@ -131,14 +133,14 @@ class USDAFoodImporter {
                     customFood.sodium = nutrientData["sodium"] ?? 0
                     customFood.cholesterol = nutrientData["cholesterol"] ?? 0
                     customFood.saturatedFat = nutrientData["saturatedFat"] ?? 0
-                    
+
                     // Store additional nutrients as JSON
                     customFood.additionalNutrients = nutrientData
                 }
-                
+
                 // Save batch
-                if self.viewContext.hasChanges {
-                    try self.viewContext.save()
+                if ctx.hasChanges {
+                    try ctx.save()
                 }
             }
         }

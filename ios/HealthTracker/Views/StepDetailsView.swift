@@ -482,7 +482,7 @@ class StepDetailsViewModel: ObservableObject {
         hourlySteps = (0..<24).map { hour in
             let date = calendar.date(byAdding: .hour, value: hour, to: startOfDay)!
             let isCurrentHour = hour == currentHour
-            let isFuture = hour > currentHour
+            _ = hour > currentHour
 
             // TODO: Replace with real HealthKit data
             // Mock data temporarily disabled - showing zeros

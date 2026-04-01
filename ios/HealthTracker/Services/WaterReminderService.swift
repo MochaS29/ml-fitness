@@ -322,7 +322,7 @@ extension WaterReminderService: UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         // Show notification even when app is in foreground
-        completionHandler([.alert, .sound, .badge])
+        completionHandler([.banner, .sound, .badge])
     }
 }
 

@@ -201,11 +201,22 @@ class DashboardViewModel: ObservableObject {
         do {
             let entries = try viewContext.fetch(request)
 
-            // Calculate total calories from food entries
             let totalCalories = entries.reduce(0) { $0 + Int($1.calories) }
+            let totalProtein = entries.reduce(0.0) { $0 + $1.protein }
+            let totalCarbs = entries.reduce(0.0) { $0 + $1.carbs }
+            let totalFat = entries.reduce(0.0) { $0 + $1.fat }
+            let totalFiber = entries.reduce(0.0) { $0 + $1.fiber }
+            let totalSugar = entries.reduce(0.0) { $0 + $1.sugar }
+            let totalSodium = entries.reduce(0.0) { $0 + $1.sodium }
 
             DispatchQueue.main.async { [weak self] in
                 self?.todayCalories = totalCalories
+                self?.todayProtein = totalProtein
+                self?.todayCarbs = totalCarbs
+                self?.todayFat = totalFat
+                self?.todayFiber = totalFiber
+                self?.todaySugar = totalSugar
+                self?.todaySodium = totalSodium
             }
         } catch {
             print("Error fetching food entries: \(error)")
@@ -248,37 +259,43 @@ class DashboardViewModel: ObservableObject {
     }
 
     private func loadSimpleGoals() {
-        // Reload from UserDefaults to get latest values
-        let newStepGoal = UserDefaults.standard.integer(forKey: "dailyStepGoal")
-        if newStepGoal > 0 {
-            dailyStepGoal = newStepGoal
-            stepGoal = newStepGoal
-        } else {
-            stepGoal = dailyStepGoal
-        }
-
+        // Read from UserDefaults off the publish path, then apply on next runloop tick
+        // to avoid "Publishing changes from within view updates" warnings.
+        let newStepGoal    = UserDefaults.standard.integer(forKey: "dailyStepGoal")
         let newCalorieGoal = UserDefaults.standard.integer(forKey: "dailyCalorieGoal")
-        if newCalorieGoal > 0 {
-            dailyCalorieGoal = newCalorieGoal
-            calorieGoal = newCalorieGoal
-        } else {
-            calorieGoal = dailyCalorieGoal
-        }
+        let newWaterGoal   = UserDefaults.standard.integer(forKey: "dailyWaterGoal")
+        let newWeightGoal  = UserDefaults.standard.double(forKey: "weightGoal")
 
-        let newWaterGoal = UserDefaults.standard.integer(forKey: "dailyWaterGoal")
-        if newWaterGoal > 0 {
-            dailyWaterGoal = newWaterGoal
-            waterGoal = newWaterGoal
-        } else {
-            waterGoal = dailyWaterGoal
-        }
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
 
-        let newWeightGoal = UserDefaults.standard.double(forKey: "weightGoal")
-        if newWeightGoal > 0 {
-            weightGoal = newWeightGoal
-            targetWeight = newWeightGoal
-        } else {
-            targetWeight = currentWeight
+            if newStepGoal > 0 {
+                self.dailyStepGoal = newStepGoal
+                self.stepGoal = newStepGoal
+            } else {
+                self.stepGoal = self.dailyStepGoal
+            }
+
+            if newCalorieGoal > 0 {
+                self.dailyCalorieGoal = newCalorieGoal
+                self.calorieGoal = newCalorieGoal
+            } else {
+                self.calorieGoal = self.dailyCalorieGoal
+            }
+
+            if newWaterGoal > 0 {
+                self.dailyWaterGoal = newWaterGoal
+                self.waterGoal = newWaterGoal
+            } else {
+                self.waterGoal = self.dailyWaterGoal
+            }
+
+            if newWeightGoal > 0 {
+                self.weightGoal = newWeightGoal
+                self.targetWeight = newWeightGoal
+            } else {
+                self.targetWeight = self.currentWeight
+            }
         }
     }
 
@@ -419,6 +436,12 @@ class DashboardViewModel: ObservableObject {
     // These will be updated from real data sources
     @Published var todayCalories = 0
     @Published var calorieGoal = 2000
+    @Published var todayProtein: Double = 0
+    @Published var todayCarbs: Double = 0
+    @Published var todayFat: Double = 0
+    @Published var todayFiber: Double = 0
+    @Published var todaySugar: Double = 0
+    @Published var todaySodium: Double = 0
     @Published var todaySteps = 0
     @Published var stepGoal = 8000
     @Published var currentWeight = 0.0
@@ -695,15 +718,71 @@ class DashboardViewModel: ObservableObject {
     var nutrientBreakdown: [NutrientBreakdown] {
         var nutrients: [NutrientBreakdown] = []
 
-        // Only show calories if we have actual food logged
+        // Only show macros if we have actual food logged
         if todayCalories > 0 {
+            let defaults = UserDefaults.standard
+            let proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0 ? Double(defaults.integer(forKey: "proteinGoal")) : 50.0
+            let carbGoal = 275.0   // Standard daily value
+            let fatGoal = 78.0     // Standard daily value
+            let fiberGoal = 28.0   // Standard daily value
+            let sugarLimit = 50.0  // Standard daily value
+            let sodiumLimit = 2300.0 // Standard daily value
+
             nutrients.append(NutrientBreakdown(
                 name: "Calories",
                 current: "\(todayCalories)",
-                goal: "\(calorieGoal)",
+                goal: "\(calorieGoal) kcal",
                 percentage: (Double(todayCalories) / Double(calorieGoal)) * 100,
                 color: .orange
             ))
+            nutrients.append(NutrientBreakdown(
+                name: "Protein",
+                current: String(format: "%.1f g", todayProtein),
+                goal: "\(Int(proteinGoal)) g",
+                percentage: (todayProtein / proteinGoal) * 100,
+                color: .blue
+            ))
+            nutrients.append(NutrientBreakdown(
+                name: "Carbohydrates",
+                current: String(format: "%.1f g", todayCarbs),
+                goal: "\(Int(carbGoal)) g",
+                percentage: (todayCarbs / carbGoal) * 100,
+                color: .green
+            ))
+            nutrients.append(NutrientBreakdown(
+                name: "Fat",
+                current: String(format: "%.1f g", todayFat),
+                goal: "\(Int(fatGoal)) g",
+                percentage: (todayFat / fatGoal) * 100,
+                color: .yellow
+            ))
+            if todayFiber > 0 {
+                nutrients.append(NutrientBreakdown(
+                    name: "Fiber",
+                    current: String(format: "%.1f g", todayFiber),
+                    goal: "\(Int(fiberGoal)) g",
+                    percentage: (todayFiber / fiberGoal) * 100,
+                    color: .brown
+                ))
+            }
+            if todaySugar > 0 {
+                nutrients.append(NutrientBreakdown(
+                    name: "Sugar",
+                    current: String(format: "%.1f g", todaySugar),
+                    goal: "< \(Int(sugarLimit)) g",
+                    percentage: (todaySugar / sugarLimit) * 100,
+                    color: .pink
+                ))
+            }
+            if todaySodium > 0 {
+                nutrients.append(NutrientBreakdown(
+                    name: "Sodium",
+                    current: String(format: "%.0f mg", todaySodium),
+                    goal: "< \(Int(sodiumLimit)) mg",
+                    percentage: (todaySodium / sodiumLimit) * 100,
+                    color: .gray
+                ))
+            }
         }
 
         // Add vitamins and minerals from supplements

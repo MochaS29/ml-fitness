@@ -12,7 +12,7 @@ struct SupplementStatsWidget: View {
     ) private var todaysSupplements: FetchedResults<SupplementEntry>
     
     var topNutrients: [(name: String, percentage: Int)] {
-        guard let profile = profileManager.currentProfile else { return [] }
+        guard profileManager.currentProfile != nil else { return [] }
 
         // Limit processing to prevent memory issues
         let supplementsToProcess = Array(todaysSupplements.prefix(5))  // Reduced from 10
@@ -21,7 +21,7 @@ struct SupplementStatsWidget: View {
 
         // Aggregate nutrients from supplements (limited)
         for supplement in supplementsToProcess {
-            if let nutrients = supplement.nutrients as? [String: Double] {
+            if let nutrients = supplement.nutrients {
                 for (nutrientId, amount) in nutrients.prefix(3) {  // Reduced from 5
                     nutrientTotals[nutrientId, default: 0] += amount
                 }

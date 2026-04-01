@@ -116,34 +116,65 @@ class BarcodeScannerService: NSObject, ObservableObject {
     }
     
     func lookupBarcode(_ barcode: String) async throws -> FoodProduct {
-        // Simulate network delay
-        try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
-
-        // Check mock database first
+        // Check mock/local database first (instant, no network needed)
         if let product = mockFoodDatabase[barcode] {
             return product
         }
 
-        // In production, make API call here
-        // For now, try to extract info from barcode if not in database
-        if barcode.count >= 12 {
-            // Generate a generic product for demo
-            return FoodProduct(
-                barcode: barcode,
-                name: "Unknown Product",
-                brand: "Generic",
-                servingSize: "1 serving",
-                calories: 100,
-                protein: 2,
-                carbs: 20,
-                fat: 3,
-                fiber: 1,
-                sugar: 5,
-                sodium: 150
-            )
+        // Try Open Food Facts API (free, no API key required)
+        if let product = try? await lookupOpenFoodFacts(barcode) {
+            return product
         }
 
-        throw ScanError.lookupFailed("Product not found in database")
+        throw ScanError.lookupFailed("Product not found. Try searching by name instead.")
+    }
+
+    private func lookupOpenFoodFacts(_ barcode: String) async throws -> FoodProduct {
+        let urlString = "https://world.openfoodfacts.org/api/v0/product/\(barcode).json"
+        guard let url = URL(string: urlString) else {
+            throw ScanError.lookupFailed("Invalid barcode")
+        }
+
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw ScanError.lookupFailed("Network error")
+        }
+
+        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let status = json["status"] as? Int, status == 1,
+              let product = json["product"] as? [String: Any] else {
+            throw ScanError.lookupFailed("Product not found")
+        }
+
+        let name = (product["product_name"] as? String) ?? "Unknown Product"
+        let brand = (product["brands"] as? String) ?? ""
+        let servingSize = (product["serving_size"] as? String) ?? "1 serving"
+
+        // Nutriments are per 100g or per serving depending on the entry
+        let nutriments = product["nutriments"] as? [String: Any] ?? [:]
+
+        // Prefer per-serving values when available, fall back to per-100g
+        func nutrientValue(_ key: String) -> Double {
+            if let perServing = nutriments["\(key)_serving"] as? Double { return perServing }
+            if let perServing = nutriments["\(key)_serving"] as? NSNumber { return perServing.doubleValue }
+            if let per100 = nutriments["\(key)_100g"] as? Double { return per100 }
+            if let per100 = nutriments["\(key)_100g"] as? NSNumber { return per100.doubleValue }
+            return 0
+        }
+
+        return FoodProduct(
+            barcode: barcode,
+            name: name,
+            brand: brand,
+            servingSize: servingSize,
+            calories: nutrientValue("energy-kcal"),
+            protein: nutrientValue("proteins"),
+            carbs: nutrientValue("carbohydrates"),
+            fat: nutrientValue("fat"),
+            fiber: nutrientValue("fiber"),
+            sugar: nutrientValue("sugars"),
+            sodium: nutrientValue("sodium") * 1000  // convert g → mg
+        )
     }
 
     func lookupSupplementBarcode(_ barcode: String) async throws -> Supplement? {

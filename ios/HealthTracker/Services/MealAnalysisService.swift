@@ -219,7 +219,7 @@ class MealAnalysisService: ObservableObject {
 
     // MARK: - Save to Core Data
 
-    func saveAnalysisToFoodEntry(analysis: MealAnalysis, image: UIImage?, context: NSManagedObjectContext) {
+    func saveAnalysisToFoodEntry(analysis: MealAnalysis, image: UIImage?, mealType: MealType, context: NSManagedObjectContext) throws {
         for item in analysis.items {
             let entry = FoodEntry(context: context)
             entry.id = UUID()
@@ -233,13 +233,11 @@ class MealAnalysisService: ObservableObject {
             entry.date = Date()
             entry.servingSize = item.quantity
             entry.servingUnit = "serving"
+            entry.mealType = mealType.rawValue
         }
 
-        do {
-            try context.save()
-        } catch {
-            print("Error saving meal analysis: \(error)")
-        }
+        try context.save()
+        UnifiedDataManager.shared.refreshAllData()
     }
 }
 

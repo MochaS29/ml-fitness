@@ -454,12 +454,18 @@ struct AddWeightView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject private var healthKitManager = HealthKitManager.shared
-    
-    @State private var weight: Double = 150
+
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \WeightEntry.timestamp, ascending: false)],
+        predicate: nil,
+        animation: nil
+    ) private var recentWeightEntries: FetchedResults<WeightEntry>
+
+    @State private var weight: Double = 0
     @State private var notes = ""
     @State private var selectedDate = Date()
     @State private var syncWithHealthKit = true
-    
+
     var body: some View {
         NavigationView {
             Form {
@@ -484,6 +490,11 @@ struct AddWeightView: View {
                 
                 Section {
                     Toggle("Sync with Apple Health", isOn: $syncWithHealthKit)
+                }
+            }
+            .onAppear {
+                if weight == 0 {
+                    weight = recentWeightEntries.first?.weight ?? 150
                 }
             }
             .navigationTitle("Add Weight")

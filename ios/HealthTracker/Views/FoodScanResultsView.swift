@@ -10,6 +10,8 @@ struct FoodScanResultsView: View {
     @State private var selectedMealType: MealType = .lunch
     @State private var adjustedFoods: [IdentifiedFood] = []
     @State private var showingSaveConfirmation = false
+    @State private var showingError = false
+    @State private var saveErrorMessage = ""
     
     init(scanResult: FoodScanResult, capturedImage: UIImage?) {
         self.scanResult = scanResult
@@ -150,6 +152,11 @@ struct FoodScanResultsView: View {
             } message: {
                 Text("The identified foods have been added to your \(mealTypeDisplayName(selectedMealType)).")
             }
+            .alert("Save Failed", isPresented: $showingError) {
+                Button("OK") {}
+            } message: {
+                Text(saveErrorMessage)
+            }
         }
     }
     
@@ -171,9 +178,11 @@ struct FoodScanResultsView: View {
         
         do {
             try viewContext.save()
+            UnifiedDataManager.shared.refreshAllData()
             showingSaveConfirmation = true
         } catch {
-            print("Error saving foods: \(error)")
+            saveErrorMessage = error.localizedDescription
+            showingError = true
         }
     }
     

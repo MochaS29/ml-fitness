@@ -290,7 +290,7 @@ class UnifiedDataManager: ObservableObject {
 
                 // Calculate weight change if we have 2 entries
                 if weightEntries.count > 1 {
-                    weightChange = currentWeight - (weightEntries[1].weight ?? 0)
+                    weightChange = currentWeight - weightEntries[1].weight
                 }
             }
 
