@@ -12,6 +12,7 @@ struct DiaryView: View {
     @State private var showingSupplementEntry = false
     @State private var selectedMealType: MealType = .breakfast
     @State private var dailySummary = DailySummary()
+    @State private var nutritionExpanded = true
     
     // Fetch requests for selected date
     @FetchRequest private var foodEntries: FetchedResults<FoodEntry>
@@ -74,6 +75,9 @@ struct DiaryView: View {
                         
                         // Notes Section
                         notesSection
+
+                        // Daily Nutrition Analytics
+                        diaryNutritionSection
 
                         // Data source citation
                         Text("Nutrition data sourced from USDA FoodData Central (fdc.nal.usda.gov). For informational purposes only — not medical advice.")
@@ -425,6 +429,141 @@ struct DiaryView: View {
         .padding(.horizontal)
     }
     
+    // MARK: - Diary Nutrition Analytics
+
+    // Aggregate totals from food entries for the selected date
+    private var totalCalories: Double { foodEntries.reduce(0) { $0 + $1.calories } }
+    private var totalProtein: Double  { foodEntries.reduce(0) { $0 + $1.protein } }
+    private var totalCarbs: Double    { foodEntries.reduce(0) { $0 + $1.carbs } }
+    private var totalFat: Double      { foodEntries.reduce(0) { $0 + $1.fat } }
+    private var totalFiber: Double    { foodEntries.reduce(0) { $0 + $1.fiber } }
+    private var totalSugar: Double    { foodEntries.reduce(0) { $0 + $1.sugar } }
+    private var totalSodium: Double   { foodEntries.reduce(0) { $0 + $1.sodium } }
+
+    // Aggregate supplement nutrients
+    private var supplementNutrients: [String: Double] {
+        var totals: [String: Double] = [:]
+        for entry in supplementEntries {
+            if let nutrients = entry.nutrients {
+                for (key, value) in nutrients {
+                    totals[key, default: 0] += value
+                }
+            }
+        }
+        return totals
+    }
+
+    private var diaryNutritionSection: some View {
+        let defaults = UserDefaults.standard
+        let calorieGoal = Double(defaults.integer(forKey: "calorieGoal")) > 0
+            ? Double(defaults.integer(forKey: "calorieGoal")) : 2000.0
+        let proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0
+            ? Double(defaults.integer(forKey: "proteinGoal")) : 50.0
+
+        return VStack(alignment: .leading, spacing: 0) {
+            // Header
+            Button(action: { withAnimation(.easeInOut(duration: 0.2)) { nutritionExpanded.toggle() } }) {
+                HStack {
+                    Label("Day's Nutrition", systemImage: "chart.bar.fill")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    Spacer()
+                    if !foodEntries.isEmpty {
+                        Text("\(Int(totalCalories)) kcal")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    Image(systemName: nutritionExpanded ? "chevron.up" : "chevron.down")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding()
+                .background(Color(UIColor.systemBackground))
+            }
+            .buttonStyle(.plain)
+
+            if nutritionExpanded {
+                VStack(spacing: 0) {
+                    if foodEntries.isEmpty && supplementEntries.isEmpty {
+                        Text("No food or supplements logged yet for this day.")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding()
+                            .background(Color(UIColor.secondarySystemGroupedBackground))
+                    } else {
+                        // Macro progress bars
+                        VStack(spacing: 12) {
+                            DiaryMacroBar(label: "Calories", value: totalCalories, goal: calorieGoal, unit: "kcal", color: .orange)
+                            DiaryMacroBar(label: "Protein",  value: totalProtein,  goal: proteinGoal, unit: "g",    color: .blue)
+                            DiaryMacroBar(label: "Carbs",    value: totalCarbs,    goal: 275,          unit: "g",    color: .green)
+                            DiaryMacroBar(label: "Fat",      value: totalFat,      goal: 78,           unit: "g",    color: Color(red: 1, green: 0.8, blue: 0))
+                        }
+                        .padding()
+                        .background(Color(UIColor.secondarySystemGroupedBackground))
+
+                        Divider().padding(.leading)
+
+                        // Additional nutrients from food
+                        VStack(spacing: 0) {
+                            DiaryNutrientRow(name: "Fiber",  value: totalFiber,  unit: "g",  goal: 28,   goalPrefix: "", color: .brown)
+                            Divider().padding(.leading)
+                            DiaryNutrientRow(name: "Sugar",  value: totalSugar,  unit: "g",  goal: 50,   goalPrefix: "< ", color: .pink)
+                            Divider().padding(.leading)
+                            DiaryNutrientRow(name: "Sodium", value: totalSodium, unit: "mg", goal: 2300, goalPrefix: "< ", color: .gray)
+                        }
+                        .background(Color(UIColor.secondarySystemGroupedBackground))
+
+                        // Supplement nutrients (only shown when supplements are logged)
+                        if !supplementNutrients.isEmpty {
+                            Divider().padding(.leading)
+
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("From Supplements")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.secondary)
+                                    .padding(.horizontal)
+                                    .padding(.top, 8)
+
+                                let vitaminRDAs: [(id: String, name: String, rda: Double, unit: String)] = [
+                                    ("vitamin_c", "Vitamin C", 90, "mg"),
+                                    ("vitamin_d", "Vitamin D", 600, "IU"),
+                                    ("vitamin_b12", "Vitamin B12", 2.4, "mcg"),
+                                    ("vitamin_a", "Vitamin A", 900, "mcg"),
+                                    ("vitamin_e", "Vitamin E", 15, "mg"),
+                                    ("folate", "Folate", 400, "mcg"),
+                                    ("calcium", "Calcium", 1000, "mg"),
+                                    ("iron", "Iron", 18, "mg"),
+                                    ("magnesium", "Magnesium", 400, "mg"),
+                                    ("zinc", "Zinc", 11, "mg"),
+                                    ("potassium", "Potassium", 2600, "mg"),
+                                ]
+
+                                ForEach(vitaminRDAs, id: \.id) { vit in
+                                    if let amount = supplementNutrients[vit.id], amount > 0 {
+                                        DiaryNutrientRow(
+                                            name: vit.name,
+                                            value: amount,
+                                            unit: vit.unit,
+                                            goal: vit.rda,
+                                            goalPrefix: "",
+                                            color: .purple
+                                        )
+                                        Divider().padding(.leading)
+                                    }
+                                }
+                            }
+                            .background(Color(UIColor.secondarySystemGroupedBackground))
+                        }
+                    }
+                }
+            }
+        }
+        .cornerRadius(12)
+        .padding(.horizontal)
+    }
+
     private func adjustDate(by days: Int) {
         if let newDate = Calendar.current.date(byAdding: .day, value: days, to: selectedDate) {
             selectedDate = newDate
@@ -768,6 +907,81 @@ struct WeightEntryView: View {
                 presentationMode.wrappedValue.dismiss()
             }
         )
+    }
+}
+
+// MARK: - Diary Nutrition Supporting Views
+
+struct DiaryMacroBar: View {
+    let label: String
+    let value: Double
+    let goal: Double
+    let unit: String
+    let color: Color
+
+    private var progress: Double { min(value / max(goal, 1), 1.0) }
+    private var pct: Int { Int((value / max(goal, 1)) * 100) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(label)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                Spacer()
+                Text(unit == "kcal"
+                     ? "\(Int(value)) / \(Int(goal)) \(unit)"
+                     : String(format: "%.1f / %.0f %@", value, goal, unit))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text("(\(pct)%)")
+                    .font(.caption2)
+                    .foregroundColor(pct > 100 ? .red : .secondary)
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(color.opacity(0.15))
+                        .frame(height: 10)
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(pct > 100 ? Color.red : color)
+                        .frame(width: geo.size.width * progress, height: 10)
+                }
+            }
+            .frame(height: 10)
+        }
+    }
+}
+
+struct DiaryNutrientRow: View {
+    let name: String
+    let value: Double
+    let unit: String
+    let goal: Double
+    let goalPrefix: String
+    let color: Color
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Circle()
+                .fill(color.opacity(0.7))
+                .frame(width: 8, height: 8)
+            Text(name)
+                .font(.subheadline)
+                .foregroundColor(.primary)
+            Spacer()
+            Text(unit == "mg"
+                 ? String(format: "%.0f %@", value, unit)
+                 : String(format: "%.1f %@", value, unit))
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(color)
+            Text("/ \(goalPrefix)\(unit == "mg" ? "\(Int(goal))" : String(format: "%.0f", goal)) \(unit)")
+                .font(.caption2)
+                .foregroundColor(.secondary)
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 8)
     }
 }
 
