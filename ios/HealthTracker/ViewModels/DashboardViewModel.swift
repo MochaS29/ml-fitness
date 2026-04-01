@@ -259,37 +259,43 @@ class DashboardViewModel: ObservableObject {
     }
 
     private func loadSimpleGoals() {
-        // Reload from UserDefaults to get latest values
-        let newStepGoal = UserDefaults.standard.integer(forKey: "dailyStepGoal")
-        if newStepGoal > 0 {
-            dailyStepGoal = newStepGoal
-            stepGoal = newStepGoal
-        } else {
-            stepGoal = dailyStepGoal
-        }
-
+        // Read from UserDefaults off the publish path, then apply on next runloop tick
+        // to avoid "Publishing changes from within view updates" warnings.
+        let newStepGoal    = UserDefaults.standard.integer(forKey: "dailyStepGoal")
         let newCalorieGoal = UserDefaults.standard.integer(forKey: "dailyCalorieGoal")
-        if newCalorieGoal > 0 {
-            dailyCalorieGoal = newCalorieGoal
-            calorieGoal = newCalorieGoal
-        } else {
-            calorieGoal = dailyCalorieGoal
-        }
+        let newWaterGoal   = UserDefaults.standard.integer(forKey: "dailyWaterGoal")
+        let newWeightGoal  = UserDefaults.standard.double(forKey: "weightGoal")
 
-        let newWaterGoal = UserDefaults.standard.integer(forKey: "dailyWaterGoal")
-        if newWaterGoal > 0 {
-            dailyWaterGoal = newWaterGoal
-            waterGoal = newWaterGoal
-        } else {
-            waterGoal = dailyWaterGoal
-        }
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
 
-        let newWeightGoal = UserDefaults.standard.double(forKey: "weightGoal")
-        if newWeightGoal > 0 {
-            weightGoal = newWeightGoal
-            targetWeight = newWeightGoal
-        } else {
-            targetWeight = currentWeight
+            if newStepGoal > 0 {
+                self.dailyStepGoal = newStepGoal
+                self.stepGoal = newStepGoal
+            } else {
+                self.stepGoal = self.dailyStepGoal
+            }
+
+            if newCalorieGoal > 0 {
+                self.dailyCalorieGoal = newCalorieGoal
+                self.calorieGoal = newCalorieGoal
+            } else {
+                self.calorieGoal = self.dailyCalorieGoal
+            }
+
+            if newWaterGoal > 0 {
+                self.dailyWaterGoal = newWaterGoal
+                self.waterGoal = newWaterGoal
+            } else {
+                self.waterGoal = self.dailyWaterGoal
+            }
+
+            if newWeightGoal > 0 {
+                self.weightGoal = newWeightGoal
+                self.targetWeight = newWeightGoal
+            } else {
+                self.targetWeight = self.currentWeight
+            }
         }
     }
 
