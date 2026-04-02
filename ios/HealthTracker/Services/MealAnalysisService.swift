@@ -13,12 +13,12 @@ struct MealAnalysis: Codable {
 
 struct DetectedFood: Codable, Identifiable {
     let id = UUID()
-    let name: String
-    let quantity: String
-    let calories: Double
-    let protein: Double
-    let carbs: Double
-    let fat: Double
+    var name: String
+    var quantity: String
+    var calories: Double
+    var protein: Double
+    var carbs: Double
+    var fat: Double
     let fiber: Double?
     let confidence: Double
     let boundingBox: CGRect?
@@ -220,7 +220,11 @@ class MealAnalysisService: ObservableObject {
     // MARK: - Save to Core Data
 
     func saveAnalysisToFoodEntry(analysis: MealAnalysis, image: UIImage?, mealType: MealType, context: NSManagedObjectContext) throws {
-        for item in analysis.items {
+        try saveAnalysisToFoodEntry(items: analysis.items, mealType: mealType, context: context)
+    }
+
+    func saveAnalysisToFoodEntry(items: [DetectedFood], mealType: MealType, context: NSManagedObjectContext) throws {
+        for item in items {
             let entry = FoodEntry(context: context)
             entry.id = UUID()
             entry.name = item.name
