@@ -6,6 +6,8 @@ struct MealPhotoAnalyzerView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject private var analysisService = MealAnalysisService.shared
+    @EnvironmentObject var storeManager: StoreManager
+    @AppStorage("freeMealScansUsed") private var freeMealScansUsed = 0
 
     @State private var selectedImage: UIImage?
     @State private var showingImagePicker = false
@@ -14,6 +16,11 @@ struct MealPhotoAnalyzerView: View {
     @State private var showingError = false
     @State private var errorMessage = ""
     @State private var mealType: MealType = .lunch
+    @State private var showingPaywall = false
+
+    private static let freeScansAllowed = 3
+    private var scansRemaining: Int { max(0, Self.freeScansAllowed - freeMealScansUsed) }
+    private var canScan: Bool { storeManager.isPro || scansRemaining > 0 }
 
     var body: some View {
         NavigationView {
@@ -41,12 +48,37 @@ struct MealPhotoAnalyzerView: View {
                             onSave: { items in saveToFoodDiary(items: items) }
                         )
                     } else {
+                        // Free scan counter banner
+                        if !storeManager.isPro {
+                            HStack(spacing: 8) {
+                                Image(systemName: scansRemaining > 0 ? "camera.fill" : "lock.fill")
+                                    .foregroundColor(scansRemaining > 0 ? .orange : .secondary)
+                                Text(scansRemaining > 0
+                                     ? "\(scansRemaining) free scan\(scansRemaining == 1 ? "" : "s") remaining"
+                                     : "No free scans left — upgrade to Pro")
+                                    .font(.caption)
+                                    .foregroundColor(scansRemaining > 0 ? .orange : .secondary)
+                                Spacer()
+                                if scansRemaining == 0 {
+                                    Button("Upgrade") { showingPaywall = true }
+                                        .font(.caption.bold())
+                                        .foregroundColor(.wellnessGreen)
+                                }
+                            }
+                            .padding(.horizontal)
+                            .padding(.vertical, 8)
+                            .background(Color.orange.opacity(scansRemaining > 0 ? 0.08 : 0.0))
+                            .cornerRadius(8)
+                            .padding(.horizontal)
+                        }
+
                         // Analyze button
-                        Button(action: analyzeMeal) {
-                            Label("Analyze Meal", systemImage: "wand.and.stars")
+                        Button(action: canScan ? analyzeMeal : { showingPaywall = true }) {
+                            Label(canScan ? "Analyze Meal" : "Unlock AI Scanner",
+                                  systemImage: canScan ? "wand.and.stars" : "lock.fill")
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.blue)
+                                .background(canScan ? Color.blue : Color.wellnessGreen)
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
@@ -114,6 +146,10 @@ struct MealPhotoAnalyzerView: View {
         .sheet(isPresented: $showingCamera) {
             MealImagePicker(selectedImage: $selectedImage, sourceType: .camera)
         }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView(trigger: .mealScanner)
+                .environmentObject(storeManager)
+        }
         .alert("Analysis Error", isPresented: $showingError) {
             Button("OK") {}
         } message: {
@@ -123,6 +159,7 @@ struct MealPhotoAnalyzerView: View {
 
     private func analyzeMeal() {
         guard let image = selectedImage else { return }
+        if !storeManager.isPro { freeMealScansUsed += 1 }
 
         analysisService.analyzeMealPhoto(image) { result in
             switch result {
