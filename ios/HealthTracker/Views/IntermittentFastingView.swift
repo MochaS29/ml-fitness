@@ -48,7 +48,9 @@ struct IntermittentFastingView: View {
                 FastingHistoryView(sessions: fastingManager.sessionHistory)
             }
             .onReceive(timer) { _ in
-                // Force view update for timer
+                if fastingManager.currentSession != nil {
+                    fastingManager.objectWillChange.send()
+                }
             }
         }
     }

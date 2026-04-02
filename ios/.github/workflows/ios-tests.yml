@@ -10,6 +10,9 @@ on:
     - cron: '0 14 * * 1'
   workflow_dispatch: # allow manual trigger from GitHub UI
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   test:
     name: Run Unit Tests
@@ -25,6 +28,9 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
 
+      - name: Install xcpretty
+        run: gem install xcpretty --no-document
+
       - name: Cache DerivedData
         uses: actions/cache@v4
         with:
@@ -35,13 +41,13 @@ jobs:
 
       - name: Run unit tests
         run: |
+          set -o pipefail
           xcodebuild test \
             -scheme HealthTracker \
-            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.5" \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=latest" \
             -skip-testing:HealthTrackerUITests \
             -resultBundlePath TestResults.xcresult \
             | xcpretty --color --report junit --output test-results.xml
-        continue-on-error: false
 
       - name: Upload test results
         uses: actions/upload-artifact@v4

@@ -23,25 +23,11 @@ struct MoreView: View {
     @EnvironmentObject var storeManager: StoreManager
     @Environment(\.managedObjectContext) private var viewContext
 
-    // New state variables for unified tracking tools
-    @State private var showingFoodSearch = false
-    @State private var showingExerciseSearch = false
-    @State private var showingWeightEntry = false
-    @State private var showingSupplementEntry = false
-    @State private var showingWaterEntry = false
-    @State private var selectedMealType: MealType = .snack
-
     var body: some View {
         List {
             UserProfileSection(showingProfile: $showingProfile)
 
             ProUpgradeSection(showingPaywall: $showingPaywall)
-
-            TrackingToolsSection(
-                showingFoodSearch: $showingFoodSearch,
-                showingExerciseSearch: $showingExerciseSearch,
-                showingWeightEntry: $showingWeightEntry
-            )
 
             ProgressAnalysisSection(showingGoals: $showingGoals)
 
@@ -121,22 +107,6 @@ struct MoreView: View {
         }
         .sheet(isPresented: $showingUSDAImport) {
             USDAImportView()
-        }
-        // Unified tracking entry sheets
-        .sheet(isPresented: $showingFoodSearch) {
-            UnifiedFoodSearchSheet(mealType: selectedMealType)
-        }
-        .sheet(isPresented: $showingExerciseSearch) {
-            ExerciseSearchView(selectedDate: Date())
-        }
-        .sheet(isPresented: $showingWeightEntry) {
-            QuickWeightAddView(selectedDate: Date())
-        }
-        .sheet(isPresented: $showingSupplementEntry) {
-            ManualSupplementEntryView()
-        }
-        .sheet(isPresented: $showingWaterEntry) {
-            QuickWaterAddView(selectedDate: Date())
         }
         .alert("Generate Demo Data?", isPresented: $showingDemoDataAlert) {
             Button("Cancel", role: .cancel) { }
