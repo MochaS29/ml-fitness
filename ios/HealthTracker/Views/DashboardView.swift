@@ -48,11 +48,11 @@ struct DashboardView: View {
                     // Key Metrics Cards — 4 blocks
                     metricsOverview
 
-                    // Supplement Stats Widget
-                    SupplementStatsWidget(showingDetail: $showingSupplementDetail)
-
                     // Nutrition Distribution Chart
                     nutritionDistributionCard
+
+                    // Supplement Stats Widget
+                    SupplementStatsWidget(showingDetail: $showingSupplementDetail)
 
                     // AI Insights Carousel
                     aiInsightsSection
