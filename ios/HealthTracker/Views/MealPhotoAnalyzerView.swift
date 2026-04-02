@@ -38,10 +38,7 @@ struct MealPhotoAnalyzerView: View {
                         AnalysisResultsView(
                             analysis: result,
                             mealType: $mealType,
-                            onSave: saveToFoodDiary,
-                            onEdit: { item in
-                                // Allow editing detected foods
-                            }
+                            onSave: { items in saveToFoodDiary(items: items) }
                         )
                     } else {
                         // Analyze button
@@ -138,13 +135,10 @@ struct MealPhotoAnalyzerView: View {
         }
     }
 
-    private func saveToFoodDiary() {
-        guard let analysis = analysisResult else { return }
-
+    private func saveToFoodDiary(items: [DetectedFood]) {
         do {
             try analysisService.saveAnalysisToFoodEntry(
-                analysis: analysis,
-                image: selectedImage,
+                items: items,
                 mealType: mealType,
                 context: viewContext
             )
@@ -161,17 +155,20 @@ struct MealPhotoAnalyzerView: View {
 struct AnalysisResultsView: View {
     let analysis: MealAnalysis
     @Binding var mealType: MealType
-    let onSave: () -> Void
-    let onEdit: (DetectedFood) -> Void
+    let onSave: ([DetectedFood]) -> Void
 
     @State private var editedItems: [DetectedFood]
+    @State private var editingFood: DetectedFood?
 
-    init(analysis: MealAnalysis, mealType: Binding<MealType>, onSave: @escaping () -> Void, onEdit: @escaping (DetectedFood) -> Void) {
+    init(analysis: MealAnalysis, mealType: Binding<MealType>, onSave: @escaping ([DetectedFood]) -> Void) {
         self.analysis = analysis
         self._mealType = mealType
         self.onSave = onSave
-        self.onEdit = onEdit
         self._editedItems = State(initialValue: analysis.items)
+    }
+
+    var totalCalories: Int {
+        editedItems.reduce(0) { $0 + Int($1.calories) }
     }
 
     var body: some View {
@@ -190,10 +187,20 @@ struct AnalysisResultsView: View {
                 Text("Total Calories")
                     .font(.headline)
                 Spacer()
-                Text("\(Int(analysis.totalCalories))")
+                Text("\(totalCalories)")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(.orange)
+            }
+            .padding(.horizontal)
+
+            // Tap hint
+            HStack {
+                Image(systemName: "pencil.circle")
+                    .foregroundColor(.secondary)
+                Text("Tap any item to edit")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
             .padding(.horizontal)
 
@@ -203,7 +210,7 @@ struct AnalysisResultsView: View {
                     ForEach(editedItems) { item in
                         DetectedFoodRow(
                             food: item,
-                            onTap: { onEdit(item) }
+                            onTap: { editingFood = item }
                         )
                     }
                 }
@@ -221,7 +228,7 @@ struct AnalysisResultsView: View {
             .padding(.horizontal)
 
             // Save button
-            Button(action: onSave) {
+            Button(action: { onSave(editedItems) }) {
                 Text("Add to Food Diary")
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -230,6 +237,13 @@ struct AnalysisResultsView: View {
                     .cornerRadius(10)
             }
             .padding(.horizontal)
+        }
+        .sheet(item: $editingFood) { foodToEdit in
+            EditDetectedFoodSheet(food: foodToEdit) { edited in
+                if let idx = editedItems.firstIndex(where: { $0.id == foodToEdit.id }) {
+                    editedItems[idx] = edited
+                }
+            }
         }
     }
 }
@@ -251,6 +265,9 @@ struct DetectedFoodRow: View {
                         .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundColor(.orange)
+                    Image(systemName: "pencil")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
 
                 Text(food.quantity)
@@ -308,6 +325,97 @@ struct MealMacroLabel: View {
             Text("\(Int(value))g")
                 .font(.caption)
                 .foregroundColor(.primary)
+        }
+    }
+}
+
+// MARK: - Edit Detected Food Sheet
+
+struct EditDetectedFoodSheet: View {
+    let food: DetectedFood
+    let onSave: (DetectedFood) -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var name: String
+    @State private var quantity: String
+    @State private var calories: String
+    @State private var protein: String
+    @State private var carbs: String
+    @State private var fat: String
+
+    init(food: DetectedFood, onSave: @escaping (DetectedFood) -> Void) {
+        self.food = food
+        self.onSave = onSave
+        _name = State(initialValue: food.name)
+        _quantity = State(initialValue: food.quantity)
+        _calories = State(initialValue: "\(Int(food.calories))")
+        _protein = State(initialValue: "\(Int(food.protein))")
+        _carbs = State(initialValue: "\(Int(food.carbs))")
+        _fat = State(initialValue: "\(Int(food.fat))")
+    }
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section("Food Details") {
+                    HStack {
+                        Text("Name")
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        TextField("Name", text: $name)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("Quantity")
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        TextField("e.g. 3 eggs", text: $quantity)
+                            .multilineTextAlignment(.trailing)
+                    }
+                }
+                Section("Nutrition (per serving)") {
+                    numericRow("Calories", value: $calories, unit: "cal")
+                    numericRow("Protein", value: $protein, unit: "g")
+                    numericRow("Carbs", value: $carbs, unit: "g")
+                    numericRow("Fat", value: $fat, unit: "g")
+                }
+            }
+            .navigationTitle("Edit Food")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        var edited = food
+                        edited.name = name.isEmpty ? food.name : name
+                        edited.quantity = quantity
+                        edited.calories = Double(calories) ?? food.calories
+                        edited.protein = Double(protein) ?? food.protein
+                        edited.carbs = Double(carbs) ?? food.carbs
+                        edited.fat = Double(fat) ?? food.fat
+                        onSave(edited)
+                        dismiss()
+                    }
+                    .fontWeight(.semibold)
+                }
+            }
+        }
+    }
+
+    private func numericRow(_ label: String, value: Binding<String>, unit: String) -> some View {
+        HStack {
+            Text(label)
+                .foregroundColor(.secondary)
+            Spacer()
+            TextField("0", text: value)
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+                .frame(width: 70)
+            Text(unit)
+                .foregroundColor(.secondary)
+                .frame(width: 30, alignment: .leading)
         }
     }
 }
