@@ -258,9 +258,9 @@ struct DetectedFoodRow: View {
                     .foregroundColor(.secondary)
 
                 HStack(spacing: 15) {
-                    MealMacroLabel(label: "P", value: food.protein, color: .red)
-                    MealMacroLabel(label: "C", value: food.carbs, color: .blue)
-                    MealMacroLabel(label: "F", value: food.fat, color: .green)
+                    MealMacroLabel(label: "Pro", value: food.protein, color: .red)
+                    MealMacroLabel(label: "Carb", value: food.carbs, color: .blue)
+                    MealMacroLabel(label: "Fat", value: food.fat, color: .green)
                 }
 
                 // Confidence bar

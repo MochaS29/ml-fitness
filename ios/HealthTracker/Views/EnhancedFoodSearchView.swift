@@ -328,9 +328,9 @@ struct EnhancedFoodSearchRow: View {
                         .foregroundColor(.wellnessGreen)
                     
                     HStack(spacing: 10) {
-                        MacroLabel(value: food.protein, label: "P", color: .blue)
-                        MacroLabel(value: food.carbs, label: "C", color: .orange)
-                        MacroLabel(value: food.fat, label: "F", color: .purple)
+                        MacroLabel(value: food.protein, label: "Pro", color: .blue)
+                        MacroLabel(value: food.carbs, label: "Carb", color: .orange)
+                        MacroLabel(value: food.fat, label: "Fat", color: .purple)
                     }
                 }
             }
