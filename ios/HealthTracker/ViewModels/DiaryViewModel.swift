@@ -21,8 +21,8 @@ class DiaryViewModel: ObservableObject {
         dailySummary.waterOunces = calculateWaterOunces(for: selectedDate)
 
         let defaults = UserDefaults.standard
-        dailySummary.calorieGoal = Double(defaults.integer(forKey: "calorieGoal")) > 0
-            ? Double(defaults.integer(forKey: "calorieGoal"))
+        dailySummary.calorieGoal = Double(defaults.integer(forKey: "dailyCalorieGoal")) > 0
+            ? Double(defaults.integer(forKey: "dailyCalorieGoal"))
             : Double(AppConstants.Defaults.dailyCalorieGoal)
         dailySummary.proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0
             ? Double(defaults.integer(forKey: "proteinGoal"))
@@ -120,8 +120,8 @@ class DiaryViewModel: ObservableObject {
         lines.append("📊 MindLab Fitness — \(dateFormatter.string(from: selectedDate))")
         lines.append("")
 
-        let goal = UserDefaults.standard.integer(forKey: "calorieGoal") > 0
-            ? UserDefaults.standard.integer(forKey: "calorieGoal") : AppConstants.Defaults.dailyCalorieGoal
+        let goal = UserDefaults.standard.integer(forKey: "dailyCalorieGoal") > 0
+            ? UserDefaults.standard.integer(forKey: "dailyCalorieGoal") : AppConstants.Defaults.dailyCalorieGoal
         let eaten = Int(totalCalories(from: foodEntries))
         let burned = Int(exerciseEntries.reduce(0) { $0 + $1.caloriesBurned })
         lines.append("🔥 Calories: \(eaten) eaten · \(burned) burned · \(max(0, goal + burned - eaten)) remaining")
