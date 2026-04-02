@@ -5,7 +5,7 @@ struct WeightTrackingView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var profileManager: UserProfileManager
     @StateObject private var healthKitManager = HealthKitManager.shared
-    @StateObject private var achievementManager = AchievementManager.shared
+    @EnvironmentObject var achievementManager: AchievementManager
 
     @State private var currentWeight: Double = 0
     @State private var showingAddWeight = false
@@ -20,7 +20,6 @@ struct WeightTrackingView: View {
     private var weights: FetchedResults<WeightEntry>
 
     var body: some View {
-        ZStack {
         NavigationStack {
             VStack(spacing: 0) {
                 Picker("Section", selection: $selectedTab) {
@@ -99,19 +98,16 @@ struct WeightTrackingView: View {
                     loadWeightHistory()
                 }
             }
+            .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
+                if let celebration = achievementManager.currentCelebration {
+                    CelebrationView(
+                        achievement: CelebrationAchievement.from(celebration),
+                        isPresented: $achievementManager.showingCelebration
+                    )
+                    .presentationBackground(.clear)
+                }
+            }
         }
-
-        // Celebration overlay — shown inside the sheet so it isn't hidden behind it
-        if achievementManager.showingCelebration,
-           let achievement = achievementManager.currentCelebration {
-            CelebrationView(
-                achievement: CelebrationAchievement.from(achievement),
-                isPresented: $achievementManager.showingCelebration
-            )
-            .transition(.opacity.combined(with: .scale))
-            .zIndex(1)
-        }
-        } // ZStack
     }
     
     var latestWeight: Double? {

@@ -4,7 +4,7 @@ import CoreData
 struct AddMenuView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var achievementManager = AchievementManager.shared
+    @EnvironmentObject var achievementManager: AchievementManager
 
     let selectedDate: Date
     @State private var selectedMealType: MealType = .breakfast
@@ -17,7 +17,6 @@ struct AddMenuView: View {
     @State private var showingMealScanner = false
     
     var body: some View {
-        ZStack {
         NavigationView {
             listContent
                 .navigationTitle("Add to Diary")
@@ -55,17 +54,15 @@ struct AddMenuView: View {
                 MealPhotoAnalyzerView()
             }
         }
-
-        if achievementManager.showingCelebration,
-           let achievement = achievementManager.currentCelebration {
-            CelebrationView(
-                achievement: CelebrationAchievement.from(achievement),
-                isPresented: $achievementManager.showingCelebration
-            )
-            .transition(.opacity.combined(with: .scale))
-            .zIndex(1)
+        .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
+            if let celebration = achievementManager.currentCelebration {
+                CelebrationView(
+                    achievement: CelebrationAchievement.from(celebration),
+                    isPresented: $achievementManager.showingCelebration
+                )
+                .presentationBackground(.clear)
+            }
         }
-        } // ZStack
     }
     
     private var listContent: some View {

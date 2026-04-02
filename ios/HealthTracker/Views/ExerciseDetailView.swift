@@ -5,7 +5,7 @@ import CoreData
 struct ExerciseDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
-    @StateObject private var achievementManager = AchievementManager.shared
+    @EnvironmentObject var achievementManager: AchievementManager
     @State private var selectedTab = 0
     @State private var showingAddExercise = false
 
@@ -16,7 +16,6 @@ struct ExerciseDetailView: View {
     private var allExercises: FetchedResults<ExerciseEntry>
 
     var body: some View {
-        ZStack {
         NavigationStack {
             VStack(spacing: 0) {
                 Picker("View", selection: $selectedTab) {
@@ -53,18 +52,16 @@ struct ExerciseDetailView: View {
             .sheet(isPresented: $showingAddExercise) {
                 ExerciseEntrySheet()
             }
+            .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
+                if let celebration = achievementManager.currentCelebration {
+                    CelebrationView(
+                        achievement: CelebrationAchievement.from(celebration),
+                        isPresented: $achievementManager.showingCelebration
+                    )
+                    .presentationBackground(.clear)
+                }
+            }
         }
-
-        if achievementManager.showingCelebration,
-           let achievement = achievementManager.currentCelebration {
-            CelebrationView(
-                achievement: CelebrationAchievement.from(achievement),
-                isPresented: $achievementManager.showingCelebration
-            )
-            .transition(.opacity.combined(with: .scale))
-            .zIndex(1)
-        }
-        } // ZStack
     }
 
     // MARK: - Data Helpers
