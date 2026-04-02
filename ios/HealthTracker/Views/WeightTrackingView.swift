@@ -464,6 +464,7 @@ struct AddWeightView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject private var healthKitManager = HealthKitManager.shared
+    @EnvironmentObject var achievementManager: AchievementManager
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \WeightEntry.timestamp, ascending: false)],
@@ -522,9 +523,18 @@ struct AddWeightView: View {
                     }
                 }
             }
+            .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
+                if let celebration = achievementManager.currentCelebration {
+                    CelebrationView(
+                        achievement: CelebrationAchievement.from(celebration),
+                        isPresented: $achievementManager.showingCelebration
+                    )
+                    .presentationBackground(.clear)
+                }
+            }
         }
     }
-    
+
     func saveWeight() {
         let newWeight = WeightEntry(context: viewContext)
         newWeight.id = UUID()

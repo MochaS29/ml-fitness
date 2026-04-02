@@ -232,6 +232,19 @@ class AchievementManager: ObservableObject {
         }
     }
     
+    func checkWaterGoal(current: Double, goal: Double) {
+        guard current >= goal else { return }
+        let achievement = Achievement(
+            type: .waterIntake,
+            title: "Hydration Hero! 💧",
+            description: "You hit your daily water goal of \(Int(goal)) oz!",
+            dateEarned: Date(),
+            value: current,
+            target: goal
+        )
+        celebrate(achievement)
+    }
+
     // MARK: - Celebration System
     
     func celebrate(_ achievement: Achievement) {

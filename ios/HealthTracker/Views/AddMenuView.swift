@@ -224,11 +224,12 @@ struct QuickWaterAddView: View {
 struct QuickWeightAddView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    
+
     let selectedDate: Date
     @State private var weight: String = ""
     @State private var notes: String = ""
-    
+    @State private var entryDate: Date = Date()
+
     var body: some View {
         NavigationView {
             Form {
@@ -239,8 +240,9 @@ struct QuickWeightAddView: View {
                         Text("lbs")
                             .foregroundColor(.secondary)
                     }
+                    DatePicker("Date", selection: $entryDate, displayedComponents: .date)
                 }
-                
+
                 Section("Notes (Optional)") {
                     TextField("Add notes...", text: $notes)
                 }
@@ -266,12 +268,12 @@ struct QuickWeightAddView: View {
     
     private func saveWeightEntry() {
         guard let weightValue = Double(weight) else { return }
-        
+
         let entry = WeightEntry(context: viewContext)
         entry.id = UUID()
         entry.weight = weightValue
-        entry.timestamp = selectedDate
-        entry.date = selectedDate
+        entry.timestamp = entryDate
+        entry.date = entryDate
         entry.notes = notes.isEmpty ? nil : notes
         
         do {
@@ -291,10 +293,11 @@ struct QuickWeightAddView: View {
 struct ExerciseSearchView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject var achievementManager: AchievementManager
     @State private var searchText = ""
     @State private var selectedExercise: ExerciseTemplateModel?
     @State private var duration: String = "30"
-    
+
     let selectedDate: Date
     private let exerciseDB = ExerciseDatabase.shared
     
@@ -361,9 +364,18 @@ struct ExerciseSearchView: View {
                     }
                 )
             }
+            .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
+                if let celebration = achievementManager.currentCelebration {
+                    CelebrationView(
+                        achievement: CelebrationAchievement.from(celebration),
+                        isPresented: $achievementManager.showingCelebration
+                    )
+                    .presentationBackground(.clear)
+                }
+            }
         }
     }
-    
+
     private func saveExercise(_ exercise: ExerciseTemplateModel, duration: Double) {
         let newExercise = ExerciseEntry(context: viewContext)
         newExercise.id = UUID()

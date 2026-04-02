@@ -104,9 +104,10 @@ class WaterReminderService: NSObject, ObservableObject {
         userDefaults.set(currentIntake, forKey: kDailyWaterIntake)
         userDefaults.set(Date(), forKey: kLastWaterIntakeDate)
 
-        // Check if goal is met
-        if currentIntake >= dailyGoal {
+        // Check if goal is just met (only fire once when threshold is crossed)
+        if currentIntake >= dailyGoal && currentIntake - amount < dailyGoal {
             scheduleGoalAchievedNotification()
+            AchievementManager.shared.checkWaterGoal(current: currentIntake, goal: dailyGoal)
         }
     }
 
