@@ -11,6 +11,7 @@ struct RecipeDetailView: View {
     @State private var showingGroceryListSelector = false
     @State private var showingIngredientDetails = false
     @State private var selectedIngredient: IngredientModel?
+    @State private var isFavorite: Bool = false
     
     var adjustedIngredients: [IngredientModel] {
         recipe.ingredients.map { ingredient in
@@ -40,9 +41,11 @@ struct RecipeDetailView: View {
             }
             .navigationTitle(recipe.name)
             .navigationBarTitleDisplayMode(.large)
-            .navigationBarItems(trailing: Button(action: {}) {
-                Image(systemName: "heart")
+            .navigationBarItems(trailing: Button(action: toggleFavorite) {
+                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                    .foregroundColor(isFavorite ? .red : .gray)
             })
+            .onAppear { isFavorite = checkIsFavorite() }
         }
         .sheet(isPresented: $showingAddToMealPlan) {
             AddToMealPlanView(recipe: recipe, servingsMultiplier: servingsMultiplier)
@@ -96,10 +99,10 @@ struct RecipeDetailView: View {
                             
                             Spacer()
                             
-                            Button(action: { /* Toggle favorite */ }) {
-                                Image(systemName: recipe.isFavorite ? "heart.fill" : "heart")
+                            Button(action: toggleFavorite) {
+                                Image(systemName: isFavorite ? "heart.fill" : "heart")
                                     .font(.title2)
-                                    .foregroundColor(recipe.isFavorite ? .red : .gray)
+                                    .foregroundColor(isFavorite ? .red : .gray)
                             }
                         }
                         
@@ -305,6 +308,53 @@ struct RecipeDetailView: View {
 
     private func shareRecipe() {
         // Implementation for sharing recipe
+    }
+
+    // MARK: - Favorites
+
+    private func checkIsFavorite() -> Bool {
+        let request: NSFetchRequest<FavoriteRecipe> = FavoriteRecipe.fetchRequest()
+        request.predicate = NSPredicate(format: "recipeId == %@", recipe.id.uuidString)
+        request.fetchLimit = 1
+        return (try? viewContext.count(for: request)) ?? 0 > 0
+    }
+
+    private func toggleFavorite() {
+        if isFavorite {
+            removeFavorite()
+        } else {
+            addFavorite()
+        }
+        isFavorite.toggle()
+        // Also update CustomRecipe flag if present
+        if let cr = customRecipe {
+            cr.isFavorite = isFavorite
+            try? viewContext.save()
+        }
+    }
+
+    private func addFavorite() {
+        let fav = FavoriteRecipe(context: viewContext)
+        fav.id = UUID()
+        fav.recipeId = recipe.id.uuidString
+        fav.recipeName = recipe.name
+        fav.category = recipe.category.rawValue
+        fav.prepTime = Int32(recipe.prepTime)
+        fav.cookTime = Int32(recipe.cookTime)
+        fav.servings = Int32(recipe.servings)
+        fav.imageURL = recipe.imageURL
+        fav.source = recipe.source
+        fav.dateAdded = Date()
+        try? viewContext.save()
+    }
+
+    private func removeFavorite() {
+        let request: NSFetchRequest<FavoriteRecipe> = FavoriteRecipe.fetchRequest()
+        request.predicate = NSPredicate(format: "recipeId == %@", recipe.id.uuidString)
+        if let results = try? viewContext.fetch(request) {
+            results.forEach { viewContext.delete($0) }
+            try? viewContext.save()
+        }
     }
 }
 

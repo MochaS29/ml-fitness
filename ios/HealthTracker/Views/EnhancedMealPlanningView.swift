@@ -1561,6 +1561,8 @@ struct SelectedDayDetailView: View {
     let date: Date
     let meals: [FoodEntry]
 
+    @State private var selectedRecipe: RecipeModel?
+
     private var dateString: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -1589,13 +1591,25 @@ struct SelectedDayDetailView: View {
                         }
 
                         ForEach(typeMeals) { meal in
-                            HStack {
-                                Text(meal.name ?? "Unknown")
-                                    .font(.caption)
-                                Spacer()
-                                Text("\(Int(meal.calories)) cal")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                            Button(action: {
+                                if let name = meal.name {
+                                    selectedRecipe = findRecipe(named: name)
+                                }
+                            }) {
+                                HStack {
+                                    Text(meal.name ?? "Unknown")
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    Text("\(Int(meal.calories)) cal")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    if findRecipe(named: meal.name ?? "") != nil {
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption2)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
                             }
                             .padding(.leading, 14)
                         }
@@ -1606,6 +1620,56 @@ struct SelectedDayDetailView: View {
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
         .cornerRadius(12)
+        .sheet(item: $selectedRecipe) { recipe in
+            ProfessionalRecipeDetailView(recipe: recipe)
+        }
+    }
+
+    private func findRecipe(named name: String) -> RecipeModel? {
+        if let match = RecipeDatabase.shared.recipes.first(where: {
+            $0.name.lowercased() == name.lowercased()
+        }) {
+            return match
+        }
+        for plan in MealPlanData.shared.allMealPlans {
+            for week in plan.monthlyPlans {
+                for day in week.days {
+                    for meal in [day.breakfast, day.lunch, day.dinner] + day.snacks {
+                        if meal.name.lowercased() == name.lowercased() {
+                            return convertMealToRecipe(meal)
+                        }
+                    }
+                }
+            }
+        }
+        return nil
+    }
+
+    private func convertMealToRecipe(_ meal: Meal) -> RecipeModel {
+        let ingredientModels = meal.ingredients.map { ingredientString in
+            IngredientModel(name: ingredientString, amount: 1, unit: .piece, category: .other)
+        }
+        let nutrition = NutritionInfo(
+            calories: Double(meal.calories),
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            fiber: meal.fiber,
+            sugar: nil,
+            sodium: nil
+        )
+        return RecipeModel(
+            id: UUID(),
+            name: meal.name,
+            category: .dinner,
+            prepTime: meal.prepTime,
+            cookTime: meal.cookTime,
+            servings: 2,
+            ingredients: ingredientModels,
+            instructions: meal.instructions,
+            nutrition: nutrition,
+            tags: meal.tags
+        )
     }
 
     private func colorForMealType(_ mealType: String) -> Color {

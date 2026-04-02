@@ -182,46 +182,67 @@ struct ParsedNutrition {
 
 class SchemaOrgParser: RecipeParserProtocol {
     func parseRecipe(from url: URL) async throws -> ParsedRecipe {
-        let (data, _) = try await URLSession.shared.data(from: url)
-        guard let html = String(data: data, encoding: .utf8) else {
+        var request = URLRequest(url: url)
+        request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1", forHTTPHeaderField: "User-Agent")
+        let (data, _) = try await URLSession.shared.data(for: request)
+        guard let html = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .isoLatin1) else {
             throw RecipeImportError.parsingFailed
         }
-        
-        // Look for JSON-LD structured data
-        if let jsonLD = extractJSONLD(from: html) {
-            return try parseFromJSONLD(jsonLD, sourceURL: url.absoluteString)
+
+        // Try every JSON-LD block on the page — sites like AllRecipes put
+        // WebPage/BreadcrumbList first and Recipe second.
+        let blocks = extractAllJSONLD(from: html)
+        for block in blocks {
+            if let recipe = try? parseFromJSONLD(block, sourceURL: url.absoluteString) {
+                return recipe
+            }
         }
-        
+
         // Fallback to microdata parsing
         return try parseFromMicrodata(html, sourceURL: url.absoluteString)
     }
-    
-    private func extractJSONLD(from html: String) -> Data? {
+
+    private func extractAllJSONLD(from html: String) -> [Data] {
         let pattern = #"<script[^>]*type=["']application/ld\+json["'][^>]*>([\s\S]*?)</script>"#
-        
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive),
-              let match = regex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
-              let range = Range(match.range(at: 1), in: html) else {
-            return nil
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
+            return []
         }
-        
-        let jsonString = String(html[range])
-        return jsonString.data(using: .utf8)
+        let range = NSRange(html.startIndex..., in: html)
+        let matches = regex.matches(in: html, range: range)
+        return matches.compactMap { match in
+            guard let r = Range(match.range(at: 1), in: html) else { return nil }
+            return String(html[r]).data(using: .utf8)
+        }
     }
-    
+
     private func parseFromJSONLD(_ data: Data, sourceURL: String) throws -> ParsedRecipe {
-        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-        
-        // Handle array of objects or single object
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw RecipeImportError.noRecipeFound
+        }
+
+        // Helper: does an @type value (String or [String]) contain "Recipe"?
+        func isRecipeType(_ value: Any?) -> Bool {
+            if let s = value as? String { return s.contains("Recipe") }
+            if let arr = value as? [String] { return arr.contains { $0.contains("Recipe") } }
+            return false
+        }
+
+        // Find the recipe object — handles three common patterns:
+        // 1. Top-level single object: { "@type": "Recipe", ... }
+        // 2. Top-level array:         [{ "@type": "Recipe", ... }, ...]
+        // 3. @graph wrapper:          { "@graph": [{ "@type": "Recipe", ... }] }
         let recipeData: [String: Any]?
-        if let jsonArray = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] {
-            recipeData = jsonArray.first { ($0["@type"] as? String)?.contains("Recipe") ?? false }
-        } else if let type = json?["@type"] as? String, type.contains("Recipe") {
+
+        if isRecipeType(json["@type"]) {
             recipeData = json
+        } else if let graph = json["@graph"] as? [[String: Any]] {
+            recipeData = graph.first { isRecipeType($0["@type"]) }
+        } else if let array = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] {
+            recipeData = array.first { isRecipeType($0["@type"]) }
         } else {
             throw RecipeImportError.noRecipeFound
         }
-        
+
         guard let recipe = recipeData else {
             throw RecipeImportError.noRecipeFound
         }
