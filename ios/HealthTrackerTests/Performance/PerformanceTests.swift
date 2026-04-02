@@ -70,22 +70,10 @@ final class PerformanceTests: XCTestCase {
         }
     }
     
-    func testImageAnalysisPerformance() async throws {
-        let service = FoodRecognitionService.shared
-        let testImage = createLargeTestImage()
-        
-        // Measure image analysis performance
-        let start = CFAbsoluteTimeGetCurrent()
-        let result = try await service.analyzeDish(from: testImage)
-        let end = CFAbsoluteTimeGetCurrent()
-        
-        let processingTime = end - start
-        
-        // Assert processing completes within reasonable time
-        XCTAssertLessThan(processingTime, 2.0, "Image analysis took too long: \(processingTime)s")
-        XCTAssertGreaterThan(result.identifiedFoods.count, 0)
-    }
-    
+    // testImageAnalysisPerformance removed — requires live Anthropic API key and network;
+    // not suitable for CI. Test manually in development with Secrets.plist present.
+
+
     func testBulkDataSavePerformance() throws {
         measure {
             // Create and save 100 food entries

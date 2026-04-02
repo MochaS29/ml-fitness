@@ -1,5 +1,6 @@
 import StoreKit
 import UIKit
+import SwiftUI
 
 /// Manages App Store review request prompts for both free and Pro users.
 /// Rules:
@@ -57,7 +58,11 @@ final class ReviewRequestManager {
                 .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
             else { return }
 
-            SKStoreReviewController.requestReview(in: scene)
+            if #available(iOS 18.0, *) {
+                AppStore.requestReview(in: scene)
+            } else {
+                SKStoreReviewController.requestReview(in: scene)
+            }
             UserDefaults.standard.set(Date(), forKey: self.lastRequestDateKey)
         }
     }
