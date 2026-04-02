@@ -1,6 +1,50 @@
 import SwiftUI
 import CoreData
 import Combine
+import UIKit
+
+// MARK: - UIKit Window Celebration Manager
+// Renders at UIWindow.Level.alert+100 — always above every sheet, modal, and overlay in the app.
+class CelebrationWindowManager {
+    static let shared = CelebrationWindowManager()
+    private var window: UIWindow?
+    private var isPresented = false
+
+    func show(achievement: CelebrationAchievement) {
+        guard let scene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first(where: { $0.activationState == .foregroundActive })
+            ?? UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first
+        else { return }
+
+        dismiss() // clear any existing
+
+        isPresented = true
+        let win = UIWindow(windowScene: scene)
+        win.windowLevel = UIWindow.Level.alert + 100
+        win.backgroundColor = .clear
+        win.isOpaque = false
+
+        let binding = Binding<Bool>(
+            get: { [weak self] in self?.isPresented ?? false },
+            set: { [weak self] newValue in if !newValue { self?.dismiss() } }
+        )
+
+        let hc = UIHostingController(rootView: CelebrationView(achievement: achievement, isPresented: binding))
+        hc.view.backgroundColor = .clear
+        hc.view.isOpaque = false
+        win.rootViewController = hc
+        win.makeKeyAndVisible()
+        self.window = win
+    }
+
+    func dismiss() {
+        isPresented = false
+        window?.isHidden = true
+        window?.resignKey()
+        window = nil
+    }
+}
 
 // MARK: - Achievement Detector
 class AchievementDetector: ObservableObject {
@@ -181,10 +225,8 @@ class AchievementDetector: ObservableObject {
     }
 
     private func triggerCelebration(_ achievement: CelebrationAchievement) {
-        // Delay slightly so any presenting sheet has time to dismiss before confetti appears
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            self.currentAchievement = achievement
-            self.showingCelebration = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            CelebrationWindowManager.shared.show(achievement: achievement)
         }
     }
 }

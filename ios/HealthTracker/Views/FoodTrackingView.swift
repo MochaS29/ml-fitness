@@ -2,7 +2,6 @@ import SwiftUI
 
 struct FoodTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @StateObject private var achievementManager = AchievementManager.shared
     @State private var showingAddFood = false
     @State private var selectedMealType = MealType.breakfast
     
@@ -12,7 +11,6 @@ struct FoodTrackingView: View {
     private var foods: FetchedResults<FoodEntry>
     
     var body: some View {
-        ZStack {
         NavigationView {
             VStack {
                 if foods.isEmpty {
@@ -56,17 +54,6 @@ struct FoodTrackingView: View {
                 AddFoodView(mealType: selectedMealType)
             }
         }
-
-        if achievementManager.showingCelebration,
-           let achievement = achievementManager.currentCelebration {
-            CelebrationView(
-                achievement: CelebrationAchievement.from(achievement),
-                isPresented: $achievementManager.showingCelebration
-            )
-            .transition(.opacity.combined(with: .scale))
-            .zIndex(1)
-        }
-        } // ZStack
     }
     
     func deleteFoods(offsets: IndexSet, mealType: MealType) {

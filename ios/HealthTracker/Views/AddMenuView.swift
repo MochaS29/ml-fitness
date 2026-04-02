@@ -4,7 +4,6 @@ import CoreData
 struct AddMenuView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var achievementManager = AchievementManager.shared
 
     let selectedDate: Date
     @State private var selectedMealType: MealType = .breakfast
@@ -17,7 +16,6 @@ struct AddMenuView: View {
     @State private var showingMealScanner = false
     
     var body: some View {
-        ZStack {
         NavigationView {
             listContent
                 .navigationTitle("Add to Diary")
@@ -55,17 +53,6 @@ struct AddMenuView: View {
                 MealPhotoAnalyzerView()
             }
         }
-
-        if achievementManager.showingCelebration,
-           let achievement = achievementManager.currentCelebration {
-            CelebrationView(
-                achievement: CelebrationAchievement.from(achievement),
-                isPresented: $achievementManager.showingCelebration
-            )
-            .transition(.opacity.combined(with: .scale))
-            .zIndex(1)
-        }
-        } // ZStack
     }
     
     private var listContent: some View {
@@ -227,11 +214,12 @@ struct QuickWaterAddView: View {
 struct QuickWeightAddView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    
+
     let selectedDate: Date
     @State private var weight: String = ""
     @State private var notes: String = ""
-    
+    @State private var entryDate: Date = Date()
+
     var body: some View {
         NavigationView {
             Form {
@@ -242,8 +230,9 @@ struct QuickWeightAddView: View {
                         Text("lbs")
                             .foregroundColor(.secondary)
                     }
+                    DatePicker("Date", selection: $entryDate, displayedComponents: .date)
                 }
-                
+
                 Section("Notes (Optional)") {
                     TextField("Add notes...", text: $notes)
                 }
@@ -269,12 +258,12 @@ struct QuickWeightAddView: View {
     
     private func saveWeightEntry() {
         guard let weightValue = Double(weight) else { return }
-        
+
         let entry = WeightEntry(context: viewContext)
         entry.id = UUID()
         entry.weight = weightValue
-        entry.timestamp = selectedDate
-        entry.date = selectedDate
+        entry.timestamp = entryDate
+        entry.date = entryDate
         entry.notes = notes.isEmpty ? nil : notes
         
         do {
@@ -297,7 +286,7 @@ struct ExerciseSearchView: View {
     @State private var searchText = ""
     @State private var selectedExercise: ExerciseTemplateModel?
     @State private var duration: String = "30"
-    
+
     let selectedDate: Date
     private let exerciseDB = ExerciseDatabase.shared
     
@@ -366,7 +355,7 @@ struct ExerciseSearchView: View {
             }
         }
     }
-    
+
     private func saveExercise(_ exercise: ExerciseTemplateModel, duration: Double) {
         let newExercise = ExerciseEntry(context: viewContext)
         newExercise.id = UUID()
