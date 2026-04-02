@@ -104,16 +104,9 @@ final class CoreDataTests: XCTestCase {
         
         try context.save()
         
-        // When - Fetch only today's entries
-        let startOfToday = calendar.startOfDay(for: today)
-        let endOfToday = calendar.date(byAdding: .day, value: 1, to: startOfToday)!
-        
+        // When - Fetch only today's entries using the NSPredicate.forDay() extension
         let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(
-            format: "timestamp >= %@ AND timestamp < %@",
-            startOfToday as NSDate,
-            endOfToday as NSDate
-        )
+        fetchRequest.predicate = .forDay(today)
         
         let results = try context.fetch(fetchRequest)
         

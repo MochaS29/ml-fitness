@@ -64,8 +64,9 @@ final class PerformanceTests: XCTestCase {
             _ = viewModel.recommendations
             _ = viewModel.nutrientBreakdown
             
-            // Verify data is loaded
-            XCTAssertGreaterThan(viewModel.nutritionData.count, 0)
+            // Verify dashboard properties are accessible (data is empty on clean install)
+            XCTAssertFalse(viewModel.aiGreeting.isEmpty)
+            XCTAssertGreaterThanOrEqual(viewModel.aiInsights.count, 1)
         }
     }
     

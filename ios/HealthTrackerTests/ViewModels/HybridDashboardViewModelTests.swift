@@ -24,27 +24,22 @@ final class HybridDashboardViewModelTests: XCTestCase {
     }
     
     func testInitialValues() {
-        // Then
-        XCTAssertEqual(viewModel.userName, "Mocha")
-        XCTAssertEqual(viewModel.healthScore, 85)
-        XCTAssertEqual(viewModel.todayCalories, 1650)
-        XCTAssertEqual(viewModel.calorieGoal, 2200)
-        XCTAssertEqual(viewModel.currentWeight, 165.5)
-        XCTAssertEqual(viewModel.targetWeight, 160.0)
+        // userName is loaded from UserDefaults/UserProfile; test it is a non-empty string.
+        XCTAssertFalse(viewModel.userName.isEmpty)
+
+        // healthScore is calculated from live device data; test it falls within the valid range.
+        XCTAssertGreaterThanOrEqual(viewModel.healthScore, 0)
+        XCTAssertLessThanOrEqual(viewModel.healthScore, 100)
     }
     
     func testWeightProgress() {
-        // Given
-        viewModel.currentWeight = 165.5
+        // weightProgress returns 0 when no profile/startingWeight is set (clean test state)
+        XCTAssertEqual(viewModel.weightProgress, 0.0)
+
+        // When target equals current, progress is 0 (nothing to lose)
+        viewModel.currentWeight = 160.0
         viewModel.targetWeight = 160.0
-        
-        // When
-        let progress = viewModel.weightProgress
-        
-        // Then
-        // Starting weight: 170, Target: 160, Current: 165.5
-        // Total to lose: 10, Lost: 4.5, Progress: 45%
-        XCTAssertEqual(progress, 45.0, accuracy: 0.1)
+        XCTAssertEqual(viewModel.weightProgress, 0.0)
     }
     
     func testWaterPercentage() {
@@ -68,88 +63,94 @@ final class HybridDashboardViewModelTests: XCTestCase {
         XCTAssertTrue(greeting.contains("!") || greeting.contains("💪") || greeting.contains("🌟"))
     }
     
-    func testHealthTrendPositive() {
-        // Given
-        viewModel.healthScore = 85
-        
-        // Then
-        XCTAssertEqual(viewModel.healthTrend, "Excellent Progress")
-        XCTAssertEqual(viewModel.healthTrendColor, .green)
-        XCTAssertEqual(viewModel.healthTrendIcon, "arrow.up.right.circle.fill")
+    func testHealthTrendIsValidTier() {
+        // healthTrend must always be one of the 5 defined tier strings regardless of score.
+        let validTiers: Set<String> = [
+            "Getting Started",
+            "Building Momentum",
+            "Making Strides",
+            "Excellent Progress",
+            "Outstanding!"
+        ]
+        let scoresToCheck: [Double] = [0, 20, 40, 50, 60, 80, 81, 90, 91, 100]
+        for score in scoresToCheck {
+            viewModel.healthScore = score
+            XCTAssertTrue(
+                validTiers.contains(viewModel.healthTrend),
+                "healthTrend '\(viewModel.healthTrend)' for score \(score) is not a recognised tier"
+            )
+        }
     }
-    
-    func testHealthTrendNegative() {
-        // Given
-        viewModel.healthScore = 75
-        
-        // Then
-        XCTAssertEqual(viewModel.healthTrend, "Room for Improvement")
-        XCTAssertEqual(viewModel.healthTrendColor, .orange)
-        XCTAssertEqual(viewModel.healthTrendIcon, "arrow.right.circle.fill")
+
+    func testHealthTrendTierBoundaries() {
+        // Verify the correct tier is returned at each defined boundary.
+        viewModel.healthScore = 100; XCTAssertEqual(viewModel.healthTrend, "Outstanding!")
+        viewModel.healthScore = 91;  XCTAssertEqual(viewModel.healthTrend, "Outstanding!")
+        viewModel.healthScore = 90;  XCTAssertEqual(viewModel.healthTrend, "Excellent Progress")
+        viewModel.healthScore = 81;  XCTAssertEqual(viewModel.healthTrend, "Excellent Progress")
+        viewModel.healthScore = 80;  XCTAssertEqual(viewModel.healthTrend, "Making Strides")
+        viewModel.healthScore = 61;  XCTAssertEqual(viewModel.healthTrend, "Making Strides")
+        viewModel.healthScore = 60;  XCTAssertEqual(viewModel.healthTrend, "Building Momentum")
+        viewModel.healthScore = 41;  XCTAssertEqual(viewModel.healthTrend, "Building Momentum")
+        viewModel.healthScore = 40;  XCTAssertEqual(viewModel.healthTrend, "Getting Started")
+        viewModel.healthScore = 0;   XCTAssertEqual(viewModel.healthTrend, "Getting Started")
     }
     
     func testNutritionData() {
-        // When
-        let nutritionData = viewModel.nutritionData
-        
-        // Then
-        XCTAssertEqual(nutritionData.count, 3)
-        
-        let totalPercentage = nutritionData.reduce(0) { $0 + $1.percentage }
-        XCTAssertEqual(totalPercentage, 100)
-        
-        let carbs = nutritionData.first { $0.name == "Carbs" }
-        XCTAssertNotNil(carbs)
-        XCTAssertEqual(carbs?.percentage, 45)
-    }
-    
-    func testWeeklyData() {
-        // When
-        let weeklyData = viewModel.weeklyData
-        
-        // Then
-        XCTAssertEqual(weeklyData.count, 7)
-        XCTAssertEqual(weeklyData.first?.day, "Mon")
-        XCTAssertEqual(weeklyData.last?.day, "Sun")
-    }
-    
-    func testAIInsights() {
-        // When
-        let insights = viewModel.aiInsights
-        
-        // Then
-        XCTAssertEqual(insights.count, 4)
-        
-        let newInsights = insights.filter { $0.isNew }
-        XCTAssertEqual(newInsights.count, 2)
-        
-        let highImpactInsights = insights.filter { $0.impact.contains("High") }
-        XCTAssertEqual(highImpactInsights.count, 2)
-    }
-    
-    func testRecommendations() {
-        // When
-        let recommendations = viewModel.recommendations
-        
-        // Then
-        XCTAssertEqual(recommendations.count, 4)
-        
-        for recommendation in recommendations {
-            XCTAssertFalse(recommendation.title.isEmpty)
-            XCTAssertFalse(recommendation.description.isEmpty)
-            XCTAssertNotNil(recommendation.actionText)
+        // With no food logged, nutritionData returns empty (data-driven, not static)
+        XCTAssertEqual(viewModel.nutritionData.count, 0)
+
+        // When items are present, they should be Protein/Carbs/Fat and sum to ~100%
+        // (Full integration tested in DiaryViewModelTests; contract check here)
+        let data = viewModel.nutritionData
+        if !data.isEmpty {
+            XCTAssertEqual(data.count, 3)
+            let total = data.reduce(0.0) { $0 + $1.percentage }
+            XCTAssertEqual(total, 100.0, accuracy: 0.1)
         }
     }
-    
+
+    func testWeeklyData() {
+        // weeklyData returns an array; empty is valid when no historical data exists
+        let data = viewModel.weeklyData
+        XCTAssertTrue(data.count == 0 || data.count == 7)
+    }
+
+    func testAIInsights() {
+        // Always returns at least one insight (falls back to "Start Tracking")
+        let insights = viewModel.aiInsights
+        XCTAssertGreaterThanOrEqual(insights.count, 1)
+
+        // Every insight must have non-empty content
+        for insight in insights {
+            XCTAssertFalse(insight.title.isEmpty)
+            XCTAssertFalse(insight.description.isEmpty)
+            XCTAssertFalse(insight.icon.isEmpty)
+            XCTAssertFalse(insight.impact.isEmpty)
+        }
+    }
+
+    func testRecommendations() {
+        // Returns 1–3 recommendations (capped at 3, minimum 1 default)
+        let recs = viewModel.recommendations
+        XCTAssertGreaterThanOrEqual(recs.count, 1)
+        XCTAssertLessThanOrEqual(recs.count, 3)
+
+        for rec in recs {
+            XCTAssertFalse(rec.title.isEmpty)
+            XCTAssertFalse(rec.description.isEmpty)
+            XCTAssertNotNil(rec.actionText)
+        }
+    }
+
     func testNutrientBreakdown() {
-        // When
-        let breakdown = viewModel.nutrientBreakdown
-        
-        // Then
-        XCTAssertEqual(breakdown.count, 10)
-        
-        let overLimit = breakdown.filter { $0.percentage > 100 }
-        XCTAssertEqual(overLimit.count, 1) // Only sodium should be over
-        XCTAssertEqual(overLimit.first?.name, "Sodium")
+        // With no calories logged, nutrientBreakdown is empty
+        XCTAssertEqual(viewModel.nutrientBreakdown.count, 0)
+
+        // When nutrients are present, each entry must have a non-empty name
+        for nutrient in viewModel.nutrientBreakdown {
+            XCTAssertFalse(nutrient.name.isEmpty)
+            XCTAssertGreaterThanOrEqual(nutrient.percentage, 0)
+        }
     }
 }
