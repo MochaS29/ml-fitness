@@ -150,12 +150,8 @@ class AchievementDetector: ObservableObject {
         // Skip if already celebrated today
         guard !celebratedToday.contains("exercise30") else { return }
 
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
-
         let request: NSFetchRequest<ExerciseEntry> = ExerciseEntry.fetchRequest()
-        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", today as NSDate, tomorrow as NSDate)
+        request.predicate = .forDay()
 
         guard let exercises = try? viewContext.fetch(request),
               !exercises.isEmpty else { return }  // Only check if there are exercises
@@ -171,12 +167,8 @@ class AchievementDetector: ObservableObject {
     }
 
     private func checkCalorieTarget() {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
-
         let request: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
-        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", today as NSDate, tomorrow as NSDate)
+        request.predicate = .forDay()
 
         guard let foods = try? viewContext.fetch(request) else { return }
 
@@ -201,11 +193,8 @@ class AchievementDetector: ObservableObject {
         var checkDate = Date()
 
         for _ in 0..<30 {  // Check up to 30 days
-            let startOfDay = calendar.startOfDay(for: checkDate)
-            let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
             let request: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
-            request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+            request.predicate = .forDay(checkDate)
             request.fetchLimit = 1
 
             if let count = try? viewContext.count(for: request), count > 0 {

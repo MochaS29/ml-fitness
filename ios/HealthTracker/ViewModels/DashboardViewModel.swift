@@ -54,6 +54,10 @@ class DashboardViewModel: ObservableObject {
         }
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     @objc private func userDefaultsDidChange() {
         // Reload goals when UserDefaults changes
         loadSimpleGoals()
@@ -153,9 +157,7 @@ class DashboardViewModel: ObservableObject {
 
     private func loadTodayWaterIntake() {
         let request = NSFetchRequest<WaterEntry>(entityName: "WaterEntry")
-        let startOfDay = Calendar.current.startOfDay(for: Date())
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
-        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+        request.predicate = .forDay()
 
         do {
             let entries = try viewContext.fetch(request)
@@ -173,9 +175,7 @@ class DashboardViewModel: ObservableObject {
 
     private func loadTodayExerciseData() {
         let request = NSFetchRequest<ExerciseEntry>(entityName: "ExerciseEntry")
-        let startOfDay = Calendar.current.startOfDay(for: Date())
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
-        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+        request.predicate = .forDay()
 
         do {
             let entries = try viewContext.fetch(request)
@@ -196,9 +196,7 @@ class DashboardViewModel: ObservableObject {
 
     private func loadTodayCalories() {
         let request = NSFetchRequest<FoodEntry>(entityName: "FoodEntry")
-        let startOfDay = Calendar.current.startOfDay(for: Date())
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
-        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+        request.predicate = .forDay()
 
         do {
             let entries = try viewContext.fetch(request)
@@ -345,9 +343,7 @@ class DashboardViewModel: ObservableObject {
     func removeWaterGlass() {
         // Remove the last water entry for today
         let request = NSFetchRequest<WaterEntry>(entityName: "WaterEntry")
-        let startOfDay = Calendar.current.startOfDay(for: Date())
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
-        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+        request.predicate = .forDay()
         request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
         request.fetchLimit = 1
 
@@ -525,13 +521,8 @@ class DashboardViewModel: ObservableObject {
     // Nutrition Distribution - Calculate from actual food entries
     var nutritionData: [HybridNutritionItem] {
         // Fetch today's food entries and calculate macro distribution
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: Date())
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
         let request = NSFetchRequest<FoodEntry>(entityName: "FoodEntry")
-        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@",
-                                       startOfDay as NSDate, endOfDay as NSDate)
+        request.predicate = .forDay()
 
         do {
             let entries = try viewContext.fetch(request)
@@ -887,9 +878,7 @@ class DashboardViewModel: ObservableObject {
 
         // Fetch today's supplement entries
         let request = NSFetchRequest<SupplementEntry>(entityName: "SupplementEntry")
-        let startOfDay = Calendar.current.startOfDay(for: Date())
-        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
-        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+        request.predicate = .forDay()
 
         do {
             let entries = try viewContext.fetch(request)
@@ -942,11 +931,8 @@ class DashboardViewModel: ObservableObject {
         // Fetch weight entries for each day
         for dayOffset in 0..<7 {
             if let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) {
-                let startOfDay = calendar.startOfDay(for: date)
-                let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
                 let request = NSFetchRequest<WeightEntry>(entityName: "WeightEntry")
-                request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+                request.predicate = .forDay(date)
                 request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
                 request.fetchLimit = 1
 
@@ -978,11 +964,8 @@ class DashboardViewModel: ObservableObject {
         // Fetch exercise data for each day
         for dayOffset in 0..<7 {
             if let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) {
-                let startOfDay = calendar.startOfDay(for: date)
-                let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
                 let request = NSFetchRequest<ExerciseEntry>(entityName: "ExerciseEntry")
-                request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+                request.predicate = .forDay(date)
 
                 do {
                     let entries = try viewContext.fetch(request)

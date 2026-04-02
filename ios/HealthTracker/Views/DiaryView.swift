@@ -24,28 +24,24 @@ struct DiaryView: View {
     @FetchRequest private var supplementEntries: FetchedResults<SupplementEntry>
     
     init() {
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: Date())
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-        
         _foodEntries = FetchRequest(
             sortDescriptors: [NSSortDescriptor(keyPath: \FoodEntry.timestamp, ascending: true)],
-            predicate: NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+            predicate: NSPredicate.forDay()
         )
-        
+
         _exerciseEntries = FetchRequest(
             sortDescriptors: [NSSortDescriptor(keyPath: \ExerciseEntry.timestamp, ascending: true)],
-            predicate: NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+            predicate: NSPredicate.forDay()
         )
-        
+
         _weightEntries = FetchRequest(
             sortDescriptors: [NSSortDescriptor(keyPath: \WeightEntry.timestamp, ascending: true)],
-            predicate: NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+            predicate: NSPredicate.forDay()
         )
-        
+
         _supplementEntries = FetchRequest(
             sortDescriptors: [NSSortDescriptor(keyPath: \SupplementEntry.timestamp, ascending: true)],
-            predicate: NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+            predicate: NSPredicate.forDay()
         )
     }
     
@@ -445,12 +441,8 @@ struct DiaryView: View {
 
     private func calculateTodaysWaterOunces() -> Double {
         // Get water entries for selected date
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: selectedDate)
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
         let request: NSFetchRequest<WaterEntry> = WaterEntry.fetchRequest()
-        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+        request.predicate = .forDay(selectedDate)
 
         guard let entries = try? viewContext.fetch(request) else { return 0 }
 
@@ -674,14 +666,10 @@ struct DiaryView: View {
     }
     
     private func updateFetchRequests() {
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: selectedDate)
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-        
-        foodEntries.nsPredicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
-        exerciseEntries.nsPredicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
-        weightEntries.nsPredicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
-        supplementEntries.nsPredicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+        foodEntries.nsPredicate = .forDay(selectedDate)
+        exerciseEntries.nsPredicate = .forDay(selectedDate)
+        weightEntries.nsPredicate = .forDay(selectedDate)
+        supplementEntries.nsPredicate = .forDay(selectedDate)
     }
     
     private func updateDailySummary() {

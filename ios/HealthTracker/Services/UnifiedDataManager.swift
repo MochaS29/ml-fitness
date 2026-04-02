@@ -248,26 +248,25 @@ class UnifiedDataManager: ObservableObject {
     func refreshAllData() {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-        let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
 
         // Food entries
         let foodRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
-        foodRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", today as NSDate, tomorrow as NSDate)
+        foodRequest.predicate = .forDay()
         foodRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
 
         // Exercise entries
         let exerciseRequest: NSFetchRequest<ExerciseEntry> = ExerciseEntry.fetchRequest()
-        exerciseRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", today as NSDate, tomorrow as NSDate)
+        exerciseRequest.predicate = .forDay()
         exerciseRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
 
         // Water entries
         let waterRequest: NSFetchRequest<WaterEntry> = WaterEntry.fetchRequest()
-        waterRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", today as NSDate, tomorrow as NSDate)
+        waterRequest.predicate = .forDay()
         waterRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
 
         // Supplement entries
         let supplementRequest: NSFetchRequest<SupplementEntry> = SupplementEntry.fetchRequest()
-        supplementRequest.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", today as NSDate, tomorrow as NSDate)
+        supplementRequest.predicate = .forDay()
         supplementRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
 
         // Weight entries (fetch all, not just today)
@@ -533,37 +532,20 @@ class UnifiedDataManager: ObservableObject {
     // MARK: - Copy from Previous Day
 
     func fetchFoodEntries(for date: Date, mealType: MealType? = nil) -> [FoodEntry] {
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: date)
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
         let request: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
+        var predicates: [NSPredicate] = [.forDay(date)]
         if let mealType = mealType {
-            request.predicate = NSPredicate(
-                format: "timestamp >= %@ AND timestamp < %@ AND mealType == %@",
-                startOfDay as NSDate, endOfDay as NSDate, mealType.rawValue
-            )
-        } else {
-            request.predicate = NSPredicate(
-                format: "timestamp >= %@ AND timestamp < %@",
-                startOfDay as NSDate, endOfDay as NSDate
-            )
+            predicates.append(NSPredicate(format: "mealType == %@", mealType.rawValue))
         }
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
         request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
 
         return (try? context.fetch(request)) ?? []
     }
 
     func fetchSupplementEntries(for date: Date) -> [SupplementEntry] {
-        let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: date)
-        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
-
         let request: NSFetchRequest<SupplementEntry> = SupplementEntry.fetchRequest()
-        request.predicate = NSPredicate(
-            format: "timestamp >= %@ AND timestamp < %@",
-            startOfDay as NSDate, endOfDay as NSDate
-        )
+        request.predicate = .forDay(date)
         request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
 
         return (try? context.fetch(request)) ?? []
