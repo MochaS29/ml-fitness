@@ -1918,10 +1918,10 @@ struct MealDetailView: View {
                 .font(.headline)
 
             HStack(spacing: 12) {
-                NutritionCard(label: "Protein", value: "0", color: .red)
-                NutritionCard(label: "Carbs", value: "0", color: .blue)
-                NutritionCard(label: "Fat", value: "0", color: .green)
-                NutritionCard(label: "Fiber", value: "0", color: .orange)
+                NutritionCard(label: "Protein", value: "\(Int(meal.protein))g", color: .red)
+                NutritionCard(label: "Carbs", value: "\(Int(meal.carbs))g", color: .blue)
+                NutritionCard(label: "Fat", value: "\(Int(meal.fat))g", color: .green)
+                NutritionCard(label: "Fiber", value: "\(Int(meal.fiber))g", color: .orange)
             }
         }
     }

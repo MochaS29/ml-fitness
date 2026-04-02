@@ -222,15 +222,55 @@ struct MyRecipeBookView: View {
     }
     
     private func getRecipeFromFavorite(_ favorite: FavoriteRecipe) -> RecipeModel? {
-        // In a real app, this would fetch the recipe from the database
-        // For now, we'll create a Recipe from the FavoriteRecipe data
         guard let id = favorite.recipeId,
-              let name = favorite.recipeName,
-              let categoryString = favorite.category,
-              let category = RecipeCategory(rawValue: categoryString) else {
-            return nil
+              let name = favorite.recipeName else { return nil }
+
+        // 1. Try exact match in RecipeDatabase
+        if let match = RecipeDatabase.shared.recipes.first(where: { $0.name.lowercased() == name.lowercased() }) {
+            return match
         }
-        
+
+        // 2. Try meal plan data (all plans)
+        for plan in MealPlanData.shared.allMealPlans {
+            for week in plan.monthlyPlans {
+                for day in week.days {
+                    for meal in [day.breakfast, day.lunch, day.dinner] + day.snacks {
+                        if meal.name.lowercased() == name.lowercased() {
+                            let ingredientModels = meal.ingredients.map {
+                                IngredientModel(name: $0, amount: 1, unit: .piece, category: .other)
+                            }
+                            return RecipeModel(
+                                id: UUID(uuidString: id) ?? UUID(),
+                                name: meal.name,
+                                category: RecipeCategory(rawValue: favorite.category ?? "") ?? .dinner,
+                                prepTime: meal.prepTime,
+                                cookTime: meal.cookTime,
+                                servings: Int(favorite.servings) > 0 ? Int(favorite.servings) : 2,
+                                ingredients: ingredientModels,
+                                instructions: meal.instructions,
+                                nutrition: NutritionInfo(
+                                    calories: Double(meal.calories),
+                                    protein: meal.protein,
+                                    carbs: meal.carbs,
+                                    fat: meal.fat,
+                                    fiber: meal.fiber,
+                                    sugar: nil,
+                                    sodium: nil
+                                ),
+                                imageURL: favorite.imageURL,
+                                source: favorite.source,
+                                tags: meal.tags
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // 3. Fallback — basic stub so card still renders
+        guard let categoryString = favorite.category,
+              let category = RecipeCategory(rawValue: categoryString) else { return nil }
+
         return RecipeModel(
             id: UUID(uuidString: id) ?? UUID(),
             name: name,
@@ -238,8 +278,8 @@ struct MyRecipeBookView: View {
             prepTime: Int(favorite.prepTime),
             cookTime: Int(favorite.cookTime),
             servings: Int(favorite.servings),
-            ingredients: [], // Would be fetched from database
-            instructions: [], // Would be fetched from database
+            ingredients: [],
+            instructions: [],
             imageURL: favorite.imageURL,
             source: favorite.source,
             rating: Int(favorite.rating)
