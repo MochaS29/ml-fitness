@@ -11,17 +11,17 @@ struct SimpleGoalsView: View {
     // Load current goals from UserDefaults
     private var currentStepGoal: Int {
         UserDefaults.standard.integer(forKey: "dailyStepGoal") > 0 ?
-        UserDefaults.standard.integer(forKey: "dailyStepGoal") : 8000
+        UserDefaults.standard.integer(forKey: "dailyStepGoal") : AppConstants.Defaults.dailyStepGoal
     }
 
     private var currentCalorieGoal: Int {
         UserDefaults.standard.integer(forKey: "dailyCalorieGoal") > 0 ?
-        UserDefaults.standard.integer(forKey: "dailyCalorieGoal") : 2000
+        UserDefaults.standard.integer(forKey: "dailyCalorieGoal") : AppConstants.Defaults.dailyCalorieGoal
     }
 
     private var currentWaterGoal: Int {
         UserDefaults.standard.integer(forKey: "dailyWaterGoal") > 0 ?
-        UserDefaults.standard.integer(forKey: "dailyWaterGoal") : 8
+        UserDefaults.standard.integer(forKey: "dailyWaterGoal") : AppConstants.Defaults.dailyWaterGlasses
     }
 
     private var currentWeightGoal: Double {

@@ -15,9 +15,9 @@ class DashboardViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     // Simple goals storage (until proper goals system is implemented)
-    @Published var dailyStepGoal: Int = UserDefaults.standard.integer(forKey: "dailyStepGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyStepGoal") : 8000
-    @Published var dailyCalorieGoal: Int = UserDefaults.standard.integer(forKey: "dailyCalorieGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyCalorieGoal") : 2000
-    @Published var dailyWaterGoal: Int = UserDefaults.standard.integer(forKey: "dailyWaterGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyWaterGoal") : 8
+    @Published var dailyStepGoal: Int = UserDefaults.standard.integer(forKey: "dailyStepGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyStepGoal") : AppConstants.Defaults.dailyStepGoal
+    @Published var dailyCalorieGoal: Int = UserDefaults.standard.integer(forKey: "dailyCalorieGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyCalorieGoal") : AppConstants.Defaults.dailyCalorieGoal
+    @Published var dailyWaterGoal: Int = UserDefaults.standard.integer(forKey: "dailyWaterGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyWaterGoal") : AppConstants.Defaults.dailyWaterGlasses
     @Published var weightGoal: Double = UserDefaults.standard.double(forKey: "weightGoal")
 
     init() {
@@ -467,7 +467,7 @@ class DashboardViewModel: ObservableObject {
     // Today's Metrics
     // These will be updated from real data sources
     @Published var todayCalories = 0
-    @Published var calorieGoal = 2000
+    @Published var calorieGoal = AppConstants.Defaults.dailyCalorieGoal
     @Published var todayProtein: Double = 0
     @Published var todayCarbs: Double = 0
     @Published var todayFat: Double = 0
@@ -475,13 +475,13 @@ class DashboardViewModel: ObservableObject {
     @Published var todaySugar: Double = 0
     @Published var todaySodium: Double = 0
     @Published var todaySteps = 0
-    @Published var stepGoal = 8000
+    @Published var stepGoal = AppConstants.Defaults.dailyStepGoal
     @Published var currentWeight = 0.0
     @Published var targetWeight = 0.0
     @Published var todayExercise = 0
     @Published var exerciseSessions = 0
     @Published var todayWater = 0
-    @Published var waterGoal = 8
+    @Published var waterGoal = AppConstants.Defaults.dailyWaterGlasses
     
     // Calculated Properties
     var weightProgress: Double {

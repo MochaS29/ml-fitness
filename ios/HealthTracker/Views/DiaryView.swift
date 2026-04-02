@@ -479,7 +479,7 @@ struct DiaryView: View {
     private var diaryNutritionSection: some View {
         let defaults = UserDefaults.standard
         let calorieGoal = Double(defaults.integer(forKey: "calorieGoal")) > 0
-            ? Double(defaults.integer(forKey: "calorieGoal")) : 2000.0
+            ? Double(defaults.integer(forKey: "calorieGoal")) : Double(AppConstants.Defaults.dailyCalorieGoal)
         let proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0
             ? Double(defaults.integer(forKey: "proteinGoal")) : 50.0
         let suppNutrients = viewModel.supplementNutrients(from: supplementEntries)
@@ -676,7 +676,7 @@ struct DiaryView: View {
 
 struct DailySummary {
     var calories: Double = 0
-    var calorieGoal: Double = 2000
+    var calorieGoal: Double = Double(AppConstants.Defaults.dailyCalorieGoal)
     var caloriesBurned: Double = 0
     var protein: Double = 0
     var proteinGoal: Double = 50

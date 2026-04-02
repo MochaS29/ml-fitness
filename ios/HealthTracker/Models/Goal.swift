@@ -217,7 +217,7 @@ struct GoalTemplate {
             description: "Stay within your daily calorie target",
             category: .nutrition,
             targetType: .stayBelow,
-            suggestedTarget: 2000,
+            suggestedTarget: Double(AppConstants.Defaults.dailyCalorieGoal),
             unit: "calories",
             frequency: .daily,
             duration: 30

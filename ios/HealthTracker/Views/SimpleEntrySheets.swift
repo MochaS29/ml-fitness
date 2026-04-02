@@ -94,11 +94,11 @@ struct ExerciseEntrySheet: View {
         let mins = Double(duration) ?? 30
         let met: Double
         switch selectedCategory {
-        case "Cardio":    met = 7.5
-        case "Strength":  met = 5.0
-        case "Flexibility": met = 3.0
-        case "Sports":    met = 7.0
-        default:          met = 5.0
+        case "Cardio":    met = AppConstants.MET.cardio
+        case "Strength":  met = AppConstants.MET.strength
+        case "Flexibility": met = AppConstants.MET.flexibility
+        case "Sports":    met = AppConstants.MET.sports
+        default:          met = AppConstants.MET.other
         }
         return Int((met * 70.0 * mins) / 60.0)
     }
