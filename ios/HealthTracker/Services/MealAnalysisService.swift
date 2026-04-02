@@ -242,6 +242,7 @@ class MealAnalysisService: ObservableObject {
 
         try context.save()
         UnifiedDataManager.shared.refreshAllData()
+        ReviewRequestManager.shared.recordMealScanned()
     }
 }
 

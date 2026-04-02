@@ -394,13 +394,19 @@ struct SettingsSupportSection: View {
 // MARK: - Section: App Info
 
 struct AppInfoSection: View {
+    private var versionString: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "—"
+        return "\(version) (\(build))"
+    }
+
     var body: some View {
         Section {
             HStack {
                 Text("Version")
                     .foregroundColor(.secondary)
                 Spacer()
-                Text("1.0.0")
+                Text(versionString)
                     .foregroundColor(.secondary)
             }
             .font(.subheadline)
@@ -740,9 +746,10 @@ struct HealthKitSettingsView: View {
     @State private var isLoading = false
     @State private var showError = false
     @State private var errorMessage = ""
-    @State private var syncWeight = true
-    @State private var syncExercise = true
-    @State private var syncSteps = true
+    @AppStorage("hkSyncWeight") private var syncWeight = true
+    @AppStorage("hkSyncExercise") private var syncExercise = true
+    @AppStorage("hkSyncSteps") private var syncSteps = true
+    @AppStorage("hkConnected") private var hkConnected = false
 
     var body: some View {
         Form {
@@ -819,7 +826,9 @@ struct HealthKitSettingsView: View {
                 self.isLoading = false
                 self.isAuthorized = success
 
-                if !success {
+                if success {
+                    self.hkConnected = true
+                } else {
                     self.errorMessage = "Failed to connect to Apple Health. Please go to Settings > Privacy & Security > Health > HealthTracker and grant permissions."
                     self.showError = true
                 }
@@ -828,9 +837,7 @@ struct HealthKitSettingsView: View {
     }
 
     private func checkAuthorizationStatus() {
-        // For now, we'll check if we've been authorized before
-        // In a production app, you'd check the actual authorization status
-        isAuthorized = false
+        isAuthorized = hkConnected
     }
 
     private func performSync() {
@@ -1041,14 +1048,14 @@ struct SettingsView: View {
                     HStack {
                         Text("Version")
                         Spacer()
-                        Text("1.0.0")
+                        Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—")
                             .foregroundColor(.secondary)
                     }
 
                     HStack {
                         Text("Build")
                         Spacer()
-                        Text("2024.1")
+                        Text(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "—")
                             .foregroundColor(.secondary)
                     }
                 }
@@ -1100,22 +1107,6 @@ struct HelpView: View {
                                 Text("Getting Started")
                                     .font(.headline)
                                 Text("Learn the basics of Health Tracker")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .padding(.vertical, 4)
-                    }
-
-                    NavigationLink(destination: TutorialsView()) {
-                        HStack {
-                            Image(systemName: "book.fill")
-                                .foregroundColor(.orange)
-                                .font(.title2)
-                            VStack(alignment: .leading) {
-                                Text("Tutorials")
-                                    .font(.headline)
-                                Text("Step-by-step guides for features")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -1212,15 +1203,12 @@ struct HelpView: View {
                     HStack {
                         Text("Version")
                         Spacer()
-                        Text("1.0.0 (Build 2024.1)")
-                            .foregroundColor(.secondary)
-                    }
-
-                    HStack {
-                        Text("Last Updated")
-                        Spacer()
-                        Text("January 2025")
-                            .foregroundColor(.secondary)
+                        Text({
+                            let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
+                            let b = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "—"
+                            return "\(v) (Build \(b))"
+                        }())
+                        .foregroundColor(.secondary)
                     }
                 }
             }

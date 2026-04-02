@@ -164,6 +164,9 @@ class StoreManager: ObservableObject {
     private func setProStatus(_ value: Bool) {
         isPro = value
         UserDefaults.standard.set(value, forKey: "isProUser")
+        if value {
+            ReviewRequestManager.shared.recordProUpgrade()
+        }
     }
 
     /// Reset purchase state back to idle (e.g. after dismissing alert)

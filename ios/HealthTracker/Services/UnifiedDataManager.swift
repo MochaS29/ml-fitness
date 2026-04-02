@@ -94,6 +94,9 @@ class UnifiedDataManager: ObservableObject {
         // Check achievements
         AchievementManager.shared.checkDailyCalorieGoal(consumed: todayCalories, goal: Double(AppConstants.Defaults.dailyCalorieGoal))
 
+        // App Store review prompt
+        ReviewRequestManager.shared.recordFoodLogged()
+
         // Update goals
         GoalsManager.shared.updateGoalsFromFoodEntry(entry)
     }
