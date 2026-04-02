@@ -394,15 +394,31 @@ class DashboardViewModel: ObservableObject {
     }
     
     var healthTrend: String {
-        return healthScore > 80 ? "Excellent Progress" : "Room for Improvement"
+        switch healthScore {
+        case 91...100: return "Outstanding!"
+        case 81...90:  return "Excellent Progress"
+        case 61...80:  return "Making Strides"
+        case 41...60:  return "Building Momentum"
+        default:       return "Getting Started"
+        }
     }
-    
+
     var healthTrendIcon: String {
-        return healthScore > 80 ? "arrow.up.right.circle.fill" : "arrow.right.circle.fill"
+        switch healthScore {
+        case 81...100: return "arrow.up.right.circle.fill"
+        case 61...80:  return "arrow.up.right.circle.fill"
+        case 41...60:  return "arrow.right.circle.fill"
+        default:       return "arrow.right.circle.fill"
+        }
     }
-    
+
     var healthTrendColor: Color {
-        return healthScore > 80 ? .green : .orange
+        switch healthScore {
+        case 81...100: return .green
+        case 61...80:  return .mint
+        case 41...60:  return .orange
+        default:       return .secondary
+        }
     }
     
     var healthSummary: String {
