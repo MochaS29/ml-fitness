@@ -5,7 +5,7 @@ import CoreData
 struct MealPhotoAnalyzerView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
-    @StateObject private var analysisService = MealAnalysisService.shared
+    @ObservedObject private var analysisService = MealAnalysisService.shared
 
     @State private var selectedImage: UIImage?
     @State private var showingImagePicker = false

@@ -6,8 +6,8 @@ import CoreData
 
 struct UnifiedFoodSearchSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = UnifiedDataManager.shared
-    @StateObject private var favourites = FavouriteFoodsManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var favourites = FavouriteFoodsManager.shared
     @State private var searchText = ""
     @State private var selectedMealType: MealType
     @State private var showingManualEntry = false

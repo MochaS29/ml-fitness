@@ -65,7 +65,7 @@ struct MealReminderView: View {
 
 struct WaterReminderView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var reminderService = WaterReminderService.shared
+    @ObservedObject private var reminderService = WaterReminderService.shared
     @State private var showingFullSettings = false
     
     var body: some View {

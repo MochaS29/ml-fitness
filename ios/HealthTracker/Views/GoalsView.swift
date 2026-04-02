@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct GoalsView: View {
-    @StateObject private var goalsManager = GoalsManager.shared
+    @ObservedObject private var goalsManager = GoalsManager.shared
     @State private var selectedTab = 0
     @State private var showingAddGoal = false
     @State private var showingGoalDetail: Goal?
@@ -113,7 +113,7 @@ struct EmptyGoalsView: View {
 // MARK: - Goal Card
 struct GoalCard: View {
     let goal: Goal
-    @StateObject private var goalsManager = GoalsManager.shared
+    @ObservedObject private var goalsManager = GoalsManager.shared
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -265,7 +265,7 @@ struct GoalCard: View {
 // MARK: - Goal Statistics View
 struct GoalStatisticsView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var goalsManager = GoalsManager.shared
+    @ObservedObject private var goalsManager = GoalsManager.shared
     
     var statistics: GoalStatistics {
         goalsManager.getGoalStatistics()

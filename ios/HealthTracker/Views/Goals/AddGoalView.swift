@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AddGoalView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var goalsManager = GoalsManager.shared
+    @ObservedObject private var goalsManager = GoalsManager.shared
     @EnvironmentObject var userProfileManager: UserProfileManager
     
     // Goal properties

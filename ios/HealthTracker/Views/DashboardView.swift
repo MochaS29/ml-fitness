@@ -4,24 +4,45 @@ import Charts
 struct DashboardView: View {
     @EnvironmentObject var profileManager: UserProfileManager
     @StateObject private var viewModel = DashboardViewModel()
-    @StateObject private var streakManager = LoggingStreakManager.shared
+    @ObservedObject private var streakManager = LoggingStreakManager.shared
     @State private var selectedTimeRange = TimeRange.week
-    @State private var showingAIInsightDetail = false
-    @State private var selectedInsight: AIInsight?
     @State private var animateCharts = false
-    @State private var showingCalorieDetail = false
-    @State private var showingWeightDetail = false
-    @State private var showingExerciseDetail = false
-    @State private var showingWaterDetail = false
-    @State private var showingSupplementDetail = false
-    @State private var showingStepDetail = false
-    @State private var showingStepGoal = false
-    @State private var showingExerciseQuickAdd = false
-    @State private var showingAllInsights = false
-    @State private var showingReminders = false
-    @State private var showingNutritionDetail = false
-    @State private var showingQuickLog = false
+    @State private var activeSheet: ActiveSheet?
     @State private var widgetsEnabled = false
+
+    private enum ActiveSheet: Identifiable {
+        case aiInsightDetail(AIInsight)
+        case calorieDetail
+        case weightDetail
+        case exerciseDetail
+        case waterDetail
+        case supplementDetail
+        case stepDetail
+        case stepGoal
+        case exerciseQuickAdd
+        case allInsights
+        case reminders
+        case nutritionDetail
+        case quickLog
+
+        var id: String {
+            switch self {
+            case .aiInsightDetail(let insight): return "aiInsightDetail-\(insight.id)"
+            case .calorieDetail: return "calorieDetail"
+            case .weightDetail: return "weightDetail"
+            case .exerciseDetail: return "exerciseDetail"
+            case .waterDetail: return "waterDetail"
+            case .supplementDetail: return "supplementDetail"
+            case .stepDetail: return "stepDetail"
+            case .stepGoal: return "stepGoal"
+            case .exerciseQuickAdd: return "exerciseQuickAdd"
+            case .allInsights: return "allInsights"
+            case .reminders: return "reminders"
+            case .nutritionDetail: return "nutritionDetail"
+            case .quickLog: return "quickLog"
+            }
+        }
+    }
 
     enum TimeRange: String, CaseIterable {
         case day = "Day"
@@ -52,7 +73,10 @@ struct DashboardView: View {
                     nutritionDistributionCard
 
                     // Supplement Stats Widget
-                    SupplementStatsWidget(showingDetail: $showingSupplementDetail)
+                    SupplementStatsWidget(showingDetail: Binding(
+                        get: { if case .supplementDetail = activeSheet { return true }; return false },
+                        set: { if $0 { activeSheet = .supplementDetail } else { activeSheet = nil } }
+                    ))
 
                     // AI Insights Carousel
                     aiInsightsSection
@@ -82,7 +106,7 @@ struct DashboardView: View {
         }
         .background(Color(UIColor.systemGroupedBackground))
         .overlay(alignment: .bottomTrailing) {
-            Button(action: { showingQuickLog = true }) {
+            Button(action: { activeSheet = .quickLog }) {
                 Image(systemName: "plus")
                     .font(.title2)
                     .fontWeight(.semibold)
@@ -112,46 +136,37 @@ struct DashboardView: View {
                 }
             }
         }
-        .sheet(item: $selectedInsight) { insight in
-            AIInsightDetailView(insight: insight)
-        }
-        .sheet(isPresented: $showingCalorieDetail) {
-            FoodTrackingView()
-        }
-        .sheet(isPresented: $showingWeightDetail) {
-            WeightTrackingView()
-        }
-        .sheet(isPresented: $showingExerciseDetail) {
-            ExerciseDetailView()
-        }
-        .sheet(isPresented: $showingWaterDetail) {
-            WaterTrackingView()
-        }
-        .sheet(isPresented: $showingSupplementDetail) {
-            ProFeatureGate {
-                EnhancedSupplementTrackingView()
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .aiInsightDetail(let insight):
+                AIInsightDetailView(insight: insight)
+            case .calorieDetail:
+                FoodTrackingView()
+            case .weightDetail:
+                WeightTrackingView()
+            case .exerciseDetail:
+                ExerciseDetailView()
+            case .waterDetail:
+                WaterTrackingView()
+            case .supplementDetail:
+                ProFeatureGate {
+                    EnhancedSupplementTrackingView()
+                }
+            case .stepDetail:
+                StepDetailsView()
+            case .stepGoal:
+                StepGoalView()
+            case .exerciseQuickAdd:
+                ExerciseQuickAddView()
+            case .allInsights:
+                AllInsightsView(insights: viewModel.aiInsights)
+            case .reminders:
+                RemindersView()
+            case .nutritionDetail:
+                NutritionDetailView()
+            case .quickLog:
+                AddMenuView(selectedDate: Date())
             }
-        }
-        .sheet(isPresented: $showingStepDetail) {
-            StepDetailsView()
-        }
-        .sheet(isPresented: $showingStepGoal) {
-            StepGoalView()
-        }
-        .sheet(isPresented: $showingExerciseQuickAdd) {
-            ExerciseQuickAddView()
-        }
-        .sheet(isPresented: $showingAllInsights) {
-            AllInsightsView(insights: viewModel.aiInsights)
-        }
-        .sheet(isPresented: $showingReminders) {
-            RemindersView()
-        }
-        .sheet(isPresented: $showingNutritionDetail) {
-            NutritionDetailView()
-        }
-        .sheet(isPresented: $showingQuickLog) {
-            AddMenuView(selectedDate: Date())
         }
     }
 
@@ -161,7 +176,7 @@ struct DashboardView: View {
         let settings = SmartReminderSettings.shared
         let activeCount = [settings.waterEnabled, settings.stepsEnabled, settings.mealsEnabled, settings.exerciseEnabled, settings.weightEnabled].filter { $0 }.count
 
-        return Button(action: { showingReminders = true }) {
+        return Button(action: { activeSheet = .reminders }) {
             HStack(spacing: 12) {
                 ZStack {
                     Circle()
@@ -362,7 +377,7 @@ struct DashboardView: View {
                 
                 Spacer()
                 
-                Button(action: { showingAllInsights = true }) {
+                Button(action: { activeSheet = .allInsights }) {
                     Text("View All")
                         .font(.caption)
                         .foregroundColor(.mindfulTeal)
@@ -374,7 +389,7 @@ struct DashboardView: View {
                     ForEach(viewModel.aiInsights) { insight in
                         AIInsightCard(insight: insight)
                             .onTapGesture {
-                                selectedInsight = insight
+                                activeSheet = .aiInsightDetail(insight)
                             }
                     }
                 }
@@ -397,7 +412,7 @@ struct DashboardView: View {
                 sparklineData: viewModel.stepsSparkline
             )
             .onTapGesture {
-                showingStepGoal = true  // Show the new StepGoalView
+                activeSheet = .stepGoal
             }
             
             MetricCardWithTrend(
@@ -411,7 +426,7 @@ struct DashboardView: View {
                 sparklineData: viewModel.weightSparkline
             )
             .onTapGesture {
-                showingWeightDetail = true
+                activeSheet = .weightDetail
             }
             
             MetricCardWithTrend(
@@ -425,7 +440,7 @@ struct DashboardView: View {
                 sparklineData: viewModel.exerciseSparkline
             )
             .onTapGesture {
-                showingExerciseDetail = true
+                activeSheet = .exerciseDetail
             }
             
             MetricCardWithTrend(
@@ -439,7 +454,7 @@ struct DashboardView: View {
                 sparklineData: viewModel.waterSparkline
             )
             .onTapGesture {
-                showingWaterDetail = true
+                activeSheet = .waterDetail
             }
         }
     }
@@ -447,7 +462,7 @@ struct DashboardView: View {
     // MARK: - Nutrition Distribution Card
 
     private var nutritionDistributionCard: some View {
-        Button(action: { showingNutritionDetail = true }) {
+        Button(action: { activeSheet = .nutritionDetail }) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text("Nutrition Distribution")

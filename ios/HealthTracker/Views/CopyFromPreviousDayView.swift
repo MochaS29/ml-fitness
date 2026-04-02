@@ -4,7 +4,7 @@ import CoreData
 struct CopyFromPreviousDayView: View {
     let targetDate: Date
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
 
     @State private var sourceDate: Date = Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date()
     @State private var selectedMeals: Set<MealType> = []

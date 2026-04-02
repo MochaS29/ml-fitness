@@ -54,7 +54,7 @@ class BodyMeasurementsManager: ObservableObject {
 // MARK: - Main View
 
 struct BodyMeasurementsView: View {
-    @StateObject private var manager = BodyMeasurementsManager.shared
+    @ObservedObject private var manager = BodyMeasurementsManager.shared
     @State private var showingAdd = false
 
     var body: some View {
@@ -213,7 +213,7 @@ struct MeasurementHistoryCard: View {
 
 struct AddMeasurementsView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var manager = BodyMeasurementsManager.shared
+    @ObservedObject private var manager = BodyMeasurementsManager.shared
 
     @State private var height  = ""
     @State private var waist   = ""

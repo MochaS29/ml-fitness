@@ -4,7 +4,7 @@ import CoreData
 struct WaterTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var reminderService = WaterReminderService.shared
+    @ObservedObject private var reminderService = WaterReminderService.shared
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \WaterEntry.timestamp, ascending: false)],
         predicate: NSPredicate.forDay(),

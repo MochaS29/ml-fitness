@@ -39,9 +39,9 @@ class SmartReminderSettings: ObservableObject {
 // MARK: - Main View
 
 struct RemindersView: View {
-    @StateObject private var settings = SmartReminderSettings.shared
-    @StateObject private var notificationService = NotificationService.shared
-    @StateObject private var waterService = WaterReminderService.shared
+    @ObservedObject private var settings = SmartReminderSettings.shared
+    @ObservedObject private var notificationService = NotificationService.shared
+    @ObservedObject private var waterService = WaterReminderService.shared
 
     @State private var notificationsAuthorized = false
     @State private var waterExpanded = false

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MealPlanFoodSelector: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @Binding var selectedFoodItems: [FoodItem]
     let mealType: MealType
 

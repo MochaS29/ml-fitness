@@ -4,7 +4,7 @@ import CoreData
 // MARK: - Water Entry Sheet
 struct WaterEntrySheet: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var waterAmount = "8"
     @State private var selectedUnit = "oz"
 
@@ -79,7 +79,7 @@ struct WaterEntrySheet: View {
 // MARK: - Exercise Entry Sheet
 struct ExerciseEntrySheet: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var exerciseName = ""
     @State private var duration = "30"
     @State private var calories = ""
@@ -280,7 +280,7 @@ struct ExerciseEntrySheet: View {
 // MARK: - Supplement Entry Sheet
 struct SupplementEntrySheet: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var supplementName = ""
     @State private var brand = ""
     @State private var servingSize = "1"

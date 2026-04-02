@@ -224,7 +224,7 @@ struct DayMealPlanCard: View {
 // Meal plan row
 struct MealPlanRow: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var showingAddedAlert = false
     let mealPlan: MealPlan
     let mealType: MealType

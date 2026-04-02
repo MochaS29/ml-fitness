@@ -4,7 +4,7 @@ struct WeightTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var profileManager: UserProfileManager
-    @StateObject private var healthKitManager = HealthKitManager.shared
+    @ObservedObject private var healthKitManager = HealthKitManager.shared
 
     @State private var currentWeight: Double = 0
     @State private var showingAddWeight = false
@@ -453,7 +453,7 @@ struct HealthKitCard: View {
 struct AddWeightView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) private var viewContext
-    @StateObject private var healthKitManager = HealthKitManager.shared
+    @ObservedObject private var healthKitManager = HealthKitManager.shared
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \WeightEntry.timestamp, ascending: false)],

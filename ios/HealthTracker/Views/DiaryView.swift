@@ -2,7 +2,8 @@ import SwiftUI
 import CoreData
 
 struct DiaryView: View {
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
+    @StateObject private var viewModel = DiaryViewModel()
     @Environment(\.managedObjectContext) private var viewContext
     @State private var selectedDate = Date()
     @State private var showingAddMenu = false
@@ -11,7 +12,6 @@ struct DiaryView: View {
     @State private var showingWaterEntry = false
     @State private var showingSupplementEntry = false
     @State private var selectedMealType: MealType = .breakfast
-    @State private var dailySummary = DailySummary()
     @State private var nutritionExpanded = true
     @State private var showingGoalsSetup = false
     @State private var showingShareSheet = false
@@ -118,7 +118,11 @@ struct DiaryView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        shareText = generateDiaryShareText()
+                        shareText = viewModel.generateDiaryShareText(
+                            selectedDate: selectedDate,
+                            foodEntries: foodEntries,
+                            exerciseEntries: exerciseEntries
+                        )
                         showingShareSheet = true
                     }) {
                         Image(systemName: "square.and.arrow.up")
@@ -212,20 +216,20 @@ struct DiaryView: View {
     }
     
     private var dailySummaryView: some View {
-        let remaining = dailySummary.caloriesRemaining
+        let remaining = viewModel.dailySummary.caloriesRemaining
         let remainingColor: Color = remaining < 0 ? .red : Color(red: 127/255, green: 176/255, blue: 105/255)
         return VStack(spacing: 8) {
             HStack(spacing: 20) {
                 SummaryMetric(
                     title: "Eaten",
-                    value: "\(Int(dailySummary.calories))",
-                    subtitle: "/ \(Int(dailySummary.calorieGoal))",
+                    value: "\(Int(viewModel.dailySummary.calories))",
+                    subtitle: "/ \(Int(viewModel.dailySummary.calorieGoal))",
                     color: Color(red: 127/255, green: 176/255, blue: 105/255)
                 )
 
                 SummaryMetric(
                     title: "Burned",
-                    value: "\(Int(dailySummary.caloriesBurned))",
+                    value: "\(Int(viewModel.dailySummary.caloriesBurned))",
                     subtitle: "cal",
                     color: .orange
                 )
@@ -239,8 +243,8 @@ struct DiaryView: View {
 
                 SummaryMetric(
                     title: "Protein",
-                    value: "\(Int(dailySummary.protein))",
-                    subtitle: "/ \(Int(dailySummary.proteinGoal))g",
+                    value: "\(Int(viewModel.dailySummary.protein))",
+                    subtitle: "/ \(Int(viewModel.dailySummary.proteinGoal))g",
                     color: Color(red: 74/255, green: 155/255, blue: 155/255)
                 )
             }
@@ -254,17 +258,17 @@ struct DiaryView: View {
         VStack(alignment: .leading, spacing: 0) {
             // Section Header
             HStack {
-                Text(mealTypeDisplayName(mealType))
+                Text(viewModel.mealTypeDisplayName(mealType))
                     .font(.headline)
                     .foregroundColor(.primary)
-                
+
                 Spacer()
-                
-                Text("\(mealCalories(for: mealType)) cal")
+
+                Text("\(viewModel.mealCalories(for: mealType, in: foodEntries)) cal")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                
-                Button(action: { 
+
+                Button(action: {
                     // Add food to this meal
                     selectedMealType = mealType
                     showingFoodSearch = true
@@ -275,7 +279,7 @@ struct DiaryView: View {
             }
             .padding()
             .background(Color(UIColor.systemBackground))
-            
+
             // Food entries for this meal
             let mealFoods = foodEntries.filter { $0.mealType == mealType.rawValue }
 
@@ -301,7 +305,7 @@ struct DiaryView: View {
                     HStack {
                         Image(systemName: "plus.circle")
                             .foregroundColor(.secondary)
-                        Text("Add \(mealTypeDisplayName(mealType).lowercased())...")
+                        Text("Add \(viewModel.mealTypeDisplayName(mealType).lowercased())...")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                         Spacer()
@@ -327,7 +331,7 @@ struct DiaryView: View {
                 
                 Spacer()
                 
-                Text("\(totalExerciseMinutes()) min")
+                Text("\(viewModel.totalExerciseMinutes(from: exerciseEntries)) min")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
@@ -407,7 +411,7 @@ struct DiaryView: View {
 
                 Spacer()
 
-                Text("\(Int(calculateTodaysWaterOunces())) oz")
+                Text("\(Int(viewModel.calculateWaterOunces(for: selectedDate))) oz")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
 
@@ -426,7 +430,7 @@ struct DiaryView: View {
 
             // Water tracking UI with proper update
             WaterTrackingRow(
-                currentOunces: Int(calculateTodaysWaterOunces()),
+                currentOunces: Int(viewModel.calculateWaterOunces(for: selectedDate)),
                 onWaterAdded: { ounces in
                     dataManager.quickAddWater(ounces)
                     updateDailySummary()
@@ -439,19 +443,6 @@ struct DiaryView: View {
         .padding(.horizontal)
     }
 
-    private func calculateTodaysWaterOunces() -> Double {
-        // Get water entries for selected date
-        let request: NSFetchRequest<WaterEntry> = WaterEntry.fetchRequest()
-        request.predicate = .forDay(selectedDate)
-
-        guard let entries = try? viewContext.fetch(request) else { return 0 }
-
-        return entries.reduce(0) { sum, entry in
-            let amount = entry.unit == "ml" ? entry.amount / 29.5735 : entry.amount
-            return sum + amount
-        }
-    }
-    
     private var notesSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
@@ -485,34 +476,13 @@ struct DiaryView: View {
     
     // MARK: - Diary Nutrition Analytics
 
-    // Aggregate totals from food entries for the selected date
-    private var totalCalories: Double { foodEntries.reduce(0) { $0 + $1.calories } }
-    private var totalProtein: Double  { foodEntries.reduce(0) { $0 + $1.protein } }
-    private var totalCarbs: Double    { foodEntries.reduce(0) { $0 + $1.carbs } }
-    private var totalFat: Double      { foodEntries.reduce(0) { $0 + $1.fat } }
-    private var totalFiber: Double    { foodEntries.reduce(0) { $0 + $1.fiber } }
-    private var totalSugar: Double    { foodEntries.reduce(0) { $0 + $1.sugar } }
-    private var totalSodium: Double   { foodEntries.reduce(0) { $0 + $1.sodium } }
-
-    // Aggregate supplement nutrients
-    private var supplementNutrients: [String: Double] {
-        var totals: [String: Double] = [:]
-        for entry in supplementEntries {
-            if let nutrients = entry.nutrients {
-                for (key, value) in nutrients {
-                    totals[key, default: 0] += value
-                }
-            }
-        }
-        return totals
-    }
-
     private var diaryNutritionSection: some View {
         let defaults = UserDefaults.standard
         let calorieGoal = Double(defaults.integer(forKey: "calorieGoal")) > 0
             ? Double(defaults.integer(forKey: "calorieGoal")) : 2000.0
         let proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0
             ? Double(defaults.integer(forKey: "proteinGoal")) : 50.0
+        let suppNutrients = viewModel.supplementNutrients(from: supplementEntries)
 
         return VStack(alignment: .leading, spacing: 0) {
             // Header
@@ -523,7 +493,7 @@ struct DiaryView: View {
                         .foregroundColor(.primary)
                     Spacer()
                     if !foodEntries.isEmpty {
-                        Text("\(Int(totalCalories)) kcal")
+                        Text("\(Int(viewModel.totalCalories(from: foodEntries))) kcal")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -548,10 +518,10 @@ struct DiaryView: View {
                     } else {
                         // Macro progress bars
                         VStack(spacing: 12) {
-                            DiaryMacroBar(label: "Calories", value: totalCalories, goal: calorieGoal, unit: "kcal", color: .orange)
-                            DiaryMacroBar(label: "Protein",  value: totalProtein,  goal: proteinGoal, unit: "g",    color: .blue)
-                            DiaryMacroBar(label: "Carbs",    value: totalCarbs,    goal: 275,          unit: "g",    color: .green)
-                            DiaryMacroBar(label: "Fat",      value: totalFat,      goal: 78,           unit: "g",    color: Color(red: 1, green: 0.8, blue: 0))
+                            DiaryMacroBar(label: "Calories", value: viewModel.totalCalories(from: foodEntries), goal: calorieGoal, unit: "kcal", color: .orange)
+                            DiaryMacroBar(label: "Protein",  value: viewModel.totalProtein(from: foodEntries),  goal: proteinGoal, unit: "g",    color: .blue)
+                            DiaryMacroBar(label: "Carbs",    value: viewModel.totalCarbs(from: foodEntries),    goal: 275,          unit: "g",    color: .green)
+                            DiaryMacroBar(label: "Fat",      value: viewModel.totalFat(from: foodEntries),      goal: 78,           unit: "g",    color: Color(red: 1, green: 0.8, blue: 0))
                         }
                         .padding()
                         .background(Color(UIColor.secondarySystemGroupedBackground))
@@ -560,16 +530,16 @@ struct DiaryView: View {
 
                         // Additional nutrients from food
                         VStack(spacing: 0) {
-                            DiaryNutrientRow(name: "Fiber",  value: totalFiber,  unit: "g",  goal: 28,   goalPrefix: "", color: .brown)
+                            DiaryNutrientRow(name: "Fiber",  value: viewModel.totalFiber(from: foodEntries),  unit: "g",  goal: 28,   goalPrefix: "", color: .brown)
                             Divider().padding(.leading)
-                            DiaryNutrientRow(name: "Sugar",  value: totalSugar,  unit: "g",  goal: 50,   goalPrefix: "< ", color: .pink)
+                            DiaryNutrientRow(name: "Sugar",  value: viewModel.totalSugar(from: foodEntries),  unit: "g",  goal: 50,   goalPrefix: "< ", color: .pink)
                             Divider().padding(.leading)
-                            DiaryNutrientRow(name: "Sodium", value: totalSodium, unit: "mg", goal: 2300, goalPrefix: "< ", color: .gray)
+                            DiaryNutrientRow(name: "Sodium", value: viewModel.totalSodium(from: foodEntries), unit: "mg", goal: 2300, goalPrefix: "< ", color: .gray)
                         }
                         .background(Color(UIColor.secondarySystemGroupedBackground))
 
                         // Supplement nutrients (only shown when supplements are logged)
-                        if !supplementNutrients.isEmpty {
+                        if !suppNutrients.isEmpty {
                             Divider().padding(.leading)
 
                             VStack(alignment: .leading, spacing: 8) {
@@ -595,7 +565,7 @@ struct DiaryView: View {
                                 ]
 
                                 ForEach(vitaminRDAs, id: \.id) { vit in
-                                    if let amount = supplementNutrients[vit.id], amount > 0 {
+                                    if let amount = suppNutrients[vit.id], amount > 0 {
                                         DiaryNutrientRow(
                                             name: vit.name,
                                             value: amount,
@@ -618,47 +588,6 @@ struct DiaryView: View {
         .padding(.horizontal)
     }
 
-    private func generateDiaryShareText() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .full
-        var lines: [String] = []
-        lines.append("📊 MindLab Fitness — \(dateFormatter.string(from: selectedDate))")
-        lines.append("")
-
-        // Calories summary
-        let goal = UserDefaults.standard.integer(forKey: "calorieGoal") > 0 ? UserDefaults.standard.integer(forKey: "calorieGoal") : 2000
-        let burned = Int(exerciseEntries.reduce(0) { $0 + $1.caloriesBurned })
-        lines.append("🔥 Calories: \(Int(totalCalories)) eaten · \(burned) burned · \(max(0, goal + burned - Int(totalCalories))) remaining")
-
-        // Food entries
-        for mealType in MealType.allCases {
-            let entries = foodEntries.filter { $0.mealType == mealType.rawValue }
-            if !entries.isEmpty {
-                lines.append("")
-                lines.append("\(mealTypeDisplayName(mealType)):")
-                for e in entries {
-                    lines.append("  • \(e.name ?? "Unknown") — \(Int(e.calories)) cal")
-                }
-            }
-        }
-
-        // Exercise
-        if !exerciseEntries.isEmpty {
-            lines.append("")
-            lines.append("🏃 Exercise:")
-            for e in exerciseEntries {
-                lines.append("  • \(e.name ?? "Unknown") — \(e.duration) min · \(Int(e.caloriesBurned)) cal")
-            }
-        }
-
-        // Macros
-        lines.append("")
-        lines.append("Macros: P \(String(format: "%.0f", totalProtein))g · C \(String(format: "%.0f", totalCarbs))g · F \(String(format: "%.0f", totalFat))g")
-        lines.append("")
-        lines.append("Logged with MindLab Fitness")
-        return lines.joined(separator: "\n")
-    }
-
     private func adjustDate(by days: Int) {
         if let newDate = Calendar.current.date(byAdding: .day, value: days, to: selectedDate) {
             selectedDate = newDate
@@ -673,41 +602,13 @@ struct DiaryView: View {
     }
     
     private func updateDailySummary() {
-        // Calculate totals from actual data
-        dailySummary.calories = foodEntries.reduce(0) { $0 + $1.calories }
-        dailySummary.protein = foodEntries.reduce(0) { $0 + $1.protein }
-        dailySummary.caloriesBurned = exerciseEntries.reduce(0) { $0 + $1.caloriesBurned }
-        dailySummary.exerciseMinutes = Double(exerciseEntries.reduce(0) { $0 + Int($1.duration) })
-        dailySummary.waterOunces = calculateTodaysWaterOunces()
+        viewModel.updateDailySummary(
+            foodEntries: foodEntries,
+            exerciseEntries: exerciseEntries,
+            selectedDate: selectedDate
+        )
+    }
 
-        // Load goals from UserDefaults
-        let defaults = UserDefaults.standard
-        dailySummary.calorieGoal = Double(defaults.integer(forKey: "calorieGoal")) > 0
-            ? Double(defaults.integer(forKey: "calorieGoal"))
-            : 2000
-        dailySummary.proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0
-            ? Double(defaults.integer(forKey: "proteinGoal"))
-            : 50
-    }
-    
-    private func mealCalories(for mealType: MealType) -> Int {
-        let mealFoods = foodEntries.filter { $0.mealType == mealType.rawValue }
-        return Int(mealFoods.reduce(0) { $0 + $1.calories })
-    }
-    
-    private func totalExerciseMinutes() -> Int {
-        exerciseEntries.reduce(0) { $0 + Int($1.duration) }
-    }
-    
-    private func mealTypeDisplayName(_ mealType: MealType) -> String {
-        switch mealType {
-        case .breakfast: return "Breakfast"
-        case .lunch: return "Lunch"
-        case .dinner: return "Dinner"
-        case .snack: return "Snack"
-        }
-    }
-    
     private func addFoodEntry(foodItem: FoodItem, mealType: MealType) {
         let newEntry = FoodEntry(context: viewContext)
         newEntry.id = UUID()
@@ -940,7 +841,7 @@ struct WaterTrackingRow: View {
     let currentOunces: Int
     var onWaterAdded: ((Double) -> Void)? = nil
     let glassSize: Int = 8
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
 
     var glasses: Int {
         currentOunces / glassSize

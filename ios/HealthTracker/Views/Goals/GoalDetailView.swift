@@ -3,7 +3,7 @@ import Charts
 
 struct GoalDetailView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var goalsManager = GoalsManager.shared
+    @ObservedObject private var goalsManager = GoalsManager.shared
     
     let goal: Goal
     @State private var showingEditGoal = false
@@ -416,7 +416,7 @@ struct UpdateProgressView: View {
 
 struct EditGoalView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var goalsManager = GoalsManager.shared
+    @ObservedObject private var goalsManager = GoalsManager.shared
     
     let goal: Goal
     

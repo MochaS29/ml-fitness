@@ -4,7 +4,7 @@ import CoreData
 
 struct MoreView: View {
     @EnvironmentObject var userProfileManager: UserProfileManager
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var showingProfile = false
     @State private var showingProgress = false
     @State private var showingFoodDatabase = false

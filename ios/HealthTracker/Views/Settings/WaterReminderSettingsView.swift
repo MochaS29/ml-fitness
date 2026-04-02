@@ -2,7 +2,7 @@ import SwiftUI
 import UserNotifications
 
 struct WaterReminderSettingsView: View {
-    @StateObject private var reminderService = WaterReminderService.shared
+    @ObservedObject private var reminderService = WaterReminderService.shared
     @Environment(\.dismiss) private var dismiss
     @State private var showingPermissionAlert = false
     @State private var tempStartTime = Date()
