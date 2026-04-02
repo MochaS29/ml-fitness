@@ -30,7 +30,7 @@ class DashboardViewModel: ObservableObject {
         loadTodayWaterIntake()
         loadTodayExerciseData()
         loadTodayCalories()
-        calculateHealthScore()
+        // Score is recalculated inside each load's async completion block
 
         // Listen for UserDefaults changes to refresh goals
         NotificationCenter.default.addObserver(
@@ -164,6 +164,7 @@ class DashboardViewModel: ObservableObject {
             // Convert ounces to glasses (8 oz per glass)
             DispatchQueue.main.async { [weak self] in
                 self?.todayWater = Int(totalOunces / 8.0)
+                self?.calculateHealthScore()
             }
         } catch {
             print("Error fetching water entries: \(error)")
@@ -186,6 +187,7 @@ class DashboardViewModel: ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 self?.todayExercise = totalMinutes
                 self?.exerciseSessions = sessionCount
+                self?.calculateHealthScore()
             }
         } catch {
             print("Error fetching exercise entries: \(error)")
@@ -217,6 +219,7 @@ class DashboardViewModel: ObservableObject {
                 self?.todayFiber = totalFiber
                 self?.todaySugar = totalSugar
                 self?.todaySodium = totalSodium
+                self?.calculateHealthScore()
             }
         } catch {
             print("Error fetching food entries: \(error)")
