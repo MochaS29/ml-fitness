@@ -47,7 +47,7 @@ struct AddMenuView: View {
                     BarcodeScannerView(selectedDate: selectedDate, mealType: selectedMealType)
                 }
             case .exerciseSearch:
-                ExerciseSearchView(selectedDate: selectedDate)
+                ExerciseQuickAddView()
             case .supplementAdd:
                 ManualSupplementEntryView()
             case .weightEntry:
