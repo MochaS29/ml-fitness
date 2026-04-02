@@ -57,11 +57,6 @@ struct DashboardView: View {
                     // AI Insights Carousel
                     aiInsightsSection
 
-                    // Logging Streak
-                    if streakManager.currentStreak > 0 {
-                        streakCard
-                    }
-
                     // Smart Recommendations
                     aiRecommendationsSection
 
@@ -272,52 +267,84 @@ struct DashboardView: View {
                 }
             }
             
-            // Overall Health Score with AI Analysis
-            HStack(spacing: 16) {
-                // Score Circle
-                ZStack {
-                    Circle()
-                        .stroke(Color(UIColor.systemFill), lineWidth: 8)
-                        .frame(width: 80, height: 80)
-                    
-                    Circle()
-                        .trim(from: 0, to: animateCharts ? viewModel.healthScore / 100 : 0)
-                        .stroke(
-                            LinearGradient(
-                                colors: [.wellnessGreen, .mindfulTeal],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            style: StrokeStyle(lineWidth: 8, lineCap: .round)
-                        )
-                        .frame(width: 80, height: 80)
-                        .rotationEffect(.degrees(-90))
-                    
-                    VStack(spacing: 2) {
-                        Text("\(Int(viewModel.healthScore))")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                        Text("Score")
+            // Overall Health Score + Streak combined card
+            VStack(spacing: 0) {
+                HStack(spacing: 16) {
+                    // Score Circle
+                    ZStack {
+                        Circle()
+                            .stroke(Color(UIColor.systemFill), lineWidth: 8)
+                            .frame(width: 80, height: 80)
+
+                        Circle()
+                            .trim(from: 0, to: animateCharts ? viewModel.healthScore / 100 : 0)
+                            .stroke(
+                                LinearGradient(
+                                    colors: [.wellnessGreen, .mindfulTeal],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                style: StrokeStyle(lineWidth: 8, lineCap: .round)
+                            )
+                            .frame(width: 80, height: 80)
+                            .rotationEffect(.degrees(-90))
+
+                        VStack(spacing: 2) {
+                            Text("\(Int(viewModel.healthScore))")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            Text("Score")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+
+                    // AI Analysis
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label(viewModel.healthTrend, systemImage: viewModel.healthTrendIcon)
+                            .font(.headline)
+                            .foregroundColor(viewModel.healthTrendColor)
+
+                        Text(viewModel.healthSummary)
                             .font(.caption)
                             .foregroundColor(.secondary)
+                            .lineLimit(2)
                     }
+
+                    Spacer()
                 }
-                
-                // AI Analysis
-                VStack(alignment: .leading, spacing: 8) {
-                    Label(viewModel.healthTrend, systemImage: viewModel.healthTrendIcon)
-                        .font(.headline)
-                        .foregroundColor(viewModel.healthTrendColor)
-                    
-                    Text(viewModel.healthSummary)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .lineLimit(2)
+                .padding()
+
+                if streakManager.currentStreak > 0 {
+                    Divider().padding(.horizontal)
+
+                    let streak = streakManager.currentStreak
+                    let emoji: String = {
+                        switch streak {
+                        case 1...2: return "🌱"
+                        case 3...6: return "🔥"
+                        case 7...13: return "⚡️"
+                        case 14...29: return "🏅"
+                        default: return "🏆"
+                        }
+                    }()
+
+                    HStack(spacing: 12) {
+                        Text(emoji)
+                            .font(.title2)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("\(streak)-Day Logging Streak!")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            Text(streak == 1 ? "Great start — log again tomorrow to build your streak." : "You've logged food \(streak) days in a row. Keep it up!")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                    }
+                    .padding()
                 }
-                
-                Spacer()
             }
-            .padding()
             .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
