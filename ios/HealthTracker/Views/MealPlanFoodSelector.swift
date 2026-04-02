@@ -173,9 +173,9 @@ struct FoodSelectionRow: View {
                             .foregroundColor(.orange)
 
                         HStack(spacing: 8) {
-                            MacroLabel(value: food.protein, label: "P", color: .red)
-                            MacroLabel(value: food.carbs, label: "C", color: .blue)
-                            MacroLabel(value: food.fat, label: "F", color: .green)
+                            MacroLabel(value: food.protein, label: "Pro", color: .red)
+                            MacroLabel(value: food.carbs, label: "Carb", color: .blue)
+                            MacroLabel(value: food.fat, label: "Fat", color: .green)
                         }
 
                         Spacer()

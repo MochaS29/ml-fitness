@@ -30,12 +30,16 @@ struct UnifiedFoodSearchSheet: View {
         self.targetDate = targetDate
     }
 
-    // Phase 1: Instant local results (SQLite + recent + cached)
+    // Phase 1: Instant local results (SQLite + hardcoded DB, deduped)
     var localResults: [FoodItem] {
         if searchText.isEmpty {
             return []
         }
-        return sortByRelevance(dataManager.searchFoodDatabase(searchText), query: searchText)
+        let sqliteResults = dataManager.searchFoodDatabase(searchText)
+        let staticMatches = FoodDatabase.shared.searchFoods(searchText)
+        let existingNames = Set(sqliteResults.map { $0.name.lowercased() })
+        let uniqueStatic = staticMatches.filter { !existingNames.contains($0.name.lowercased()) }
+        return sortByRelevance(sqliteResults + uniqueStatic, query: searchText)
     }
 
     // Phase 2: USDA API results, deduplicated against local
@@ -467,13 +471,13 @@ struct FoodRowView: View {
                     }
 
                     HStack(spacing: 15) {
-                        MacroLabel(value: food.protein, label: "P", color: .red)
-                        MacroLabel(value: food.carbs, label: "C", color: .blue)
-                        MacroLabel(value: food.fat, label: "F", color: .green)
+                        MacroLabel(value: food.protein, label: "Pro", color: .red)
+                        MacroLabel(value: food.carbs, label: "Carb", color: .blue)
+                        MacroLabel(value: food.fat, label: "Fat", color: .green)
 
                         Spacer()
 
-                        Text("\(food.servingSize) \(food.servingUnit)")
+                        Text(food.servingUnit.first?.isNumber == true ? food.servingUnit : "\(food.servingSize) \(food.servingUnit)")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
