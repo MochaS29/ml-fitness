@@ -47,7 +47,7 @@ class PhoneConnectivityManager: NSObject, ObservableObject {
             let dailyData: [String: Any] = [
                 "currentCalories": totalCalories,
                 "calorieGoal": UserDefaults.standard.double(forKey: "dailyCalorieGoal") > 0 ?
-                               UserDefaults.standard.double(forKey: "dailyCalorieGoal") : 2000,
+                               UserDefaults.standard.double(forKey: "dailyCalorieGoal") : Double(AppConstants.Defaults.dailyCalorieGoal),
                 "currentWater": totalWater,
                 "waterGoal": UserDefaults.standard.double(forKey: "dailyWaterGoal") > 0 ?
                             UserDefaults.standard.double(forKey: "dailyWaterGoal") : 64,

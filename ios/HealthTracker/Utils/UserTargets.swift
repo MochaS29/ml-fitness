@@ -15,7 +15,7 @@ class UserTargets {
     private let fatTargetKey = "dailyFatTarget"
 
     // Default values
-    private let defaultCalorieTarget: Double = 2000
+    private let defaultCalorieTarget: Double = Double(AppConstants.Defaults.dailyCalorieGoal)
     private let defaultExerciseTarget: Int = 30  // minutes
     private let defaultWaterTarget: Double = 64  // ounces
     private let defaultProteinTarget: Double = 50  // grams

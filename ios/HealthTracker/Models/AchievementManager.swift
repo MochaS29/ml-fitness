@@ -192,7 +192,7 @@ class AchievementManager: ObservableObject {
     
     // MARK: - Daily Goal Achievements
     
-    func checkDailyCalorieGoal(consumed: Double, goal: Double = 2000) {
+    func checkDailyCalorieGoal(consumed: Double, goal: Double = Double(AppConstants.Defaults.dailyCalorieGoal)) {
         let percentage = (consumed / goal) * 100
         
         if percentage >= 90 && percentage <= 110 {

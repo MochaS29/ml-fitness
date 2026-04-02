@@ -7,14 +7,20 @@ struct AddMenuView: View {
 
     let selectedDate: Date
     @State private var selectedMealType: MealType = .breakfast
-    @State private var showingFoodSearch = false
-    @State private var showingExerciseSearch = false
-    @State private var showingBarcodeScanner = false
-    @State private var showingSupplementAdd = false
-    @State private var showingWeightEntry = false
-    @State private var showingWaterEntry = false
-    @State private var showingMealScanner = false
-    
+    @State private var activeSheet: ActiveSheet?
+
+    private enum ActiveSheet: Identifiable {
+        case foodSearch
+        case exerciseSearch
+        case barcodeScanner
+        case supplementAdd
+        case weightEntry
+        case waterEntry
+        case mealScanner
+
+        var id: Self { self }
+    }
+
     var body: some View {
         NavigationView {
             listContent
@@ -28,29 +34,26 @@ struct AddMenuView: View {
                     }
                 }
         }
-        .sheet(isPresented: $showingFoodSearch) {
-            UnifiedFoodSearchSheet(mealType: selectedMealType, targetDate: selectedDate)
-        }
-        .sheet(isPresented: $showingBarcodeScanner) {
-            ProFeatureGate {
-                BarcodeScannerView(selectedDate: selectedDate, mealType: selectedMealType)
-            }
-        }
-        .sheet(isPresented: $showingExerciseSearch) {
-            ExerciseSearchView(selectedDate: selectedDate)
-        }
-        .sheet(isPresented: $showingSupplementAdd) {
-            ManualSupplementEntryView()
-        }
-        .sheet(isPresented: $showingWeightEntry) {
-            QuickWeightAddView(selectedDate: selectedDate)
-        }
-        .sheet(isPresented: $showingWaterEntry) {
-            QuickWaterAddView(selectedDate: selectedDate)
-        }
-        .sheet(isPresented: $showingMealScanner) {
-            ProFeatureGate {
-                MealPhotoAnalyzerView()
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .foodSearch:
+                UnifiedFoodSearchSheet(mealType: selectedMealType, targetDate: selectedDate)
+            case .barcodeScanner:
+                ProFeatureGate {
+                    BarcodeScannerView(selectedDate: selectedDate, mealType: selectedMealType)
+                }
+            case .exerciseSearch:
+                ExerciseSearchView(selectedDate: selectedDate)
+            case .supplementAdd:
+                ManualSupplementEntryView()
+            case .weightEntry:
+                QuickWeightAddView(selectedDate: selectedDate)
+            case .waterEntry:
+                QuickWaterAddView(selectedDate: selectedDate)
+            case .mealScanner:
+                ProFeatureGate {
+                    MealPhotoAnalyzerView()
+                }
             }
         }
     }
@@ -69,17 +72,17 @@ struct AddMenuView: View {
                 .padding(.vertical, 8)
                 
                 // Add food options
-                Button(action: { showingFoodSearch = true }) {
+                Button(action: { activeSheet = .foodSearch }) {
                     Label("Search Food Database", systemImage: "magnifyingglass")
                         .foregroundColor(.primary)
                 }
 
-                Button(action: { showingMealScanner = true }) {
+                Button(action: { activeSheet = .mealScanner }) {
                     Label("Scan Meal with Camera", systemImage: "camera.fill")
                         .foregroundColor(.primary)
                 }
 
-                Button(action: { showingBarcodeScanner = true }) {
+                Button(action: { activeSheet = .barcodeScanner }) {
                     Label("Scan Barcode", systemImage: "barcode.viewfinder")
                         .foregroundColor(.primary)
                 }
@@ -87,7 +90,7 @@ struct AddMenuView: View {
             
             // Exercise Section
             Section("Exercise") {
-                Button(action: { showingExerciseSearch = true }) {
+                Button(action: { activeSheet = .exerciseSearch }) {
                     Label("Add Exercise", systemImage: "figure.run")
                         .foregroundColor(.primary)
                 }
@@ -95,17 +98,17 @@ struct AddMenuView: View {
             
             // Tracking Section
             Section("Tracking") {
-                Button(action: { showingWeightEntry = true }) {
+                Button(action: { activeSheet = .weightEntry }) {
                     Label("Log Weight", systemImage: "scalemass")
                         .foregroundColor(.primary)
                 }
-                
-                Button(action: { showingWaterEntry = true }) {
+
+                Button(action: { activeSheet = .waterEntry }) {
                     Label("Log Water", systemImage: "drop.fill")
                         .foregroundColor(.primary)
                 }
-                
-                Button(action: { showingSupplementAdd = true }) {
+
+                Button(action: { activeSheet = .supplementAdd }) {
                     Label("Add Supplement", systemImage: "pills.fill")
                         .foregroundColor(.primary)
                 }

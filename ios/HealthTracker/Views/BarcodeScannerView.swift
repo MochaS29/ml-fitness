@@ -6,7 +6,7 @@ import CoreData
 struct BarcodeScannerView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var scanner = BarcodeScannerService.shared
+    @ObservedObject private var scanner = BarcodeScannerService.shared
     @State private var scannedProduct: FoodProduct?
     @State private var showingProductDetails = false
     @State private var showingError = false

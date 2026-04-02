@@ -157,7 +157,7 @@ struct EmptyPlanBanner: View {
 struct TodaysMealView: View {
     @ObservedObject var manager: MealPlanManager
     @Binding var showingMealDetail: Meal?
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var showingAddedAllAlert = false
 
     private var todaysMeals: DailyMealPlan? {
@@ -288,7 +288,7 @@ struct MealCard: View {
     let icon: String
     let color: Color
     let onTap: () -> Void
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var showingAddedAlert = false
     @State private var addedMealName = ""
 
@@ -412,7 +412,7 @@ struct MealCard: View {
 struct MiniMealCard: View {
     let meal: Meal
     let onTap: () -> Void
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var showingAddedAlert = false
 
     var body: some View {
@@ -596,7 +596,7 @@ struct DayMealSummaryCard: View {
     let day: DailyMealPlan
     let onMealTap: (Meal) -> Void
     @State private var isExpanded = false
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var showingAddedAlert = false
 
     var totalCalories: Int {

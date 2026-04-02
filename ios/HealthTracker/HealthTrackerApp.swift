@@ -4,10 +4,10 @@ import WatchConnectivity
 @main
 struct HealthTrackerApp: App {
     @StateObject private var userProfileManager = UserProfileManager()
-    @StateObject private var achievementManager = AchievementManager.shared
-    @StateObject private var waterReminderService = WaterReminderService.shared
-    @StateObject private var phoneConnectivity = PhoneConnectivityManager.shared
-    @StateObject private var storeManager = StoreManager.shared
+    @ObservedObject private var achievementManager = AchievementManager.shared
+    @ObservedObject private var waterReminderService = WaterReminderService.shared
+    @ObservedObject private var phoneConnectivity = PhoneConnectivityManager.shared
+    @ObservedObject private var storeManager = StoreManager.shared
     @State private var showMainApp = false
     @State private var showQuickSetup = false
 

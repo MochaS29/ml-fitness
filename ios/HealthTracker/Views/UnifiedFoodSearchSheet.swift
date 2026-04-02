@@ -6,8 +6,8 @@ import CoreData
 
 struct UnifiedFoodSearchSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = UnifiedDataManager.shared
-    @StateObject private var favourites = FavouriteFoodsManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var favourites = FavouriteFoodsManager.shared
     @State private var searchText = ""
     @State private var selectedMealType: MealType
     @State private var showingManualEntry = false
@@ -39,7 +39,7 @@ struct UnifiedFoodSearchSheet: View {
         let staticMatches = FoodDatabase.shared.searchFoods(searchText)
         let existingNames = Set(sqliteResults.map { $0.name.lowercased() })
         let uniqueStatic = staticMatches.filter { !existingNames.contains($0.name.lowercased()) }
-        return sortByRelevance(sqliteResults + uniqueStatic, query: searchText)
+        return FoodSearchService.sortByRelevance(sqliteResults + uniqueStatic, query: searchText)
     }
 
     // Phase 2: USDA API results, deduplicated against local
@@ -48,66 +48,7 @@ struct UnifiedFoodSearchSheet: View {
         let filtered = usdaResults
             .map { $0.toFoodItem() }
             .filter { !localNames.contains($0.name.lowercased()) }
-        return sortByRelevance(filtered, query: searchText)
-    }
-
-    /// Rank results so closest matches to the query appear first.
-    private func sortByRelevance(_ foods: [FoodItem], query: String) -> [FoodItem] {
-        let q = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !q.isEmpty else { return foods }
-
-        return foods.sorted { a, b in
-            let tierA = relevanceScore(a.name, query: q)
-            let tierB = relevanceScore(b.name, query: q)
-            if tierA != tierB { return tierA < tierB }
-            // Within same tier, prefer items with calorie data over 0-cal (bad data)
-            if (a.calories > 0) != (b.calories > 0) { return a.calories > 0 }
-            // Then prefer shorter names
-            return a.name.count < b.name.count
-        }
-    }
-
-    /// Lower score = better match.
-    /// Distinguishes whole-word matches from prefix-of-word matches:
-    /// "Egg whites" (query "egg" is a whole word) ranks above "Eggnog" (prefix of another word).
-    private func relevanceScore(_ name: String, query: String) -> Int {
-        let lower = name.lowercased()
-        let words = lower.components(separatedBy: CharacterSet.alphanumerics.inverted).filter { !$0.isEmpty }
-
-        // Tier 0: Exact match
-        if lower == query { return 0 }
-
-        // Check if query appears as a whole word at the start of the name
-        // (not as a prefix of a longer word like "egg" in "eggnog")
-        let queryIsWordAtStart: Bool = {
-            guard lower.hasPrefix(query) else { return false }
-            if lower.count == query.count { return true }
-            let nextIdx = lower.index(lower.startIndex, offsetBy: query.count)
-            let nextChar = lower[nextIdx]
-            if !nextChar.isLetter { return true } // "Egg whites" — space after "egg"
-            // Allow simple plural: "eggs" for "egg"
-            if nextChar == "s" {
-                let afterS = lower.index(after: nextIdx)
-                return afterS >= lower.endIndex || !lower[afterS].isLetter
-            }
-            return false
-        }()
-
-        // Tier 1: Query is a whole word at start of a short name ("Egg whites", "Eggs, whole")
-        if queryIsWordAtStart && words.count <= 3 { return 1 }
-        // Tier 2: Query is an exact word in a short name ("Coffee, Latte" for "latte")
-        if words.contains(query) && words.count <= 3 { return 2 }
-        // Tier 3: Query is a whole word at start of a longer name ("Latte Blended Greek Yogurt")
-        if queryIsWordAtStart { return 3 }
-        // Tier 4: Query is an exact word in a longer name
-        if words.contains(query) { return 4 }
-        // Tier 5: Name starts with query as prefix of a word ("Eggnog" for "egg")
-        if lower.hasPrefix(query) { return 5 }
-        // Tier 6: A word starts with query
-        if words.contains(where: { $0.hasPrefix(query) }) { return 6 }
-        // Tier 7: Substring match
-        if lower.contains(query) { return 7 }
-        return 8
+        return FoodSearchService.sortByRelevance(filtered, query: searchText)
     }
 
     var recentFoods: [FoodItem] {

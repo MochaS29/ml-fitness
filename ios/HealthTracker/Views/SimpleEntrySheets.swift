@@ -4,7 +4,7 @@ import CoreData
 // MARK: - Water Entry Sheet
 struct WaterEntrySheet: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var waterAmount = "8"
     @State private var selectedUnit = "oz"
 
@@ -79,7 +79,7 @@ struct WaterEntrySheet: View {
 // MARK: - Exercise Entry Sheet
 struct ExerciseEntrySheet: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var exerciseName = ""
     @State private var duration = "30"
     @State private var calories = ""
@@ -94,11 +94,11 @@ struct ExerciseEntrySheet: View {
         let mins = Double(duration) ?? 30
         let met: Double
         switch selectedCategory {
-        case "Cardio":    met = 7.5
-        case "Strength":  met = 5.0
-        case "Flexibility": met = 3.0
-        case "Sports":    met = 7.0
-        default:          met = 5.0
+        case "Cardio":    met = AppConstants.MET.cardio
+        case "Strength":  met = AppConstants.MET.strength
+        case "Flexibility": met = AppConstants.MET.flexibility
+        case "Sports":    met = AppConstants.MET.sports
+        default:          met = AppConstants.MET.other
         }
         return Int((met * 70.0 * mins) / 60.0)
     }
@@ -280,7 +280,7 @@ struct ExerciseEntrySheet: View {
 // MARK: - Supplement Entry Sheet
 struct SupplementEntrySheet: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var dataManager = UnifiedDataManager.shared
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var supplementName = ""
     @State private var brand = ""
     @State private var servingSize = "1"

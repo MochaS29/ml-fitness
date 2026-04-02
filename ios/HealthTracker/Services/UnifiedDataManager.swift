@@ -92,7 +92,7 @@ class UnifiedDataManager: ObservableObject {
         saveContext()
 
         // Check achievements
-        AchievementManager.shared.checkDailyCalorieGoal(consumed: todayCalories, goal: 2000)
+        AchievementManager.shared.checkDailyCalorieGoal(consumed: todayCalories, goal: Double(AppConstants.Defaults.dailyCalorieGoal))
 
         // Update goals
         GoalsManager.shared.updateGoalsFromFoodEntry(entry)
@@ -326,42 +326,16 @@ class UnifiedDataManager: ObservableObject {
 
     // MARK: - Search Functions
 
+    /// Search the food database by query. Delegates orchestration and deduplication
+    /// to `FoodSearchService`; CoreData-backed data (recent foods, cached USDA foods)
+    /// is fetched here and passed in so `FoodSearchService` can remain stateless.
     func searchFoodDatabase(_ query: String) -> [FoodItem] {
         guard !query.isEmpty else { return [] }
-
-        // 1. Recent foods that match
-        let recentFoods = getRecentFoods()
-        let recentMatches = recentFoods.filter {
-            $0.name.localizedCaseInsensitiveContains(query)
-        }
-
-        // 2. Local SQLite database (FTS5 search — fast, ~25K foods)
-        let localMatches = LocalFoodDatabase.shared.searchFoods(query, limit: 30)
-
-        // 3. Cached USDA API foods from CoreData
-        let cachedMatches = searchCachedFoods(query)
-
-        // Combine and deduplicate
-        var allMatches = recentMatches
-        var seen = Set(recentMatches.map { "\($0.name.lowercased())|\($0.brand?.lowercased() ?? "")" })
-
-        for food in localMatches {
-            let key = "\(food.name.lowercased())|\(food.brand?.lowercased() ?? "")"
-            if !seen.contains(key) {
-                seen.insert(key)
-                allMatches.append(food)
-            }
-        }
-
-        for food in cachedMatches {
-            let key = "\(food.name.lowercased())|\(food.brand?.lowercased() ?? "")"
-            if !seen.contains(key) {
-                seen.insert(key)
-                allMatches.append(food)
-            }
-        }
-
-        return Array(allMatches.prefix(50))
+        return FoodSearchService.search(
+            query,
+            recentFoods: getRecentFoods(),
+            cachedFoods: searchCachedFoods(query)
+        )
     }
 
     /// Cache a USDA API food result into CoreData for offline access.

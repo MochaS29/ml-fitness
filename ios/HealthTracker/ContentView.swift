@@ -4,7 +4,7 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var selectedTab = 0
-    @StateObject private var achievementManager = AchievementManager.shared
+    @ObservedObject private var achievementManager = AchievementManager.shared
     @State private var showingAddMenu = false
     @State private var notificationAction: NotificationAction?
     @EnvironmentObject var storeManager: StoreManager

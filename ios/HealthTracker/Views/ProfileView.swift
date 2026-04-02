@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var profileManager: UserProfileManager
-    @StateObject private var stepCounter = StepCounterService.shared
+    @ObservedObject private var stepCounter = StepCounterService.shared
     @State private var showingEditProfile = false
 
     var body: some View {

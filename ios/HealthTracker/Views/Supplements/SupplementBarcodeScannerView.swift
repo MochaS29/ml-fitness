@@ -5,7 +5,7 @@ import Vision
 struct SupplementBarcodeScannerView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
-    @StateObject private var barcodeService = SupplementBarcodeService.shared
+    @ObservedObject private var barcodeService = SupplementBarcodeService.shared
     @StateObject private var scanner = BarcodeScanner()
 
     @State private var scannedSupplement: SupplementBarcodeService.SupplementInfo?

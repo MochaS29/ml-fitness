@@ -403,7 +403,7 @@ class EnhancedMacroTrackingViewModel: ObservableObject {
     @Published var totalCarbs: Double = 0
     @Published var totalFat: Double = 0
     
-    @Published var calorieGoal = 2000
+    @Published var calorieGoal = AppConstants.Defaults.dailyCalorieGoal
     @Published var proteinGoal = 150.0
     @Published var carbsGoal = 225.0
     @Published var fatGoal = 65.0

@@ -4,14 +4,14 @@ import CoreData
 struct WaterTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var reminderService = WaterReminderService.shared
+    @ObservedObject private var reminderService = WaterReminderService.shared
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \WaterEntry.timestamp, ascending: false)],
         predicate: NSPredicate.forDay(),
         animation: .default)
     private var todayWaterEntries: FetchedResults<WaterEntry>
 
-    @State private var waterGoal: Int = 8 // 8 glasses of 8oz each
+    @State private var waterGoal: Int = AppConstants.Defaults.dailyWaterGlasses // 8 glasses of 8oz each
     @State private var showingAddCustom = false
     @State private var customAmount: String = ""
     @State private var showingReminderSettings = false
@@ -21,7 +21,7 @@ struct WaterTrackingView: View {
     }
 
     var glassesConsumed: Int {
-        Int(totalOuncesToday / 8)
+        Int(totalOuncesToday / AppConstants.Defaults.waterGlassOunces)
     }
     
     var body: some View {
@@ -62,7 +62,7 @@ struct WaterTrackingView: View {
                         .frame(width: 200, height: 200)
 
                     Circle()
-                        .trim(from: 0, to: min(totalOuncesToday / (Double(waterGoal) * 8), 1.0))
+                        .trim(from: 0, to: min(totalOuncesToday / (Double(waterGoal) * AppConstants.Defaults.waterGlassOunces), 1.0))
                         .stroke(Color.blue, style: StrokeStyle(lineWidth: 20, lineCap: .round))
                         .frame(width: 200, height: 200)
                         .rotationEffect(.degrees(-90))
