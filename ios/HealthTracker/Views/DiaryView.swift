@@ -56,7 +56,7 @@ struct DiaryView: View {
                     .padding(.vertical, 12)
                 
                 // Goal setup prompt (shown when calorie goal is at default 0)
-                let calorieGoalSet = UserDefaults.standard.integer(forKey: "calorieGoal") > 0
+                let calorieGoalSet = UserDefaults.standard.integer(forKey: "dailyCalorieGoal") > 0
                 if !calorieGoalSet {
                     Button(action: { showingGoalsSetup = true }) {
                         HStack(spacing: 10) {
