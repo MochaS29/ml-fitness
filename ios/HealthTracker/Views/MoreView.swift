@@ -1381,7 +1381,7 @@ struct HelpView: View {
 
     private func rateApp() {
         // This would normally open the App Store review page
-        if let url = URL(string: "https://apps.apple.com/app/idXXXXXXXXX") {
+        if let url = URL(string: "https://apps.apple.com/app/id6752837101?action=write-review") {
             UIApplication.shared.open(url)
         }
     }
