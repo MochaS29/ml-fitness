@@ -19,8 +19,11 @@ struct MealPhotoAnalyzerView: View {
     @State private var showingPaywall = false
 
     private static let freeScansAllowed = 3
+    private var isProOrTrial: Bool { storeManager.isPro || TrialManager.shared.isTrialActive }
     private var scansRemaining: Int { max(0, Self.freeScansAllowed - freeMealScansUsed) }
-    private var canScan: Bool { storeManager.isPro || scansRemaining > 0 }
+    private var canScan: Bool { isProOrTrial || scansRemaining > 0 }
+    /// True when this scan's result should immediately trigger the upgrade prompt
+    private var isLastFreeScan: Bool { !isProOrTrial && freeMealScansUsed == Self.freeScansAllowed - 1 }
 
     var body: some View {
         NavigationView {
@@ -147,7 +150,7 @@ struct MealPhotoAnalyzerView: View {
             MealImagePicker(selectedImage: $selectedImage, sourceType: .camera)
         }
         .sheet(isPresented: $showingPaywall) {
-            PaywallView(trigger: .mealScanner)
+            PaywallView(trigger: freeMealScansUsed >= Self.freeScansAllowed ? .mealScannerLastScan : .mealScanner)
                 .environmentObject(storeManager)
         }
         .alert("Analysis Error", isPresented: $showingError) {
@@ -159,12 +162,20 @@ struct MealPhotoAnalyzerView: View {
 
     private func analyzeMeal() {
         guard let image = selectedImage else { return }
-        if !storeManager.isPro { freeMealScansUsed += 1 }
+        let wasLastFreeScan = isLastFreeScan
 
         analysisService.analyzeMealPhoto(image) { result in
             switch result {
             case .success(let analysis):
                 self.analysisResult = analysis
+                // Increment after success so scan #3 result is visible first
+                if !self.isProOrTrial { self.freeMealScansUsed += 1 }
+                // Show paywall 1.5s after the last free result appears
+                if wasLastFreeScan {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        self.showingPaywall = true
+                    }
+                }
             case .failure(let error):
                 self.errorMessage = error.localizedDescription
                 self.showingError = true

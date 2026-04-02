@@ -11,8 +11,10 @@ struct ProFeatureGate<Content: View>: View {
         self.content = content
     }
 
+    private var isUnlocked: Bool { storeManager.isPro || TrialManager.shared.isTrialActive }
+
     var body: some View {
-        if storeManager.isPro {
+        if isUnlocked {
             content()
         } else {
             LockedFeatureView(showingPaywall: $showingPaywall)
@@ -66,8 +68,10 @@ struct ProGateModifier: ViewModifier {
     @EnvironmentObject var storeManager: StoreManager
     @State private var showingPaywall = false
 
+    private var isUnlocked: Bool { storeManager.isPro || TrialManager.shared.isTrialActive }
+
     func body(content: Content) -> some View {
-        if storeManager.isPro {
+        if isUnlocked {
             content
         } else {
             Button(action: { showingPaywall = true }) {

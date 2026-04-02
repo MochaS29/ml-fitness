@@ -178,6 +178,13 @@ class StoreManager: ObservableObject {
     var proPriceDisplay: String {
         products.first?.displayPrice ?? "$6.99"
     }
+
+    /// Per-week breakdown of the one-time price (52 weeks)
+    var proWeeklyPriceDisplay: String {
+        guard let product = products.first else { return "$0.17" }
+        let weekly = (product.price as NSDecimalNumber).doubleValue / 52.0
+        return String(format: "$%.2f", weekly)
+    }
 }
 
 enum StoreError: LocalizedError {

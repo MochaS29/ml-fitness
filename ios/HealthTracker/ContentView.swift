@@ -72,6 +72,7 @@ struct ContentView: View {
         .withCelebrations(context: viewContext)  // Add celebration detection
         .sheet(isPresented: $showingAddMenu) {
             AddMenuView(selectedDate: Date())
+                .environmentObject(storeManager)
         }
         .sheet(isPresented: $showingPaywall) {
             PaywallView()
