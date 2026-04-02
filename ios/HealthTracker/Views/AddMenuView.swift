@@ -4,10 +4,14 @@ import CoreData
 struct AddMenuView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var storeManager: StoreManager
+    @AppStorage("freeMealScansUsed") private var freeMealScansUsed = 0
 
     let selectedDate: Date
     @State private var selectedMealType: MealType = .breakfast
     @State private var activeSheet: ActiveSheet?
+
+    private static let freeScansAllowed = 3
 
     private enum ActiveSheet: Identifiable {
         case foodSearch
@@ -51,9 +55,7 @@ struct AddMenuView: View {
             case .waterEntry:
                 QuickWaterAddView(selectedDate: selectedDate)
             case .mealScanner:
-                ProFeatureGate {
-                    MealPhotoAnalyzerView()
-                }
+                MealPhotoAnalyzerView()
             }
         }
     }
@@ -78,8 +80,22 @@ struct AddMenuView: View {
                 }
 
                 Button(action: { activeSheet = .mealScanner }) {
-                    Label("Scan Meal with Camera", systemImage: "camera.fill")
-                        .foregroundColor(.primary)
+                    HStack {
+                        Label("Scan Meal with Camera", systemImage: "camera.fill")
+                            .foregroundColor(.primary)
+                        Spacer()
+                        if !storeManager.isPro {
+                            let remaining = max(0, Self.freeScansAllowed - freeMealScansUsed)
+                            Text(remaining > 0 ? "\(remaining) free" : "Pro")
+                                .font(.caption2)
+                                .fontWeight(.semibold)
+                                .padding(.horizontal, 7)
+                                .padding(.vertical, 3)
+                                .background(remaining > 0 ? Color.orange.opacity(0.15) : Color.wellnessGreen.opacity(0.15))
+                                .foregroundColor(remaining > 0 ? .orange : .wellnessGreen)
+                                .cornerRadius(6)
+                        }
+                    }
                 }
 
                 Button(action: { activeSheet = .barcodeScanner }) {
