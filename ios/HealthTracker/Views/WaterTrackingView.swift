@@ -7,9 +7,7 @@ struct WaterTrackingView: View {
     @StateObject private var reminderService = WaterReminderService.shared
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \WaterEntry.timestamp, ascending: false)],
-        predicate: NSPredicate(format: "timestamp >= %@ AND timestamp < %@",
-                             Calendar.current.startOfDay(for: Date()) as NSDate,
-                             Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date()))! as NSDate),
+        predicate: NSPredicate.forDay(),
         animation: .default)
     private var todayWaterEntries: FetchedResults<WaterEntry>
 
