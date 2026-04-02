@@ -248,17 +248,12 @@ class AchievementManager: ObservableObject {
     // MARK: - Celebration System
     
     func celebrate(_ achievement: Achievement) {
-        // Delay so any presenting sheet has time to dismiss first
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
             self.recentAchievements.insert(achievement, at: 0)
             self.currentCelebration = achievement
-            self.showingCelebration = true
-
-            // Save achievement
             self.saveAchievement(achievement)
-
-            // Play haptic feedback
             self.playHapticFeedback()
+            CelebrationWindowManager.shared.show(achievement: CelebrationAchievement.from(achievement))
         }
     }
     

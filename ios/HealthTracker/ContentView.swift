@@ -67,16 +67,6 @@ struct ContentView: View {
                 }
             }
             
-            // Celebration overlay
-            if achievementManager.showingCelebration,
-               let achievement = achievementManager.currentCelebration {
-                CelebrationView(
-                    achievement: CelebrationAchievement.from(achievement),
-                    isPresented: $achievementManager.showingCelebration
-                )
-                .transition(.opacity.combined(with: .scale))
-                .zIndex(1)
-            }
         }
         .environmentObject(achievementManager)
         .withCelebrations(context: viewContext)  // Add celebration detection

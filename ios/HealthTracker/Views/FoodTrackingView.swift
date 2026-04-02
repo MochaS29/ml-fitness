@@ -2,7 +2,6 @@ import SwiftUI
 
 struct FoodTrackingView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var achievementManager: AchievementManager
     @State private var showingAddFood = false
     @State private var selectedMealType = MealType.breakfast
     
@@ -53,15 +52,6 @@ struct FoodTrackingView: View {
             }
             .sheet(isPresented: $showingAddFood) {
                 AddFoodView(mealType: selectedMealType)
-            }
-            .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
-                if let celebration = achievementManager.currentCelebration {
-                    CelebrationView(
-                        achievement: CelebrationAchievement.from(celebration),
-                        isPresented: $achievementManager.showingCelebration
-                    )
-                    .presentationBackground(.clear)
-                }
             }
         }
     }

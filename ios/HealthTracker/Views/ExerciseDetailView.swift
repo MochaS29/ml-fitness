@@ -5,7 +5,6 @@ import CoreData
 struct ExerciseDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var achievementManager: AchievementManager
     @State private var selectedTab = 0
     @State private var showingAddExercise = false
 
@@ -51,15 +50,6 @@ struct ExerciseDetailView: View {
             }
             .sheet(isPresented: $showingAddExercise) {
                 ExerciseEntrySheet()
-            }
-            .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
-                if let celebration = achievementManager.currentCelebration {
-                    CelebrationView(
-                        achievement: CelebrationAchievement.from(celebration),
-                        isPresented: $achievementManager.showingCelebration
-                    )
-                    .presentationBackground(.clear)
-                }
             }
         }
     }

@@ -4,7 +4,6 @@ import CoreData
 struct AddMenuView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var achievementManager: AchievementManager
 
     let selectedDate: Date
     @State private var selectedMealType: MealType = .breakfast
@@ -52,15 +51,6 @@ struct AddMenuView: View {
         .sheet(isPresented: $showingMealScanner) {
             ProFeatureGate {
                 MealPhotoAnalyzerView()
-            }
-        }
-        .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
-            if let celebration = achievementManager.currentCelebration {
-                CelebrationView(
-                    achievement: CelebrationAchievement.from(celebration),
-                    isPresented: $achievementManager.showingCelebration
-                )
-                .presentationBackground(.clear)
             }
         }
     }
@@ -293,7 +283,6 @@ struct QuickWeightAddView: View {
 struct ExerciseSearchView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
-    @EnvironmentObject var achievementManager: AchievementManager
     @State private var searchText = ""
     @State private var selectedExercise: ExerciseTemplateModel?
     @State private var duration: String = "30"
@@ -363,15 +352,6 @@ struct ExerciseSearchView: View {
                         saveExercise(exercise, duration: duration)
                     }
                 )
-            }
-            .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
-                if let celebration = achievementManager.currentCelebration {
-                    CelebrationView(
-                        achievement: CelebrationAchievement.from(celebration),
-                        isPresented: $achievementManager.showingCelebration
-                    )
-                    .presentationBackground(.clear)
-                }
             }
         }
     }

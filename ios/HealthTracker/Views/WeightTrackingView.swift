@@ -5,7 +5,6 @@ struct WeightTrackingView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var profileManager: UserProfileManager
     @StateObject private var healthKitManager = HealthKitManager.shared
-    @EnvironmentObject var achievementManager: AchievementManager
 
     @State private var currentWeight: Double = 0
     @State private var showingAddWeight = false
@@ -96,15 +95,6 @@ struct WeightTrackingView: View {
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     loadWeightHistory()
-                }
-            }
-            .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
-                if let celebration = achievementManager.currentCelebration {
-                    CelebrationView(
-                        achievement: CelebrationAchievement.from(celebration),
-                        isPresented: $achievementManager.showingCelebration
-                    )
-                    .presentationBackground(.clear)
                 }
             }
         }
@@ -464,7 +454,6 @@ struct AddWeightView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject private var healthKitManager = HealthKitManager.shared
-    @EnvironmentObject var achievementManager: AchievementManager
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \WeightEntry.timestamp, ascending: false)],
@@ -521,15 +510,6 @@ struct AddWeightView: View {
                     Button("Save") {
                         saveWeight()
                     }
-                }
-            }
-            .fullScreenCover(isPresented: $achievementManager.showingCelebration) {
-                if let celebration = achievementManager.currentCelebration {
-                    CelebrationView(
-                        achievement: CelebrationAchievement.from(celebration),
-                        isPresented: $achievementManager.showingCelebration
-                    )
-                    .presentationBackground(.clear)
                 }
             }
         }
