@@ -381,15 +381,31 @@ class DashboardViewModel: ObservableObject {
     // AI Greetings and Analysis
     var aiGreeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
+        let timeGreeting: String
         switch hour {
-        case 5..<12:
-            return "Great morning! You're 15% more active than usual this week 🌟"
-        case 12..<17:
-            return "Keep it up! You're on track to meet 4 of 5 goals today 💪"
-        case 17..<22:
-            return "Strong finish! Just 200 calories to reach your protein goal 🎯"
-        default:
-            return "Rest well! Your body burns 1,800 calories even at rest 😴"
+        case 5..<12:  timeGreeting = "Good morning"
+        case 12..<17: timeGreeting = "Good afternoon"
+        case 17..<22: timeGreeting = "Good evening"
+        default:      timeGreeting = "Rest well"
+        }
+
+        // Data-driven nudge based on what's actually missing
+        let stepsLeft = stepGoal - todaySteps
+        let waterLeft = waterGoal - todayWater
+        let calsLogged = todayCalories
+
+        if calsLogged == 0 && todayExercise == 0 {
+            return "\(timeGreeting)! Start by logging a meal or a workout 💪"
+        } else if stepsLeft > 0 && stepsLeft <= 2000 {
+            return "\(timeGreeting)! Just \(stepsLeft.formatted()) more steps to hit your goal 🚶"
+        } else if waterLeft > 0 {
+            return "\(timeGreeting)! \(waterLeft) more glass\(waterLeft == 1 ? "" : "es") of water to reach your goal 💧"
+        } else if todayExercise > 0 && stepsLeft <= 0 {
+            return "\(timeGreeting)! Great work — all activity goals hit today 🌟"
+        } else if calsLogged > 0 {
+            return "\(timeGreeting)! You've logged \(calsLogged) calories so far today 🎯"
+        } else {
+            return "\(timeGreeting)! Keep building those healthy habits 🌟"
         }
     }
     
@@ -422,29 +438,30 @@ class DashboardViewModel: ObservableObject {
     }
     
     var healthSummary: String {
-        // Generate real summary based on actual data
-        var summaryParts: [String] = []
+        var hints: [String] = []
 
-        // Steps summary
-        if todaySteps > 0 {
-            summaryParts.append("\(todaySteps.formatted()) steps today")
+        if todaySteps < stepGoal {
+            hints.append("\((stepGoal - todaySteps).formatted()) more steps")
+        }
+        if todayWater < waterGoal {
+            hints.append("drink \(waterGoal - todayWater) more oz water")
+        }
+        if todayExercise == 0 {
+            hints.append("log exercise")
+        }
+        if todayCalories < 300 {
+            hints.append("log a meal")
         }
 
-        // Exercise summary
-        if todayExercise > 0 {
-            summaryParts.append("\(todayExercise) min of exercise")
-        }
-
-        // Water summary
-        if todayWater > 0 {
-            let percent = waterPercentage
-            summaryParts.append("\(percent)% hydrated")
-        }
-
-        if summaryParts.isEmpty {
-            return "Start tracking your activities to see your progress"
+        if hints.isEmpty {
+            // All goals met — show achievements
+            var parts: [String] = []
+            if todaySteps >= stepGoal { parts.append("\(todaySteps.formatted()) steps ✓") }
+            if todayExercise > 0 { parts.append("\(todayExercise) min exercise") }
+            if todayWater >= waterGoal { parts.append("hydrated ✓") }
+            return parts.isEmpty ? "Great job today!" : parts.joined(separator: " • ")
         } else {
-            return summaryParts.joined(separator: " • ")
+            return "Boost score: " + hints.prefix(2).joined(separator: " • ")
         }
     }
     
