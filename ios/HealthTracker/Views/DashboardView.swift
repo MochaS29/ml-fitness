@@ -42,10 +42,19 @@ struct DashboardView: View {
             VStack(spacing: 20) {
                 // Header with Time Range Selector
                 headerSection
-                
+
                 // Delay loading heavy widgets
                 if widgetsEnabled {
-                    // AI Insights Carousel (from Option 4)
+                    // Key Metrics Cards — 4 blocks
+                    metricsOverview
+
+                    // Supplement Stats Widget
+                    SupplementStatsWidget(showingDetail: $showingSupplementDetail)
+
+                    // Nutrition Distribution Chart
+                    nutritionDistributionCard
+
+                    // AI Insights Carousel
                     aiInsightsSection
 
                     // Logging Streak
@@ -53,22 +62,13 @@ struct DashboardView: View {
                         streakCard
                     }
 
-                    // Key Metrics Cards with Trends (from Option 3)
-                    metricsOverview
-
-                    // Supplement Stats Widget
-                    SupplementStatsWidget(showingDetail: $showingSupplementDetail)
-
-                    // Interactive Charts Section (from Option 3)
-                    chartsSection
-
-                    // AI Recommendations (from Option 4)
+                    // Smart Recommendations
                     aiRecommendationsSection
 
                     // Quick Reminders Access
                     quickRemindersStrip
 
-                    // Detailed Analytics (from Option 3)
+                    // Detailed Analytics
                     detailedAnalyticsSection
                 } else {
                     // Show loading placeholder
@@ -417,99 +417,13 @@ struct DashboardView: View {
         }
     }
     
-    // MARK: - Charts Section (from Option 3)
+    // MARK: - Nutrition Distribution Card
 
-    private var chartsSection: some View {
-        VStack(spacing: 20) {
-            // Steps Chart - Weekly View
+    private var nutritionDistributionCard: some View {
+        Button(action: { showingNutritionDetail = true }) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    HStack(spacing: 8) {
-                        Image(systemName: "figure.walk")
-                            .font(.headline)
-                            .foregroundColor(.green)
-                        Text("Steps - Weekly")
-                            .font(.headline)
-                            .foregroundColor(.deepCharcoal)
-                    }
-                    Spacer()
-                }
-
-                Chart(viewModel.getWeeklyStepsData()) { dataPoint in
-                    BarMark(
-                        x: .value("Time", dataPoint.date),
-                        y: .value("Steps", dataPoint.value)
-                    )
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.green.opacity(0.8), .mint.opacity(0.6)],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                    .cornerRadius(4)
-                }
-                .frame(height: 200)
-                .chartYAxis {
-                    AxisMarks(position: .leading)
-                }
-                .chartXAxis {
-                    AxisMarks { value in
-                        AxisValueLabel {
-                            if let date = value.as(Date.self) {
-                                Text(date, format: .dateTime.weekday(.abbreviated))
-                            }
-                        }
-                    }
-                }
-            }
-            .padding()
-            .background(Color(UIColor.secondarySystemGroupedBackground))
-            .cornerRadius(16)
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-
-            // Weight Chart
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 8) {
-                    Image(systemName: "scalemass")
-                        .font(.headline)
-                        .foregroundColor(.blue)
-                    Text("Weight Trend")
-                        .font(.headline)
-                        .foregroundColor(.deepCharcoal)
-                    Spacer()
-                }
-
-                Chart(viewModel.getWeightData(for: selectedTimeRange)) { dataPoint in
-                    LineMark(
-                        x: .value("Date", dataPoint.date),
-                        y: .value("Weight", dataPoint.value)
-                    )
-                    .foregroundStyle(Color.blue)
-                    .lineStyle(StrokeStyle(lineWidth: 2))
-
-                    PointMark(
-                        x: .value("Date", dataPoint.date),
-                        y: .value("Weight", dataPoint.value)
-                    )
-                    .foregroundStyle(Color.blue)
-                    .symbolSize(50)
-                }
-                .frame(height: 150)
-                .chartYScale(domain: viewModel.getWeightRange(for: selectedTimeRange))
-            }
-            .padding()
-            .background(Color(UIColor.secondarySystemGroupedBackground))
-            .cornerRadius(16)
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-
-            // Exercise Minutes Chart
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 8) {
-                    Image(systemName: "figure.run")
-                        .font(.headline)
-                        .foregroundColor(.orange)
-                    Text("Exercise Minutes")
+                    Text("Nutrition Distribution")
                         .font(.headline)
                         .foregroundColor(.deepCharcoal)
                     Spacer()
@@ -517,174 +431,63 @@ struct DashboardView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                .padding(.bottom, 4)
 
-                Chart(viewModel.getExerciseData(for: selectedTimeRange)) { dataPoint in
-                    BarMark(
-                        x: .value("Date", dataPoint.date),
-                        y: .value("Minutes", dataPoint.value)
-                    )
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.orange, .yellow],
-                            startPoint: .top,
-                            endPoint: .bottom
+                Chart {
+                    ForEach(viewModel.nutritionData) { item in
+                        SectorMark(
+                            angle: .value("Value", item.value),
+                            innerRadius: .ratio(0.6),
+                            angularInset: 2
                         )
-                    )
-                    .cornerRadius(4)
-                }
-                .frame(height: 150)
-            }
-            .padding()
-            .background(Color(UIColor.secondarySystemGroupedBackground))
-            .cornerRadius(16)
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-            .onTapGesture {
-                showingExerciseDetail = true
-            }
-
-            // Nutrition Distribution Chart (tappable)
-            Button(action: { showingNutritionDetail = true }) {
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("Nutrition Distribution")
-                            .font(.headline)
-                            .foregroundColor(.deepCharcoal)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                        .foregroundStyle(item.color)
+                        .cornerRadius(4)
+                        .opacity(animateCharts ? 1 : 0)
                     }
-
-                    Chart {
-                        ForEach(viewModel.nutritionData) { item in
-                            SectorMark(
-                                angle: .value("Value", item.value),
-                                innerRadius: .ratio(0.6),
-                                angularInset: 2
-                            )
-                            .foregroundStyle(item.color)
-                            .cornerRadius(4)
-                            .opacity(animateCharts ? 1 : 0)
-                        }
-                    }
-                    .frame(height: 200)
-                    .chartBackground { chartProxy in
-                        GeometryReader { geometry in
-                            VStack {
-                                Text("\(viewModel.todayCalories)")
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                                Text("calories")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
-                        }
-                    }
-
-                    // Legend
-                    HStack(spacing: 20) {
-                        ForEach(viewModel.nutritionData) { item in
-                            HStack(spacing: 4) {
-                                Circle()
-                                    .fill(item.color)
-                                    .frame(width: 12, height: 12)
-                                Text(item.name)
-                                    .font(.caption)
-                                Text("\(Int(item.percentage))%")
-                                    .font(.caption)
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-
-                    Text("Tap for detailed day / week / month breakdown")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                }
-                .padding()
-                .background(Color(UIColor.secondarySystemGroupedBackground))
-                .cornerRadius(16)
-                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-            }
-            .buttonStyle(.plain)
-            
-            // Weekly Trend Chart
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("Weekly Trends")
-                        .font(.headline)
-                        .foregroundColor(.deepCharcoal)
-                    
-                    Spacer()
-                    
-                    // Metric Selector
-                    Menu {
-                        Button("Calories") { }
-                        Button("Weight") { }
-                        Button("Exercise") { }
-                        Button("Water") { }
-                    } label: {
-                        Label("Calories", systemImage: "chevron.down")
-                            .font(.caption)
-                            .foregroundColor(.mindfulTeal)
-                    }
-                }
-                
-                Chart(viewModel.weeklyData) { item in
-                    LineMark(
-                        x: .value("Day", item.day),
-                        y: .value("Value", item.value)
-                    )
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.wellnessGreen, .mindfulTeal],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .lineStyle(StrokeStyle(lineWidth: 3, lineCap: .round))
-                    .opacity(animateCharts ? 1 : 0)
-                    
-                    AreaMark(
-                        x: .value("Day", item.day),
-                        y: .value("Value", item.value)
-                    )
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.wellnessGreen.opacity(0.3), .mindfulTeal.opacity(0.1)],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                    .opacity(animateCharts ? 1 : 0)
-                    
-                    PointMark(
-                        x: .value("Day", item.day),
-                        y: .value("Value", item.value)
-                    )
-                    .foregroundStyle(.white)
-                    .symbolSize(animateCharts ? 60 : 0)
                 }
                 .frame(height: 200)
-                .chartYScale(domain: 0...3000)
-                .chartXAxis {
-                    AxisMarks(values: .automatic) { value in
-                        AxisValueLabel()
-                            .font(.caption)
+                .chartBackground { chartProxy in
+                    GeometryReader { geometry in
+                        VStack {
+                            Text("\(viewModel.todayCalories)")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            Text("calories")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                     }
                 }
+
+                HStack(spacing: 20) {
+                    ForEach(viewModel.nutritionData) { item in
+                        HStack(spacing: 4) {
+                            Circle()
+                                .fill(item.color)
+                                .frame(width: 12, height: 12)
+                            Text(item.name)
+                                .font(.caption)
+                            Text("\(Int(item.percentage))%")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                        }
+                    }
+                }
+                .padding(.horizontal)
+
+                Text("Tap for detailed day / week / month breakdown")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
             }
             .padding()
             .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
         }
+        .buttonStyle(.plain)
     }
-    
+
     // MARK: - AI Recommendations (from Option 4)
     
     private var aiRecommendationsSection: some View {
