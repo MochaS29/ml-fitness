@@ -14,7 +14,6 @@ struct MoreView: View {
     @State private var showingExport = false
     @State private var showingSettings = false
     @State private var showingHelp = false
-    @State private var showingUSDAImport = false
     @State private var showingDemoDataAlert = false
     @AppStorage("hasDemoData") private var hasDemoData = false
     @State private var showingResetAlert = false
@@ -32,8 +31,7 @@ struct MoreView: View {
             ProgressAnalysisSection(showingGoals: $showingGoals)
 
             FoodRecipesSection(
-                showingFoodDatabase: $showingFoodDatabase,
-                showingUSDAImport: $showingUSDAImport
+                showingFoodDatabase: $showingFoodDatabase
             )
 
             #if DEBUG
@@ -82,6 +80,9 @@ struct MoreView: View {
             PaywallView()
                 .environmentObject(storeManager)
         }
+        .sheet(isPresented: $showingFoodDatabase) {
+            UnifiedFoodSearchSheet(mealType: .breakfast, targetDate: Date())
+        }
         .sheet(isPresented: $showingProfile) {
             ProfileView()
         }
@@ -104,9 +105,6 @@ struct MoreView: View {
         }
         .sheet(isPresented: $showingHelp) {
             HelpView()
-        }
-        .sheet(isPresented: $showingUSDAImport) {
-            USDAImportView()
         }
         .alert("Generate Demo Data?", isPresented: $showingDemoDataAlert) {
             Button("Cancel", role: .cancel) { }

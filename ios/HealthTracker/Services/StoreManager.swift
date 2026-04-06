@@ -174,16 +174,23 @@ class StoreManager: ObservableObject {
         purchaseState = .idle
     }
 
-    /// Price string for the Pro product, or a fallback
+    /// Price string for the Pro product, or a fallback.
+    /// Appends "USD" when StoreKit returns a bare "$X.XX" (no currency prefix like "CA$").
     var proPriceDisplay: String {
-        products.first?.displayPrice ?? "$6.99"
+        let price = products.first?.displayPrice ?? "$8.99 CAD"
+        // If price is just a plain dollar amount (US), label the currency explicitly
+        if price.hasPrefix("$") {
+            return "\(price) USD"
+        }
+        return price
     }
 
     /// Per-week breakdown of the one-time price (52 weeks)
     var proWeeklyPriceDisplay: String {
-        guard let product = products.first else { return "$0.17" }
+        guard let product = products.first else { return "$0.17 USD" }
         let weekly = (product.price as NSDecimalNumber).doubleValue / 52.0
-        return String(format: "$%.2f", weekly)
+        let formatted = String(format: "$%.2f", weekly)
+        return product.displayPrice.hasPrefix("$") ? "\(formatted) USD" : formatted
     }
 }
 

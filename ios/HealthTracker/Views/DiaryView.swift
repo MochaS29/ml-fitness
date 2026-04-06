@@ -135,24 +135,7 @@ struct DiaryView: View {
                 }
             }
             .sheet(isPresented: $showingAddMenu) {
-                QuickAddMenu(
-                    onFoodTap: {
-                        showingAddMenu = false
-                        showingFoodSearch = true
-                    },
-                    onExerciseTap: {
-                        showingAddMenu = false
-                        showingExerciseSearch = true
-                    },
-                    onWaterTap: {
-                        showingAddMenu = false
-                        showingWaterEntry = true
-                    },
-                    onSupplementTap: {
-                        showingAddMenu = false
-                        showingSupplementEntry = true
-                    }
-                )
+                QuickAddMenu(selectedDate: selectedDate)
             }
             .sheet(isPresented: $showingFoodSearch) {
                 UnifiedFoodSearchSheet(mealType: selectedMealType, targetDate: selectedDate)

@@ -231,7 +231,6 @@ struct ProgressAnalysisSection: View {
 
 struct FoodRecipesSection: View {
     @Binding var showingFoodDatabase: Bool
-    @Binding var showingUSDAImport: Bool
 
     var body: some View {
         Section("Food & Recipes") {
@@ -243,44 +242,11 @@ struct FoodRecipesSection: View {
                 )
             }
 
-            NavigationLink(destination: RecipeLibraryView()) {
-                MoreMenuItem(
-                    icon: "book.fill",
-                    title: "Recipe Library",
-                    color: Color(red: 127/255, green: 176/255, blue: 105/255)
-                )
-            }
-
-            // Meal Planning - Commented out (has dedicated Plan tab)
-            // NavigationLink(destination: MealPlanningView()) {
-            //     MoreMenuItem(
-            //         icon: "calendar",
-            //         title: "Meal Planning",
-            //         color: .indigo
-            //     )
-            // }
-
-            NavigationLink(destination: CustomFoodsView()) {
-                MoreMenuItem(
-                    icon: "plus.square.fill",
-                    title: "My Foods",
-                    color: .orange
-                )
-            }
-
             Button(action: { showingFoodDatabase = true }) {
                 MoreMenuItem(
                     icon: "magnifyingglass",
                     title: "Food Database",
                     color: Color(red: 74/255, green: 155/255, blue: 155/255)
-                )
-            }
-
-            Button(action: { showingUSDAImport = true }) {
-                MoreMenuItem(
-                    icon: "arrow.down.doc.fill",
-                    title: "Import USDA Database",
-                    color: .purple
                 )
             }
         }
@@ -689,25 +655,14 @@ struct RecipeCard: View {
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
+                        .frame(height: 120)
+                        .clipped()
                 } placeholder: {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.2))
-                        .overlay(
-                            Image(systemName: "photo")
-                                .foregroundColor(.gray)
-                        )
+                    RecipeImagePlaceholder(category: recipe.category, height: 120)
                 }
-                .frame(height: 120)
-                .clipped()
                 .cornerRadius(8)
             } else {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.2))
-                    .frame(height: 120)
-                    .overlay(
-                        Image(systemName: "photo")
-                            .foregroundColor(.gray)
-                    )
+                RecipeImagePlaceholder(category: recipe.category, height: 120)
                     .cornerRadius(8)
             }
 

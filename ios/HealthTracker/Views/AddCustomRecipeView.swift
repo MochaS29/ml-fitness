@@ -305,6 +305,15 @@ struct AddCustomRecipeView: View {
         )
     }
     
+    private func saveImageToFileSystem(_ image: UIImage, recipeID: UUID) {
+        guard let data = image.jpegData(compressionQuality: 0.8),
+              let docsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let folder = docsURL.appendingPathComponent("recipe_photos", isDirectory: true)
+        try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let fileURL = folder.appendingPathComponent("\(recipeID.uuidString).jpg")
+        try? data.write(to: fileURL)
+    }
+
     func saveRecipe() {
         let customRecipe = CustomRecipe(context: viewContext)
         customRecipe.id = UUID()
@@ -335,11 +344,13 @@ struct AddCustomRecipeView: View {
         customRecipe.instructions = instructions.filter { !$0.isEmpty }
         
         // Save image if available
-        if let image = recipeImage {
-            // Compress image to reduce storage size
+        if let image = recipeImage, let recipeID = customRecipe.id {
+            // Save to CoreData for thumbnails
             customRecipe.imageData = image.jpegData(compressionQuality: 0.8)
+            // Also save to file system so ProfessionalRecipeDetailView can find it
+            saveImageToFileSystem(image, recipeID: recipeID)
         }
-        
+
         do {
             try viewContext.save()
             presentationMode.wrappedValue.dismiss()
@@ -446,22 +457,287 @@ struct FlowLayout<Item, ItemView: View>: View {
     }
 }
 
-// Placeholder for ingredient picker
 struct IngredientPickerView: View {
     let onSelect: (RecipeIngredient) -> Void
     @Environment(\.presentationMode) var presentationMode
-    
+
+    // Search phase
+    @State private var searchText = ""
+    @State private var searchResults: [FoodItem] = []
+    @State private var showingForm = false
+
+    // Form fields
+    @State private var name = ""
+    @State private var amount = "100"
+    @State private var selectedUnit = "g"
+    @State private var calories = ""
+    @State private var protein = ""
+    @State private var carbs = ""
+    @State private var fat = ""
+    @State private var fiber = ""
+    @State private var sugar = ""
+    @State private var sodium = ""
+
+    // Base (per-serving) values for proportional scaling
+    @State private var baseAmount: Double = 100
+    @State private var baseCalories: Double = 0
+    @State private var baseProtein: Double = 0
+    @State private var baseCarbs: Double = 0
+    @State private var baseFat: Double = 0
+    @State private var baseFiber: Double = 0
+    @State private var baseSugar: Double? = nil
+    @State private var baseSodium: Double? = nil
+    @State private var fromDatabase = false
+
+    private let commonUnits = ["g", "oz", "cup", "tbsp", "tsp", "ml", "L", "lb", "kg",
+                                "piece", "clove", "slice", "can", "bunch", "pinch"]
+    private var isValid: Bool { !name.isEmpty && (Double(amount) ?? 0) > 0 }
+
     var body: some View {
         NavigationView {
-            Text("Ingredient Picker - To be implemented")
-                .navigationTitle("Select Ingredient")
-                .toolbar {
+            Group {
+                if showingForm {
+                    formView
+                } else {
+                    searchListView
+                }
+            }
+            .navigationTitle(showingForm ? "Add Ingredient" : "Select Ingredient")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(showingForm ? "Back" : "Cancel") {
+                        if showingForm { showingForm = false } else { presentationMode.wrappedValue.dismiss() }
+                    }
+                }
+                if showingForm {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Cancel") {
-                            presentationMode.wrappedValue.dismiss()
+                        Button("Add") { addIngredient() }
+                            .fontWeight(.semibold)
+                            .disabled(!isValid)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Search phase
+
+    private var searchListView: some View {
+        VStack(spacing: 0) {
+            // Search bar
+            HStack {
+                Image(systemName: "magnifyingglass").foregroundColor(.secondary)
+                TextField("Search foods (e.g. Chicken Breast)…", text: $searchText)
+                    .autocorrectionDisabled()
+                    .onChange(of: searchText) { _, q in
+                        searchResults = q.count >= 2
+                            ? LocalFoodDatabase.shared.searchFoods(q, limit: 40)
+                            : LocalFoodDatabase.shared.getCommonFoods(limit: 20)
+                    }
+                if !searchText.isEmpty {
+                    Button(action: { searchText = "" }) {
+                        Image(systemName: "xmark.circle.fill").foregroundColor(.secondary)
+                    }
+                }
+            }
+            .padding(10)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(10)
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
+            .padding(.bottom, 8)
+
+            List {
+                // Manual entry shortcut
+                Button(action: { openManualForm() }) {
+                    HStack {
+                        Image(systemName: "square.and.pencil")
+                            .foregroundColor(.mindfulTeal)
+                            .frame(width: 28)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Enter manually")
+                                .foregroundColor(.primary)
+                            Text("Type nutrition values yourself")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
                     }
                 }
+
+                // Search results or common foods
+                let items = searchResults.isEmpty
+                    ? LocalFoodDatabase.shared.getCommonFoods(limit: 20)
+                    : searchResults
+                let sectionTitle = searchResults.isEmpty ? "Common Foods" : "Results"
+
+                Section(sectionTitle) {
+                    ForEach(items) { food in
+                        Button(action: { selectFood(food) }) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(food.name)
+                                        .foregroundColor(.primary)
+                                    if let brand = food.brand {
+                                        Text(brand)
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                                Spacer()
+                                VStack(alignment: .trailing, spacing: 2) {
+                                    Text("\(Int(food.calories)) cal")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundColor(.orange)
+                                    Text("\(food.servingSize) \(food.servingUnit)")
+                                        .font(.caption2)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .listStyle(.insetGrouped)
         }
+        .background(Color(UIColor.systemGroupedBackground))
+        .onAppear {
+            searchResults = LocalFoodDatabase.shared.getCommonFoods(limit: 20)
+        }
+    }
+
+    // MARK: - Form phase
+
+    private var formView: some View {
+        Form {
+            Section("Ingredient") {
+                TextField("Name", text: $name)
+                HStack(spacing: 12) {
+                    TextField("Amount", text: $amount)
+                        .keyboardType(.decimalPad)
+                        .frame(width: 80)
+                        .onChange(of: amount) { _, newVal in
+                            guard fromDatabase, let newAmt = Double(newVal), newAmt > 0, baseAmount > 0 else { return }
+                            let ratio = newAmt / baseAmount
+                            calories = formatNutrient(baseCalories * ratio)
+                            protein  = formatNutrient(baseProtein  * ratio)
+                            carbs    = formatNutrient(baseCarbs    * ratio)
+                            fat      = formatNutrient(baseFat      * ratio)
+                            fiber    = formatNutrient(baseFiber    * ratio)
+                            if let s = baseSugar  { sugar  = formatNutrient(s * ratio) }
+                            if let s = baseSodium { sodium = formatNutrient(s * ratio) }
+                        }
+                    Divider().frame(height: 20)
+                    Picker("Unit", selection: $selectedUnit) {
+                        ForEach(commonUnits, id: \.self) { Text($0).tag($0) }
+                    }
+                    .pickerStyle(.menu)
+                }
+            }
+
+            if fromDatabase {
+                Section {
+                    nutritionRow("Calories", value: $calories, unit: "kcal")
+                    nutritionRow("Protein",  value: $protein,  unit: "g")
+                    nutritionRow("Carbs",    value: $carbs,    unit: "g")
+                    nutritionRow("Fat",      value: $fat,      unit: "g")
+                    nutritionRow("Fiber",    value: $fiber,    unit: "g")
+                    nutritionRow("Sugar",    value: $sugar,    unit: "g")
+                    nutritionRow("Sodium",   value: $sodium,   unit: "mg")
+                } header: {
+                    Text("Nutrition — auto-filled from database")
+                } footer: {
+                    Text("Values scale automatically with amount. Edit if needed.")
+                }
+            } else {
+                Section {
+                    nutritionRow("Calories", value: $calories, unit: "kcal")
+                    nutritionRow("Protein",  value: $protein,  unit: "g")
+                    nutritionRow("Carbs",    value: $carbs,    unit: "g")
+                    nutritionRow("Fat",      value: $fat,      unit: "g")
+                    nutritionRow("Fiber",    value: $fiber,    unit: "g")
+                    nutritionRow("Sugar",    value: $sugar,    unit: "g")
+                    nutritionRow("Sodium",   value: $sodium,   unit: "mg")
+                } header: {
+                    Text("Nutrition (optional)")
+                } footer: {
+                    Text("Leave blank if unknown — values default to 0.")
+                }
+            }
+        }
+    }
+
+    // MARK: - Helpers
+
+    private func nutritionRow(_ label: String, value: Binding<String>, unit: String) -> some View {
+        HStack {
+            Text(label)
+            Spacer()
+            TextField("0", text: value)
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+                .frame(width: 70)
+            Text(unit)
+                .foregroundColor(.secondary)
+                .frame(width: 38, alignment: .leading)
+        }
+    }
+
+    private func selectFood(_ food: FoodItem) {
+        let servingAmt = Double(food.servingSize) ?? 100
+        name         = food.name
+        amount       = food.servingSize
+        selectedUnit = food.servingUnit.isEmpty ? "g" : food.servingUnit
+        fromDatabase = true
+
+        // Store base values for proportional scaling
+        baseAmount   = servingAmt
+        baseCalories = food.calories
+        baseProtein  = food.protein
+        baseCarbs    = food.carbs
+        baseFat      = food.fat
+        baseFiber    = food.fiber
+        baseSugar    = food.sugar
+        baseSodium   = food.sodium
+
+        calories = formatNutrient(food.calories)
+        protein  = formatNutrient(food.protein)
+        carbs    = formatNutrient(food.carbs)
+        fat      = formatNutrient(food.fat)
+        fiber    = formatNutrient(food.fiber)
+        sugar    = food.sugar.map { formatNutrient($0) } ?? ""
+        sodium   = food.sodium.map { formatNutrient($0) } ?? ""
+
+        showingForm = true
+    }
+
+    private func openManualForm() {
+        fromDatabase = false
+        name = searchText  // pre-fill name from whatever was typed
+        amount = "100"; selectedUnit = "g"
+        calories = ""; protein = ""; carbs = ""; fat = ""
+        fiber = ""; sugar = ""; sodium = ""
+        showingForm = true
+    }
+
+    private func formatNutrient(_ value: Double) -> String {
+        value == 0 ? "" : (value == Double(Int(value)) ? "\(Int(value))" : String(format: "%.1f", value))
+    }
+
+    private func addIngredient() {
+        let ingredient = RecipeIngredient(
+            name: name,
+            amount: Double(amount) ?? 1,
+            unit: selectedUnit,
+            calories: Double(calories) ?? 0,
+            protein:  Double(protein)  ?? 0,
+            carbs:    Double(carbs)    ?? 0,
+            fat:      Double(fat)      ?? 0,
+            fiber:    fiber.isEmpty  ? nil : Double(fiber),
+            sugar:    sugar.isEmpty  ? nil : Double(sugar),
+            sodium:   sodium.isEmpty ? nil : Double(sodium)
+        )
+        onSelect(ingredient)
+        presentationMode.wrappedValue.dismiss()
     }
 }
