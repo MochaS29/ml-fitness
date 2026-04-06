@@ -3,6 +3,7 @@ import Charts
 
 struct DashboardView: View {
     @EnvironmentObject var profileManager: UserProfileManager
+    @EnvironmentObject var storeManager: StoreManager
     @StateObject private var viewModel = DashboardViewModel()
     @ObservedObject private var streakManager = LoggingStreakManager.shared
     @State private var selectedTimeRange = TimeRange.week
@@ -63,6 +64,11 @@ struct DashboardView: View {
             VStack(spacing: 20) {
                 // Header with Time Range Selector
                 headerSection
+
+                // AI Meal Scanner teaser (free users only)
+                if !storeManager.isPro && !TrialManager.shared.isTrialActive {
+                    MealScannerTeaserCard(onTap: { activeSheet = .quickLog })
+                }
 
                 // Delay loading heavy widgets
                 if widgetsEnabled {
@@ -166,6 +172,7 @@ struct DashboardView: View {
                 NutritionDetailView()
             case .quickLog:
                 AddMenuView(selectedDate: Date())
+                    .environmentObject(storeManager)
             }
         }
     }
@@ -924,6 +931,68 @@ struct NutrientBreakdown: Identifiable {
     
     var statusText: String {
         return "\(Int(percentage))% RDA"
+    }
+}
+
+// MARK: - Meal Scanner Teaser Card
+
+struct MealScannerTeaserCard: View {
+    @AppStorage("freeMealScansUsed") private var freeMealScansUsed = 0
+    let onTap: () -> Void
+
+    private static let freeScansAllowed = 3
+    private var remaining: Int { max(0, Self.freeScansAllowed - freeMealScansUsed) }
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 14) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(LinearGradient(
+                            colors: [Color.mindfulTeal.opacity(0.85), Color.wellnessGreen.opacity(0.85)],
+                            startPoint: .topLeading, endPoint: .bottomTrailing
+                        ))
+                        .frame(width: 48, height: 48)
+                    Image(systemName: "camera.viewfinder")
+                        .font(.system(size: 22))
+                        .foregroundColor(.white)
+                }
+
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack(spacing: 6) {
+                        Text("AI Meal Scanner")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(.primary)
+                        if remaining > 0 {
+                            Text("\(remaining) FREE")
+                                .font(.caption2.bold())
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.orange.opacity(0.15))
+                                .foregroundColor(.orange)
+                                .cornerRadius(5)
+                        }
+                    }
+                    Text(remaining > 0
+                         ? "Point your camera at any meal — AI logs the macros"
+                         : "Upgrade to keep scanning meals with AI")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                }
+
+                Spacer()
+
+                Image(systemName: remaining > 0 ? "chevron.right" : "lock.fill")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+        }
+        .buttonStyle(.plain)
     }
 }
 

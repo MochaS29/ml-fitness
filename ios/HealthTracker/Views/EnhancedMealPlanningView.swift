@@ -75,10 +75,50 @@ struct EnhancedMealPlanningView: View {
                 ShoppingListView(manager: mealPlanManager)
             }
             .sheet(item: $showingMealDetail) { meal in
-                MealDetailView(meal: meal, isFavorite: mealPlanManager.favoriteMeals.contains(meal.id)) {
-                    mealPlanManager.toggleFavorite(meal.id)
-                }
+                ProfessionalRecipeDetailView(recipe: mealToRecipeModel(meal))
+                    .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
             }
+    }
+    private func mealToRecipeModel(_ meal: Meal) -> RecipeModel {
+        let tags = meal.tags.map { $0.lowercased() }
+        let nameLower = meal.name.lowercased()
+        let category: RecipeCategory
+        if tags.contains("breakfast") || nameLower.contains("breakfast") ||
+           nameLower.contains("oatmeal") || nameLower.contains("pancake") ||
+           nameLower.contains("granola") || nameLower.contains("yogurt") {
+            category = .breakfast
+        } else if tags.contains("snack") || tags.contains("snacks") {
+            category = .snack
+        } else if tags.contains("dessert") {
+            category = .dessert
+        } else if tags.contains("lunch") || nameLower.contains("salad") ||
+                  nameLower.contains("sandwich") || nameLower.contains("wrap") {
+            category = .lunch
+        } else {
+            category = .dinner
+        }
+        return RecipeModel(
+            id: UUID(uuidString: meal.id) ?? UUID(),
+            name: meal.name,
+            category: category,
+            prepTime: meal.prepTime,
+            cookTime: meal.cookTime,
+            servings: 2,
+            ingredients: meal.ingredients.map {
+                IngredientModel(name: $0, amount: 1, unit: .piece, category: .other)
+            },
+            instructions: meal.instructions,
+            nutrition: NutritionInfo(
+                calories: Double(meal.calories),
+                protein: meal.protein,
+                carbs: meal.carbs,
+                fat: meal.fat,
+                fiber: meal.fiber,
+                sugar: nil,
+                sodium: nil
+            ),
+            tags: meal.tags
+        )
     }
 }
 
@@ -783,6 +823,7 @@ struct MonthlyOverviewView: View {
                     selectedDate: $selectedDate,
                     displayMonth: displayMonth,
                     foodEntries: foodEntries,
+                    manager: manager,
                     onDateSelected: {
                         showingDayDetail = true
                     }
@@ -893,7 +934,10 @@ struct CalendarGridView: View {
     @Binding var selectedDate: Date
     let displayMonth: Date
     let foodEntries: [FoodEntry]
+    let manager: MealPlanManager
     let onDateSelected: () -> Void
+
+    private let weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
     private let columns = Array(repeating: GridItem(.flexible()), count: 7)
     private let weekdays = ["S", "M", "T", "W", "T", "F", "S"]
@@ -963,45 +1007,43 @@ struct CalendarGridView: View {
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay
 
         var mealDots = MealDots()
-        var dayMealCount = 0
 
-        // Use early exit to minimize processing
+        // Check diary entries first
         for entry in foodEntries {
-            // Check all meal types are set before continuing
             if mealDots.hasBreakfast && mealDots.hasLunch &&
-               mealDots.hasDinner && mealDots.hasSnack {
-                break  // All dots set, no need to continue
-            }
+               mealDots.hasDinner && mealDots.hasSnack { break }
 
             guard let timestamp = entry.timestamp,
                   timestamp >= startOfDay && timestamp < endOfDay,
                   let mealType = entry.mealType else { continue }
 
             switch mealType {
-            case "Breakfast" where !mealDots.hasBreakfast:
-                mealDots.hasBreakfast = true
-                dayMealCount += 1
-            case "Lunch" where !mealDots.hasLunch:
-                mealDots.hasLunch = true
-                dayMealCount += 1
+            case "Breakfast" where !mealDots.hasBreakfast: mealDots.hasBreakfast = true
+            case "Lunch" where !mealDots.hasLunch: mealDots.hasLunch = true
             case "Dinner" where !mealDots.hasDinner,
-                 "Supper" where !mealDots.hasDinner:
-                mealDots.hasDinner = true
-                dayMealCount += 1
+                 "Supper" where !mealDots.hasDinner: mealDots.hasDinner = true
             case "Snack" where !mealDots.hasSnack,
-                 "Snacks" where !mealDots.hasSnack:
-                mealDots.hasSnack = true
-                dayMealCount += 1
-            default:
-                break
+                 "Snacks" where !mealDots.hasSnack: mealDots.hasSnack = true
+            default: break
             }
         }
 
-        // Debug: Log if this day has meals
-        if dayMealCount > 0 {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMM dd"
-            print("Date \(formatter.string(from: date)) has \(dayMealCount) meal types")
+        // If no diary entries, fall back to meal plan schedule for this weekday
+        let hasDiaryEntry = mealDots.hasBreakfast || mealDots.hasLunch || mealDots.hasDinner || mealDots.hasSnack
+        if !hasDiaryEntry, let plan = manager.selectedPlanType {
+            let weekdayIndex = calendar.component(.weekday, from: date) - 1
+            let dayName = weekdayNames[weekdayIndex]
+            // Cycle through weeks using absolute week number
+            let weekOfYear = calendar.component(.weekOfYear, from: date)
+            let weekIndex = plan.monthlyPlans.isEmpty ? 0 : (weekOfYear - 1) % plan.monthlyPlans.count
+            guard weekIndex < plan.monthlyPlans.count else { return mealDots }
+            let week = plan.monthlyPlans[weekIndex]
+            if let day = week.days.first(where: { $0.dayName == dayName }) {
+                mealDots.hasBreakfast = true
+                mealDots.hasLunch = true
+                mealDots.hasDinner = true
+                mealDots.hasSnack = !day.snacks.isEmpty
+            }
         }
 
         return mealDots
@@ -1259,10 +1301,10 @@ struct FoodEntryDetailView: View {
             sodium: nil  // Meal doesn't have sodium property
         )
 
-        // Determine category based on meal name or default to dinner
-        let category: RecipeCategory = .dinner
+        let category = categoryFromMealTags(meal.tags, name: meal.name)
 
         return RecipeModel(
+            id: UUID(uuidString: meal.id) ?? UUID(),
             name: meal.name,
             category: category,
             prepTime: meal.prepTime,
@@ -1290,6 +1332,17 @@ struct FoodEntryDetailView: View {
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return formatter
+    }
+
+    private func categoryFromMealTags(_ tags: [String], name: String) -> RecipeCategory {
+        let t = tags.map { $0.lowercased() }
+        let n = name.lowercased()
+        if t.contains("breakfast") || n.contains("breakfast") || n.contains("oatmeal") ||
+           n.contains("granola") || n.contains("pancake") || n.contains("yogurt") { return .breakfast }
+        if t.contains("snack") || t.contains("snacks") { return .snack }
+        if t.contains("dessert") { return .dessert }
+        if t.contains("lunch") || n.contains("salad") || n.contains("sandwich") || n.contains("wrap") { return .lunch }
+        return .dinner
     }
 }
 
@@ -1561,6 +1614,8 @@ struct SelectedDayDetailView: View {
     let date: Date
     let meals: [FoodEntry]
 
+    @State private var selectedRecipe: RecipeModel?
+
     private var dateString: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -1589,13 +1644,25 @@ struct SelectedDayDetailView: View {
                         }
 
                         ForEach(typeMeals) { meal in
-                            HStack {
-                                Text(meal.name ?? "Unknown")
-                                    .font(.caption)
-                                Spacer()
-                                Text("\(Int(meal.calories)) cal")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                            Button(action: {
+                                if let name = meal.name {
+                                    selectedRecipe = findRecipe(named: name)
+                                }
+                            }) {
+                                HStack {
+                                    Text(meal.name ?? "Unknown")
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    Text("\(Int(meal.calories)) cal")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    if findRecipe(named: meal.name ?? "") != nil {
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption2)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
                             }
                             .padding(.leading, 14)
                         }
@@ -1606,6 +1673,68 @@ struct SelectedDayDetailView: View {
         .padding()
         .background(Color(UIColor.secondarySystemBackground))
         .cornerRadius(12)
+        .sheet(item: $selectedRecipe) { recipe in
+            ProfessionalRecipeDetailView(recipe: recipe)
+                .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+        }
+    }
+
+    private func findRecipe(named name: String) -> RecipeModel? {
+        if let match = RecipeDatabase.shared.recipes.first(where: {
+            $0.name.lowercased() == name.lowercased()
+        }) {
+            return match
+        }
+        for plan in MealPlanData.shared.allMealPlans {
+            for week in plan.monthlyPlans {
+                for day in week.days {
+                    for meal in [day.breakfast, day.lunch, day.dinner] + day.snacks {
+                        if meal.name.lowercased() == name.lowercased() {
+                            return convertMealToRecipe(meal)
+                        }
+                    }
+                }
+            }
+        }
+        return nil
+    }
+
+    private func categoryFromMealTags(_ tags: [String], name: String) -> RecipeCategory {
+        let t = tags.map { $0.lowercased() }
+        let n = name.lowercased()
+        if t.contains("breakfast") || n.contains("breakfast") || n.contains("oatmeal") ||
+           n.contains("granola") || n.contains("pancake") || n.contains("yogurt") { return .breakfast }
+        if t.contains("snack") || t.contains("snacks") { return .snack }
+        if t.contains("dessert") { return .dessert }
+        if t.contains("lunch") || n.contains("salad") || n.contains("sandwich") || n.contains("wrap") { return .lunch }
+        return .dinner
+    }
+
+    private func convertMealToRecipe(_ meal: Meal) -> RecipeModel {
+        let ingredientModels = meal.ingredients.map { ingredientString in
+            IngredientModel(name: ingredientString, amount: 1, unit: .piece, category: .other)
+        }
+        let nutrition = NutritionInfo(
+            calories: Double(meal.calories),
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            fiber: meal.fiber,
+            sugar: nil,
+            sodium: nil
+        )
+        return RecipeModel(
+            id: UUID(uuidString: meal.id) ?? UUID(),
+            name: meal.name,
+            category: categoryFromMealTags(meal.tags, name: meal.name),
+            prepTime: meal.prepTime,
+            cookTime: meal.cookTime,
+            servings: 2,
+            ingredients: ingredientModels,
+            instructions: meal.instructions,
+            nutrition: nutrition,
+            tags: meal.tags
+        )
     }
 
     private func colorForMealType(_ mealType: String) -> Color {
@@ -1854,10 +1983,10 @@ struct MealDetailView: View {
                 .font(.headline)
 
             HStack(spacing: 12) {
-                NutritionCard(label: "Protein", value: "0", color: .red)
-                NutritionCard(label: "Carbs", value: "0", color: .blue)
-                NutritionCard(label: "Fat", value: "0", color: .green)
-                NutritionCard(label: "Fiber", value: "0", color: .orange)
+                NutritionCard(label: "Protein", value: "\(Int(meal.protein))g", color: .red)
+                NutritionCard(label: "Carbs", value: "\(Int(meal.carbs))g", color: .blue)
+                NutritionCard(label: "Fat", value: "\(Int(meal.fat))g", color: .green)
+                NutritionCard(label: "Fiber", value: "\(Int(meal.fiber))g", color: .orange)
             }
         }
     }

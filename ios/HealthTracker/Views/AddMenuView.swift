@@ -47,7 +47,7 @@ struct AddMenuView: View {
                     BarcodeScannerView(selectedDate: selectedDate, mealType: selectedMealType)
                 }
             case .exerciseSearch:
-                ExerciseSearchView(selectedDate: selectedDate)
+                ExerciseQuickAddView()
             case .supplementAdd:
                 ManualSupplementEntryView()
             case .weightEntry:
@@ -80,20 +80,35 @@ struct AddMenuView: View {
                 }
 
                 Button(action: { activeSheet = .mealScanner }) {
-                    HStack {
-                        Label("Scan Meal with Camera", systemImage: "camera.fill")
-                            .foregroundColor(.primary)
+                    HStack(alignment: .center) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Label("Scan Meal with Camera", systemImage: "camera.fill")
+                                .foregroundColor(.primary)
+                            if !storeManager.isPro && !TrialManager.shared.isTrialActive {
+                                let remaining = max(0, Self.freeScansAllowed - freeMealScansUsed)
+                                Text(remaining > 0
+                                     ? "\(remaining) free scan\(remaining == 1 ? "" : "s") · tap to try"
+                                     : "Upgrade to keep scanning")
+                                    .font(.caption)
+                                    .foregroundColor(remaining > 0 ? .orange : .secondary)
+                            }
+                        }
                         Spacer()
-                        if !storeManager.isPro {
+                        if !storeManager.isPro && !TrialManager.shared.isTrialActive {
                             let remaining = max(0, Self.freeScansAllowed - freeMealScansUsed)
-                            Text(remaining > 0 ? "\(remaining) free" : "Pro")
-                                .font(.caption2)
-                                .fontWeight(.semibold)
-                                .padding(.horizontal, 7)
-                                .padding(.vertical, 3)
-                                .background(remaining > 0 ? Color.orange.opacity(0.15) : Color.wellnessGreen.opacity(0.15))
-                                .foregroundColor(remaining > 0 ? .orange : .wellnessGreen)
-                                .cornerRadius(6)
+                            if remaining > 0 {
+                                Text("FREE")
+                                    .font(.caption2.bold())
+                                    .padding(.horizontal, 7)
+                                    .padding(.vertical, 3)
+                                    .background(Color.orange.opacity(0.15))
+                                    .foregroundColor(.orange)
+                                    .cornerRadius(6)
+                            } else {
+                                Image(systemName: "lock.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                 }

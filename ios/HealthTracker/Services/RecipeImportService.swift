@@ -182,46 +182,91 @@ struct ParsedNutrition {
 
 class SchemaOrgParser: RecipeParserProtocol {
     func parseRecipe(from url: URL) async throws -> ParsedRecipe {
-        let (data, _) = try await URLSession.shared.data(from: url)
-        guard let html = String(data: data, encoding: .utf8) else {
-            throw RecipeImportError.parsingFailed
+        let html = try await fetchHTML(from: url)
+
+        // Try every JSON-LD block — sites put BreadcrumbList/WebPage first, Recipe later.
+        let blocks = extractAllJSONLD(from: html)
+        for block in blocks {
+            if let recipe = try? parseFromJSONLD(block, sourceURL: url.absoluteString) {
+                return recipe
+            }
         }
-        
-        // Look for JSON-LD structured data
-        if let jsonLD = extractJSONLD(from: html) {
-            return try parseFromJSONLD(jsonLD, sourceURL: url.absoluteString)
-        }
-        
-        // Fallback to microdata parsing
+
+        // Fallback: microdata / meta tags
         return try parseFromMicrodata(html, sourceURL: url.absoluteString)
     }
-    
-    private func extractJSONLD(from html: String) -> Data? {
-        let pattern = #"<script[^>]*type=["']application/ld\+json["'][^>]*>([\s\S]*?)</script>"#
-        
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive),
-              let match = regex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
-              let range = Range(match.range(at: 1), in: html) else {
-            return nil
+
+    func fetchHTML(from url: URL) async throws -> String {
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 15)
+        // Use a desktop Chrome UA — more reliable against bot detection than mobile Safari
+        request.setValue(
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            forHTTPHeaderField: "User-Agent"
+        )
+        request.setValue("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", forHTTPHeaderField: "Accept")
+        request.setValue("en-US,en;q=0.9", forHTTPHeaderField: "Accept-Language")
+        request.setValue("https://www.google.com/", forHTTPHeaderField: "Referer")
+        request.setValue("1", forHTTPHeaderField: "DNT")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        // Surface HTTP errors
+        if let http = response as? HTTPURLResponse, http.statusCode >= 400 {
+            throw RecipeImportError.networkError
         }
-        
-        let jsonString = String(html[range])
-        return jsonString.data(using: .utf8)
+
+        guard let html = String(data: data, encoding: .utf8)
+                      ?? String(data: data, encoding: .isoLatin1) else {
+            throw RecipeImportError.parsingFailed
+        }
+        return html
     }
-    
+
+    private func extractAllJSONLD(from html: String) -> [Data] {
+        let pattern = #"<script[^>]*type=["']application/ld\+json["'][^>]*>([\s\S]*?)</script>"#
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
+            return []
+        }
+        let range = NSRange(html.startIndex..., in: html)
+        let matches = regex.matches(in: html, range: range)
+        return matches.compactMap { match in
+            guard let r = Range(match.range(at: 1), in: html) else { return nil }
+            return String(html[r]).data(using: .utf8)
+        }
+    }
+
     private func parseFromJSONLD(_ data: Data, sourceURL: String) throws -> ParsedRecipe {
-        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-        
-        // Handle array of objects or single object
+        let rawJSON = try JSONSerialization.jsonObject(with: data)
+
+        // Helper: does an @type value (String or [String]) contain "Recipe"?
+        func isRecipeType(_ value: Any?) -> Bool {
+            if let s = value as? String { return s.contains("Recipe") }
+            if let arr = value as? [String] { return arr.contains { $0.contains("Recipe") } }
+            return false
+        }
+
+        // Handle four common JSON-LD patterns:
+        // 1. Top-level dict, @type is "Recipe"
+        // 2. Top-level dict with @graph array containing a Recipe
+        // 3. Top-level array of objects — iterate and find Recipe (AllRecipes, many modern sites)
+        // 4. Top-level array where one element has its own @graph
         let recipeData: [String: Any]?
-        if let jsonArray = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] {
-            recipeData = jsonArray.first { ($0["@type"] as? String)?.contains("Recipe") ?? false }
-        } else if let type = json?["@type"] as? String, type.contains("Recipe") {
-            recipeData = json
+
+        if let json = rawJSON as? [String: Any] {
+            if isRecipeType(json["@type"]) {
+                recipeData = json
+            } else if let graph = json["@graph"] as? [[String: Any]] {
+                recipeData = graph.first { isRecipeType($0["@type"]) }
+            } else {
+                recipeData = nil
+            }
+        } else if let array = rawJSON as? [[String: Any]] {
+            // Top-level array — find the Recipe entry
+            recipeData = array.first { isRecipeType($0["@type"]) }
         } else {
             throw RecipeImportError.noRecipeFound
         }
-        
+
         guard let recipe = recipeData else {
             throw RecipeImportError.noRecipeFound
         }
@@ -245,10 +290,10 @@ class SchemaOrgParser: RecipeParserProtocol {
         let imageURL = extractImageURL(from: recipe["image"])
         
         // Extract tags/keywords
-        let tags = (recipe["keywords"] as? String)?.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) } ?? []
+        let tags = (recipe["keywords"] as? String)?.components(separatedBy: ",").map { decodeHTMLEntities($0.trimmingCharacters(in: .whitespaces)) } ?? []
         
         return ParsedRecipe(
-            name: name,
+            name: decodeHTMLEntities(name),
             category: guessCategory(from: name, tags: tags),
             prepTime: prepTime,
             cookTime: cookTime,
@@ -306,8 +351,46 @@ class SchemaOrgParser: RecipeParserProtocol {
         return nil
     }
     
+    func decodeHTMLEntities(_ string: String) -> String {
+        var s = string
+        // Named entities
+        let table: [(String, String)] = [
+            ("&amp;", "&"), ("&lt;", "<"), ("&gt;", ">"),
+            ("&quot;", "\""), ("&apos;", "'"), ("&#39;", "'"),
+            ("&nbsp;", " "), ("&rsquo;", "\u{2019}"), ("&lsquo;", "\u{2018}"),
+            ("&rdquo;", "\u{201D}"), ("&ldquo;", "\u{201C}"),
+            ("&mdash;", "\u{2014}"), ("&ndash;", "\u{2013}"),
+            ("&hellip;", "\u{2026}"), ("&trade;", "\u{2122}"),
+            ("&reg;", "\u{00AE}"), ("&copy;", "\u{00A9}"), ("&frac12;", "½")
+        ]
+        for (entity, char) in table {
+            s = s.replacingOccurrences(of: entity, with: char, options: .caseInsensitive)
+        }
+        // Numeric decimal &#NNN;
+        if let rx = try? NSRegularExpression(pattern: "&#(\\d+);") {
+            for m in rx.matches(in: s, range: NSRange(s.startIndex..., in: s)).reversed() {
+                guard let r = Range(m.range, in: s),
+                      let nr = Range(m.range(at: 1), in: s),
+                      let cp = UInt32(s[nr]),
+                      let sc = Unicode.Scalar(cp) else { continue }
+                s.replaceSubrange(r, with: String(Character(sc)))
+            }
+        }
+        // Numeric hex &#xHH;
+        if let rx = try? NSRegularExpression(pattern: "&#x([0-9a-fA-F]+);", options: .caseInsensitive) {
+            for m in rx.matches(in: s, range: NSRange(s.startIndex..., in: s)).reversed() {
+                guard let r = Range(m.range, in: s),
+                      let hr = Range(m.range(at: 1), in: s),
+                      let cp = UInt32(s[hr], radix: 16),
+                      let sc = Unicode.Scalar(cp) else { continue }
+                s.replaceSubrange(r, with: String(Character(sc)))
+            }
+        }
+        return s
+    }
+
     private func parseIngredients(_ ingredientStrings: [String]) -> [ParsedIngredient] {
-        return ingredientStrings.compactMap { parseIngredientString($0) }
+        return ingredientStrings.compactMap { parseIngredientString(decodeHTMLEntities($0)) }
     }
     
     private func parseIngredientString(_ ingredient: String) -> ParsedIngredient {
@@ -335,22 +418,19 @@ class SchemaOrgParser: RecipeParserProtocol {
     }
     
     private func parseInstructions(_ instructionsData: Any?) -> [String] {
+        let raw: [String]
         if let instructions = instructionsData as? [String] {
-            return instructions
+            raw = instructions
         } else if let instructions = instructionsData as? [[String: Any]] {
-            return instructions.compactMap { instruction in
-                if let text = instruction["text"] as? String {
-                    return text
-                } else if let name = instruction["name"] as? String {
-                    return name
-                }
-                return nil
+            raw = instructions.compactMap { step in
+                (step["text"] as? String) ?? (step["name"] as? String)
             }
         } else if let instructionText = instructionsData as? String {
-            // Split by common delimiters
-            return instructionText.components(separatedBy: .newlines).filter { !$0.isEmpty }
+            raw = instructionText.components(separatedBy: .newlines).filter { !$0.isEmpty }
+        } else {
+            return []
         }
-        return []
+        return raw.map { decodeHTMLEntities($0) }.filter { !$0.isEmpty }
     }
     
     private func parseNutrition(_ nutritionData: [String: Any]?) -> ParsedNutrition? {
@@ -428,8 +508,25 @@ class SchemaOrgParser: RecipeParserProtocol {
 // MARK: - Site-Specific Parsers
 
 class AllRecipesParser: SchemaOrgParser {
-    // AllRecipes uses schema.org, so we can use the parent implementation
-    // Add any AllRecipes-specific parsing here if needed
+    override func parseRecipe(from url: URL) async throws -> ParsedRecipe {
+        // Try the normal URL first
+        if let recipe = try? await super.parseRecipe(from: url) {
+            return recipe
+        }
+        // Fallback: AllRecipes AMP pages are simpler and reliably contain JSON-LD
+        if let ampURL = makeAMPURL(from: url) {
+            return try await super.parseRecipe(from: ampURL)
+        }
+        throw RecipeImportError.parsingFailed
+    }
+
+    private func makeAMPURL(from url: URL) -> URL? {
+        // https://www.allrecipes.com/recipe/236218/... → /amp/recipe/236218/...
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              !url.path.hasPrefix("/amp") else { return nil }
+        components.path = "/amp" + url.path
+        return components.url
+    }
 }
 
 class FoodNetworkParser: SchemaOrgParser {

@@ -135,24 +135,7 @@ struct DiaryView: View {
                 }
             }
             .sheet(isPresented: $showingAddMenu) {
-                QuickAddMenu(
-                    onFoodTap: {
-                        showingAddMenu = false
-                        showingFoodSearch = true
-                    },
-                    onExerciseTap: {
-                        showingAddMenu = false
-                        showingExerciseSearch = true
-                    },
-                    onWaterTap: {
-                        showingAddMenu = false
-                        showingWaterEntry = true
-                    },
-                    onSupplementTap: {
-                        showingAddMenu = false
-                        showingSupplementEntry = true
-                    }
-                )
+                QuickAddMenu(selectedDate: selectedDate)
             }
             .sheet(isPresented: $showingFoodSearch) {
                 UnifiedFoodSearchSheet(mealType: selectedMealType, targetDate: selectedDate)
@@ -715,7 +698,7 @@ struct SummaryMetric: View {
 struct FoodEntryRow: View {
     let entry: FoodEntry
     var onDelete: (() -> Void)? = nil
-    @State private var showingDeleteButton = false
+    @State private var selectedRecipe: RecipeModel?
 
     var body: some View {
         HStack {
@@ -754,6 +737,53 @@ struct FoodEntryRow: View {
         }
         .padding(.vertical, 12)
         .contentShape(Rectangle())
+        .onTapGesture {
+            if let name = entry.name, let recipe = findRecipe(named: name) {
+                selectedRecipe = recipe
+            }
+        }
+        .sheet(item: $selectedRecipe) { recipe in
+            ProfessionalRecipeDetailView(recipe: recipe)
+        }
+    }
+
+    private func findRecipe(named name: String) -> RecipeModel? {
+        if let match = RecipeDatabase.shared.recipes.first(where: { $0.name.lowercased() == name.lowercased() }) {
+            return match
+        }
+        for plan in MealPlanData.shared.allMealPlans {
+            for week in plan.monthlyPlans {
+                for day in week.days {
+                    for meal in [day.breakfast, day.lunch, day.dinner] + day.snacks {
+                        if meal.name.lowercased() == name.lowercased() {
+                            return RecipeModel(
+                                id: UUID(),
+                                name: meal.name,
+                                category: .dinner,
+                                prepTime: meal.prepTime,
+                                cookTime: meal.cookTime,
+                                servings: 2,
+                                ingredients: meal.ingredients.map {
+                                    IngredientModel(name: $0, amount: 1, unit: .piece, category: .other)
+                                },
+                                instructions: meal.instructions,
+                                nutrition: NutritionInfo(
+                                    calories: Double(meal.calories),
+                                    protein: meal.protein,
+                                    carbs: meal.carbs,
+                                    fat: meal.fat,
+                                    fiber: meal.fiber,
+                                    sugar: nil,
+                                    sodium: nil
+                                ),
+                                tags: meal.tags
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        return nil
     }
 }
 

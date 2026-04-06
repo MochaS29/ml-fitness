@@ -1,9 +1,10 @@
 import SwiftUI
 
 enum PaywallTrigger {
-    case mealScanner   // came from scanner — lead with scanner hero
-    case mealPlan      // came from meal plan lock
-    case general       // general upgrade tap
+    case mealScanner        // came from scanner mid-flow
+    case mealScannerLastScan // just used last free scan — show result first, then gate
+    case mealPlan           // came from meal plan lock
+    case general            // general upgrade tap
 }
 
 struct PaywallView: View {
@@ -70,31 +71,83 @@ struct PaywallView: View {
                     .padding(.vertical, 24)
 
                     // MARK: CTA
-                    VStack(spacing: 10) {
-                        Button(action: {
-                            Task { await storeManager.purchase() }
-                        }) {
-                            Group {
-                                if storeManager.purchaseState == .purchasing {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                } else {
-                                    VStack(spacing: 2) {
-                                        Text("Upgrade to Pro · \(storeManager.proPriceDisplay)")
-                                            .fontWeight(.bold)
-                                        Text("One-time purchase · no subscription")
-                                            .font(.caption)
-                                            .opacity(0.85)
+                    VStack(spacing: 12) {
+                        // Primary CTA: free trial (if not yet started)
+                        if !TrialManager.shared.hasStartedTrial {
+                            Button(action: {
+                                TrialManager.shared.startTrial()
+                                dismiss()
+                            }) {
+                                VStack(spacing: 2) {
+                                    Text("Try Pro Free · 7 Days")
+                                        .fontWeight(.bold)
+                                    Text("No payment required · cancel anytime")
+                                        .font(.caption)
+                                        .opacity(0.85)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(Color.wellnessGreen)
+                                .foregroundColor(.white)
+                                .cornerRadius(14)
+                            }
+
+                            // Secondary CTA: buy now
+                            Button(action: {
+                                Task { await storeManager.purchase() }
+                            }) {
+                                Group {
+                                    if storeManager.purchaseState == .purchasing {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    } else {
+                                        Text("Buy Once · \(storeManager.proPriceDisplay)")
+                                            .fontWeight(.semibold)
                                     }
                                 }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
+                                .background(Color(UIColor.secondarySystemBackground))
+                                .foregroundColor(.primary)
+                                .cornerRadius(14)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+                                )
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color.wellnessGreen)
-                            .foregroundColor(.white)
-                            .cornerRadius(14)
+                            .disabled(storeManager.purchaseState == .purchasing)
+                        } else {
+                            // Trial already used — show buy button as primary
+                            Button(action: {
+                                Task { await storeManager.purchase() }
+                            }) {
+                                Group {
+                                    if storeManager.purchaseState == .purchasing {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    } else {
+                                        VStack(spacing: 2) {
+                                            Text("Upgrade to Pro · \(storeManager.proPriceDisplay)")
+                                                .fontWeight(.bold)
+                                            Text("One-time purchase · no subscription")
+                                                .font(.caption)
+                                                .opacity(0.85)
+                                        }
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(Color.wellnessGreen)
+                                .foregroundColor(.white)
+                                .cornerRadius(14)
+                            }
+                            .disabled(storeManager.purchaseState == .purchasing)
                         }
-                        .disabled(storeManager.purchaseState == .purchasing)
+
+                        // Price anchor
+                        Text("≈ \(storeManager.proWeeklyPriceDisplay)/week · yours forever")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
 
                         Button("Restore Purchases") {
                             Task { await storeManager.restorePurchases() }
@@ -135,6 +188,8 @@ struct PaywallView: View {
         switch trigger {
         case .mealScanner:
             scannerHero
+        case .mealScannerLastScan:
+            lastScanHero
         case .mealPlan:
             mealPlanHero
         case .general:
@@ -170,6 +225,42 @@ struct PaywallView: View {
             Text("You've used your 3 free scans")
                 .font(.headline)
             Text("Upgrade once to scan unlimited meals forever.")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+        }
+        .padding(.bottom, 8)
+    }
+
+    private var lastScanHero: some View {
+        VStack(spacing: 16) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(LinearGradient(
+                        colors: [Color.mindfulTeal.opacity(0.85), Color.wellnessGreen.opacity(0.85)],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    ))
+                    .frame(height: 200)
+
+                VStack(spacing: 12) {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 56))
+                        .foregroundColor(.white)
+                    Text("Your meal is logged!")
+                        .font(.title2.bold())
+                        .foregroundColor(.white)
+                    Text("That was your last free scan")
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.9))
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
+
+            Text("Keep scanning every meal")
+                .font(.headline)
+            Text("Upgrade once to unlock unlimited AI scans forever.")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

@@ -26,20 +26,28 @@ struct AddAllergyView: View {
                 }
                 
                 Section(header: Text("Severity")) {
-                    Picker("Severity Level", selection: $selectedSeverity) {
-                        ForEach(AllergySeverity.allCases, id: \.self) { severity in
-                            HStack {
+                    ForEach(AllergySeverity.allCases, id: \.self) { severity in
+                        Button(action: { selectedSeverity = severity }) {
+                            HStack(spacing: 12) {
                                 SeverityBadge(severity: severity)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(severity.rawValue)
+                                        .font(.subheadline.weight(.medium))
+                                        .foregroundColor(.primary)
+                                    Text(descriptionFor(severity))
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
                                 Spacer()
+                                if selectedSeverity == severity {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.accentColor)
+                                        .font(.subheadline.weight(.semibold))
+                                }
                             }
-                            .tag(severity)
+                            .padding(.vertical, 4)
                         }
                     }
-                    .pickerStyle(.segmented)
-                    
-                    Text(severityDescription)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
                 }
                 
                 Section(header: Text("Additional Notes (Optional)")) {
@@ -76,16 +84,12 @@ struct AddAllergyView: View {
         }
     }
     
-    private var severityDescription: String {
-        switch selectedSeverity {
-        case .mild:
-            return "Minor symptoms like mild discomfort or skin irritation"
-        case .moderate:
-            return "Noticeable symptoms like hives, stomach upset, or breathing issues"
-        case .severe:
-            return "Serious symptoms requiring immediate medical attention"
-        case .lifeThreatening:
-            return "Anaphylactic reaction risk - carry EpiPen"
+    private func descriptionFor(_ severity: AllergySeverity) -> String {
+        switch severity {
+        case .mild: return "Minor discomfort or skin irritation"
+        case .moderate: return "Hives, stomach upset, or breathing issues"
+        case .severe: return "Serious symptoms requiring immediate medical attention"
+        case .lifeThreatening: return "Anaphylactic reaction risk — carry EpiPen"
         }
     }
     
