@@ -199,99 +199,157 @@ struct TodaysMealView: View {
     @Binding var showingMealDetail: Meal?
     @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var showingAddedAllAlert = false
+    @State private var selectedDayIndex: Int = max(0, Calendar.current.component(.weekday, from: Date()) - 1)
 
-    private var todaysMeals: DailyMealPlan? {
-        guard let weekPlan = manager.getCurrentWeekPlan() else { return nil }
-        let dayOfWeek = Calendar.current.component(.weekday, from: Date()) - 1
-        guard dayOfWeek >= 0 && dayOfWeek < weekPlan.days.count else { return nil }
-        return weekPlan.days[dayOfWeek]
+    private var todayDayIndex: Int {
+        max(0, Calendar.current.component(.weekday, from: Date()) - 1)
+    }
+
+    private var weekPlan: WeeklyMealPlan? {
+        manager.getCurrentWeekPlan()
+    }
+
+    // Date for a given day index in the current week
+    private func date(for dayIndex: Int) -> Date {
+        let calendar = Calendar.current
+        let today = Date()
+        let offset = dayIndex - todayDayIndex
+        return calendar.date(byAdding: .day, value: offset, to: today) ?? today
     }
 
     var body: some View {
-        ScrollView {
-            if let meals = todaysMeals {
-                VStack(spacing: 16) {
-                    // Date header
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Today")
-                                .font(.largeTitle)
-                                .fontWeight(.bold)
+        VStack(spacing: 0) {
+            // Day navigation strip
+            if let plan = weekPlan {
+                dayNavigationStrip(days: plan.days)
+            }
 
-                            Text(Date(), format: .dateTime.weekday(.wide).month().day())
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
-
-                        Spacer()
-
-                        // Daily totals
-                        VStack(alignment: .trailing, spacing: 2) {
-                            let totalCalories = meals.breakfast.calories + meals.lunch.calories + meals.dinner.calories + meals.snacks.reduce(0) { $0 + $1.calories }
-                            Text("\(totalCalories)")
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                            Text("calories")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .padding(.horizontal)
-
-                    // Add All to Diary button
-                    Button(action: { addAllToDiary(meals) }) {
-                        HStack {
-                            Image(systemName: "plus.circle.fill")
-                            Text("Add All to Diary")
-                                .fontWeight(.medium)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(Color.wellnessGreen)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
-                    }
-                    .padding(.horizontal)
-
-                    // Meal cards
-                    MealCard(meal: meals.breakfast, mealType: "Breakfast", icon: "sunrise.fill", color: .orange) {
-                        showingMealDetail = meals.breakfast
-                    }
-
-                    MealCard(meal: meals.lunch, mealType: "Lunch", icon: "sun.max.fill", color: .yellow) {
-                        showingMealDetail = meals.lunch
-                    }
-
-                    MealCard(meal: meals.dinner, mealType: "Dinner", icon: "moon.fill", color: .purple) {
-                        showingMealDetail = meals.dinner
-                    }
-
-                    if !meals.snacks.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Label("Snacks", systemImage: "leaf.fill")
-                                .font(.headline)
-                                .foregroundColor(.green)
-                                .padding(.horizontal)
-
-                            ForEach(meals.snacks) { snack in
-                                MiniMealCard(meal: snack) {
-                                    showingMealDetail = snack
-                                }
-                            }
-                        }
+            if let plan = weekPlan {
+                TabView(selection: $selectedDayIndex) {
+                    ForEach(Array(plan.days.enumerated()), id: \.offset) { index, meals in
+                        dayPageView(meals: meals, dayIndex: index)
+                            .tag(index)
                     }
                 }
-                .padding(.vertical)
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .animation(.easeInOut, value: selectedDayIndex)
             } else {
-                Text("No meals available for today")
+                Text("No meal plan selected")
                     .foregroundColor(.secondary)
                     .padding()
             }
         }
-        .alert("Added to Diary", isPresented: $showingAddedAllAlert) {
+        .alert("Added to Today's Diary", isPresented: $showingAddedAllAlert) {
             Button("OK", role: .cancel) { }
         } message: {
-            Text("All meals for today have been added to your food diary.")
+            Text("All meals have been added to today's food diary.")
+        }
+    }
+
+    // MARK: - Day Navigation Strip
+    private func dayNavigationStrip(days: [DailyMealPlan]) -> some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(0..<days.count, id: \.self) { index in
+                        let dayDate = date(for: index)
+                        let isToday = index == todayDayIndex
+                        let isSelected = index == selectedDayIndex
+
+                        Button(action: { selectedDayIndex = index }) {
+                            VStack(spacing: 2) {
+                                Text(dayDate, format: .dateTime.weekday(.abbreviated))
+                                    .font(.caption2)
+                                    .foregroundColor(isSelected ? .white : .secondary)
+                                Text(dayDate, format: .dateTime.day())
+                                    .font(.system(size: 15, weight: isToday ? .bold : .regular))
+                                    .foregroundColor(isSelected ? .white : (isToday ? Color.wellnessGreen : .primary))
+                            }
+                            .frame(width: 44, height: 50)
+                            .background(isSelected ? Color.wellnessGreen : Color.clear)
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(isToday && !isSelected ? Color.wellnessGreen : Color.clear, lineWidth: 1.5)
+                            )
+                        }
+                        .id(index)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+            }
+            .onAppear { proxy.scrollTo(selectedDayIndex, anchor: .center) }
+            .onChange(of: selectedDayIndex) { _, newVal in
+                withAnimation { proxy.scrollTo(newVal, anchor: .center) }
+            }
+        }
+        .background(Color(UIColor.systemGroupedBackground))
+    }
+
+    // MARK: - Day Page
+    private func dayPageView(meals: DailyMealPlan, dayIndex: Int) -> some View {
+        let isToday = dayIndex == todayDayIndex
+        let addLabel = isToday ? "Add All to Diary" : "Add All to Today's Diary"
+
+        return ScrollView {
+            VStack(spacing: 16) {
+                // Date header
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(isToday ? "Today" : date(for: dayIndex).formatted(.dateTime.weekday(.wide)))
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        Text(date(for: dayIndex), format: .dateTime.weekday(isToday ? .wide : .abbreviated).month().day())
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 2) {
+                        let total = meals.breakfast.calories + meals.lunch.calories + meals.dinner.calories + meals.snacks.reduce(0) { $0 + $1.calories }
+                        Text("\(total)")
+                            .font(.title2).fontWeight(.semibold)
+                        Text("calories")
+                            .font(.caption).foregroundColor(.secondary)
+                    }
+                }
+                .padding(.horizontal)
+
+                // Add All button
+                Button(action: { addAllToDiary(meals) }) {
+                    HStack {
+                        Image(systemName: "plus.circle.fill")
+                        Text(addLabel).fontWeight(.medium)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Color.wellnessGreen)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                }
+                .padding(.horizontal)
+
+                MealCard(meal: meals.breakfast, mealType: "Breakfast", icon: "sunrise.fill", color: .orange, addToTodayLabel: !isToday) {
+                    showingMealDetail = meals.breakfast
+                }
+                MealCard(meal: meals.lunch, mealType: "Lunch", icon: "sun.max.fill", color: .yellow, addToTodayLabel: !isToday) {
+                    showingMealDetail = meals.lunch
+                }
+                MealCard(meal: meals.dinner, mealType: "Dinner", icon: "moon.fill", color: .purple, addToTodayLabel: !isToday) {
+                    showingMealDetail = meals.dinner
+                }
+
+                if !meals.snacks.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label("Snacks", systemImage: "leaf.fill")
+                            .font(.headline).foregroundColor(.green).padding(.horizontal)
+                        ForEach(meals.snacks) { snack in
+                            MiniMealCard(meal: snack) { showingMealDetail = snack }
+                        }
+                    }
+                }
+            }
+            .padding(.vertical)
         }
     }
 
@@ -299,9 +357,7 @@ struct TodaysMealView: View {
         addMealEntry(day.breakfast, type: .breakfast)
         addMealEntry(day.lunch, type: .lunch)
         addMealEntry(day.dinner, type: .dinner)
-        for snack in day.snacks {
-            addMealEntry(snack, type: .snack)
-        }
+        for snack in day.snacks { addMealEntry(snack, type: .snack) }
         showingAddedAllAlert = true
     }
 
@@ -327,6 +383,7 @@ struct MealCard: View {
     let mealType: String
     let icon: String
     let color: Color
+    var addToTodayLabel: Bool = false
     let onTap: () -> Void
     @ObservedObject private var dataManager = UnifiedDataManager.shared
     @State private var showingAddedAlert = false
@@ -343,12 +400,10 @@ struct MealCard: View {
                     Spacer()
 
                     // Add to Diary button
-                    Button(action: {
-                        addToDiary()
-                    }) {
+                    Button(action: { addToDiary() }) {
                         HStack(spacing: 4) {
                             Image(systemName: "plus.circle.fill")
-                            Text("Add to Diary")
+                            Text(addToTodayLabel ? "Add to Today" : "Add to Diary")
                         }
                         .font(.caption)
                         .padding(.horizontal, 10)
