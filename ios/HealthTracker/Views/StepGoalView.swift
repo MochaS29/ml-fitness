@@ -10,14 +10,9 @@ struct StepGoalView: View {
     @State private var viewMode: ViewMode = .today
     @State private var isEditingGoal = false
 
-    // Mock data - will be replaced with real data from StepCounterService
-    @State private var todaySteps = 6547
-    @State private var hourlySteps: [Int] = [
-        0, 0, 0, 0, 0, 0, // 12am-5am
-        245, 532, 867, 423, 756, 891, // 6am-11am
-        234, 678, 456, 789, 543, 321, // 12pm-5pm
-        456, 234, 123, 67, 0, 0 // 6pm-11pm
-    ]
+    @State private var todaySteps = 0
+    @State private var hourlySteps: [Int] = Array(repeating: 0, count: 24)
+    @State private var weeklyData: [(label: String, steps: Int, isToday: Bool)] = []
 
     enum ViewMode: String, CaseIterable {
         case today = "Today"
@@ -72,6 +67,7 @@ struct StepGoalView: View {
             }
             .navigationTitle("Step Goal")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear { loadData() }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Done") {
@@ -231,34 +227,30 @@ struct StepGoalView: View {
                 .font(.headline)
                 .padding(.horizontal)
 
-            // Mock weekly data
-            let weekData = [
-                ("Sun", Int.random(in: 5000...15000)),
-                ("Mon", Int.random(in: 5000...15000)),
-                ("Tue", Int.random(in: 5000...15000)),
-                ("Wed", Int.random(in: 5000...15000)),
-                ("Thu", Int.random(in: 5000...15000)),
-                ("Fri", Int.random(in: 5000...15000)),
-                ("Sat", Int.random(in: 5000...15000))
-            ]
-
             Chart {
-                ForEach(weekData, id: \.0) { day, steps in
+                ForEach(weeklyData, id: \.label) { item in
                     BarMark(
-                        x: .value("Day", day),
-                        y: .value("Steps", steps)
+                        x: .value("Day", item.label),
+                        y: .value("Steps", item.steps)
                     )
                     .foregroundStyle(
-                        steps >= dailyStepGoal ? Color.green : Color.blue
+                        item.isToday ? Color.blue :
+                        (item.steps >= dailyStepGoal ? Color.green : Color.green.opacity(0.5))
                     )
                 }
-
-                // Goal line
                 RuleMark(y: .value("Goal", dailyStepGoal))
                     .foregroundStyle(Color.red.opacity(0.5))
                     .lineStyle(StrokeStyle(lineWidth: 2, dash: [5]))
             }
             .frame(height: 200)
+            .padding(.horizontal)
+
+            HStack(spacing: 16) {
+                Label("Today", systemImage: "circle.fill").foregroundColor(.blue)
+                Label("Goal met", systemImage: "circle.fill").foregroundColor(.green)
+                Label("Below goal", systemImage: "circle.fill").foregroundColor(.green.opacity(0.5))
+            }
+            .font(.caption)
             .padding(.horizontal)
         }
     }
@@ -343,6 +335,45 @@ struct StepGoalView: View {
         .background(Color.gray.opacity(0.1))
         .cornerRadius(12)
         .padding(.horizontal)
+    }
+
+    private func loadData() {
+        // Today's steps
+        HealthKitManager.shared.fetchTodaySteps { steps in
+            todaySteps = Int(steps ?? 0)
+        }
+
+        // Hourly steps
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: Date())
+        HealthKitManager.shared.fetchHourlySteps(from: startOfDay, to: Date()) { hkHourly in
+            hourlySteps = (0..<24).map { i in i < hkHourly.count ? Int(hkHourly[i]) : 0 }
+        }
+
+        // Rolling 7 days ending today — today is rightmost
+        let today = calendar.startOfDay(for: Date())
+        let dayFormatter = DateFormatter()
+        dayFormatter.dateFormat = "EEE" // Mon, Tue, Wed etc.
+
+        let group = DispatchGroup()
+        var results: [(index: Int, label: String, steps: Int, isToday: Bool)] = []
+
+        for offset in 0..<7 {
+            let date = calendar.date(byAdding: .day, value: -(6 - offset), to: today)!
+            let end  = calendar.date(byAdding: .day, value: 1, to: date)!
+            let label = dayFormatter.string(from: date)
+            let isToday = calendar.isDateInToday(date)
+            group.enter()
+            HealthKitManager.shared.fetchSteps(from: date, to: min(end, Date())) { steps in
+                results.append((index: offset, label: label, steps: Int(steps), isToday: isToday))
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .main) {
+            weeklyData = results.sorted { $0.index < $1.index }
+                .map { (label: $0.label, steps: $0.steps, isToday: $0.isToday) }
+        }
     }
 
     private func saveGoal() {
