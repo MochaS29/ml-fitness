@@ -479,62 +479,81 @@ class StepDetailsViewModel: ObservableObject {
         let startOfDay = calendar.startOfDay(for: now)
         let currentHour = calendar.component(.hour, from: now)
 
+        // Seed with zeros
         hourlySteps = (0..<24).map { hour in
             let date = calendar.date(byAdding: .hour, value: hour, to: startOfDay)!
-            let isCurrentHour = hour == currentHour
-            _ = hour > currentHour
+            return StepDetailDataPoint(date: date, value: 0, isCurrentHour: hour == currentHour)
+        }
 
-            // TODO: Replace with real HealthKit data
-            // Mock data temporarily disabled - showing zeros
-            let steps: Double = 0
-            /*
-            let steps: Double = {
-                if isFuture {
-                    return 0
-                } else if hour < 6 {
-                    return Double.random(in: 0...50)
-                } else if hour < 9 {
-                    return Double.random(in: 200...500)
-                } else if hour < 12 {
-                    return Double.random(in: 300...800)
-                } else if hour < 14 {
-                    return Double.random(in: 400...900)
-                } else if hour < 18 {
-                    return Double.random(in: 300...700)
-                } else if hour < 21 {
-                    return Double.random(in: 200...600)
-                } else {
-                    return Double.random(in: 50...200)
-                }
-            }()
-            */
-
-            return StepDetailDataPoint(date: date, value: steps, isCurrentHour: isCurrentHour)
+        HealthKitManager.shared.fetchHourlySteps(from: startOfDay, to: now) { [weak self] hkHourly in
+            guard let self = self else { return }
+            var updated = self.hourlySteps
+            for (i, steps) in hkHourly.prefix(24).enumerated() {
+                updated[i] = StepDetailDataPoint(date: updated[i].date, value: steps, isCurrentHour: i == currentHour)
+            }
+            self.hourlySteps = updated
+            self.generateHourlyBreakdown()
         }
     }
 
     private func fetchWeeklySteps() {
         let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        // Build 7 placeholder dates: 6 days ago → today (today is rightmost)
+        let dates = (0..<7).map { offset in
+            calendar.date(byAdding: .day, value: -(6 - offset), to: today)!
+        }
+        // Seed with zeros while HealthKit loads
+        weeklySteps = dates.map { StepDetailDataPoint(date: $0, value: 0, isCurrentHour: false) }
 
-        weeklySteps = (0..<7).map { dayOffset in
-            let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date())!
-            // TODO: Replace with real HealthKit data
-            // let steps = Double([8547, 9200, 7500, 10200, 8800, 9100, 7900][dayOffset % 7])
-            let steps = 0.0 // Mock data disabled
-            return StepDetailDataPoint(date: date, value: steps, isCurrentHour: false)
-        }.reversed()
+        let group = DispatchGroup()
+        var results = [(date: Date, steps: Double)]()
+
+        for date in dates {
+            let start = date
+            let end = calendar.date(byAdding: .day, value: 1, to: start)!
+            group.enter()
+            HealthKitManager.shared.fetchSteps(from: start, to: min(end, Date())) { steps in
+                results.append((date: start, steps: steps))
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .main) { [weak self] in
+            let sorted = results.sorted { $0.date < $1.date }
+            self?.weeklySteps = sorted.map {
+                StepDetailDataPoint(date: $0.date, value: $0.steps, isCurrentHour: false)
+            }
+            self?.generateDailyBreakdown()
+        }
     }
 
     private func fetchMonthlySteps() {
         let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let dates = (0..<30).map { offset in
+            calendar.date(byAdding: .day, value: -(29 - offset), to: today)!
+        }
+        monthlySteps = dates.map { StepDetailDataPoint(date: $0, value: 0, isCurrentHour: false) }
 
-        monthlySteps = (0..<30).map { dayOffset in
-            let date = calendar.date(byAdding: .day, value: -dayOffset, to: Date())!
-            // TODO: Replace with real HealthKit data
-            // let steps = Double.random(in: 6000...12000)
-            let steps = 0.0 // Mock data disabled
-            return StepDetailDataPoint(date: date, value: steps, isCurrentHour: false)
-        }.reversed()
+        let group = DispatchGroup()
+        var results = [(date: Date, steps: Double)]()
+
+        for date in dates {
+            let start = date
+            let end = calendar.date(byAdding: .day, value: 1, to: start)!
+            group.enter()
+            HealthKitManager.shared.fetchSteps(from: start, to: min(end, Date())) { steps in
+                results.append((date: start, steps: steps))
+                group.leave()
+            }
+        }
+
+        group.notify(queue: .main) { [weak self] in
+            self?.monthlySteps = results.sorted { $0.date < $1.date }.map {
+                StepDetailDataPoint(date: $0.date, value: $0.steps, isCurrentHour: false)
+            }
+        }
     }
 
     private func generateHourlyBreakdown() {
