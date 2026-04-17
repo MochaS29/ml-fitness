@@ -1,6 +1,7 @@
 import Foundation
 import CoreMotion
 import Combine
+import HealthKit
 
 class StepCounterService: ObservableObject {
     static let shared = StepCounterService()
@@ -219,26 +220,26 @@ class StepCounterService: ObservableObject {
     // MARK: - Historical Queries
 
     func queryTodaysSteps() {
-        let calendar = Calendar.current
-        let now = Date()
-        let startOfDay = calendar.startOfDay(for: now)
-
-        pedometer.queryPedometerData(from: startOfDay, to: now) { [weak self] data, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self?.errorMessage = "Failed to fetch today's steps: \(error.localizedDescription)"
-                    return
+        // Use HealthKit so Apple Watch steps are included (matches Apple Health)
+        HealthKitManager.shared.fetchTodaySteps { [weak self] hkSteps in
+            guard let self = self else { return }
+            if let steps = hkSteps, steps > 0 {
+                self.todaySteps = Int(steps)
+                self.errorMessage = nil
+            } else {
+                // Fallback to CMPedometer if HealthKit not authorised or returns 0
+                let calendar = Calendar.current
+                let now = Date()
+                let startOfDay = calendar.startOfDay(for: now)
+                self.pedometer.queryPedometerData(from: startOfDay, to: now) { data, error in
+                    DispatchQueue.main.async {
+                        guard let data = data, error == nil else { return }
+                        self.todaySteps = data.numberOfSteps.intValue
+                        if let distance = data.distance {
+                            self.todayDistance = distance.doubleValue * 0.000621371
+                        }
+                    }
                 }
-
-                guard let data = data else { return }
-
-                self?.todaySteps = data.numberOfSteps.intValue
-
-                if let distance = data.distance {
-                    self?.todayDistance = distance.doubleValue * 0.000621371 // meters to miles
-                }
-
-                self?.errorMessage = nil
             }
         }
     }
@@ -247,30 +248,16 @@ class StepCounterService: ObservableObject {
         let calendar = Calendar.current
         let now = Date()
         let startOfDay = calendar.startOfDay(for: now)
-        let currentHour = calendar.component(.hour, from: now)
 
-        var hourlyData = Array(repeating: 0, count: 24)
-        let group = DispatchGroup()
-
-        for hour in 0...currentHour {
-            guard let hourStart = calendar.date(byAdding: .hour, value: hour, to: startOfDay),
-                  let hourEnd = calendar.date(byAdding: .hour, value: 1, to: hourStart) else {
-                continue
-            }
-
-            group.enter()
-
-            pedometer.queryPedometerData(from: hourStart, to: min(hourEnd, now)) { data, error in
-                defer { group.leave() }
-
-                if let data = data {
-                    hourlyData[hour] = data.numberOfSteps.intValue
+        HealthKitManager.shared.fetchHourlySteps(from: startOfDay, to: now) { [weak self] hkHourly in
+            guard let self = self else { return }
+            if !hkHourly.isEmpty {
+                var hourlyData = Array(repeating: 0, count: 24)
+                for (i, steps) in hkHourly.prefix(24).enumerated() {
+                    hourlyData[i] = Int(steps)
                 }
+                self.hourlySteps = hourlyData
             }
-        }
-
-        group.notify(queue: .main) { [weak self] in
-            self?.hourlySteps = hourlyData
         }
     }
 
@@ -320,8 +307,8 @@ class StepCounterService: ObservableObject {
     private func setupHourlyTimer() {
         updateTimer?.invalidate()
 
-        // Update every hour to minimize background processing
-        updateTimer = Timer.scheduledTimer(withTimeInterval: 3600, repeats: true) { [weak self] _ in
+        // Refresh every 5 min so Apple Watch steps sync promptly
+        updateTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { [weak self] _ in
             DispatchQueue.global(qos: .background).async {
                 self?.queryTodaysSteps()
                 self?.queryHourlySteps()
