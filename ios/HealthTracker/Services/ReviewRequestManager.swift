@@ -23,7 +23,7 @@ final class ReviewRequestManager {
         let count = UserDefaults.standard.integer(forKey: foodLogCountKey) + 1
         UserDefaults.standard.set(count, forKey: foodLogCountKey)
 
-        let milestones = [10, 50, 150, 300, 500]
+        let milestones = [3, 10, 50, 150, 300, 500]
         if milestones.contains(count) {
             requestReviewIfEligible()
         }
@@ -51,7 +51,8 @@ final class ReviewRequestManager {
             Calendar.current.dateComponents([.day], from: $0, to: Date()).day ?? 0
         } ?? Int.max
 
-        guard daysSince >= 30 else { return }
+        let isFirstEver = last == nil
+        guard isFirstEver || daysSince >= 30 else { return }
 
         DispatchQueue.main.async {
             guard let scene = UIApplication.shared.connectedScenes

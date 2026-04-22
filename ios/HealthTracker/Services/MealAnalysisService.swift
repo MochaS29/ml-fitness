@@ -93,7 +93,7 @@ class MealAnalysisService: ObservableObject {
         """
 
         let requestBody: [String: Any] = [
-            "model": "claude-sonnet-4-6-20250514",
+            "model": "claude-sonnet-4-6",
             "max_tokens": 1024,
             "messages": [
                 [
@@ -159,31 +159,43 @@ class MealAnalysisService: ObservableObject {
     // MARK: - Response Parsing
 
     private func parseClaudeResponse(_ data: Data) throws -> MealAnalysis {
+        // Debug: print raw response
+        if let rawString = String(data: data, encoding: .utf8) {
+            print("🔍 Claude raw response:\n\(rawString)")
+        }
+
         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
 
         // Check for API error
         if let errorInfo = json?["error"] as? [String: Any],
            let errorMessage = errorInfo["message"] as? String {
-            print("Claude API Error: \(errorMessage)")
+            print("❌ Claude API Error: \(errorMessage)")
             throw AnalysisError.invalidResponse
         }
 
         guard let content = json?["content"] as? [[String: Any]],
               let firstContent = content.first,
               let text = firstContent["text"] as? String else {
-            print("Could not extract text from Claude response")
+            print("❌ Could not extract text from Claude response. Keys: \(json?.keys.joined(separator: ", ") ?? "none")")
             throw AnalysisError.invalidResponse
         }
 
         // Extract JSON from the response (Claude might include extra text)
+        print("📝 Claude text response:\n\(text)")
         let jsonString = extractJSON(from: text)
+        print("📦 Extracted JSON:\n\(jsonString)")
 
         guard let jsonData = jsonString.data(using: .utf8) else {
             throw AnalysisError.invalidResponse
         }
 
-        let analysis = try JSONDecoder().decode(MealAnalysis.self, from: jsonData)
-        return analysis
+        do {
+            let analysis = try JSONDecoder().decode(MealAnalysis.self, from: jsonData)
+            return analysis
+        } catch {
+            print("❌ Decode error: \(error)")
+            throw error
+        }
     }
 
     // Helper to extract JSON from Claude's response

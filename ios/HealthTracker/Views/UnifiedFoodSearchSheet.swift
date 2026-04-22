@@ -440,6 +440,33 @@ struct FoodRowView: View {
     }
 }
 
+// MARK: - Unit Conversion Model
+
+enum ServingUnit: String, CaseIterable, Identifiable {
+    // Original serving
+    case serving = "serving"
+    // Weight
+    case grams = "g"
+    case oz = "oz"
+    case lb = "lb"
+    // Volume
+    case cup = "cup"
+    case tbsp = "tbsp"
+    case tsp = "tsp"
+    case flOz = "fl oz"
+    case ml = "ml"
+
+    var id: String { rawValue }
+
+    var category: String {
+        switch self {
+        case .serving: return "Serving"
+        case .grams, .oz, .lb: return "Weight"
+        case .cup, .tbsp, .tsp, .flOz, .ml: return "Volume"
+        }
+    }
+}
+
 // MARK: - Serving Size Sheet
 
 struct ServingSizeSheet: View {
@@ -448,90 +475,231 @@ struct ServingSizeSheet: View {
     let onAdd: () -> Void
     let onCancel: () -> Void
 
+    @State private var selectedUnit: ServingUnit = .serving
+    @State private var quantity: Double = 1.0
+    @State private var quantityText: String = "1"
+
+    // grams encoded in the unit string e.g. "cup (244g)", "medium (182g)", "oz (28g)"
+    private var gramsPerServing: Double? {
+        let unit = food.servingUnit
+        // Match pattern like "(244g)" or "(28.5g)"
+        if let range = unit.range(of: #"\((\d+(?:\.\d+)?)g\)"#, options: .regularExpression) {
+            let inner = String(unit[range]).dropFirst().dropLast(2) // strip "(" and "g)"
+            return Double(inner.filter { $0.isNumber || $0 == "." })
+        }
+        // Plain "oz" unit — 1 oz = 28.3495g
+        let lower = unit.lowercased()
+        if lower == "oz" || lower.hasPrefix("oz ") { return 28.3495 }
+        // Plain "g" unit
+        if lower == "g" || lower.hasPrefix("g ") { return 1.0 }
+        return nil
+    }
+
+    private var servingSizeNumber: Double {
+        let s = food.servingSize.trimmingCharacters(in: .whitespaces)
+        if s.contains("/") {
+            let parts = s.split(separator: "/")
+            if parts.count == 2, let n = Double(parts[0]), let d = Double(parts[1]), d != 0 {
+                return n / d
+            }
+        }
+        return Double(s) ?? 1.0
+    }
+
+    private var isCupBased: Bool {
+        food.servingUnit.lowercased().contains("cup") ||
+        food.servingUnit.lowercased().contains("fl oz") ||
+        food.servingUnit.lowercased().contains("ml")
+    }
+
+    var availableUnits: [ServingUnit] {
+        var units: [ServingUnit] = [.serving]
+        if gramsPerServing != nil {
+            units += [.grams, .oz, .lb]
+        }
+        if isCupBased {
+            units += [.cup, .tbsp, .tsp, .flOz, .ml]
+        }
+        return units
+    }
+
+    // How many of `selectedUnit` equals 1 multiplier (1 serving)
+    private var unitsPerServing: Double {
+        let sn = servingSizeNumber
+        switch selectedUnit {
+        case .serving: return 1.0
+        case .grams:
+            guard let g = gramsPerServing else { return 1.0 }
+            return g * sn
+        case .oz:
+            guard let g = gramsPerServing else { return 1.0 }
+            return (g * sn) / 28.3495
+        case .lb:
+            guard let g = gramsPerServing else { return 1.0 }
+            return (g * sn) / 453.592
+        case .cup:
+            // base unit is cups — sn cups per serving
+            return sn
+        case .tbsp:
+            return sn * 16.0
+        case .tsp:
+            return sn * 48.0
+        case .flOz:
+            return sn * 8.0
+        case .ml:
+            return sn * 240.0
+        }
+    }
+
     private var adjCalories: Double { food.calories * multiplier }
     private var adjProtein: Double { food.protein * multiplier }
     private var adjCarbs: Double { food.carbs * multiplier }
     private var adjFat: Double { food.fat * multiplier }
 
+    private func quantityLabel() -> String {
+        let q = quantity
+        let fmt = q.truncatingRemainder(dividingBy: 1) == 0 ? "%.0f" : "%.2g"
+        return String(format: fmt, q)
+    }
+
+    private func applyUnit(_ unit: ServingUnit) {
+        selectedUnit = unit
+        // Convert current multiplier → quantity in new unit
+        quantity = max(0.01, (multiplier * unitsPerServing).rounded(toPlaces: 3))
+        quantityText = quantityLabel()
+    }
+
+    private func applyQuantity(_ raw: String) {
+        guard let val = Double(raw), val > 0 else { return }
+        quantity = val
+        multiplier = max(0.01, (val / unitsPerServing).rounded(toPlaces: 4))
+    }
+
     var body: some View {
         NavigationView {
-            VStack(spacing: 24) {
-                // Food name
-                VStack(spacing: 4) {
-                    Text(food.name)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                    if let brand = food.brand {
-                        Text(brand)
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Food name header
+                    VStack(spacing: 4) {
+                        Text(food.name)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                        if let brand = food.brand {
+                            Text(brand).font(.caption).foregroundColor(.secondary)
+                        }
+                        Text("1 serving = \(food.servingSize) \(food.servingUnit)")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
-                    Text("Per serving: \(food.servingSize) \(food.servingUnit)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.top)
+                    .padding(.top)
 
-                // Serving stepper
-                VStack(spacing: 8) {
-                    Text("Number of Servings")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                    HStack(spacing: 24) {
-                        Button(action: {
-                            if multiplier > 0.25 { multiplier = (multiplier - 0.25).rounded(toPlaces: 2) }
-                        }) {
-                            Image(systemName: "minus.circle.fill")
-                                .font(.title)
-                                .foregroundColor(.accentColor)
+                    // Unit selector chips
+                    if availableUnits.count > 1 {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Unit")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.secondary)
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(availableUnits) { unit in
+                                        Button(action: { applyUnit(unit) }) {
+                                            Text(unit == .serving ? "\(food.servingSize) \(food.servingUnit.components(separatedBy: "(").first?.trimmingCharacters(in: .whitespaces) ?? food.servingUnit)" : unit.rawValue)
+                                                .font(.subheadline)
+                                                .fontWeight(selectedUnit == unit ? .semibold : .regular)
+                                                .padding(.horizontal, 14)
+                                                .padding(.vertical, 8)
+                                                .background(selectedUnit == unit ? Color.accentColor : Color(.systemGray5))
+                                                .foregroundColor(selectedUnit == unit ? .white : .primary)
+                                                .cornerRadius(20)
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal, 1)
+                            }
                         }
-                        Text(String(format: "%.2f", multiplier))
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .frame(minWidth: 64)
-                        Button(action: {
-                            multiplier = (multiplier + 0.25).rounded(toPlaces: 2)
-                        }) {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title)
-                                .foregroundColor(.accentColor)
+                        .padding(.horizontal)
+                    }
+
+                    // Quantity control
+                    VStack(spacing: 10) {
+                        Text("Amount")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.secondary)
+                        HStack(spacing: 20) {
+                            Button(action: {
+                                let step = stepSize()
+                                let newVal = max(step, (quantity - step).rounded(toPlaces: 3))
+                                quantity = newVal
+                                quantityText = quantityLabel()
+                                multiplier = max(0.01, (newVal / unitsPerServing).rounded(toPlaces: 4))
+                            }) {
+                                Image(systemName: "minus.circle.fill")
+                                    .font(.title)
+                                    .foregroundColor(.accentColor)
+                            }
+
+                            TextField("Amount", text: $quantityText)
+                                .keyboardType(.decimalPad)
+                                .multilineTextAlignment(.center)
+                                .font(.title2.weight(.semibold))
+                                .frame(minWidth: 80)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(10)
+                                .onChange(of: quantityText) { newVal in
+                                    applyQuantity(newVal)
+                                }
+
+                            Button(action: {
+                                let step = stepSize()
+                                let newVal = (quantity + step).rounded(toPlaces: 3)
+                                quantity = newVal
+                                quantityText = quantityLabel()
+                                multiplier = max(0.01, (newVal / unitsPerServing).rounded(toPlaces: 4))
+                            }) {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.title)
+                                    .foregroundColor(.accentColor)
+                            }
                         }
                     }
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+                    .padding(.horizontal)
 
-                // Adjusted nutrition
-                HStack(spacing: 0) {
-                    ServingNutrientCell(label: "Calories", value: adjCalories, format: "%.0f", color: .orange)
-                    Divider().frame(height: 40)
-                    ServingNutrientCell(label: "Protein", value: adjProtein, format: "%.1fg", color: .blue)
-                    Divider().frame(height: 40)
-                    ServingNutrientCell(label: "Carbs", value: adjCarbs, format: "%.1fg", color: .green)
-                    Divider().frame(height: 40)
-                    ServingNutrientCell(label: "Fat", value: adjFat, format: "%.1fg", color: .yellow)
-                }
-                .padding()
-                .background(Color(.secondarySystemGroupedBackground))
-                .cornerRadius(12)
+                    // Nutrition summary
+                    HStack(spacing: 0) {
+                        ServingNutrientCell(label: "Calories", value: adjCalories, format: "%.0f", color: .orange)
+                        Divider().frame(height: 40)
+                        ServingNutrientCell(label: "Protein", value: adjProtein, format: "%.1fg", color: .blue)
+                        Divider().frame(height: 40)
+                        ServingNutrientCell(label: "Carbs", value: adjCarbs, format: "%.1fg", color: .green)
+                        Divider().frame(height: 40)
+                        ServingNutrientCell(label: "Fat", value: adjFat, format: "%.1fg", color: .yellow)
+                    }
+                    .padding()
+                    .background(Color(.secondarySystemGroupedBackground))
+                    .cornerRadius(12)
+                    .padding(.horizontal)
 
-                Spacer()
-
-                Button(action: onAdd) {
-                    Text("Add to Diary")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.accentColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
+                    Button(action: onAdd) {
+                        Text("Add to Diary")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom)
                 }
-                .padding(.horizontal)
-                .padding(.bottom)
             }
-            .padding(.horizontal)
             .navigationTitle("Adjust Serving")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -539,6 +707,25 @@ struct ServingSizeSheet: View {
                     Button("Cancel", action: onCancel)
                 }
             }
+        }
+        .onAppear {
+            selectedUnit = .serving
+            quantity = multiplier
+            quantityText = quantityLabel()
+        }
+    }
+
+    private func stepSize() -> Double {
+        switch selectedUnit {
+        case .serving: return 0.25
+        case .grams: return 10.0
+        case .oz: return 0.5
+        case .lb: return 0.1
+        case .cup: return 0.25
+        case .tbsp: return 1.0
+        case .tsp: return 1.0
+        case .flOz: return 1.0
+        case .ml: return 10.0
         }
     }
 }

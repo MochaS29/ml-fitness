@@ -48,9 +48,11 @@ class DashboardViewModel: ObservableObject {
             object: nil
         )
 
-        // Start step counting immediately with a short delay for UI to stabilize
+        // Request HealthKit authorization then start step counting
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            self?.stepCounter.startStepCounting()
+            HealthKitManager.shared.requestAuthorization { _ in
+                self?.stepCounter.startStepCounting()
+            }
         }
     }
 

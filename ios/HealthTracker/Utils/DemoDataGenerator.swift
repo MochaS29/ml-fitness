@@ -74,70 +74,95 @@ class DemoDataGenerator {
     
     private static func generateFoodEntries(context: NSManagedObjectContext, startDate: Date) {
         let calendar = Calendar.current
-        
-        // Sample meals for variety
-        let breakfastOptions = [
-            ("Oatmeal with Berries", "Quaker", 250.0, 8.0, 45.0, 5.0, 8.0),
-            ("Greek Yogurt Parfait", "Chobani", 320.0, 20.0, 35.0, 12.0, 4.0),
-            ("Scrambled Eggs with Toast", nil, 380.0, 22.0, 28.0, 18.0, 2.0),
-            ("Protein Smoothie", "Homemade", 295.0, 25.0, 40.0, 6.0, 5.0),
-            ("Avocado Toast", nil, 340.0, 10.0, 36.0, 18.0, 8.0)
+
+        // Visually appealing meals for past history
+        let breakfastOptions: [(String, String?, Double, Double, Double, Double, Double)] = [
+            ("Acai Smoothie Bowl", nil, 285.0, 9.0, 48.0, 7.0, 8.0),
+            ("Greek Yogurt & Granola", "Chobani", 320.0, 22.0, 38.0, 8.0, 4.0),
+            ("Avocado Toast & Poached Eggs", nil, 390.0, 20.0, 32.0, 22.0, 9.0),
+            ("Protein Overnight Oats", nil, 340.0, 24.0, 45.0, 8.0, 6.0),
+            ("Smoked Salmon Bagel", nil, 410.0, 26.0, 42.0, 14.0, 2.0)
         ]
-        
-        let lunchOptions = [
-            ("Grilled Chicken Salad", "Sweetgreen", 420.0, 35.0, 25.0, 22.0, 6.0),
-            ("Turkey Sandwich", "Subway", 380.0, 24.0, 46.0, 12.0, 3.0),
-            ("Quinoa Buddha Bowl", nil, 485.0, 18.0, 65.0, 18.0, 12.0),
-            ("Salmon with Vegetables", nil, 450.0, 40.0, 20.0, 25.0, 5.0),
-            ("Chicken Burrito Bowl", "Chipotle", 680.0, 32.0, 65.0, 32.0, 8.0)
+
+        let lunchOptions: [(String, String?, Double, Double, Double, Double, Double)] = [
+            ("Grilled Chicken & Quinoa Bowl", nil, 485.0, 42.0, 38.0, 14.0, 7.0),
+            ("Salmon Poke Bowl", nil, 520.0, 38.0, 55.0, 16.0, 5.0),
+            ("Mediterranean Wrap", nil, 420.0, 28.0, 46.0, 14.0, 6.0),
+            ("Thai Green Curry & Brown Rice", nil, 510.0, 30.0, 58.0, 18.0, 8.0),
+            ("Chicken Caesar Salad", "Sweetgreen", 440.0, 36.0, 22.0, 24.0, 4.0)
         ]
-        
-        let dinnerOptions = [
-            ("Grilled Salmon with Rice", nil, 520.0, 42.0, 48.0, 18.0, 2.0),
-            ("Pasta with Chicken", "Homemade", 580.0, 38.0, 62.0, 20.0, 4.0),
-            ("Steak with Sweet Potato", nil, 650.0, 45.0, 42.0, 32.0, 6.0),
-            ("Vegetarian Curry", "Thai Kitchen", 420.0, 12.0, 58.0, 16.0, 8.0),
-            ("Shrimp Stir-fry", nil, 380.0, 28.0, 45.0, 10.0, 6.0)
+
+        let dinnerOptions: [(String, String?, Double, Double, Double, Double, Double)] = [
+            ("Pan-Seared Salmon & Asparagus", nil, 480.0, 44.0, 18.0, 26.0, 5.0),
+            ("Grilled Chicken & Sweet Potato", nil, 520.0, 46.0, 44.0, 12.0, 7.0),
+            ("Beef & Broccoli Stir-fry", nil, 490.0, 38.0, 34.0, 22.0, 6.0),
+            ("Shrimp Tacos with Mango Salsa", nil, 460.0, 30.0, 52.0, 14.0, 5.0),
+            ("Turkey Meatballs & Zucchini Noodles", nil, 410.0, 40.0, 22.0, 18.0, 5.0)
         ]
-        
-        let snackOptions = [
-            ("Apple with Almond Butter", nil, 200.0, 4.0, 25.0, 10.0, 4.0),
+
+        let snackOptions: [(String, String?, Double, Double, Double, Double, Double)] = [
+            ("Apple & Almond Butter", nil, 195.0, 5.0, 24.0, 10.0, 4.0),
             ("Protein Bar", "RXBAR", 210.0, 12.0, 23.0, 9.0, 3.0),
-            ("Mixed Nuts", "Planters", 180.0, 6.0, 8.0, 16.0, 2.0),
-            ("Banana", nil, 105.0, 1.3, 27.0, 0.4, 3.1),
-            ("Greek Yogurt", "Fage", 130.0, 16.0, 9.0, 4.0, 0.0)
+            ("Mixed Nuts & Dark Chocolate", nil, 220.0, 6.0, 18.0, 16.0, 3.0),
+            ("Greek Yogurt with Honey", "Fage", 145.0, 17.0, 12.0, 4.0, 0.0),
+            ("Edamame", nil, 155.0, 13.0, 14.0, 6.0, 6.0)
         ]
-        
-        // Generate entries for past 30 days
-        for dayOffset in 0..<30 {
+
+        // Today's entries — visually ideal state: 3 meals logged, ~1,680 cal, dinner pending
+        // Gives a great partially-filled progress ring for screenshots
+        let todayBreakfast: (String, String?, Double, Double, Double, Double, Double) =
+            ("Acai Smoothie Bowl", nil, 285.0, 9.0, 48.0, 7.0, 8.0)
+        let todayLunch: (String, String?, Double, Double, Double, Double, Double) =
+            ("Grilled Chicken & Quinoa Bowl", nil, 485.0, 42.0, 38.0, 14.0, 7.0)
+        let todaySnack: (String, String?, Double, Double, Double, Double, Double) =
+            ("Apple & Almond Butter", nil, 195.0, 5.0, 24.0, 10.0, 4.0)
+        let todayDinner: (String, String?, Double, Double, Double, Double, Double) =
+            ("Pan-Seared Salmon & Asparagus", nil, 480.0, 44.0, 18.0, 26.0, 5.0)
+
+        createFoodEntry(context: context, date: calendar.date(bySettingHour: 7, minute: 30, second: 0, of: startDate)!,
+                        mealType: .breakfast, name: todayBreakfast.0, brand: todayBreakfast.1,
+                        calories: todayBreakfast.2, protein: todayBreakfast.3, carbs: todayBreakfast.4,
+                        fat: todayBreakfast.5, fiber: todayBreakfast.6)
+        createFoodEntry(context: context, date: calendar.date(bySettingHour: 12, minute: 15, second: 0, of: startDate)!,
+                        mealType: .lunch, name: todayLunch.0, brand: todayLunch.1,
+                        calories: todayLunch.2, protein: todayLunch.3, carbs: todayLunch.4,
+                        fat: todayLunch.5, fiber: todayLunch.6)
+        createFoodEntry(context: context, date: calendar.date(bySettingHour: 15, minute: 0, second: 0, of: startDate)!,
+                        mealType: .snack, name: todaySnack.0, brand: todaySnack.1,
+                        calories: todaySnack.2, protein: todaySnack.3, carbs: todaySnack.4,
+                        fat: todaySnack.5, fiber: todaySnack.6)
+        createFoodEntry(context: context, date: calendar.date(bySettingHour: 18, minute: 30, second: 0, of: startDate)!,
+                        mealType: .dinner, name: todayDinner.0, brand: todayDinner.1,
+                        calories: todayDinner.2, protein: todayDinner.3, carbs: todayDinner.4,
+                        fat: todayDinner.5, fiber: todayDinner.6)
+
+        // Past 29 days
+        for dayOffset in 1..<30 {
             guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: startDate) else { continue }
-            
-            // Breakfast
-            let breakfast = breakfastOptions.randomElement()!
-            createFoodEntry(context: context, date: date, mealType: .breakfast,
-                          name: breakfast.0, brand: breakfast.1, calories: breakfast.2,
-                          protein: breakfast.3, carbs: breakfast.4, fat: breakfast.5, fiber: breakfast.6)
-            
-            // Lunch
-            let lunch = lunchOptions.randomElement()!
-            createFoodEntry(context: context, date: date, mealType: .lunch,
-                          name: lunch.0, brand: lunch.1, calories: lunch.2,
-                          protein: lunch.3, carbs: lunch.4, fat: lunch.5, fiber: lunch.6)
-            
-            // Dinner
-            let dinner = dinnerOptions.randomElement()!
-            createFoodEntry(context: context, date: date, mealType: .dinner,
-                          name: dinner.0, brand: dinner.1, calories: dinner.2,
-                          protein: dinner.3, carbs: dinner.4, fat: dinner.5, fiber: dinner.6)
-            
-            // Snacks (1-2 per day)
-            let snackCount = Int.random(in: 1...2)
-            for _ in 0..<snackCount {
-                let snack = snackOptions.randomElement()!
-                createFoodEntry(context: context, date: date, mealType: .snack,
-                              name: snack.0, brand: snack.1, calories: snack.2,
-                              protein: snack.3, carbs: snack.4, fat: snack.5, fiber: snack.6)
-            }
+
+            let breakfast = breakfastOptions[dayOffset % breakfastOptions.count]
+            createFoodEntry(context: context, date: calendar.date(bySettingHour: 8, minute: 0, second: 0, of: date) ?? date,
+                            mealType: .breakfast, name: breakfast.0, brand: breakfast.1,
+                            calories: breakfast.2, protein: breakfast.3, carbs: breakfast.4,
+                            fat: breakfast.5, fiber: breakfast.6)
+
+            let lunch = lunchOptions[dayOffset % lunchOptions.count]
+            createFoodEntry(context: context, date: calendar.date(bySettingHour: 12, minute: 30, second: 0, of: date) ?? date,
+                            mealType: .lunch, name: lunch.0, brand: lunch.1,
+                            calories: lunch.2, protein: lunch.3, carbs: lunch.4,
+                            fat: lunch.5, fiber: lunch.6)
+
+            let dinner = dinnerOptions[dayOffset % dinnerOptions.count]
+            createFoodEntry(context: context, date: calendar.date(bySettingHour: 19, minute: 0, second: 0, of: date) ?? date,
+                            mealType: .dinner, name: dinner.0, brand: dinner.1,
+                            calories: dinner.2, protein: dinner.3, carbs: dinner.4,
+                            fat: dinner.5, fiber: dinner.6)
+
+            let snack = snackOptions[dayOffset % snackOptions.count]
+            createFoodEntry(context: context, date: calendar.date(bySettingHour: 15, minute: 0, second: 0, of: date) ?? date,
+                            mealType: .snack, name: snack.0, brand: snack.1,
+                            calories: snack.2, protein: snack.3, carbs: snack.4,
+                            fat: snack.5, fiber: snack.6)
         }
     }
     
@@ -198,27 +223,16 @@ class DemoDataGenerator {
     
     private static func generateWeightEntries(context: NSManagedObjectContext, startDate: Date) {
         let calendar = Calendar.current
-        let currentWeight = 170.0 // Current weight showing on dashboard
-        let startingWeight = 180.0 // Starting weight 30 days ago
-        _ = 160.0 // Goal weight (unused)
+        let currentWeight = 158.4
+        let startingWeight = 165.0
 
-        // Generate weight entries every 2-3 days showing gradual loss
-        for dayOffset in [28, 25, 22, 19, 16, 14, 11, 8, 5, 3, 0] {
+        let offsets = [28, 25, 22, 19, 16, 14, 11, 8, 5, 3, 1, 0]
+        for dayOffset in offsets {
             guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: startDate) else { continue }
 
-            // Calculate weight with gradual loss trend
             let progress = Double(28 - dayOffset) / 28.0
-            let targetLoss = startingWeight - currentWeight
-            let baseWeight = startingWeight - (targetLoss * progress)
-
-            // Add small realistic fluctuation
-            let fluctuation = dayOffset == 0 ? 0 : Double.random(in: -0.3...0.3)
-            var weight = baseWeight + fluctuation
-
-            // Make sure today's weight is exactly 170
-            if dayOffset == 0 {
-                weight = currentWeight
-            }
+            let base = startingWeight - ((startingWeight - currentWeight) * progress)
+            let weight = dayOffset == 0 ? currentWeight : base + Double.random(in: -0.4...0.4)
 
             let entry = WeightEntry(context: context)
             entry.id = UUID()
@@ -226,15 +240,9 @@ class DemoDataGenerator {
             entry.timestamp = date
             entry.date = date
 
-            // Add motivating notes
-            if dayOffset == 0 {
-                entry.notes = "New low! 10 lbs down 🎉"
-            } else if dayOffset == 3 {
-                entry.notes = "Almost at 170!"
-            } else if dayOffset == 14 {
-                entry.notes = "Halfway to goal weight"
-            }
-
+            if dayOffset == 0 { entry.notes = "New low! Feeling great 💪" }
+            else if dayOffset == 5 { entry.notes = "Down 5 lbs!" }
+            else if dayOffset == 14 { entry.notes = "Halfway to goal" }
         }
     }
     
@@ -302,8 +310,7 @@ class DemoDataGenerator {
     }
     
     private static func setDemoStepCount() {
-        // Set a good step count for today (shown in dashboard)
-        UserDefaults.standard.set(6915, forKey: "demoStepCount")
+        UserDefaults.standard.set(8742, forKey: "demoStepCount")
         UserDefaults.standard.set(Date(), forKey: "demoStepCountDate")
     }
 
@@ -358,22 +365,15 @@ class DemoDataGenerator {
     
     private static func createDemoUserProfile() {
         let userProfileManager = UserProfileManager()
-        
-        // Only create if no profile exists
-        if userProfileManager.currentProfile == nil {
-            var demoProfile = UserProfile(
-                name: "Alex Johnson",
-                gender: .male,
-                birthDate: Calendar.current.date(byAdding: .year, value: -30, to: Date()) ?? Date()
-            )
-            
-            // Set additional properties
-            demoProfile.activityLevel = .moderate
-            demoProfile.dietaryRestrictions = [DietaryRestriction.vegetarian]
-            
-            userProfileManager.currentProfile = demoProfile
-            userProfileManager.hasCompletedOnboarding = true
-        }
+        var demoProfile = UserProfile(
+            name: "Jordan",
+            gender: .female,
+            birthDate: Calendar.current.date(byAdding: .year, value: -28, to: Date()) ?? Date()
+        )
+        demoProfile.activityLevel = .moderate
+        demoProfile.startingWeight = 165.0
+        userProfileManager.currentProfile = demoProfile
+        userProfileManager.hasCompletedOnboarding = true
     }
     
     private static func generateMealPlans() {

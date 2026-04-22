@@ -1,5 +1,6 @@
 import SwiftUI
 import WatchConnectivity
+import UserNotifications
 
 @main
 struct HealthTrackerApp: App {
@@ -10,6 +11,9 @@ struct HealthTrackerApp: App {
     @ObservedObject private var storeManager = StoreManager.shared
     @State private var showMainApp = false
     @State private var showQuickSetup = false
+    @State private var showReminderSetup = false
+    @State private var showWhatsNew = false
+    @AppStorage("lastSeenAppVersion") private var lastSeenAppVersion = ""
 
     // Check if running UI tests
     private var isUITesting: Bool {
@@ -21,10 +25,18 @@ struct HealthTrackerApp: App {
     }
 
     init() {
-        // Initialize water reminder service to set up notification delegate
         _ = WaterReminderService.shared
-        // Initialize Watch Connectivity
         _ = PhoneConnectivityManager.shared
+    }
+
+    private func checkWhatsNew() {
+        let current = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        if current != lastSeenAppVersion && !current.isEmpty {
+            lastSeenAppVersion = current
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                showWhatsNew = true
+            }
+        }
     }
 
     var body: some Scene {
@@ -38,14 +50,22 @@ struct HealthTrackerApp: App {
                     .environmentObject(storeManager)
                     .accentColor(Color.mochaBrown)
                     .onAppear {
-                        // Send initial data to watch
                         phoneConnectivity.sendDailyUpdate()
+                        checkWhatsNew()
+                        SmartNotificationScheduler.shared.rescheduleAll()
                     }
+                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                        SmartNotificationScheduler.shared.rescheduleAll()
+                    }
+                    .sheet(isPresented: $showWhatsNew) {
+                        WhatsNewView(isPresented: $showWhatsNew)
+                    }
+            } else if showReminderSetup {
+                ReminderSetupView(showMainApp: $showMainApp)
             } else if showQuickSetup {
-                QuickSetupView(showMainApp: $showMainApp)
+                QuickSetupView(showMainApp: $showMainApp, showReminderSetup: $showReminderSetup)
                     .environmentObject(userProfileManager)
             } else {
-                // Welcome screen with setup options
                 WelcomeScreenView(showMainApp: $showMainApp, showQuickSetup: $showQuickSetup)
                     .environmentObject(userProfileManager)
             }
@@ -86,10 +106,10 @@ struct WelcomeScreenView: View {
 
             // Features list
             VStack(alignment: .leading, spacing: 20) {
-                FeatureRow(icon: "fork.knife", title: "Track Nutrition", subtitle: "Log meals and monitor calories")
-                FeatureRow(icon: "figure.run", title: "Exercise Tracking", subtitle: "Record workouts and activities")
+                FeatureRow(icon: "camera.viewfinder", title: "AI Food Scanner", subtitle: "Snap a photo to instantly log any meal")
+                FeatureRow(icon: "calendar", title: "Smart Meal Planning", subtitle: "4-week personalized meal plans")
+                FeatureRow(icon: "figure.run", title: "Exercise & Step Tracking", subtitle: "Workouts, steps, and activity synced")
                 FeatureRow(icon: "chart.line.uptrend.xyaxis", title: "Progress Insights", subtitle: "Visualize your health journey")
-                FeatureRow(icon: "target", title: "Set Goals", subtitle: "Achieve your wellness targets")
             }
             .padding(.horizontal, 30)
 
@@ -169,6 +189,7 @@ struct FeatureRow: View {
 struct QuickSetupView: View {
     @EnvironmentObject var userProfileManager: UserProfileManager
     @Binding var showMainApp: Bool
+    @Binding var showReminderSetup: Bool
 
     @State private var name = ""
     @State private var selectedGender = Gender.other
@@ -241,12 +262,11 @@ struct QuickSetupView: View {
 
                 // Skip button at the bottom
                 Button(action: {
-                    // Create minimal profile with entered name if available
                     let profileName = name.isEmpty ? "User" : name
                     let profile = UserProfile(name: profileName, gender: .other, birthDate: Date())
                     userProfileManager.saveProfile(profile)
                     UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-                    showMainApp = true
+                    showReminderSetup = true
                 }) {
                     Text("Skip Setup")
                         .font(.headline)
@@ -291,9 +311,213 @@ struct QuickSetupView: View {
 
         profile.activityLevel = activityLevel
 
-        // Save profile and navigate to main app
         userProfileManager.saveProfile(profile)
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-        showMainApp = true
+        showReminderSetup = true
+    }
+}
+
+// MARK: - Reminder Setup View
+struct ReminderSetupView: View {
+    @Binding var showMainApp: Bool
+    @ObservedObject private var settings = SmartReminderSettings.shared
+    @State private var mealsEnabled = true
+    @State private var permissionDenied = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            VStack(spacing: 16) {
+                Image(systemName: "bell.badge.fill")
+                    .font(.system(size: 64))
+                    .foregroundColor(Color(red: 127/255, green: 176/255, blue: 105/255))
+                    .padding(.top, 60)
+
+                Text("Stay on Track")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+
+                Text("Meal reminders help you log consistently — which means better insights and faster progress.")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 30)
+            }
+
+            Spacer()
+
+            VStack(spacing: 16) {
+                Toggle(isOn: $mealsEnabled) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Image(systemName: "fork.knife")
+                                .foregroundColor(Color(red: 127/255, green: 176/255, blue: 105/255))
+                            Text("Meal Logging Reminders")
+                                .font(.headline)
+                        }
+                        Text("Breakfast 8am · Lunch 12pm · Dinner 6pm")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding()
+                .background(Color(UIColor.secondarySystemGroupedBackground))
+                .cornerRadius(12)
+
+                if permissionDenied {
+                    Text("Notifications are blocked. Enable them in Settings → Notifications.")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                }
+            }
+            .padding(.horizontal, 30)
+
+            Spacer()
+
+            VStack(spacing: 12) {
+                Button(action: enableAndContinue) {
+                    Text("Enable & Continue")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(red: 127/255, green: 176/255, blue: 105/255))
+                        .cornerRadius(12)
+                }
+
+                Button(action: { showMainApp = true }) {
+                    Text("Skip for Now")
+                        .font(.headline)
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding(.horizontal, 30)
+            .padding(.bottom, 40)
+        }
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [Color(UIColor.systemBackground), Color(UIColor.systemGray6)]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+    }
+
+    private func enableAndContinue() {
+        guard mealsEnabled else {
+            showMainApp = true
+            return
+        }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+            DispatchQueue.main.async {
+                if granted {
+                    settings.mealsEnabled = true
+                    scheduleMealNotifications()
+                } else {
+                    permissionDenied = true
+                }
+                showMainApp = true
+            }
+        }
+    }
+
+    private func scheduleMealNotifications() {
+        let center = UNUserNotificationCenter.current()
+        let meals: [(String, String, Int)] = [
+            ("smart_meal_breakfast", "🍳 Breakfast Time!", 8),
+            ("smart_meal_lunch",     "🥗 Lunch Time!",    12),
+            ("smart_meal_dinner",    "🍽️ Dinner Time!",  18)
+        ]
+        for (id, title, hour) in meals {
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = "Don't forget to log your meal."
+            content.sound = .default
+            content.categoryIdentifier = "MEAL_REMINDER"
+            var components = DateComponents()
+            components.hour = hour
+            components.minute = 0
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+            center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
+        }
+    }
+}
+
+// MARK: - What's New View
+struct WhatsNewView: View {
+    @Binding var isPresented: Bool
+
+    private let features: [(icon: String, color: Color, title: String, detail: String)] = [
+        ("camera.viewfinder", .blue, "Smarter AI Food Scanner", "Upgraded to the latest Claude model for more accurate meal recognition"),
+        ("arrow.left.arrow.right", Color(red: 127/255, green: 176/255, blue: 105/255), "Swipeable Meal Planning", "Swipe through the week in Today view and add any day's meal to your diary"),
+        ("calendar.badge.plus", .orange, "Add Week or Month to Diary", "Bulk-add an entire week or month of planned meals in one tap"),
+        ("book.closed", .purple, "Log Recipes Directly", "Tap 'Log This Meal' on any recipe to add it straight to your food diary"),
+        ("figure.walk", .teal, "Apple Watch Step Sync", "Step count now pulls from HealthKit so Apple Watch steps are included"),
+    ]
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 24) {
+                    VStack(spacing: 8) {
+                        Image(systemName: "star.circle.fill")
+                            .font(.system(size: 56))
+                            .foregroundColor(.yellow)
+                            .padding(.top, 20)
+
+                        Text("What's New")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+
+                        Text("Here's what's been updated in this version.")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding(.horizontal)
+
+                    VStack(spacing: 0) {
+                        ForEach(features, id: \.title) { feature in
+                            HStack(alignment: .top, spacing: 16) {
+                                Image(systemName: feature.icon)
+                                    .font(.title2)
+                                    .foregroundColor(feature.color)
+                                    .frame(width: 36)
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(feature.title)
+                                        .font(.headline)
+                                    Text(feature.detail)
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                            }
+                            .padding()
+
+                            if feature.title != features.last?.title {
+                                Divider().padding(.leading, 52)
+                            }
+                        }
+                    }
+                    .background(Color(UIColor.secondarySystemGroupedBackground))
+                    .cornerRadius(16)
+                    .padding(.horizontal)
+
+                    Button(action: { isPresented = false }) {
+                        Text("Continue")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(red: 127/255, green: 176/255, blue: 105/255))
+                            .cornerRadius(12)
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 20)
+                }
+            }
+            .navigationBarHidden(true)
+        }
     }
 }

@@ -600,6 +600,9 @@ struct WeeklyMealView: View {
     @EnvironmentObject var storeManager: StoreManager
     @Binding var showingMealDetail: Meal?
     @State private var showingPaywall = false
+    @State private var showingAddWeekConfirm = false
+    @State private var weekAddedBanner = false
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
 
     /// Free users can only view week 1
     private var isWeekLocked: Bool {
@@ -646,7 +649,34 @@ struct WeeklyMealView: View {
                         }
                         .disabled(manager.currentWeek >= 4)
                     }
-                    .padding()
+                    .padding(.horizontal)
+                    .padding(.top)
+
+                    // Add Week to Diary button
+                    if !isWeekLocked {
+                        Button(action: { showingAddWeekConfirm = true }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: weekAddedBanner ? "checkmark.circle.fill" : "calendar.badge.plus")
+                                Text(weekAddedBanner ? "Added to Diary!" : "Add Week to Diary")
+                                    .fontWeight(.semibold)
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(weekAddedBanner ? Color.green : Color.wellnessGreen)
+                            .cornerRadius(12)
+                        }
+                        .padding(.horizontal)
+                        .confirmationDialog("Add Week \(manager.currentWeek) to Diary?", isPresented: $showingAddWeekConfirm, titleVisibility: .visible) {
+                            Button("Add All Meals") {
+                                addWeekToDiary(weekPlan)
+                            }
+                            Button("Cancel", role: .cancel) { }
+                        } message: {
+                            Text("This will add all meals from Week \(manager.currentWeek) to your food diary for the corresponding days.")
+                        }
+                    }
 
                     if isWeekLocked {
                         // Show locked overlay for weeks 2-4 for free users
@@ -684,6 +714,46 @@ struct WeeklyMealView: View {
             PaywallView()
                 .environmentObject(storeManager)
         }
+    }
+
+    private func addWeekToDiary(_ weekPlan: WeeklyMealPlan) {
+        let calendar = Calendar.current
+        let today = Date()
+        let todayWeekday = calendar.component(.weekday, from: today)
+        let dayMap = ["Monday": 2, "Tuesday": 3, "Wednesday": 4, "Thursday": 5,
+                      "Friday": 6, "Saturday": 7, "Sunday": 1]
+
+        for day in weekPlan.days {
+            let targetWeekday = dayMap[day.dayName] ?? todayWeekday
+            let diff = targetWeekday - todayWeekday
+            let date = calendar.date(byAdding: .day, value: diff, to: today) ?? today
+
+            addEntry(day.breakfast, type: .breakfast, on: date)
+            addEntry(day.lunch, type: .lunch, on: date)
+            addEntry(day.dinner, type: .dinner, on: date)
+            for snack in day.snacks { addEntry(snack, type: .snack, on: date) }
+        }
+
+        withAnimation { weekAddedBanner = true }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            withAnimation { weekAddedBanner = false }
+        }
+    }
+
+    private func addEntry(_ meal: Meal, type: MealType, on date: Date) {
+        dataManager.addFoodEntry(
+            name: meal.name,
+            calories: Double(meal.calories),
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            fiber: meal.fiber,
+            sugar: 0,
+            sodium: 0,
+            servingSize: "1 serving",
+            mealType: type,
+            date: date
+        )
     }
 }
 
@@ -843,6 +913,9 @@ struct MonthlyOverviewView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var foodEntries: [FoodEntry] = []
     @State private var showingDayDetail = false
+    @State private var showingAddMonthConfirm = false
+    @State private var monthAddedBanner = false
+    @ObservedObject private var dataManager = UnifiedDataManager.shared
 
     init(manager: MealPlanManager) {
         self.manager = manager
@@ -872,6 +945,32 @@ struct MonthlyOverviewView: View {
                     }
                 }
                 .padding(.horizontal)
+
+                // Add Month to Diary button
+                if manager.selectedPlanType != nil {
+                    Button(action: { showingAddMonthConfirm = true }) {
+                        HStack(spacing: 6) {
+                            Image(systemName: monthAddedBanner ? "checkmark.circle.fill" : "calendar.badge.plus")
+                            Text(monthAddedBanner ? "Added to Diary!" : "Add Month to Diary")
+                                .fontWeight(.semibold)
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(monthAddedBanner ? Color.green : Color.mindfulTeal)
+                        .cornerRadius(12)
+                    }
+                    .padding(.horizontal)
+                    .confirmationDialog("Add \(monthYearString) to Diary?", isPresented: $showingAddMonthConfirm, titleVisibility: .visible) {
+                        Button("Add All Meals") {
+                            addMonthToDiary()
+                        }
+                        Button("Cancel", role: .cancel) { }
+                    } message: {
+                        Text("All planned meals will be added to your food diary, mapped to each day of \(monthYearString).")
+                    }
+                }
 
                 // Calendar grid
                 CalendarGridView(
@@ -930,6 +1029,45 @@ struct MonthlyOverviewView: View {
             displayMonth = newDate
             selectedDate = newDate
         }
+    }
+
+    private func addMonthToDiary() {
+        guard let plan = manager.selectedPlanType else { return }
+        let calendar = Calendar.current
+        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: displayMonth)) else { return }
+
+        for (weekIndex, week) in plan.monthlyPlans.enumerated() {
+            for (dayIndex, day) in week.days.enumerated() {
+                let offset = weekIndex * 7 + dayIndex
+                guard let date = calendar.date(byAdding: .day, value: offset, to: startOfMonth) else { continue }
+                addMonthEntry(day.breakfast, type: .breakfast, on: date)
+                addMonthEntry(day.lunch, type: .lunch, on: date)
+                addMonthEntry(day.dinner, type: .dinner, on: date)
+                for snack in day.snacks { addMonthEntry(snack, type: .snack, on: date) }
+            }
+        }
+
+        withAnimation { monthAddedBanner = true }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            withAnimation { monthAddedBanner = false }
+        }
+        fetchFoodEntries()
+    }
+
+    private func addMonthEntry(_ meal: Meal, type: MealType, on date: Date) {
+        dataManager.addFoodEntry(
+            name: meal.name,
+            calories: Double(meal.calories),
+            protein: meal.protein,
+            carbs: meal.carbs,
+            fat: meal.fat,
+            fiber: meal.fiber,
+            sugar: 0,
+            sodium: 0,
+            servingSize: "1 serving",
+            mealType: type,
+            date: date
+        )
     }
 
     private func fetchFoodEntries() {
