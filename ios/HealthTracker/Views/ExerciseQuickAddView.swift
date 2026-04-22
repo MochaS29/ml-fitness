@@ -84,6 +84,10 @@ struct ExerciseQuickAddView: View {
                     }
                     .disabled(selectedExercise == nil)
 
+                    if let exercise = selectedExercise, !presetExercises.contains(where: { $0.id == exercise.id }) {
+                        selectedActivityBanner(exercise: exercise)
+                    }
+
                     exerciseGrid
                     durationSelector
 
@@ -111,6 +115,40 @@ struct ExerciseQuickAddView: View {
                 }
             }
         }
+    }
+
+    private func selectedActivityBanner(exercise: ExerciseTemplateModel) -> some View {
+        HStack(spacing: 14) {
+            Image(systemName: exercise.sfSymbol)
+                .font(.title2)
+                .foregroundColor(.white)
+                .frame(width: 44, height: 44)
+                .background(Color.blue)
+                .cornerRadius(10)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(exercise.name)
+                    .font(.headline)
+                Text(exercise.category)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+
+            Spacer()
+
+            Button(action: { selectedExercise = nil }) {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundColor(.secondary)
+                    .font(.title3)
+            }
+        }
+        .padding()
+        .background(Color.blue.opacity(0.08))
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+        )
     }
 
     private var exerciseGrid: some View {

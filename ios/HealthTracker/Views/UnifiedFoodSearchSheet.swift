@@ -478,6 +478,7 @@ struct ServingSizeSheet: View {
     @State private var selectedUnit: ServingUnit = .serving
     @State private var quantity: Double = 1.0
     @State private var quantityText: String = "1"
+    @FocusState private var quantityFocused: Bool
 
     // grams encoded in the unit string e.g. "cup (244g)", "medium (182g)", "oz (28g)"
     private var gramsPerServing: Double? {
@@ -577,6 +578,7 @@ struct ServingSizeSheet: View {
 
     var body: some View {
         NavigationView {
+            VStack(spacing: 0) {
             ScrollView {
                 VStack(spacing: 20) {
                     // Food name header
@@ -650,7 +652,12 @@ struct ServingSizeSheet: View {
                                 .padding(.vertical, 8)
                                 .background(Color(.systemGray6))
                                 .cornerRadius(10)
-                                .onChange(of: quantityText) { newVal in
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(quantityFocused ? Color.accentColor : Color.clear, lineWidth: 2)
+                                )
+                                .focused($quantityFocused)
+                                .onChange(of: quantityText) { _, newVal in
                                     applyQuantity(newVal)
                                 }
 
@@ -687,24 +694,38 @@ struct ServingSizeSheet: View {
                     .cornerRadius(12)
                     .padding(.horizontal)
 
-                    Button(action: onAdd) {
-                        Text("Add to Diary")
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.accentColor)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom)
+                    Spacer(minLength: 8)
                 }
             }
+
+            // Add button pinned at bottom — always visible regardless of keyboard or scroll
+            Button(action: {
+                quantityFocused = false
+                onAdd()
+            }) {
+                Text("Add to Diary")
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.accentColor)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 12)
+            .background(Color(.systemBackground).shadow(radius: 4, y: -2))
+            } // end outer VStack
             .navigationTitle("Adjust Serving")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel", action: onCancel)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if quantityFocused {
+                        Button("Done") { quantityFocused = false }
+                            .fontWeight(.semibold)
+                    }
                 }
             }
         }
