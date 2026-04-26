@@ -202,11 +202,7 @@ fun MLFitnessNavigation(
             }
 
             composable("reminders") {
-                ComingSoonScreen(
-                    title = "Reminders",
-                    message = "Set meal and water reminders",
-                    navController = navController
-                )
+                com.mochasmindlab.mlhealth.ui.screens.reminders.RemindersScreen(navController)
             }
 
             // Food & Nutrition

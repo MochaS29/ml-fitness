@@ -211,8 +211,15 @@ fun MLHealthApp(
             }
             
             composable("achievements") {
-                // TODO: Implement AchievementsScreen
-                Text("Achievements - Coming Soon", modifier = Modifier.padding(16.dp))
+                com.mochasmindlab.mlhealth.ui.screens.achievements.AchievementsScreen(navController = navController)
+            }
+
+            composable("paywall") {
+                com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallScreen(navController = navController)
+            }
+
+            composable("meal_scanner") {
+                com.mochasmindlab.mlhealth.ui.screens.scanner.MealScannerScreen(navController = navController)
             }
             
             composable("reports") {

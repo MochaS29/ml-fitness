@@ -43,6 +43,18 @@ class PreferencesManager @Inject constructor(
         val EXERCISE_REMINDER_ENABLED = booleanPreferencesKey("exercise_reminder_enabled")
         val WATER_GOAL_OZ = intPreferencesKey("water_goal_oz")
         val WATER_REMINDER_INTERVAL = stringPreferencesKey("water_reminder_interval")
+        // Smart reminders (mirrors iOS SmartReminderSettings)
+        val WATER_REMINDER_INTERVAL_MIN = intPreferencesKey("reminder_water_interval_min")
+        val WATER_REMINDER_START_HOUR = intPreferencesKey("reminder_water_start_hour")
+        val WATER_REMINDER_END_HOUR = intPreferencesKey("reminder_water_end_hour")
+        val MEAL_BREAKFAST_HOUR = intPreferencesKey("reminder_meal_breakfast_hour")
+        val MEAL_LUNCH_HOUR = intPreferencesKey("reminder_meal_lunch_hour")
+        val MEAL_DINNER_HOUR = intPreferencesKey("reminder_meal_dinner_hour")
+        val WEIGHT_REMINDER_ENABLED = booleanPreferencesKey("reminder_weight_enabled")
+        val WEIGHT_REMINDER_HOUR = intPreferencesKey("reminder_weight_hour")
+        val WEIGHT_REMINDER_MINUTE = intPreferencesKey("reminder_weight_minute")
+        val DARK_MODE_ENABLED = booleanPreferencesKey("dark_mode_enabled")
+        val IS_PRO_USER = booleanPreferencesKey("is_pro_user")
     }
     
     // Onboarding
@@ -252,6 +264,96 @@ class PreferencesManager @Inject constructor(
             preferences[PreferenceKeys.WATER_REMINDER_INTERVAL] ?: "Every 2 hours"
         }
 
+    // Smart reminder settings (water window, meal times, weight time, weight toggle)
+    suspend fun setWaterReminderIntervalMinutes(minutes: Int) {
+        dataStore.edit { it[PreferenceKeys.WATER_REMINDER_INTERVAL_MIN] = minutes }
+    }
+
+    suspend fun setWaterWindow(startHour: Int, endHour: Int) {
+        dataStore.edit {
+            it[PreferenceKeys.WATER_REMINDER_START_HOUR] = startHour
+            it[PreferenceKeys.WATER_REMINDER_END_HOUR] = endHour
+        }
+    }
+
+    suspend fun setMealHours(breakfast: Int, lunch: Int, dinner: Int) {
+        dataStore.edit {
+            it[PreferenceKeys.MEAL_BREAKFAST_HOUR] = breakfast
+            it[PreferenceKeys.MEAL_LUNCH_HOUR] = lunch
+            it[PreferenceKeys.MEAL_DINNER_HOUR] = dinner
+        }
+    }
+
+    suspend fun setWeightReminder(enabled: Boolean, hour: Int = 8, minute: Int = 0) {
+        dataStore.edit {
+            it[PreferenceKeys.WEIGHT_REMINDER_ENABLED] = enabled
+            it[PreferenceKeys.WEIGHT_REMINDER_HOUR] = hour
+            it[PreferenceKeys.WEIGHT_REMINDER_MINUTE] = minute
+        }
+    }
+
+    val reminderSettings: Flow<ReminderSettings> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { p ->
+            ReminderSettings(
+                waterEnabled = p[PreferenceKeys.WATER_REMINDER_ENABLED] ?: false,
+                waterIntervalMinutes = p[PreferenceKeys.WATER_REMINDER_INTERVAL_MIN] ?: 120,
+                waterStartHour = p[PreferenceKeys.WATER_REMINDER_START_HOUR] ?: 8,
+                waterEndHour = p[PreferenceKeys.WATER_REMINDER_END_HOUR] ?: 20,
+                mealsEnabled = p[PreferenceKeys.MEAL_REMINDER_ENABLED] ?: false,
+                breakfastHour = p[PreferenceKeys.MEAL_BREAKFAST_HOUR] ?: 8,
+                lunchHour = p[PreferenceKeys.MEAL_LUNCH_HOUR] ?: 12,
+                dinnerHour = p[PreferenceKeys.MEAL_DINNER_HOUR] ?: 18,
+                exerciseEnabled = p[PreferenceKeys.EXERCISE_REMINDER_ENABLED] ?: false,
+                weightEnabled = p[PreferenceKeys.WEIGHT_REMINDER_ENABLED] ?: false,
+                weightHour = p[PreferenceKeys.WEIGHT_REMINDER_HOUR] ?: 8,
+                weightMinute = p[PreferenceKeys.WEIGHT_REMINDER_MINUTE] ?: 0
+            )
+        }
+
+    // Dark mode
+    suspend fun setDarkMode(enabled: Boolean) {
+        dataStore.edit { it[PreferenceKeys.DARK_MODE_ENABLED] = enabled }
+    }
+
+    val darkModeEnabled: Flow<Boolean> = dataStore.data
+        .map { it[PreferenceKeys.DARK_MODE_ENABLED] ?: false }
+
+    // Pro user state (Play Billing-driven)
+    suspend fun setProUser(isPro: Boolean) {
+        dataStore.edit { it[PreferenceKeys.IS_PRO_USER] = isPro }
+    }
+
+    val isProUser: Flow<Boolean> = dataStore.data
+        .map { it[PreferenceKeys.IS_PRO_USER] ?: false }
+
+    // ===== Achievements =====
+
+    private object AchievementKeys {
+        val UNLOCKED_ACHIEVEMENTS = stringSetPreferencesKey("unlocked_achievements")
+    }
+
+    /** Observe the full set of unlocked achievement IDs. */
+    val unlockedAchievements: Flow<Set<String>> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[AchievementKeys.UNLOCKED_ACHIEVEMENTS] ?: emptySet() }
+
+    /** Persist a single unlocked achievement ID (idempotent — DataStore sets are de-duped). */
+    suspend fun addUnlockedAchievement(id: String) {
+        dataStore.edit { prefs ->
+            val current = prefs[AchievementKeys.UNLOCKED_ACHIEVEMENTS] ?: emptySet()
+            prefs[AchievementKeys.UNLOCKED_ACHIEVEMENTS] = current + id
+        }
+    }
+
+    /** Batch-persist a set of unlocked achievement IDs. */
+    suspend fun addUnlockedAchievements(ids: Set<String>) {
+        dataStore.edit { prefs ->
+            val current = prefs[AchievementKeys.UNLOCKED_ACHIEVEMENTS] ?: emptySet()
+            prefs[AchievementKeys.UNLOCKED_ACHIEVEMENTS] = current + ids
+        }
+    }
+
     // Clear all preferences (for logout/reset)
     suspend fun clearAllPreferences() {
         dataStore.edit { preferences ->
@@ -287,6 +389,21 @@ class PreferencesManager @Inject constructor(
         }
     }
 }
+
+data class ReminderSettings(
+    val waterEnabled: Boolean,
+    val waterIntervalMinutes: Int,
+    val waterStartHour: Int,
+    val waterEndHour: Int,
+    val mealsEnabled: Boolean,
+    val breakfastHour: Int,
+    val lunchHour: Int,
+    val dinnerHour: Int,
+    val exerciseEnabled: Boolean,
+    val weightEnabled: Boolean,
+    val weightHour: Int,
+    val weightMinute: Int
+)
 
 data class UserProfile(
     val name: String,

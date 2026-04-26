@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -5,6 +7,12 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("kotlinx-serialization")
 }
+
+val localProperties = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) load(f.inputStream())
+}
+val anthropicApiKey: String = localProperties.getProperty("anthropic.api.key", "")
 
 android {
     namespace = "com.mochasmindlab.mlhealth"
@@ -25,6 +33,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "ANTHROPIC_API_KEY", "\"$anthropicApiKey\"")
     }
 
     buildTypes {
@@ -149,6 +158,9 @@ dependencies {
 
     // ML Kit
     implementation("com.google.mlkit:barcode-scanning:17.0.2")
+
+    // Google Play Billing
+    implementation("com.android.billingclient:billing-ktx:6.2.1")
 
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.7.1")

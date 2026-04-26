@@ -92,6 +92,18 @@ interface FoodDao {
     
     @Query("SELECT SUM(fat * servingCount) FROM food_entries WHERE date = :date")
     suspend fun getTotalFatForDate(date: Date): Double?
+
+    /** Returns all distinct logged dates (as timestamps), newest first. Suspend version for one-shot queries. */
+    @Query("SELECT DISTINCT date FROM food_entries ORDER BY date DESC")
+    suspend fun getAllLoggedDates(): List<Date>
+
+    /** Room Flow version — emits a new list whenever food_entries changes. Used by LoggingStreakManager. */
+    @Query("SELECT DISTINCT date FROM food_entries ORDER BY date DESC")
+    fun getAllLoggedDatesFlow(): kotlinx.coroutines.flow.Flow<List<Date>>
+
+    /** All-time count of food entries. Used by AchievementManager. */
+    @Query("SELECT COUNT(*) FROM food_entries")
+    suspend fun getTotalFoodEntryCount(): Int
 }
 
 @Dao
