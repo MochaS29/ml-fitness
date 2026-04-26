@@ -1,0 +1,1686 @@
+{
+  "dietType": "high_protein",
+  "displayName": "High Protein",
+  "description": "Protein-focused diet ideal for muscle building, recovery, and maintaining lean body mass",
+  "benefits": [
+    "Supports muscle growth",
+    "Enhances workout recovery",
+    "Increases satiety",
+    "Boosts metabolism",
+    "Preserves lean mass during cutting"
+  ],
+  "restrictions": [
+    "Minimum 30g protein per main meal",
+    "Lean protein sources preferred",
+    "Moderate carbs and fats",
+    "Limited processed foods"
+  ],
+  "meals": {
+    "hp_egg_white_veggie_scramble": {
+      "name": "Egg White Veggie Scramble",
+      "description": "Fluffy egg whites loaded with spinach, bell peppers, and mushrooms, served with whole wheat toast",
+      "calories": 320,
+      "protein": 32.0,
+      "carbs": 28.0,
+      "fat": 8.0,
+      "fiber": 5.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "8 large egg whites",
+        "1 cup fresh spinach",
+        "1/2 red bell pepper, diced",
+        "1/2 cup sliced mushrooms",
+        "1 slice whole wheat bread",
+        "1 tsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a non-stick skillet over medium heat.",
+        "Saute bell pepper and mushrooms for 3 minutes until softened.",
+        "Add spinach and cook until wilted, about 1 minute.",
+        "Pour in egg whites and gently scramble until set, about 3-4 minutes.",
+        "Season with salt and pepper. Serve with toasted whole wheat bread."
+      ],
+      "tags": ["high-protein", "breakfast", "low-fat", "quick"]
+    },
+    "hp_greek_yogurt_protein_bowl": {
+      "name": "Greek Yogurt Protein Power Bowl",
+      "description": "Thick Greek yogurt topped with berries, granola, chia seeds, and a drizzle of honey",
+      "calories": 410,
+      "protein": 35.0,
+      "carbs": 45.0,
+      "fat": 10.0,
+      "fiber": 6.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1.5 cups plain nonfat Greek yogurt",
+        "1/2 cup mixed berries (blueberries, strawberries)",
+        "1/4 cup low-fat granola",
+        "1 tbsp chia seeds",
+        "1 scoop vanilla whey protein powder",
+        "1 tsp honey"
+      ],
+      "instructions": [
+        "Add Greek yogurt to a bowl and mix in the whey protein powder until smooth.",
+        "Top with mixed berries and granola.",
+        "Sprinkle chia seeds over the top.",
+        "Drizzle with honey and serve immediately."
+      ],
+      "tags": ["high-protein", "breakfast", "no-cook", "quick", "post-workout"]
+    },
+    "hp_turkey_sausage_egg_muffins": {
+      "name": "Turkey Sausage Egg Muffins",
+      "description": "Portable baked egg muffins packed with turkey sausage, cheddar, and chives",
+      "calories": 340,
+      "protein": 34.0,
+      "carbs": 8.0,
+      "fat": 18.0,
+      "fiber": 1.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "6 large eggs",
+        "4 oz turkey breakfast sausage, crumbled",
+        "1/4 cup shredded reduced-fat cheddar cheese",
+        "2 tbsp chopped chives",
+        "1/4 cup diced onion",
+        "Cooking spray",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Spray a 6-cup muffin tin with cooking spray.",
+        "Brown the turkey sausage in a skillet over medium heat, breaking into crumbles, about 5 minutes.",
+        "Whisk eggs in a bowl and stir in cooked sausage, cheese, chives, onion, salt, and pepper.",
+        "Divide mixture evenly among muffin cups.",
+        "Bake for 18-20 minutes until set and lightly golden.",
+        "Let cool 2 minutes before removing. Serves 2 (3 muffins each)."
+      ],
+      "tags": ["high-protein", "breakfast", "meal-prep", "low-carb"]
+    },
+    "hp_protein_oatmeal": {
+      "name": "Protein-Packed Oatmeal",
+      "description": "Creamy oats blended with whey protein, topped with banana slices and almond butter",
+      "calories": 430,
+      "protein": 33.0,
+      "carbs": 52.0,
+      "fat": 11.0,
+      "fiber": 6.0,
+      "prepTime": 3,
+      "cookTime": 7,
+      "ingredients": [
+        "1 cup rolled oats",
+        "1.5 cups water",
+        "1 scoop chocolate whey protein powder",
+        "1/2 medium banana, sliced",
+        "1 tbsp almond butter",
+        "Pinch of cinnamon"
+      ],
+      "instructions": [
+        "Combine oats and water in a saucepan. Bring to a boil, then reduce heat and simmer for 5 minutes.",
+        "Remove from heat and let cool for 1 minute.",
+        "Stir in whey protein powder until fully combined.",
+        "Top with banana slices, almond butter, and a pinch of cinnamon."
+      ],
+      "tags": ["high-protein", "breakfast", "muscle-building", "quick"]
+    },
+    "hp_cottage_cheese_pancakes": {
+      "name": "Cottage Cheese Protein Pancakes",
+      "description": "Light and fluffy pancakes made with cottage cheese and oats for a protein-rich breakfast",
+      "calories": 380,
+      "protein": 32.0,
+      "carbs": 40.0,
+      "fat": 9.0,
+      "fiber": 4.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "1 cup low-fat cottage cheese",
+        "3/4 cup rolled oats",
+        "3 large eggs",
+        "1 tsp vanilla extract",
+        "1/2 tsp baking powder",
+        "1/2 cup fresh blueberries",
+        "Cooking spray"
+      ],
+      "instructions": [
+        "Blend cottage cheese, oats, eggs, vanilla, and baking powder in a blender until smooth.",
+        "Heat a non-stick skillet over medium heat and spray with cooking spray.",
+        "Pour 1/4 cup batter per pancake. Cook until bubbles form on top, about 2-3 minutes.",
+        "Flip and cook another 1-2 minutes until golden brown.",
+        "Serve topped with fresh blueberries. Makes about 6 pancakes."
+      ],
+      "tags": ["high-protein", "breakfast", "lean"]
+    },
+    "hp_smoked_salmon_toast": {
+      "name": "Smoked Salmon Avocado Toast",
+      "description": "Whole grain toast layered with mashed avocado, smoked salmon, capers, and a poached egg",
+      "calories": 420,
+      "protein": 30.0,
+      "carbs": 30.0,
+      "fat": 20.0,
+      "fiber": 6.0,
+      "prepTime": 5,
+      "cookTime": 5,
+      "ingredients": [
+        "2 slices whole grain bread",
+        "4 oz smoked salmon",
+        "1/2 medium avocado",
+        "1 large egg",
+        "1 tbsp capers",
+        "1 tsp lemon juice",
+        "Fresh dill for garnish",
+        "Black pepper to taste"
+      ],
+      "instructions": [
+        "Toast the bread until golden and crisp.",
+        "Mash avocado with lemon juice and spread evenly on both slices.",
+        "Poach the egg in simmering water with a splash of vinegar for 3-4 minutes.",
+        "Layer smoked salmon on top of the avocado toast.",
+        "Top with the poached egg, capers, fresh dill, and black pepper."
+      ],
+      "tags": ["high-protein", "breakfast", "omega-3", "lean"]
+    },
+    "hp_breakfast_burrito": {
+      "name": "High-Protein Breakfast Burrito",
+      "description": "A hearty whole wheat tortilla stuffed with scrambled eggs, turkey bacon, black beans, and salsa",
+      "calories": 460,
+      "protein": 36.0,
+      "carbs": 38.0,
+      "fat": 16.0,
+      "fiber": 7.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "1 large whole wheat tortilla (10-inch)",
+        "4 large eggs, scrambled",
+        "2 slices turkey bacon",
+        "1/4 cup canned black beans, rinsed",
+        "2 tbsp salsa",
+        "2 tbsp shredded reduced-fat cheddar cheese",
+        "1 tsp olive oil"
+      ],
+      "instructions": [
+        "Cook turkey bacon in a skillet until crisp. Chop into pieces.",
+        "Scramble eggs in olive oil over medium heat until just set.",
+        "Warm the tortilla in a dry skillet or microwave for 15 seconds.",
+        "Layer eggs, turkey bacon, black beans, cheese, and salsa in the center of the tortilla.",
+        "Fold in the sides and roll tightly into a burrito."
+      ],
+      "tags": ["high-protein", "breakfast", "meal-prep", "muscle-building"]
+    },
+    "hp_overnight_protein_oats": {
+      "name": "Overnight Protein Oats",
+      "description": "No-cook oats soaked overnight with protein powder, topped with walnuts and strawberries",
+      "calories": 400,
+      "protein": 31.0,
+      "carbs": 48.0,
+      "fat": 10.0,
+      "fiber": 7.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "3/4 cup rolled oats",
+        "1 scoop vanilla whey protein powder",
+        "3/4 cup unsweetened almond milk",
+        "1/4 cup plain nonfat Greek yogurt",
+        "1 tbsp chopped walnuts",
+        "1/2 cup sliced strawberries",
+        "1 tsp honey"
+      ],
+      "instructions": [
+        "Combine oats, protein powder, almond milk, and Greek yogurt in a jar or container.",
+        "Stir well until fully mixed with no clumps.",
+        "Cover and refrigerate for at least 6 hours or overnight.",
+        "In the morning, top with strawberries, walnuts, and a drizzle of honey."
+      ],
+      "tags": ["high-protein", "breakfast", "meal-prep", "no-cook"]
+    },
+    "hp_spinach_feta_egg_wrap": {
+      "name": "Spinach Feta Egg White Wrap",
+      "description": "A light whole wheat wrap filled with seasoned egg whites, spinach, sun-dried tomatoes, and feta",
+      "calories": 310,
+      "protein": 30.0,
+      "carbs": 26.0,
+      "fat": 9.0,
+      "fiber": 4.0,
+      "prepTime": 5,
+      "cookTime": 8,
+      "ingredients": [
+        "6 large egg whites",
+        "1 whole wheat wrap (8-inch)",
+        "1 cup fresh spinach",
+        "2 tbsp crumbled feta cheese",
+        "2 tbsp chopped sun-dried tomatoes",
+        "1 tsp olive oil",
+        "1/4 tsp garlic powder",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a non-stick skillet over medium heat.",
+        "Add spinach and sun-dried tomatoes, cook until spinach is wilted, about 1 minute.",
+        "Pour in egg whites seasoned with garlic powder, salt, and pepper.",
+        "Scramble gently until egg whites are fully cooked, about 3 minutes.",
+        "Warm the wrap in a dry skillet for 30 seconds per side.",
+        "Fill wrap with the egg white mixture and top with crumbled feta. Fold and serve."
+      ],
+      "tags": ["high-protein", "breakfast", "low-fat", "quick"]
+    },
+    "hp_chocolate_banana_smoothie": {
+      "name": "Chocolate Banana Protein Smoothie",
+      "description": "A thick creamy smoothie blending whey protein, banana, peanut butter, and cocoa for a satisfying start",
+      "calories": 390,
+      "protein": 35.0,
+      "carbs": 42.0,
+      "fat": 10.0,
+      "fiber": 5.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1.5 scoops chocolate whey protein powder",
+        "1 medium banana, frozen",
+        "1 tbsp natural peanut butter",
+        "1 cup unsweetened almond milk",
+        "1/2 cup ice",
+        "1 tsp cocoa powder"
+      ],
+      "instructions": [
+        "Add almond milk, frozen banana, and peanut butter to a blender.",
+        "Add protein powder, cocoa powder, and ice.",
+        "Blend on high for 45-60 seconds until smooth and creamy.",
+        "Pour into a glass and serve immediately."
+      ],
+      "tags": ["high-protein", "breakfast", "post-workout", "quick", "no-cook"]
+    },
+    "hp_steak_and_eggs": {
+      "name": "Steak and Eggs",
+      "description": "Classic bodybuilding breakfast with seared sirloin steak, sunny-side-up eggs, and sauteed asparagus",
+      "calories": 480,
+      "protein": 45.0,
+      "carbs": 6.0,
+      "fat": 30.0,
+      "fiber": 2.0,
+      "prepTime": 5,
+      "cookTime": 12,
+      "ingredients": [
+        "5 oz sirloin steak",
+        "2 large eggs",
+        "6 asparagus spears",
+        "1 tsp olive oil",
+        "1 tsp butter",
+        "Salt and pepper to taste",
+        "Garlic powder to taste"
+      ],
+      "instructions": [
+        "Season steak with salt, pepper, and garlic powder on both sides.",
+        "Heat olive oil in a cast iron skillet over high heat. Sear steak 3-4 minutes per side for medium.",
+        "Remove steak and let rest for 3 minutes.",
+        "In the same skillet, reduce heat to medium and melt butter. Fry eggs sunny-side-up for 3 minutes.",
+        "Meanwhile, sauté asparagus in a separate pan with a drizzle of oil for 3 minutes.",
+        "Slice steak and serve with eggs and asparagus."
+      ],
+      "tags": ["high-protein", "breakfast", "low-carb", "muscle-building"]
+    },
+    "hp_ham_cheese_omelette": {
+      "name": "Ham and Cheese Omelette",
+      "description": "A golden omelette filled with lean ham, Swiss cheese, and diced tomatoes",
+      "calories": 370,
+      "protein": 34.0,
+      "carbs": 6.0,
+      "fat": 24.0,
+      "fiber": 1.0,
+      "prepTime": 5,
+      "cookTime": 8,
+      "ingredients": [
+        "4 large eggs",
+        "3 oz lean deli ham, diced",
+        "1 oz Swiss cheese, shredded",
+        "1/4 cup diced tomatoes",
+        "1 tbsp chopped fresh chives",
+        "1 tsp butter",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Whisk eggs with salt and pepper in a bowl.",
+        "Melt butter in a non-stick skillet over medium heat.",
+        "Pour in eggs and let set for 1 minute without stirring.",
+        "Add ham, Swiss cheese, and tomatoes to one half of the omelette.",
+        "Fold the other half over the fillings and cook 2-3 more minutes until cheese melts.",
+        "Slide onto a plate and garnish with chives."
+      ],
+      "tags": ["high-protein", "breakfast", "low-carb", "quick"]
+    },
+    "hp_grilled_chicken_rice": {
+      "name": "Grilled Chicken and Brown Rice",
+      "description": "Classic meal-prep staple with seasoned grilled chicken breast, brown rice, and steamed broccoli",
+      "calories": 480,
+      "protein": 42.0,
+      "carbs": 48.0,
+      "fat": 10.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "8 oz boneless skinless chicken breast",
+        "3/4 cup cooked brown rice",
+        "1 cup broccoli florets",
+        "1 tsp olive oil",
+        "1/2 tsp garlic powder",
+        "1/2 tsp paprika",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken breast with garlic powder, paprika, salt, and pepper.",
+        "Heat olive oil in a grill pan or skillet over medium-high heat.",
+        "Grill chicken for 6-7 minutes per side until internal temperature reaches 165°F.",
+        "Steam broccoli florets for 4-5 minutes until tender-crisp.",
+        "Let chicken rest for 3 minutes, then slice. Serve over brown rice with broccoli."
+      ],
+      "tags": ["high-protein", "lunch", "meal-prep", "muscle-building", "lean"]
+    },
+    "hp_turkey_quinoa_bowl": {
+      "name": "Ground Turkey Quinoa Bowl",
+      "description": "Seasoned lean ground turkey over fluffy quinoa with black beans, corn, and avocado",
+      "calories": 510,
+      "protein": 40.0,
+      "carbs": 50.0,
+      "fat": 14.0,
+      "fiber": 9.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "6 oz 93% lean ground turkey",
+        "3/4 cup cooked quinoa",
+        "1/4 cup canned black beans, rinsed",
+        "1/4 cup corn kernels",
+        "1/4 avocado, sliced",
+        "2 tbsp salsa",
+        "1 tsp cumin",
+        "1/2 tsp chili powder",
+        "1 tsp olive oil"
+      ],
+      "instructions": [
+        "Heat olive oil in a skillet over medium-high heat.",
+        "Add ground turkey, cumin, and chili powder. Cook, breaking apart, for 6-7 minutes until browned.",
+        "In a separate pot, cook quinoa according to package directions (or use pre-cooked).",
+        "Warm black beans and corn in the microwave for 1 minute.",
+        "Assemble bowl with quinoa, turkey, black beans, corn, avocado slices, and salsa."
+      ],
+      "tags": ["high-protein", "lunch", "meal-prep", "lean", "muscle-building"]
+    },
+    "hp_tuna_salad_wrap": {
+      "name": "Tuna Salad Lettuce Wraps",
+      "description": "Light and fresh tuna salad made with Greek yogurt, wrapped in crisp butter lettuce leaves",
+      "calories": 330,
+      "protein": 38.0,
+      "carbs": 10.0,
+      "fat": 15.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "2 cans (5 oz each) albacore tuna in water, drained",
+        "3 tbsp plain nonfat Greek yogurt",
+        "1 stalk celery, finely diced",
+        "2 tbsp red onion, finely diced",
+        "1 tsp Dijon mustard",
+        "1 tsp lemon juice",
+        "6 large butter lettuce leaves",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Drain tuna thoroughly and flake into a mixing bowl.",
+        "Add Greek yogurt, Dijon mustard, and lemon juice. Mix well.",
+        "Fold in diced celery and red onion. Season with salt and pepper.",
+        "Wash and pat dry the lettuce leaves.",
+        "Divide tuna salad evenly among the lettuce leaves and serve."
+      ],
+      "tags": ["high-protein", "lunch", "low-carb", "no-cook", "lean"]
+    },
+    "hp_chicken_caesar_salad": {
+      "name": "Grilled Chicken Caesar Salad",
+      "description": "Crisp romaine lettuce with grilled chicken, parmesan, croutons, and light Caesar dressing",
+      "calories": 420,
+      "protein": 40.0,
+      "carbs": 18.0,
+      "fat": 22.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "7 oz boneless skinless chicken breast",
+        "4 cups chopped romaine lettuce",
+        "2 tbsp shredded Parmesan cheese",
+        "1/4 cup whole wheat croutons",
+        "2 tbsp light Caesar dressing",
+        "1 tsp olive oil",
+        "1/2 tsp garlic powder",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken with garlic powder, salt, and pepper.",
+        "Heat olive oil in a grill pan over medium-high heat and cook chicken 6-7 minutes per side.",
+        "Let chicken rest 3 minutes, then slice into strips.",
+        "Toss romaine lettuce with Caesar dressing in a large bowl.",
+        "Top with sliced chicken, Parmesan cheese, and croutons."
+      ],
+      "tags": ["high-protein", "lunch", "lean", "classic"]
+    },
+    "hp_salmon_sweet_potato": {
+      "name": "Baked Salmon with Sweet Potato",
+      "description": "Herb-crusted baked salmon fillet served with roasted sweet potato and green beans",
+      "calories": 490,
+      "protein": 38.0,
+      "carbs": 40.0,
+      "fat": 18.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "6 oz Atlantic salmon fillet",
+        "1 medium sweet potato, cubed",
+        "1 cup green beans, trimmed",
+        "1 tsp olive oil",
+        "1 tsp dried dill",
+        "1/2 tsp garlic powder",
+        "1 lemon wedge",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Line a baking sheet with parchment paper.",
+        "Toss sweet potato cubes with half the olive oil, salt, and pepper. Spread on baking sheet.",
+        "Roast sweet potatoes for 10 minutes.",
+        "Season salmon with dill, garlic powder, salt, pepper, and remaining olive oil. Place on the baking sheet with sweet potatoes.",
+        "Add green beans to the sheet. Bake everything for 12-15 minutes until salmon flakes easily.",
+        "Squeeze lemon over salmon before serving."
+      ],
+      "tags": ["high-protein", "lunch", "omega-3", "meal-prep"]
+    },
+    "hp_lean_beef_stir_fry": {
+      "name": "Lean Beef and Vegetable Stir-Fry",
+      "description": "Tender strips of lean sirloin stir-fried with colorful vegetables in a savory soy ginger sauce",
+      "calories": 440,
+      "protein": 38.0,
+      "carbs": 32.0,
+      "fat": 16.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 12,
+      "ingredients": [
+        "6 oz top sirloin steak, sliced thin",
+        "1/2 cup cooked jasmine rice",
+        "1 cup broccoli florets",
+        "1/2 red bell pepper, sliced",
+        "1/2 cup snap peas",
+        "1 tbsp low-sodium soy sauce",
+        "1 tsp sesame oil",
+        "1 tsp fresh ginger, grated",
+        "1 clove garlic, minced",
+        "1 tsp cornstarch"
+      ],
+      "instructions": [
+        "Toss sliced beef with cornstarch, half the soy sauce, and a pinch of pepper.",
+        "Heat sesame oil in a wok or large skillet over high heat.",
+        "Stir-fry beef for 2-3 minutes until browned. Remove and set aside.",
+        "Add broccoli, bell pepper, and snap peas to the wok. Stir-fry for 3-4 minutes.",
+        "Return beef to the wok. Add garlic, ginger, and remaining soy sauce. Toss to combine.",
+        "Serve immediately over jasmine rice."
+      ],
+      "tags": ["high-protein", "lunch", "lean", "quick"]
+    },
+    "hp_chicken_avocado_wrap": {
+      "name": "Chicken Avocado Spinach Wrap",
+      "description": "A satisfying whole wheat wrap filled with sliced grilled chicken, avocado, spinach, and hummus",
+      "calories": 470,
+      "protein": 38.0,
+      "carbs": 36.0,
+      "fat": 18.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "6 oz grilled chicken breast, sliced",
+        "1 large whole wheat tortilla (10-inch)",
+        "1/3 avocado, sliced",
+        "1 cup fresh spinach",
+        "2 tbsp hummus",
+        "2 slices tomato",
+        "1 tbsp red onion, thinly sliced"
+      ],
+      "instructions": [
+        "Spread hummus evenly across the center of the tortilla.",
+        "Layer spinach leaves, sliced chicken, avocado, tomato, and red onion.",
+        "Fold in the sides of the tortilla.",
+        "Roll tightly from the bottom up into a wrap.",
+        "Cut in half diagonally and serve."
+      ],
+      "tags": ["high-protein", "lunch", "no-cook", "meal-prep", "lean"]
+    },
+    "hp_shrimp_cauliflower_rice": {
+      "name": "Garlic Shrimp with Cauliflower Rice",
+      "description": "Juicy garlic-butter shrimp served over seasoned cauliflower rice with a squeeze of lemon",
+      "calories": 310,
+      "protein": 36.0,
+      "carbs": 12.0,
+      "fat": 14.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 10,
+      "ingredients": [
+        "8 oz large shrimp, peeled and deveined",
+        "2 cups riced cauliflower",
+        "3 cloves garlic, minced",
+        "1 tbsp butter",
+        "1 tsp olive oil",
+        "1 tbsp fresh parsley, chopped",
+        "1 lemon wedge",
+        "Red pepper flakes to taste",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a large skillet over medium-high heat. Add cauliflower rice and cook 4-5 minutes until tender.",
+        "Season cauliflower rice with salt and pepper. Transfer to a plate.",
+        "In the same skillet, melt butter over medium-high heat.",
+        "Add shrimp and garlic. Cook 2-3 minutes per side until shrimp are pink and opaque.",
+        "Sprinkle with red pepper flakes and parsley. Squeeze lemon over top.",
+        "Serve shrimp over the cauliflower rice."
+      ],
+      "tags": ["high-protein", "lunch", "low-carb", "quick", "lean"]
+    },
+    "hp_lentil_turkey_soup": {
+      "name": "Turkey and Lentil Soup",
+      "description": "A hearty soup loaded with ground turkey, green lentils, carrots, and warming spices",
+      "calories": 420,
+      "protein": 36.0,
+      "carbs": 42.0,
+      "fat": 10.0,
+      "fiber": 12.0,
+      "prepTime": 10,
+      "cookTime": 35,
+      "ingredients": [
+        "6 oz 93% lean ground turkey",
+        "1/2 cup dried green lentils, rinsed",
+        "1 medium carrot, diced",
+        "1 stalk celery, diced",
+        "1/2 medium onion, diced",
+        "2 cups low-sodium chicken broth",
+        "1 cup water",
+        "1 tsp cumin",
+        "1/2 tsp turmeric",
+        "1 tsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a large pot over medium heat. Brown the ground turkey for 5 minutes, breaking apart.",
+        "Add onion, carrot, and celery. Sauté 3-4 minutes until softened.",
+        "Stir in cumin, turmeric, salt, and pepper.",
+        "Add lentils, chicken broth, and water. Bring to a boil.",
+        "Reduce heat, cover, and simmer for 25-30 minutes until lentils are tender.",
+        "Adjust seasoning and serve hot."
+      ],
+      "tags": ["high-protein", "lunch", "meal-prep", "high-fiber", "lean"]
+    },
+    "hp_chicken_pesto_pasta": {
+      "name": "Chicken Pesto Pasta",
+      "description": "Whole wheat penne tossed with basil pesto, grilled chicken, cherry tomatoes, and Parmesan",
+      "calories": 520,
+      "protein": 42.0,
+      "carbs": 48.0,
+      "fat": 16.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "7 oz boneless skinless chicken breast",
+        "3 oz whole wheat penne (dry weight)",
+        "2 tbsp basil pesto",
+        "1/2 cup cherry tomatoes, halved",
+        "1 tbsp shredded Parmesan cheese",
+        "1 cup fresh spinach",
+        "1 tsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Cook penne in salted boiling water according to package directions. Drain, reserving 2 tbsp pasta water.",
+        "Season chicken with salt and pepper. Grill or pan-sear in olive oil for 6-7 minutes per side. Slice.",
+        "In the pasta pot, combine cooked penne, pesto, reserved pasta water, and spinach. Toss until spinach wilts.",
+        "Add cherry tomatoes and sliced chicken. Toss gently.",
+        "Plate and top with shredded Parmesan."
+      ],
+      "tags": ["high-protein", "lunch", "muscle-building"]
+    },
+    "hp_teriyaki_chicken_bowl": {
+      "name": "Teriyaki Chicken Rice Bowl",
+      "description": "Glazed teriyaki chicken thighs over steamed rice with edamame and pickled cucumber",
+      "calories": 500,
+      "protein": 38.0,
+      "carbs": 52.0,
+      "fat": 14.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "7 oz boneless skinless chicken thighs",
+        "3/4 cup cooked white rice",
+        "1/3 cup shelled edamame",
+        "1/4 cucumber, thinly sliced",
+        "2 tbsp low-sodium teriyaki sauce",
+        "1 tsp rice vinegar",
+        "1 tsp sesame seeds",
+        "1 tsp olive oil"
+      ],
+      "instructions": [
+        "Marinate chicken thighs in 1 tbsp teriyaki sauce for 5 minutes.",
+        "Heat olive oil in a skillet over medium-high heat. Cook chicken 5-6 minutes per side until cooked through.",
+        "Brush remaining teriyaki sauce on chicken during the last minute. Slice into strips.",
+        "Toss cucumber slices with rice vinegar for a quick pickle.",
+        "Assemble bowl with rice, chicken strips, edamame, and pickled cucumber. Sprinkle with sesame seeds."
+      ],
+      "tags": ["high-protein", "lunch", "meal-prep", "muscle-building"]
+    },
+    "hp_egg_salad_sandwich": {
+      "name": "High-Protein Egg Salad Sandwich",
+      "description": "Egg salad made with extra egg whites and Greek yogurt on toasted whole grain bread",
+      "calories": 380,
+      "protein": 30.0,
+      "carbs": 32.0,
+      "fat": 14.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "4 large eggs, hard-boiled",
+        "4 large egg whites, hard-boiled",
+        "2 tbsp plain nonfat Greek yogurt",
+        "1 tsp Dijon mustard",
+        "1 stalk celery, finely diced",
+        "1 tbsp fresh chives, chopped",
+        "2 slices whole grain bread",
+        "2 leaves romaine lettuce",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Place eggs and extra egg whites in a pot, cover with water, and bring to a boil. Cover, remove from heat, and let sit 10-12 minutes.",
+        "Transfer to an ice bath to cool. Peel and roughly chop.",
+        "Mix chopped eggs with Greek yogurt, Dijon mustard, celery, and chives.",
+        "Season with salt and pepper.",
+        "Toast bread and layer lettuce, then egg salad between the slices."
+      ],
+      "tags": ["high-protein", "lunch", "meal-prep", "lean"]
+    },
+    "hp_grilled_chicken_sweet_potato": {
+      "name": "Grilled Chicken with Roasted Sweet Potato",
+      "description": "Herb-marinated grilled chicken breast with roasted sweet potato wedges and a side salad",
+      "calories": 460,
+      "protein": 40.0,
+      "carbs": 42.0,
+      "fat": 12.0,
+      "fiber": 6.0,
+      "prepTime": 15,
+      "cookTime": 30,
+      "ingredients": [
+        "7 oz boneless skinless chicken breast",
+        "1 medium sweet potato, cut into wedges",
+        "2 cups mixed greens",
+        "1 tbsp balsamic vinaigrette",
+        "1 tsp olive oil",
+        "1/2 tsp dried rosemary",
+        "1/2 tsp dried thyme",
+        "1/2 tsp garlic powder",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Toss sweet potato wedges with half the olive oil, salt, and pepper.",
+        "Spread on a baking sheet and roast for 25-30 minutes, flipping halfway.",
+        "Marinate chicken with remaining olive oil, rosemary, thyme, garlic powder, salt, and pepper.",
+        "Grill or pan-sear chicken over medium-high heat for 6-7 minutes per side.",
+        "Let chicken rest 3 minutes before slicing.",
+        "Serve sliced chicken with sweet potato wedges and mixed greens tossed in balsamic vinaigrette."
+      ],
+      "tags": ["high-protein", "dinner", "lean", "meal-prep"]
+    },
+    "hp_baked_cod_asparagus": {
+      "name": "Baked Cod with Asparagus",
+      "description": "Flaky cod fillets baked with lemon, garlic, and served alongside roasted asparagus and wild rice",
+      "calories": 400,
+      "protein": 40.0,
+      "carbs": 34.0,
+      "fat": 10.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "8 oz cod fillet",
+        "12 asparagus spears, trimmed",
+        "1/2 cup cooked wild rice",
+        "1 tbsp olive oil",
+        "2 cloves garlic, minced",
+        "1 lemon, juiced and zested",
+        "1 tsp dried oregano",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Line a baking sheet with parchment paper.",
+        "Place cod fillet on the sheet. Drizzle with half the olive oil, lemon juice, garlic, and oregano.",
+        "Arrange asparagus around the cod. Drizzle with remaining olive oil, salt, and pepper.",
+        "Bake for 15-18 minutes until cod flakes easily with a fork.",
+        "Serve with wild rice and a sprinkle of lemon zest."
+      ],
+      "tags": ["high-protein", "dinner", "lean", "low-fat"]
+    },
+    "hp_turkey_meatballs_marinara": {
+      "name": "Turkey Meatballs with Marinara",
+      "description": "Baked lean turkey meatballs simmered in a robust marinara sauce over whole wheat spaghetti",
+      "calories": 510,
+      "protein": 40.0,
+      "carbs": 50.0,
+      "fat": 14.0,
+      "fiber": 7.0,
+      "prepTime": 15,
+      "cookTime": 25,
+      "ingredients": [
+        "7 oz 93% lean ground turkey",
+        "3 oz whole wheat spaghetti (dry weight)",
+        "1/2 cup marinara sauce (no sugar added)",
+        "1 large egg white",
+        "2 tbsp whole wheat breadcrumbs",
+        "1 tbsp fresh parsley, chopped",
+        "1 clove garlic, minced",
+        "1/4 tsp Italian seasoning",
+        "1 tbsp grated Parmesan cheese",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Line a baking sheet with parchment paper.",
+        "Mix ground turkey, egg white, breadcrumbs, garlic, Italian seasoning, parsley, salt, and pepper. Form into 8 meatballs.",
+        "Place meatballs on the baking sheet and bake for 18-20 minutes until cooked through.",
+        "Meanwhile, cook spaghetti according to package directions.",
+        "Heat marinara sauce in a saucepan. Add baked meatballs and simmer 3-5 minutes.",
+        "Serve meatballs and sauce over spaghetti, topped with Parmesan."
+      ],
+      "tags": ["high-protein", "dinner", "meal-prep", "muscle-building"]
+    },
+    "hp_grilled_salmon_quinoa": {
+      "name": "Grilled Salmon with Lemon Quinoa",
+      "description": "Grilled salmon fillet served on a bed of lemon-herb quinoa with roasted zucchini",
+      "calories": 520,
+      "protein": 42.0,
+      "carbs": 38.0,
+      "fat": 20.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "7 oz Atlantic salmon fillet",
+        "3/4 cup cooked quinoa",
+        "1 medium zucchini, sliced into half-moons",
+        "1 tbsp olive oil",
+        "1 lemon, juiced",
+        "1 tbsp fresh dill, chopped",
+        "1 clove garlic, minced",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat grill or grill pan to medium-high heat.",
+        "Brush salmon with half the olive oil, season with salt, pepper, and garlic.",
+        "Grill salmon skin-side down for 5-6 minutes, flip and cook 3-4 minutes more.",
+        "Toss zucchini with remaining olive oil, salt, and pepper. Grill or roast at 425°F for 8-10 minutes.",
+        "Toss cooked quinoa with lemon juice and fresh dill.",
+        "Plate quinoa, top with salmon fillet, and serve zucchini alongside."
+      ],
+      "tags": ["high-protein", "dinner", "omega-3", "muscle-building"]
+    },
+    "hp_lean_beef_tacos": {
+      "name": "Lean Beef Tacos",
+      "description": "Seasoned lean ground beef in corn tortillas with fresh pico de gallo, lettuce, and Greek yogurt crema",
+      "calories": 460,
+      "protein": 38.0,
+      "carbs": 36.0,
+      "fat": 18.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "6 oz 95% lean ground beef",
+        "3 small corn tortillas (6-inch)",
+        "1/4 cup diced tomatoes",
+        "2 tbsp diced red onion",
+        "1 tbsp fresh cilantro, chopped",
+        "1 tbsp lime juice",
+        "1/4 cup shredded lettuce",
+        "2 tbsp plain nonfat Greek yogurt",
+        "1 tsp chili powder",
+        "1/2 tsp cumin",
+        "1/2 tsp garlic powder"
+      ],
+      "instructions": [
+        "Brown the ground beef in a skillet over medium-high heat, breaking apart, for 5-6 minutes.",
+        "Season with chili powder, cumin, and garlic powder. Cook 1-2 more minutes.",
+        "Make pico de gallo by combining diced tomatoes, red onion, cilantro, and lime juice.",
+        "Warm corn tortillas in a dry skillet for 30 seconds per side.",
+        "Fill tortillas with seasoned beef, lettuce, pico de gallo, and a dollop of Greek yogurt."
+      ],
+      "tags": ["high-protein", "dinner", "lean", "quick"]
+    },
+    "hp_chicken_stir_fry_noodles": {
+      "name": "Chicken Stir-Fry with Rice Noodles",
+      "description": "Sliced chicken breast stir-fried with vegetables and thin rice noodles in a light soy-sesame sauce",
+      "calories": 470,
+      "protein": 38.0,
+      "carbs": 46.0,
+      "fat": 12.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "7 oz boneless skinless chicken breast, sliced",
+        "2 oz thin rice noodles (dry weight)",
+        "1 cup mixed stir-fry vegetables (bell pepper, snap peas, carrots)",
+        "1 tbsp low-sodium soy sauce",
+        "1 tsp sesame oil",
+        "1 tsp rice vinegar",
+        "1 clove garlic, minced",
+        "1 tsp fresh ginger, grated",
+        "1 tsp cornstarch",
+        "1 green onion, sliced"
+      ],
+      "instructions": [
+        "Soak rice noodles in boiling water for 5-7 minutes until tender. Drain and set aside.",
+        "Toss chicken slices with cornstarch and half the soy sauce.",
+        "Heat sesame oil in a wok over high heat. Stir-fry chicken for 4-5 minutes until golden. Remove.",
+        "Add vegetables, garlic, and ginger to the wok. Stir-fry 3-4 minutes.",
+        "Return chicken to wok, add noodles, remaining soy sauce, and rice vinegar. Toss to combine.",
+        "Garnish with sliced green onion and serve immediately."
+      ],
+      "tags": ["high-protein", "dinner", "quick", "lean"]
+    },
+    "hp_stuffed_bell_peppers": {
+      "name": "Turkey-Stuffed Bell Peppers",
+      "description": "Colorful bell peppers stuffed with seasoned ground turkey, rice, tomato sauce, and melted cheese",
+      "calories": 440,
+      "protein": 36.0,
+      "carbs": 34.0,
+      "fat": 16.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 35,
+      "ingredients": [
+        "2 large bell peppers, halved and seeded",
+        "6 oz 93% lean ground turkey",
+        "1/3 cup cooked brown rice",
+        "1/4 cup tomato sauce",
+        "1/4 cup shredded reduced-fat mozzarella cheese",
+        "1/4 cup diced onion",
+        "1 clove garlic, minced",
+        "1/2 tsp Italian seasoning",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Place pepper halves cut-side up in a baking dish.",
+        "Brown ground turkey with onion and garlic in a skillet for 5-6 minutes.",
+        "Stir in cooked rice, tomato sauce, Italian seasoning, salt, and pepper.",
+        "Spoon the turkey-rice mixture into each pepper half.",
+        "Cover with foil and bake for 25 minutes. Remove foil, top with mozzarella, and bake 5 more minutes until cheese melts."
+      ],
+      "tags": ["high-protein", "dinner", "meal-prep", "lean"]
+    },
+    "hp_herb_crusted_chicken_thigh": {
+      "name": "Herb-Crusted Chicken Thighs",
+      "description": "Juicy bone-in chicken thighs with a crispy herb crust, served with roasted Brussels sprouts",
+      "calories": 480,
+      "protein": 40.0,
+      "carbs": 16.0,
+      "fat": 28.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 35,
+      "ingredients": [
+        "2 bone-in, skin-on chicken thighs (about 8 oz total meat)",
+        "2 cups Brussels sprouts, halved",
+        "1 tbsp olive oil",
+        "1 tsp dried rosemary",
+        "1 tsp dried thyme",
+        "1/2 tsp garlic powder",
+        "1/2 tsp onion powder",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F.",
+        "Pat chicken thighs dry. Mix rosemary, thyme, garlic powder, onion powder, salt, and pepper. Rub over chicken.",
+        "Heat olive oil in an oven-safe skillet over medium-high heat. Sear chicken skin-side down for 4 minutes until crispy.",
+        "Flip chicken. Add Brussels sprouts around the chicken in the skillet.",
+        "Transfer skillet to oven and roast for 25-30 minutes until chicken reaches 175°F internal temp.",
+        "Let rest 5 minutes before serving."
+      ],
+      "tags": ["high-protein", "dinner", "muscle-building"]
+    },
+    "hp_pork_tenderloin_vegetables": {
+      "name": "Roasted Pork Tenderloin with Vegetables",
+      "description": "Lean pork tenderloin roasted with root vegetables, garlic, and a Dijon glaze",
+      "calories": 430,
+      "protein": 40.0,
+      "carbs": 30.0,
+      "fat": 14.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 30,
+      "ingredients": [
+        "6 oz pork tenderloin",
+        "1 cup diced butternut squash",
+        "1 medium carrot, chopped",
+        "1/2 red onion, quartered",
+        "1 tbsp Dijon mustard",
+        "1 tbsp olive oil",
+        "1 tsp dried sage",
+        "2 cloves garlic, minced",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F.",
+        "Rub pork tenderloin with Dijon mustard, garlic, sage, salt, and pepper.",
+        "Toss butternut squash, carrots, and red onion with olive oil, salt, and pepper.",
+        "Spread vegetables on a baking sheet. Place pork tenderloin on top.",
+        "Roast for 25-30 minutes until pork internal temperature reaches 145°F.",
+        "Let pork rest 5 minutes, then slice into medallions. Serve over roasted vegetables."
+      ],
+      "tags": ["high-protein", "dinner", "lean", "meal-prep"]
+    },
+    "hp_blackened_tilapia": {
+      "name": "Blackened Tilapia with Cilantro Lime Rice",
+      "description": "Spicy blackened tilapia fillets served over fragrant cilantro lime rice with a mango salsa",
+      "calories": 430,
+      "protein": 38.0,
+      "carbs": 44.0,
+      "fat": 10.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "7 oz tilapia fillet",
+        "3/4 cup cooked white rice",
+        "1 tbsp fresh cilantro, chopped",
+        "1 tbsp lime juice",
+        "1/4 cup diced mango",
+        "2 tbsp diced red onion",
+        "1 tsp olive oil",
+        "1 tsp paprika",
+        "1/2 tsp cayenne pepper",
+        "1/2 tsp garlic powder",
+        "1/2 tsp onion powder",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Mix paprika, cayenne, garlic powder, onion powder, salt, and pepper for the blackening spice.",
+        "Coat tilapia fillets evenly with the spice mix.",
+        "Heat olive oil in a skillet over high heat. Cook tilapia 3-4 minutes per side until blackened and flaky.",
+        "Toss cooked rice with cilantro and lime juice.",
+        "Make quick mango salsa by combining mango, red onion, a squeeze of lime, and cilantro.",
+        "Plate the cilantro lime rice, top with tilapia, and spoon mango salsa alongside."
+      ],
+      "tags": ["high-protein", "dinner", "lean", "quick"]
+    },
+    "hp_chicken_fajita_bowl": {
+      "name": "Chicken Fajita Bowl",
+      "description": "Colorful fajita-style chicken with sauteed peppers and onions over cilantro lime rice with beans",
+      "calories": 500,
+      "protein": 42.0,
+      "carbs": 48.0,
+      "fat": 14.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "7 oz boneless skinless chicken breast, sliced",
+        "1/2 cup cooked brown rice",
+        "1/3 cup canned black beans, rinsed",
+        "1/2 green bell pepper, sliced",
+        "1/2 red bell pepper, sliced",
+        "1/4 medium onion, sliced",
+        "1 tsp olive oil",
+        "1 tsp chili powder",
+        "1/2 tsp cumin",
+        "1/2 tsp smoked paprika",
+        "1 tbsp lime juice",
+        "1 tbsp fresh cilantro, chopped",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken slices with chili powder, cumin, smoked paprika, salt, and pepper.",
+        "Heat olive oil in a large skillet over medium-high heat. Cook chicken for 5-6 minutes until done. Remove.",
+        "In the same skillet, sauté peppers and onion for 4-5 minutes until slightly charred.",
+        "Toss brown rice with lime juice and cilantro.",
+        "Assemble bowl with rice, black beans, fajita chicken, and sautéed peppers and onions."
+      ],
+      "tags": ["high-protein", "dinner", "meal-prep", "muscle-building"]
+    },
+    "hp_bison_burger": {
+      "name": "Bison Burger with Sweet Potato Fries",
+      "description": "A lean bison patty on a whole wheat bun with lettuce, tomato, and baked sweet potato fries",
+      "calories": 530,
+      "protein": 38.0,
+      "carbs": 50.0,
+      "fat": 18.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "6 oz ground bison",
+        "1 whole wheat hamburger bun",
+        "1 medium sweet potato, cut into fries",
+        "1 leaf romaine lettuce",
+        "1 slice tomato",
+        "1 slice red onion",
+        "1 tsp olive oil",
+        "1/2 tsp garlic powder",
+        "1/2 tsp smoked paprika",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Toss sweet potato fries with olive oil, smoked paprika, and salt.",
+        "Spread on a baking sheet and bake 20-25 minutes, flipping halfway.",
+        "Form bison into a patty, season with garlic powder, salt, and pepper.",
+        "Grill or pan-sear the patty over medium-high heat, 4 minutes per side for medium.",
+        "Toast the bun lightly. Assemble burger with lettuce, tomato, and red onion.",
+        "Serve with sweet potato fries on the side."
+      ],
+      "tags": ["high-protein", "dinner", "lean", "muscle-building"]
+    },
+    "hp_chicken_tikka_masala": {
+      "name": "Chicken Tikka Masala (Lighter Version)",
+      "description": "Tender chicken in a creamy, spiced tomato-yogurt sauce served over basmati rice",
+      "calories": 490,
+      "protein": 40.0,
+      "carbs": 46.0,
+      "fat": 14.0,
+      "fiber": 3.0,
+      "prepTime": 15,
+      "cookTime": 25,
+      "ingredients": [
+        "7 oz boneless skinless chicken breast, cubed",
+        "3/4 cup cooked basmati rice",
+        "1/2 cup canned crushed tomatoes",
+        "3 tbsp plain nonfat Greek yogurt",
+        "1 tbsp olive oil",
+        "1 tsp garam masala",
+        "1/2 tsp turmeric",
+        "1/2 tsp cumin",
+        "1/2 tsp paprika",
+        "1 clove garlic, minced",
+        "1 tsp fresh ginger, grated",
+        "2 tbsp fresh cilantro, chopped",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Marinate chicken cubes in 1 tbsp Greek yogurt, half the garam masala, and turmeric for at least 10 minutes.",
+        "Heat olive oil in a skillet over medium-high heat. Cook chicken cubes for 5-6 minutes until golden. Remove.",
+        "In the same pan, sauté garlic and ginger for 1 minute. Add crushed tomatoes, remaining garam masala, cumin, and paprika.",
+        "Simmer sauce for 8-10 minutes until thickened. Stir in remaining Greek yogurt.",
+        "Return chicken to the sauce and cook 3-4 minutes. Adjust seasoning.",
+        "Serve over basmati rice, garnished with fresh cilantro."
+      ],
+      "tags": ["high-protein", "dinner", "muscle-building"]
+    },
+    "hp_protein_trail_mix": {
+      "name": "High-Protein Trail Mix",
+      "description": "A crunchy mix of roasted almonds, pumpkin seeds, dried edamame, and dark chocolate chips",
+      "calories": 280,
+      "protein": 16.0,
+      "carbs": 18.0,
+      "fat": 18.0,
+      "fiber": 4.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "1/4 cup roasted almonds",
+        "2 tbsp pumpkin seeds (pepitas)",
+        "2 tbsp dried roasted edamame",
+        "1 tbsp dark chocolate chips",
+        "1 tbsp dried cranberries"
+      ],
+      "instructions": [
+        "Measure out all ingredients.",
+        "Combine in a small container or bag.",
+        "Mix well and enjoy. Store in an airtight container for up to 2 weeks."
+      ],
+      "tags": ["high-protein", "snack", "no-cook", "portable"]
+    },
+    "hp_cottage_cheese_berries": {
+      "name": "Cottage Cheese with Berries and Honey",
+      "description": "Creamy low-fat cottage cheese topped with fresh mixed berries and a light drizzle of honey",
+      "calories": 220,
+      "protein": 24.0,
+      "carbs": 22.0,
+      "fat": 4.0,
+      "fiber": 3.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "1 cup low-fat cottage cheese",
+        "1/2 cup mixed berries (strawberries, blueberries, raspberries)",
+        "1 tsp honey",
+        "1 tbsp sliced almonds"
+      ],
+      "instructions": [
+        "Scoop cottage cheese into a bowl.",
+        "Top with mixed berries and sliced almonds.",
+        "Drizzle honey over the top and serve."
+      ],
+      "tags": ["high-protein", "snack", "no-cook", "quick"]
+    },
+    "hp_turkey_roll_ups": {
+      "name": "Turkey and Cheese Roll-Ups",
+      "description": "Sliced lean turkey breast rolled around cheese sticks with mustard, served with baby carrots",
+      "calories": 200,
+      "protein": 22.0,
+      "carbs": 8.0,
+      "fat": 9.0,
+      "fiber": 2.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "4 oz sliced lean deli turkey breast",
+        "1 low-fat mozzarella cheese stick",
+        "1 tsp Dijon mustard",
+        "10 baby carrots"
+      ],
+      "instructions": [
+        "Lay out turkey slices flat. Spread a thin layer of Dijon mustard on each.",
+        "Cut the cheese stick in half lengthwise.",
+        "Place cheese at the end of each turkey slice and roll up tightly.",
+        "Serve with baby carrots on the side."
+      ],
+      "tags": ["high-protein", "snack", "no-cook", "portable", "quick"]
+    },
+    "hp_protein_energy_bites": {
+      "name": "Peanut Butter Protein Energy Bites",
+      "description": "No-bake bites made with oats, peanut butter, whey protein, honey, and mini chocolate chips",
+      "calories": 260,
+      "protein": 18.0,
+      "carbs": 26.0,
+      "fat": 12.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1/2 cup rolled oats",
+        "2 tbsp natural peanut butter",
+        "1 scoop vanilla whey protein powder",
+        "1 tbsp honey",
+        "1 tbsp mini dark chocolate chips",
+        "1 tbsp ground flaxseed"
+      ],
+      "instructions": [
+        "Combine oats, protein powder, and flaxseed in a bowl.",
+        "Add peanut butter and honey. Mix until a sticky dough forms.",
+        "Fold in chocolate chips.",
+        "Roll into 6 small balls. Refrigerate for at least 30 minutes before eating.",
+        "Store in the fridge for up to 1 week. Makes 2 servings (3 bites each)."
+      ],
+      "tags": ["high-protein", "snack", "meal-prep", "no-cook", "post-workout"]
+    },
+    "hp_hard_boiled_eggs_hummus": {
+      "name": "Hard-Boiled Eggs with Hummus and Veggies",
+      "description": "Two hard-boiled eggs paired with creamy hummus and crispy sliced cucumber and bell pepper",
+      "calories": 240,
+      "protein": 16.0,
+      "carbs": 14.0,
+      "fat": 14.0,
+      "fiber": 4.0,
+      "prepTime": 5,
+      "cookTime": 12,
+      "ingredients": [
+        "2 large eggs",
+        "3 tbsp hummus",
+        "1/2 cucumber, sliced",
+        "1/2 bell pepper, sliced",
+        "Pinch of paprika",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Place eggs in a pot, cover with cold water, and bring to a boil.",
+        "Once boiling, cover and remove from heat. Let sit 10-12 minutes.",
+        "Transfer eggs to an ice bath. Peel and halve.",
+        "Arrange eggs on a plate with hummus, cucumber slices, and bell pepper slices.",
+        "Sprinkle paprika over the eggs and serve."
+      ],
+      "tags": ["high-protein", "snack", "meal-prep", "portable"]
+    },
+    "hp_greek_yogurt_parfait": {
+      "name": "Greek Yogurt Parfait",
+      "description": "Layered nonfat Greek yogurt with crunchy granola and a medley of fresh fruit",
+      "calories": 250,
+      "protein": 20.0,
+      "carbs": 32.0,
+      "fat": 4.0,
+      "fiber": 3.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1 cup plain nonfat Greek yogurt",
+        "1/4 cup low-fat granola",
+        "1/4 cup sliced strawberries",
+        "1/4 cup blueberries",
+        "1 tsp honey"
+      ],
+      "instructions": [
+        "Spoon half the Greek yogurt into a glass or bowl.",
+        "Add a layer of granola and half the berries.",
+        "Add the remaining yogurt on top.",
+        "Top with remaining berries and drizzle with honey."
+      ],
+      "tags": ["high-protein", "snack", "no-cook", "quick"]
+    },
+    "hp_edamame_sea_salt": {
+      "name": "Steamed Edamame with Sea Salt",
+      "description": "Warm steamed edamame pods sprinkled with flaky sea salt and a touch of garlic",
+      "calories": 190,
+      "protein": 17.0,
+      "carbs": 14.0,
+      "fat": 8.0,
+      "fiber": 5.0,
+      "prepTime": 2,
+      "cookTime": 5,
+      "ingredients": [
+        "1.5 cups frozen edamame in pods",
+        "1/2 tsp flaky sea salt",
+        "1/4 tsp garlic powder"
+      ],
+      "instructions": [
+        "Bring a pot of water to a boil. Add frozen edamame and cook 4-5 minutes.",
+        "Drain well and transfer to a bowl.",
+        "Sprinkle with sea salt and garlic powder. Toss to coat.",
+        "Serve warm. Squeeze pods to pop out the beans."
+      ],
+      "tags": ["high-protein", "snack", "quick", "lean"]
+    },
+    "hp_protein_shake_post_workout": {
+      "name": "Post-Workout Protein Shake",
+      "description": "A quick-absorbing protein shake with whey, banana, and almond milk to fuel recovery",
+      "calories": 250,
+      "protein": 25.0,
+      "carbs": 28.0,
+      "fat": 4.0,
+      "fiber": 2.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "1 scoop vanilla whey protein powder",
+        "1 small banana",
+        "1 cup unsweetened almond milk",
+        "1/2 cup ice",
+        "1 tsp honey"
+      ],
+      "instructions": [
+        "Add almond milk and banana to a blender.",
+        "Add protein powder, ice, and honey.",
+        "Blend on high for 30-45 seconds until smooth.",
+        "Pour and drink immediately after your workout."
+      ],
+      "tags": ["high-protein", "snack", "post-workout", "quick", "no-cook"]
+    },
+    "hp_tuna_cucumber_bites": {
+      "name": "Tuna Cucumber Bites",
+      "description": "Thick cucumber rounds topped with seasoned tuna salad, a caper, and a sprinkle of everything seasoning",
+      "calories": 180,
+      "protein": 24.0,
+      "carbs": 6.0,
+      "fat": 6.0,
+      "fiber": 1.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 can (5 oz) albacore tuna in water, drained",
+        "1 large English cucumber",
+        "1 tbsp plain nonfat Greek yogurt",
+        "1 tsp Dijon mustard",
+        "1 tsp lemon juice",
+        "1 tsp everything bagel seasoning",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Drain tuna and mix in a bowl with Greek yogurt, Dijon mustard, and lemon juice.",
+        "Season with salt and pepper.",
+        "Slice cucumber into 1/2-inch thick rounds (about 12 rounds).",
+        "Top each cucumber round with a spoonful of tuna mixture.",
+        "Sprinkle everything bagel seasoning over the top and serve."
+      ],
+      "tags": ["high-protein", "snack", "no-cook", "low-carb", "lean"]
+    },
+    "hp_chicken_black_bean_bowl": {
+      "name": "Chicken and Black Bean Power Bowl",
+      "description": "Shredded chicken breast with seasoned black beans, brown rice, roasted corn, and lime crema",
+      "calories": 490,
+      "protein": 42.0,
+      "carbs": 50.0,
+      "fat": 12.0,
+      "fiber": 10.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "7 oz boneless skinless chicken breast",
+        "1/2 cup cooked brown rice",
+        "1/2 cup canned black beans, rinsed",
+        "1/4 cup roasted corn kernels",
+        "2 tbsp plain nonfat Greek yogurt",
+        "1 tbsp lime juice",
+        "1 tsp cumin",
+        "1/2 tsp chili powder",
+        "1 tsp olive oil",
+        "1 tbsp fresh cilantro, chopped",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken with cumin, chili powder, salt, and pepper.",
+        "Heat olive oil in a skillet over medium-high heat. Cook chicken 6-7 minutes per side. Let rest 3 minutes, then shred with two forks.",
+        "Warm black beans and corn in the microwave or a small saucepan.",
+        "Mix Greek yogurt with lime juice for the crema.",
+        "Assemble bowl with brown rice, shredded chicken, black beans, and corn.",
+        "Drizzle with lime crema and garnish with cilantro."
+      ],
+      "tags": ["high-protein", "lunch", "meal-prep", "muscle-building", "high-fiber"]
+    },
+    "hp_mediterranean_chicken_plate": {
+      "name": "Mediterranean Chicken Plate",
+      "description": "Grilled chicken served with tabbouleh, hummus, cucumber, and warm whole wheat pita",
+      "calories": 480,
+      "protein": 40.0,
+      "carbs": 40.0,
+      "fat": 16.0,
+      "fiber": 7.0,
+      "prepTime": 15,
+      "cookTime": 15,
+      "ingredients": [
+        "7 oz boneless skinless chicken breast",
+        "1/4 cup prepared tabbouleh",
+        "3 tbsp hummus",
+        "1/4 cucumber, sliced",
+        "1 small whole wheat pita",
+        "1 tsp olive oil",
+        "1 tsp lemon juice",
+        "1/2 tsp za'atar seasoning",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken with za'atar, salt, pepper, and a drizzle of olive oil.",
+        "Grill or pan-sear chicken over medium-high heat for 6-7 minutes per side until cooked through.",
+        "Let chicken rest 3 minutes, then slice.",
+        "Warm the pita in a dry skillet or toaster for 30 seconds.",
+        "Arrange sliced chicken, tabbouleh, hummus, and cucumber slices on a plate. Squeeze lemon juice over the top."
+      ],
+      "tags": ["high-protein", "lunch", "lean", "meal-prep"]
+    },
+    "hp_honey_garlic_chicken": {
+      "name": "Honey Garlic Chicken with Jasmine Rice",
+      "description": "Tender chicken breast glazed in a sticky honey garlic sauce, served with steamed jasmine rice and bok choy",
+      "calories": 500,
+      "protein": 40.0,
+      "carbs": 52.0,
+      "fat": 12.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "7 oz boneless skinless chicken breast",
+        "3/4 cup cooked jasmine rice",
+        "2 heads baby bok choy, halved",
+        "2 cloves garlic, minced",
+        "1 tbsp honey",
+        "1 tbsp low-sodium soy sauce",
+        "1 tsp rice vinegar",
+        "1 tsp olive oil",
+        "1 tsp cornstarch mixed with 1 tbsp water",
+        "1 tsp sesame seeds"
+      ],
+      "instructions": [
+        "Season chicken breast with salt and pepper. Heat olive oil in a skillet over medium-high heat.",
+        "Cook chicken 6-7 minutes per side until golden and cooked through. Remove and let rest.",
+        "In the same skillet, sauté garlic for 30 seconds. Add honey, soy sauce, and rice vinegar.",
+        "Stir in cornstarch slurry and simmer until sauce thickens, about 1-2 minutes.",
+        "Steam bok choy in a covered pot with 1 inch of water for 3-4 minutes until tender.",
+        "Slice chicken, drizzle with honey garlic sauce, sprinkle sesame seeds, and serve with rice and bok choy."
+      ],
+      "tags": ["high-protein", "dinner", "muscle-building"]
+    },
+    "hp_beef_jerky_cheese_apple": {
+      "name": "Beef Jerky with Cheese and Apple",
+      "description": "A satisfying portable snack pairing lean beef jerky with string cheese and crisp apple slices",
+      "calories": 230,
+      "protein": 20.0,
+      "carbs": 20.0,
+      "fat": 8.0,
+      "fiber": 3.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "1.5 oz lean beef jerky",
+        "1 low-fat mozzarella string cheese",
+        "1 small apple, sliced"
+      ],
+      "instructions": [
+        "Slice the apple into wedges.",
+        "Portion out the beef jerky and string cheese.",
+        "Arrange on a plate or pack into a container for an on-the-go snack."
+      ],
+      "tags": ["high-protein", "snack", "no-cook", "portable", "quick"]
+    }
+  },
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "hp_egg_white_veggie_scramble",
+          "lunch": "hp_grilled_chicken_rice",
+          "dinner": "hp_grilled_salmon_quinoa",
+          "snack": "hp_cottage_cheese_berries"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "hp_greek_yogurt_protein_bowl",
+          "lunch": "hp_turkey_quinoa_bowl",
+          "dinner": "hp_lean_beef_tacos",
+          "snack": "hp_protein_trail_mix"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "hp_protein_oatmeal",
+          "lunch": "hp_chicken_caesar_salad",
+          "dinner": "hp_turkey_meatballs_marinara",
+          "snack": "hp_hard_boiled_eggs_hummus"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "hp_turkey_sausage_egg_muffins",
+          "lunch": "hp_salmon_sweet_potato",
+          "dinner": "hp_chicken_fajita_bowl",
+          "snack": "hp_greek_yogurt_parfait"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "hp_cottage_cheese_pancakes",
+          "lunch": "hp_tuna_salad_wrap",
+          "dinner": "hp_herb_crusted_chicken_thigh",
+          "snack": "hp_protein_energy_bites"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "hp_smoked_salmon_toast",
+          "lunch": "hp_chicken_avocado_wrap",
+          "dinner": "hp_baked_cod_asparagus",
+          "snack": "hp_edamame_sea_salt"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "hp_steak_and_eggs",
+          "lunch": "hp_lentil_turkey_soup",
+          "dinner": "hp_chicken_tikka_masala",
+          "snack": "hp_protein_shake_post_workout"
+        }
+      ]
+    },
+    {
+      "weekNumber": 2,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "hp_breakfast_burrito",
+          "lunch": "hp_lean_beef_stir_fry",
+          "dinner": "hp_grilled_chicken_sweet_potato",
+          "snack": "hp_turkey_roll_ups"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "hp_overnight_protein_oats",
+          "lunch": "hp_chicken_pesto_pasta",
+          "dinner": "hp_blackened_tilapia",
+          "snack": "hp_cottage_cheese_berries"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "hp_spinach_feta_egg_wrap",
+          "lunch": "hp_shrimp_cauliflower_rice",
+          "dinner": "hp_stuffed_bell_peppers",
+          "snack": "hp_protein_trail_mix"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "hp_chocolate_banana_smoothie",
+          "lunch": "hp_mediterranean_chicken_plate",
+          "dinner": "hp_pork_tenderloin_vegetables",
+          "snack": "hp_hard_boiled_eggs_hummus"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "hp_ham_cheese_omelette",
+          "lunch": "hp_egg_salad_sandwich",
+          "dinner": "hp_honey_garlic_chicken",
+          "snack": "hp_tuna_cucumber_bites"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "hp_greek_yogurt_protein_bowl",
+          "lunch": "hp_chicken_black_bean_bowl",
+          "dinner": "hp_grilled_salmon_quinoa",
+          "snack": "hp_beef_jerky_cheese_apple"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "hp_steak_and_eggs",
+          "lunch": "hp_chicken_caesar_salad",
+          "dinner": "hp_chicken_stir_fry_noodles",
+          "snack": "hp_protein_shake_post_workout"
+        }
+      ]
+    },
+    {
+      "weekNumber": 3,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "hp_cottage_cheese_pancakes",
+          "lunch": "hp_turkey_quinoa_bowl",
+          "dinner": "hp_lean_beef_tacos",
+          "snack": "hp_greek_yogurt_parfait"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "hp_protein_oatmeal",
+          "lunch": "hp_salmon_sweet_potato",
+          "dinner": "hp_turkey_meatballs_marinara",
+          "snack": "hp_protein_energy_bites"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "hp_egg_white_veggie_scramble",
+          "lunch": "hp_chicken_avocado_wrap",
+          "dinner": "hp_baked_cod_asparagus",
+          "snack": "hp_turkey_roll_ups"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "hp_smoked_salmon_toast",
+          "lunch": "hp_lentil_turkey_soup",
+          "dinner": "hp_chicken_fajita_bowl",
+          "snack": "hp_cottage_cheese_berries"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "hp_turkey_sausage_egg_muffins",
+          "lunch": "hp_tuna_salad_wrap",
+          "dinner": "hp_herb_crusted_chicken_thigh",
+          "snack": "hp_protein_trail_mix"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "hp_breakfast_burrito",
+          "lunch": "hp_shrimp_cauliflower_rice",
+          "dinner": "hp_chicken_tikka_masala",
+          "snack": "hp_tuna_cucumber_bites"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "hp_ham_cheese_omelette",
+          "lunch": "hp_chicken_pesto_pasta",
+          "dinner": "hp_pork_tenderloin_vegetables",
+          "snack": "hp_protein_shake_post_workout"
+        }
+      ]
+    },
+    {
+      "weekNumber": 4,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "hp_overnight_protein_oats",
+          "lunch": "hp_lean_beef_stir_fry",
+          "dinner": "hp_grilled_chicken_sweet_potato",
+          "snack": "hp_hard_boiled_eggs_hummus"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "hp_chocolate_banana_smoothie",
+          "lunch": "hp_teriyaki_chicken_bowl",
+          "dinner": "hp_blackened_tilapia",
+          "snack": "hp_edamame_sea_salt"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "hp_spinach_feta_egg_wrap",
+          "lunch": "hp_egg_salad_sandwich",
+          "dinner": "hp_stuffed_bell_peppers",
+          "snack": "hp_protein_energy_bites"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "hp_greek_yogurt_protein_bowl",
+          "lunch": "hp_grilled_chicken_rice",
+          "dinner": "hp_bison_burger",
+          "snack": "hp_greek_yogurt_parfait"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "hp_cottage_cheese_pancakes",
+          "lunch": "hp_chicken_caesar_salad",
+          "dinner": "hp_grilled_salmon_quinoa",
+          "snack": "hp_cottage_cheese_berries"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "hp_smoked_salmon_toast",
+          "lunch": "hp_turkey_quinoa_bowl",
+          "dinner": "hp_chicken_stir_fry_noodles",
+          "snack": "hp_turkey_roll_ups"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "hp_steak_and_eggs",
+          "lunch": "hp_salmon_sweet_potato",
+          "dinner": "hp_chicken_tikka_masala",
+          "snack": "hp_protein_shake_post_workout"
+        }
+      ]
+    }
+  ]
+}

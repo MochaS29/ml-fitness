@@ -1,0 +1,1689 @@
+{
+  "dietType": "balanced",
+  "displayName": "Balanced",
+  "description": "Well-rounded nutrition plan with balanced macros from whole foods for sustainable healthy eating",
+  "benefits": [
+    "Sustainable long-term eating",
+    "Balanced energy throughout the day",
+    "Complete nutrition coverage",
+    "Flexible food choices",
+    "Supports overall wellness"
+  ],
+  "restrictions": [
+    "Limited processed foods",
+    "Moderate portions",
+    "Balanced macronutrient ratios",
+    "Whole foods preferred"
+  ],
+  "meals": {
+    "bal_overnight_oats": {
+      "name": "Berry Overnight Oats",
+      "description": "Creamy overnight oats layered with mixed berries and a drizzle of honey",
+      "calories": 385,
+      "protein": 14.0,
+      "carbs": 58.0,
+      "fat": 12.0,
+      "fiber": 7.5,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1/2 cup rolled oats",
+        "1/2 cup whole milk",
+        "1/4 cup plain Greek yogurt",
+        "1/2 cup mixed berries (blueberries, raspberries, strawberries)",
+        "1 tbsp chia seeds",
+        "1 tbsp honey",
+        "1 tbsp sliced almonds"
+      ],
+      "instructions": [
+        "Combine oats, milk, Greek yogurt, and chia seeds in a mason jar or container.",
+        "Stir well, cover, and refrigerate overnight or at least 4 hours.",
+        "In the morning, top with mixed berries, sliced almonds, and a drizzle of honey.",
+        "Stir gently and enjoy cold or at room temperature."
+      ],
+      "tags": ["balanced", "meal-prep", "quick", "whole-grain", "vegetarian"]
+    },
+    "bal_veggie_scramble": {
+      "name": "Garden Veggie Egg Scramble",
+      "description": "Fluffy scrambled eggs loaded with bell peppers, spinach, and feta on whole wheat toast",
+      "calories": 410,
+      "protein": 24.0,
+      "carbs": 32.0,
+      "fat": 21.0,
+      "fiber": 5.0,
+      "prepTime": 5,
+      "cookTime": 8,
+      "ingredients": [
+        "3 large eggs",
+        "1/4 cup diced red bell pepper",
+        "1/4 cup diced green bell pepper",
+        "1 cup fresh baby spinach",
+        "2 tbsp crumbled feta cheese",
+        "1 slice whole wheat bread",
+        "1 tsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a non-stick skillet over medium heat.",
+        "Saute diced bell peppers for 2 minutes until slightly softened.",
+        "Add spinach and cook for 1 minute until wilted.",
+        "Pour in beaten eggs, gently fold until just set, about 2-3 minutes.",
+        "Top with crumbled feta and serve alongside toasted whole wheat bread."
+      ],
+      "tags": ["balanced", "quick", "lean-protein", "vegetarian"]
+    },
+    "bal_banana_pancakes": {
+      "name": "Whole Wheat Banana Pancakes",
+      "description": "Light and fluffy whole wheat pancakes with caramelized banana slices and a touch of maple syrup",
+      "calories": 435,
+      "protein": 15.0,
+      "carbs": 62.0,
+      "fat": 14.0,
+      "fiber": 5.5,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "3/4 cup whole wheat flour",
+        "1 medium ripe banana",
+        "1 large egg",
+        "1/2 cup low-fat milk",
+        "1 tsp baking powder",
+        "1 tbsp maple syrup",
+        "1 tsp butter",
+        "Pinch of cinnamon"
+      ],
+      "instructions": [
+        "Mash half the banana into a bowl, slice the other half and set aside.",
+        "Whisk together flour, baking powder, and cinnamon in a separate bowl.",
+        "Combine mashed banana, egg, and milk, then fold into dry ingredients until just combined.",
+        "Melt butter on a griddle over medium heat and pour batter to form 3 pancakes.",
+        "Cook 2-3 minutes per side until golden brown.",
+        "Top with sliced banana and drizzle with maple syrup."
+      ],
+      "tags": ["balanced", "whole-grain", "family-friendly"]
+    },
+    "bal_greek_yogurt_bowl": {
+      "name": "Greek Yogurt Power Bowl",
+      "description": "Thick Greek yogurt topped with granola, walnuts, and fresh fruit",
+      "calories": 365,
+      "protein": 22.0,
+      "carbs": 42.0,
+      "fat": 13.0,
+      "fiber": 4.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1 cup plain Greek yogurt (2%)",
+        "1/4 cup low-sugar granola",
+        "2 tbsp chopped walnuts",
+        "1/2 medium banana, sliced",
+        "1/4 cup fresh blueberries",
+        "1 tsp honey"
+      ],
+      "instructions": [
+        "Spoon Greek yogurt into a bowl.",
+        "Arrange granola, walnuts, banana slices, and blueberries on top.",
+        "Drizzle with honey and serve immediately."
+      ],
+      "tags": ["balanced", "quick", "vegetarian", "lean-protein"]
+    },
+    "bal_avocado_toast_egg": {
+      "name": "Avocado Toast with Poached Egg",
+      "description": "Crispy whole grain toast topped with mashed avocado, a perfectly poached egg, and everything seasoning",
+      "calories": 395,
+      "protein": 16.0,
+      "carbs": 34.0,
+      "fat": 22.0,
+      "fiber": 8.0,
+      "prepTime": 5,
+      "cookTime": 5,
+      "ingredients": [
+        "2 slices whole grain bread",
+        "1/2 medium avocado",
+        "1 large egg",
+        "1 tsp white vinegar",
+        "1/2 tsp everything bagel seasoning",
+        "Pinch of red pepper flakes",
+        "Squeeze of lemon juice"
+      ],
+      "instructions": [
+        "Toast the whole grain bread until golden and crisp.",
+        "Mash avocado with lemon juice and spread evenly on both slices.",
+        "Bring a small pot of water to a gentle simmer, add vinegar, and create a swirl.",
+        "Crack egg into the center, poach for 3-4 minutes, then remove with a slotted spoon.",
+        "Place poached egg on top of avocado toast, sprinkle with everything seasoning and red pepper flakes."
+      ],
+      "tags": ["balanced", "quick", "whole-grain"]
+    },
+    "bal_smoothie_bowl": {
+      "name": "Tropical Smoothie Bowl",
+      "description": "Thick blended mango-banana smoothie bowl topped with coconut flakes and seeds",
+      "calories": 380,
+      "protein": 13.0,
+      "carbs": 56.0,
+      "fat": 13.0,
+      "fiber": 6.5,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "1/2 cup frozen mango chunks",
+        "1/2 frozen banana",
+        "1/2 cup plain Greek yogurt",
+        "1/4 cup coconut milk",
+        "1 tbsp unsweetened coconut flakes",
+        "1 tbsp pumpkin seeds",
+        "1 tbsp hemp seeds",
+        "2 fresh strawberries, sliced"
+      ],
+      "instructions": [
+        "Blend mango, frozen banana, Greek yogurt, and coconut milk until thick and smooth.",
+        "Pour into a bowl — the consistency should be thicker than a drinkable smoothie.",
+        "Arrange coconut flakes, pumpkin seeds, hemp seeds, and sliced strawberries on top.",
+        "Serve immediately before it melts."
+      ],
+      "tags": ["balanced", "quick", "vegetarian", "whole-grain"]
+    },
+    "bal_oatmeal_apple": {
+      "name": "Cinnamon Apple Oatmeal",
+      "description": "Warm steel-cut oatmeal with sauteed cinnamon apples and a dollop of almond butter",
+      "calories": 395,
+      "protein": 12.0,
+      "carbs": 55.0,
+      "fat": 15.0,
+      "fiber": 7.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "1/2 cup steel-cut oats (quick-cook)",
+        "1 cup water",
+        "1/2 medium apple, diced",
+        "1 tbsp almond butter",
+        "1/2 tsp cinnamon",
+        "1 tsp butter",
+        "1 tsp maple syrup",
+        "Pinch of salt"
+      ],
+      "instructions": [
+        "Cook steel-cut oats in water with a pinch of salt according to package directions.",
+        "In a small pan, melt butter over medium heat and saute diced apple with cinnamon for 3-4 minutes.",
+        "Transfer oatmeal to a bowl and top with sauteed apples.",
+        "Add a dollop of almond butter and drizzle with maple syrup."
+      ],
+      "tags": ["balanced", "whole-grain", "vegetarian", "family-friendly"]
+    },
+    "bal_breakfast_wrap": {
+      "name": "Turkey Sausage Breakfast Wrap",
+      "description": "Whole wheat tortilla filled with turkey sausage, scrambled egg whites, and pepper jack cheese",
+      "calories": 420,
+      "protein": 28.0,
+      "carbs": 36.0,
+      "fat": 18.0,
+      "fiber": 4.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "1 whole wheat tortilla (10-inch)",
+        "2 turkey sausage links, sliced",
+        "3 egg whites",
+        "1 oz pepper jack cheese, shredded",
+        "2 tbsp salsa verde",
+        "1 tsp olive oil"
+      ],
+      "instructions": [
+        "Heat olive oil in a skillet over medium heat and cook sliced turkey sausage until browned, about 4 minutes.",
+        "Push sausage to the side, pour in egg whites, and scramble until just set.",
+        "Warm the tortilla in the microwave for 15 seconds.",
+        "Layer sausage, scrambled egg whites, and shredded cheese down the center of the tortilla.",
+        "Top with salsa verde, fold in the sides, and roll tightly into a wrap."
+      ],
+      "tags": ["balanced", "lean-protein", "quick", "meal-prep"]
+    },
+    "bal_cottage_cheese_toast": {
+      "name": "Whipped Cottage Cheese Toast",
+      "description": "Sourdough toast with whipped cottage cheese, sliced peaches, and a sprinkle of flaky sea salt",
+      "calories": 340,
+      "protein": 20.0,
+      "carbs": 38.0,
+      "fat": 11.0,
+      "fiber": 3.5,
+      "prepTime": 5,
+      "cookTime": 3,
+      "ingredients": [
+        "2 slices sourdough bread",
+        "1/2 cup low-fat cottage cheese",
+        "1 medium peach, sliced (or canned in juice)",
+        "1 tsp honey",
+        "Pinch of flaky sea salt",
+        "Fresh mint leaves (optional)"
+      ],
+      "instructions": [
+        "Blend cottage cheese in a food processor or blender until smooth and whipped.",
+        "Toast sourdough slices until golden.",
+        "Spread whipped cottage cheese generously on each slice.",
+        "Arrange peach slices on top, drizzle with honey, and finish with flaky sea salt."
+      ],
+      "tags": ["balanced", "quick", "lean-protein", "vegetarian"]
+    },
+    "bal_shakshuka": {
+      "name": "Shakshuka with Crusty Bread",
+      "description": "Eggs poached in a spiced tomato and bell pepper sauce, served with warm crusty bread",
+      "calories": 415,
+      "protein": 19.0,
+      "carbs": 40.0,
+      "fat": 20.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "2 large eggs",
+        "1 cup canned crushed tomatoes",
+        "1/2 red bell pepper, diced",
+        "1/4 medium onion, diced",
+        "1 clove garlic, minced",
+        "1/2 tsp cumin",
+        "1/2 tsp paprika",
+        "1 tbsp olive oil",
+        "1 slice crusty whole wheat bread",
+        "Fresh parsley for garnish"
+      ],
+      "instructions": [
+        "Heat olive oil in a skillet over medium heat, saute onion and bell pepper for 4 minutes.",
+        "Add garlic, cumin, and paprika, stir for 30 seconds until fragrant.",
+        "Pour in crushed tomatoes, stir, and simmer for 8-10 minutes until slightly thickened.",
+        "Make two wells in the sauce and crack an egg into each.",
+        "Cover and cook on low for 5-7 minutes until egg whites are set but yolks are still runny.",
+        "Garnish with parsley and serve with warm crusty bread for dipping."
+      ],
+      "tags": ["balanced", "vegetarian", "family-friendly"]
+    },
+    "bal_frittata": {
+      "name": "Mushroom and Herb Frittata",
+      "description": "Light and fluffy oven-baked frittata with cremini mushrooms, fresh herbs, and Gruyere cheese",
+      "calories": 350,
+      "protein": 23.0,
+      "carbs": 12.0,
+      "fat": 24.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "4 large eggs",
+        "1 cup cremini mushrooms, sliced",
+        "1/4 cup whole milk",
+        "1 oz Gruyere cheese, shredded",
+        "1 tbsp fresh chives, chopped",
+        "1 tsp fresh thyme leaves",
+        "1 tsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375F. Whisk eggs with milk, salt, and pepper.",
+        "Heat olive oil in an oven-safe skillet over medium heat and saute mushrooms for 5 minutes.",
+        "Pour egg mixture over mushrooms and sprinkle with cheese and herbs.",
+        "Cook on stovetop for 2 minutes until edges begin to set.",
+        "Transfer to oven and bake 10-12 minutes until puffed and golden.",
+        "Let rest 2 minutes, then slice into wedges. Serves 2 — one serving is half."
+      ],
+      "tags": ["balanced", "lean-protein", "meal-prep", "vegetarian"]
+    },
+    "bal_chia_pudding": {
+      "name": "Chocolate Chia Seed Pudding",
+      "description": "Rich chocolate chia pudding made with cocoa powder and topped with raspberries and almonds",
+      "calories": 355,
+      "protein": 14.0,
+      "carbs": 38.0,
+      "fat": 17.0,
+      "fiber": 12.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "3 tbsp chia seeds",
+        "1 cup unsweetened almond milk",
+        "1 tbsp cocoa powder",
+        "1 tbsp maple syrup",
+        "1/4 cup fresh raspberries",
+        "1 tbsp sliced almonds",
+        "1/4 tsp vanilla extract"
+      ],
+      "instructions": [
+        "Whisk together almond milk, cocoa powder, maple syrup, and vanilla extract until smooth.",
+        "Stir in chia seeds thoroughly to prevent clumping.",
+        "Cover and refrigerate for at least 4 hours or overnight, stirring once after 30 minutes.",
+        "Serve topped with fresh raspberries and sliced almonds."
+      ],
+      "tags": ["balanced", "meal-prep", "quick", "vegetarian"]
+    },
+    "bal_chicken_grain_bowl": {
+      "name": "Grilled Chicken Quinoa Power Bowl",
+      "description": "Herb-marinated grilled chicken over fluffy quinoa with roasted sweet potato and tahini drizzle",
+      "calories": 530,
+      "protein": 38.0,
+      "carbs": 48.0,
+      "fat": 20.0,
+      "fiber": 7.0,
+      "prepTime": 15,
+      "cookTime": 25,
+      "ingredients": [
+        "5 oz chicken breast, grilled and sliced",
+        "1/2 cup cooked quinoa",
+        "1/2 medium sweet potato, cubed and roasted",
+        "1 cup baby kale",
+        "1/4 avocado, sliced",
+        "1 tbsp tahini",
+        "1 tsp lemon juice",
+        "1 tsp olive oil",
+        "Salt, pepper, garlic powder to taste"
+      ],
+      "instructions": [
+        "Season chicken breast with garlic powder, salt, and pepper. Grill 5-6 minutes per side until cooked through.",
+        "Toss sweet potato cubes in olive oil and roast at 400F for 20 minutes.",
+        "Cook quinoa according to package directions and fluff with a fork.",
+        "Assemble bowl with quinoa base, kale, sliced chicken, roasted sweet potato, and avocado.",
+        "Whisk tahini with lemon juice and 1 tbsp water, drizzle over the bowl."
+      ],
+      "tags": ["balanced", "lean-protein", "whole-grain", "meal-prep"]
+    },
+    "bal_turkey_sandwich": {
+      "name": "Turkey Cranberry Club Sandwich",
+      "description": "Stacked whole grain sandwich with roasted turkey, cranberry spread, arugula, and Swiss cheese",
+      "calories": 465,
+      "protein": 32.0,
+      "carbs": 44.0,
+      "fat": 18.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "2 slices whole grain bread",
+        "4 oz sliced roasted turkey breast",
+        "1 slice Swiss cheese",
+        "1 cup arugula",
+        "2 tbsp cranberry sauce (whole berry)",
+        "1 tsp Dijon mustard",
+        "3 slices cucumber"
+      ],
+      "instructions": [
+        "Toast whole grain bread until lightly golden.",
+        "Spread cranberry sauce on one slice and Dijon mustard on the other.",
+        "Layer turkey breast, Swiss cheese, cucumber slices, and arugula.",
+        "Press together, slice diagonally, and serve."
+      ],
+      "tags": ["balanced", "quick", "lean-protein", "whole-grain"]
+    },
+    "bal_salmon_salad": {
+      "name": "Citrus Salmon Salad",
+      "description": "Flaked pan-seared salmon over mixed greens with orange segments, pecans, and citrus vinaigrette",
+      "calories": 485,
+      "protein": 34.0,
+      "carbs": 28.0,
+      "fat": 27.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "5 oz salmon fillet",
+        "3 cups mixed spring greens",
+        "1 medium navel orange, segmented",
+        "2 tbsp chopped pecans",
+        "2 tbsp dried cranberries",
+        "1/4 small red onion, thinly sliced",
+        "1 tbsp olive oil",
+        "1 tbsp orange juice",
+        "1 tsp balsamic vinegar",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season salmon with salt and pepper. Heat a skillet over medium-high heat with half the olive oil.",
+        "Cook salmon skin-side up for 4 minutes, flip and cook 3-4 more minutes until done. Let cool slightly and flake.",
+        "Arrange mixed greens on a plate and top with orange segments, red onion, pecans, and cranberries.",
+        "Whisk remaining olive oil, orange juice, and balsamic vinegar for the dressing.",
+        "Add flaked salmon on top and drizzle with citrus vinaigrette."
+      ],
+      "tags": ["balanced", "lean-protein", "omega-3"]
+    },
+    "bal_lentil_soup": {
+      "name": "Hearty Red Lentil Soup",
+      "description": "Warming red lentil soup with carrots, celery, and cumin served with a slice of crusty bread",
+      "calories": 395,
+      "protein": 20.0,
+      "carbs": 55.0,
+      "fat": 10.0,
+      "fiber": 14.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "3/4 cup dried red lentils, rinsed",
+        "1 medium carrot, diced",
+        "1 celery stalk, diced",
+        "1/4 medium onion, diced",
+        "1 clove garlic, minced",
+        "2 cups low-sodium vegetable broth",
+        "1/2 tsp cumin",
+        "1/4 tsp turmeric",
+        "1 tbsp olive oil",
+        "1 slice whole wheat bread",
+        "Squeeze of lemon"
+      ],
+      "instructions": [
+        "Heat olive oil in a pot over medium heat. Saute onion, carrot, and celery for 5 minutes.",
+        "Add garlic, cumin, and turmeric, stirring for 30 seconds.",
+        "Add lentils and vegetable broth. Bring to a boil, then reduce to a simmer.",
+        "Cook for 20-25 minutes until lentils are very soft and soup has thickened.",
+        "Stir in a squeeze of lemon juice. Serve with crusty whole wheat bread."
+      ],
+      "tags": ["balanced", "meal-prep", "whole-grain", "vegetarian", "family-friendly"]
+    },
+    "bal_chicken_caesar_wrap": {
+      "name": "Grilled Chicken Caesar Wrap",
+      "description": "Whole wheat wrap with grilled chicken, crisp romaine, Parmesan, and a light Caesar dressing",
+      "calories": 455,
+      "protein": 35.0,
+      "carbs": 36.0,
+      "fat": 19.0,
+      "fiber": 4.5,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "1 whole wheat tortilla (10-inch)",
+        "5 oz grilled chicken breast, sliced",
+        "1.5 cups chopped romaine lettuce",
+        "2 tbsp shaved Parmesan",
+        "1.5 tbsp light Caesar dressing",
+        "1/4 cup cherry tomatoes, halved",
+        "Freshly cracked black pepper"
+      ],
+      "instructions": [
+        "Grill chicken breast seasoned with salt and pepper for 5-6 minutes per side. Let rest and slice.",
+        "Warm the tortilla briefly in a dry skillet or microwave.",
+        "Toss romaine with Caesar dressing and Parmesan in a bowl.",
+        "Layer dressed romaine, sliced chicken, and cherry tomatoes down the center of the tortilla.",
+        "Fold in the sides and roll tightly. Slice in half on a diagonal."
+      ],
+      "tags": ["balanced", "lean-protein", "quick", "whole-grain"]
+    },
+    "bal_tuna_poke_bowl": {
+      "name": "Ahi Tuna Poke Bowl",
+      "description": "Sushi-grade ahi tuna over seasoned rice with edamame, cucumber, avocado, and soy-sesame glaze",
+      "calories": 510,
+      "protein": 32.0,
+      "carbs": 52.0,
+      "fat": 18.0,
+      "fiber": 5.5,
+      "prepTime": 15,
+      "cookTime": 15,
+      "ingredients": [
+        "4 oz sushi-grade ahi tuna, cubed",
+        "3/4 cup cooked short-grain brown rice",
+        "1/4 cup shelled edamame",
+        "1/4 medium cucumber, sliced",
+        "1/4 avocado, sliced",
+        "1 tbsp low-sodium soy sauce",
+        "1 tsp sesame oil",
+        "1 tsp rice vinegar",
+        "1 tsp sesame seeds",
+        "Pickled ginger (optional)"
+      ],
+      "instructions": [
+        "Cook brown rice according to package directions. Season with rice vinegar and let cool slightly.",
+        "Toss cubed ahi tuna with soy sauce and sesame oil. Let marinate 5 minutes.",
+        "Arrange rice in a bowl and top with marinated tuna, edamame, cucumber, and avocado.",
+        "Sprinkle with sesame seeds and serve with pickled ginger on the side."
+      ],
+      "tags": ["balanced", "lean-protein", "omega-3", "whole-grain"]
+    },
+    "bal_mediterranean_plate": {
+      "name": "Mediterranean Mezze Plate",
+      "description": "A colorful spread of hummus, falafel, tabbouleh, and warm pita with fresh vegetables",
+      "calories": 490,
+      "protein": 18.0,
+      "carbs": 56.0,
+      "fat": 22.0,
+      "fiber": 10.0,
+      "prepTime": 15,
+      "cookTime": 15,
+      "ingredients": [
+        "3 store-bought falafel patties",
+        "1/4 cup hummus",
+        "1/4 cup tabbouleh (bulgur, parsley, tomato, lemon)",
+        "1 whole wheat pita, warmed",
+        "1/4 cup diced cucumber",
+        "1/4 cup cherry tomatoes, halved",
+        "2 tbsp pickled turnip or olives",
+        "1 tbsp olive oil"
+      ],
+      "instructions": [
+        "Bake or pan-fry falafel patties according to package directions until crispy.",
+        "Prepare tabbouleh by combining cooked bulgur with chopped parsley, diced tomato, lemon juice, and olive oil.",
+        "Warm pita bread in the oven or toaster.",
+        "Arrange hummus, falafel, tabbouleh, cucumbers, tomatoes, and pickled turnip on a plate.",
+        "Drizzle olive oil over hummus and serve with warm pita wedges."
+      ],
+      "tags": ["balanced", "vegetarian", "family-friendly", "whole-grain"]
+    },
+    "bal_black_bean_bowl": {
+      "name": "Southwest Black Bean Bowl",
+      "description": "Seasoned black beans with cilantro-lime rice, corn salsa, and a dollop of Greek yogurt",
+      "calories": 475,
+      "protein": 20.0,
+      "carbs": 68.0,
+      "fat": 14.0,
+      "fiber": 15.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "3/4 cup canned black beans, drained and rinsed",
+        "1/2 cup cooked brown rice",
+        "1/4 cup corn kernels (fresh or frozen)",
+        "1/4 cup diced tomato",
+        "2 tbsp diced red onion",
+        "2 tbsp plain Greek yogurt",
+        "1 tbsp fresh cilantro, chopped",
+        "1/2 lime, juiced",
+        "1/2 tsp cumin",
+        "1/2 tsp chili powder",
+        "1 tsp olive oil"
+      ],
+      "instructions": [
+        "Heat olive oil in a pan, add black beans, cumin, and chili powder. Cook 5 minutes until warmed through.",
+        "Mix cooked brown rice with half the lime juice and cilantro.",
+        "Combine corn, diced tomato, and red onion for a quick salsa.",
+        "Assemble bowl with cilantro-lime rice, seasoned black beans, and corn salsa.",
+        "Top with Greek yogurt and remaining lime juice."
+      ],
+      "tags": ["balanced", "vegetarian", "whole-grain", "meal-prep", "family-friendly"]
+    },
+    "bal_shrimp_stir_fry": {
+      "name": "Garlic Shrimp Stir-Fry",
+      "description": "Juicy garlic shrimp tossed with snap peas, carrots, and brown rice in a light ginger-soy sauce",
+      "calories": 445,
+      "protein": 30.0,
+      "carbs": 50.0,
+      "fat": 13.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "5 oz large shrimp, peeled and deveined",
+        "3/4 cup cooked brown rice",
+        "1/2 cup sugar snap peas",
+        "1/2 medium carrot, julienned",
+        "2 cloves garlic, minced",
+        "1 tsp fresh ginger, grated",
+        "1 tbsp low-sodium soy sauce",
+        "1 tsp sesame oil",
+        "1 tsp rice vinegar",
+        "1 tsp cornstarch mixed with 1 tbsp water"
+      ],
+      "instructions": [
+        "Heat sesame oil in a wok or large skillet over high heat.",
+        "Add shrimp and cook 2 minutes per side until pink. Remove and set aside.",
+        "Stir-fry snap peas and carrots for 2-3 minutes until crisp-tender.",
+        "Add garlic and ginger, cook 30 seconds. Return shrimp to the wok.",
+        "Pour in soy sauce, rice vinegar, and cornstarch slurry. Toss until sauce thickens.",
+        "Serve immediately over brown rice."
+      ],
+      "tags": ["balanced", "lean-protein", "quick", "whole-grain"]
+    },
+    "bal_turkey_stuffed_pepper": {
+      "name": "Turkey-Stuffed Bell Peppers",
+      "description": "Colorful bell peppers stuffed with lean ground turkey, brown rice, tomatoes, and melted mozzarella",
+      "calories": 445,
+      "protein": 33.0,
+      "carbs": 36.0,
+      "fat": 18.0,
+      "fiber": 5.5,
+      "prepTime": 15,
+      "cookTime": 35,
+      "ingredients": [
+        "2 medium bell peppers, halved and seeded",
+        "5 oz lean ground turkey (93%)",
+        "1/3 cup cooked brown rice",
+        "1/2 cup canned diced tomatoes",
+        "1/4 cup shredded part-skim mozzarella",
+        "1/4 tsp oregano",
+        "1/4 tsp garlic powder",
+        "1 tsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375F. Place halved bell peppers in a baking dish.",
+        "Brown ground turkey in a skillet with olive oil, breaking apart. Season with oregano, garlic powder, salt, and pepper.",
+        "Stir in cooked brown rice and diced tomatoes. Cook 2 minutes.",
+        "Divide filling among pepper halves and top with shredded mozzarella.",
+        "Cover with foil and bake 25 minutes, then uncover and bake 10 more minutes until cheese is bubbly.",
+        "Serve 2 halves per portion."
+      ],
+      "tags": ["balanced", "lean-protein", "family-friendly", "meal-prep"]
+    },
+    "bal_asian_noodle_salad": {
+      "name": "Sesame Peanut Noodle Salad",
+      "description": "Chilled soba noodles tossed with shredded chicken, crunchy vegetables, and a creamy peanut-sesame dressing",
+      "calories": 500,
+      "protein": 28.0,
+      "carbs": 52.0,
+      "fat": 20.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 10,
+      "ingredients": [
+        "3 oz soba noodles (dry)",
+        "4 oz cooked chicken breast, shredded",
+        "1/2 cup shredded red cabbage",
+        "1/4 cup shredded carrot",
+        "2 green onions, sliced",
+        "1 tbsp natural peanut butter",
+        "1 tbsp low-sodium soy sauce",
+        "1 tsp sesame oil",
+        "1 tsp rice vinegar",
+        "1 tsp honey",
+        "1 tsp sesame seeds"
+      ],
+      "instructions": [
+        "Cook soba noodles according to package directions, rinse under cold water, and drain.",
+        "Whisk together peanut butter, soy sauce, sesame oil, rice vinegar, and honey until smooth.",
+        "Toss cold noodles with the dressing until evenly coated.",
+        "Add shredded chicken, red cabbage, carrot, and green onions. Toss gently.",
+        "Garnish with sesame seeds and serve chilled or at room temperature."
+      ],
+      "tags": ["balanced", "lean-protein", "meal-prep", "whole-grain"]
+    },
+    "bal_caprese_panini": {
+      "name": "Caprese Panini with Pesto",
+      "description": "Pressed whole grain sandwich with fresh mozzarella, ripe tomato, basil, and homemade pesto",
+      "calories": 460,
+      "protein": 22.0,
+      "carbs": 38.0,
+      "fat": 24.0,
+      "fiber": 5.0,
+      "prepTime": 5,
+      "cookTime": 8,
+      "ingredients": [
+        "2 slices whole grain bread",
+        "2 oz fresh mozzarella, sliced",
+        "1 medium tomato, sliced",
+        "4 fresh basil leaves",
+        "1 tbsp basil pesto",
+        "1/2 tsp balsamic glaze",
+        "1 tsp olive oil"
+      ],
+      "instructions": [
+        "Spread pesto on one slice of whole grain bread.",
+        "Layer mozzarella slices, tomato slices, and fresh basil leaves.",
+        "Drizzle with balsamic glaze and top with the second slice of bread.",
+        "Brush outside of bread lightly with olive oil.",
+        "Press in a panini press or grill pan with a heavy pan on top for 3-4 minutes per side until golden and cheese melts."
+      ],
+      "tags": ["balanced", "quick", "vegetarian", "whole-grain"]
+    },
+    "bal_chicken_tortilla_soup": {
+      "name": "Chicken Tortilla Soup",
+      "description": "Smoky tomato-based soup with shredded chicken, black beans, and crispy tortilla strips",
+      "calories": 420,
+      "protein": 32.0,
+      "carbs": 40.0,
+      "fat": 14.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "5 oz chicken breast",
+        "1 cup canned fire-roasted diced tomatoes",
+        "1/4 cup canned black beans, drained",
+        "1.5 cups low-sodium chicken broth",
+        "1/4 medium onion, diced",
+        "1 clove garlic, minced",
+        "1/2 tsp cumin",
+        "1/2 tsp chili powder",
+        "1 small corn tortilla, cut into strips",
+        "1 tbsp fresh cilantro",
+        "1 tbsp plain Greek yogurt",
+        "1 tsp olive oil"
+      ],
+      "instructions": [
+        "Heat olive oil in a pot and saute onion for 3 minutes. Add garlic, cumin, and chili powder.",
+        "Add tomatoes and chicken broth, bring to a simmer.",
+        "Add chicken breast whole. Simmer 15 minutes until cooked through.",
+        "Remove chicken, shred with two forks, and return to pot. Add black beans and cook 5 more minutes.",
+        "Meanwhile, bake tortilla strips at 375F for 8 minutes until crispy.",
+        "Ladle soup into a bowl, top with tortilla strips, cilantro, and a dollop of Greek yogurt."
+      ],
+      "tags": ["balanced", "lean-protein", "family-friendly"]
+    },
+    "bal_baked_salmon_dinner": {
+      "name": "Herb-Crusted Baked Salmon",
+      "description": "Dijon and herb-crusted salmon fillet with roasted asparagus and wild rice pilaf",
+      "calories": 545,
+      "protein": 38.0,
+      "carbs": 40.0,
+      "fat": 24.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "5 oz salmon fillet",
+        "1 tsp Dijon mustard",
+        "1 tbsp whole wheat panko breadcrumbs",
+        "1 tsp fresh dill, chopped",
+        "1 tsp fresh parsley, chopped",
+        "8 asparagus spears",
+        "1/2 cup cooked wild rice blend",
+        "1 tbsp olive oil",
+        "1 lemon wedge",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400F. Line a baking sheet with parchment paper.",
+        "Brush salmon with Dijon mustard. Mix panko with dill and parsley, press onto the top of the salmon.",
+        "Toss asparagus with half the olive oil, salt, and pepper. Arrange alongside salmon on the baking sheet.",
+        "Bake for 15-18 minutes until salmon flakes easily and asparagus is tender.",
+        "Serve salmon and asparagus over wild rice pilaf with a lemon wedge."
+      ],
+      "tags": ["balanced", "lean-protein", "omega-3", "whole-grain"]
+    },
+    "bal_beef_stir_fry": {
+      "name": "Beef and Broccoli Stir-Fry",
+      "description": "Tender sliced sirloin with broccoli florets in a savory garlic-ginger sauce over steamed jasmine rice",
+      "calories": 520,
+      "protein": 35.0,
+      "carbs": 50.0,
+      "fat": 19.0,
+      "fiber": 4.5,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "5 oz sirloin steak, thinly sliced",
+        "2 cups broccoli florets",
+        "3/4 cup cooked jasmine rice",
+        "2 cloves garlic, minced",
+        "1 tsp fresh ginger, grated",
+        "2 tbsp low-sodium soy sauce",
+        "1 tsp sesame oil",
+        "1 tsp cornstarch mixed with 2 tbsp water",
+        "1 tsp rice vinegar",
+        "1 tsp vegetable oil"
+      ],
+      "instructions": [
+        "Heat vegetable oil in a wok over high heat. Sear beef slices for 2 minutes until browned. Remove and set aside.",
+        "Add broccoli and 2 tbsp water to the wok. Cover and steam 3 minutes until bright green and crisp-tender.",
+        "Add garlic and ginger, stir 30 seconds. Return beef to the wok.",
+        "Pour in soy sauce, sesame oil, rice vinegar, and cornstarch slurry. Toss until sauce coats everything.",
+        "Serve immediately over steamed jasmine rice."
+      ],
+      "tags": ["balanced", "lean-protein", "quick", "family-friendly"]
+    },
+    "bal_grilled_chicken_dinner": {
+      "name": "Lemon Herb Grilled Chicken",
+      "description": "Juicy grilled chicken thigh with garlic-roasted baby potatoes and steamed green beans",
+      "calories": 510,
+      "protein": 36.0,
+      "carbs": 42.0,
+      "fat": 20.0,
+      "fiber": 6.0,
+      "prepTime": 15,
+      "cookTime": 30,
+      "ingredients": [
+        "5 oz boneless skinless chicken thigh",
+        "6 baby potatoes, halved",
+        "1 cup green beans, trimmed",
+        "1 tbsp olive oil",
+        "2 cloves garlic, minced",
+        "1 tbsp lemon juice",
+        "1 tsp dried oregano",
+        "1 tsp dried thyme",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Marinate chicken thigh in lemon juice, half the olive oil, oregano, thyme, salt, and pepper for 10 minutes.",
+        "Toss halved baby potatoes with remaining olive oil and garlic. Roast at 400F for 25 minutes until golden.",
+        "Grill or pan-sear chicken thigh for 5-6 minutes per side until internal temp reaches 165F.",
+        "Steam green beans for 4-5 minutes until tender-crisp.",
+        "Let chicken rest 5 minutes before slicing. Serve alongside roasted potatoes and green beans."
+      ],
+      "tags": ["balanced", "lean-protein", "family-friendly"]
+    },
+    "bal_pasta_primavera": {
+      "name": "Whole Wheat Pasta Primavera",
+      "description": "Al dente whole wheat penne tossed with seasonal vegetables in a light garlic-olive oil sauce with Parmesan",
+      "calories": 480,
+      "protein": 18.0,
+      "carbs": 62.0,
+      "fat": 18.0,
+      "fiber": 9.0,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "2.5 oz whole wheat penne (dry)",
+        "1/2 medium zucchini, sliced",
+        "1/2 cup cherry tomatoes, halved",
+        "1/4 cup diced yellow squash",
+        "1/4 cup frozen peas",
+        "2 cloves garlic, minced",
+        "2 tbsp olive oil",
+        "2 tbsp grated Parmesan",
+        "1 tbsp fresh basil, torn",
+        "Red pepper flakes to taste"
+      ],
+      "instructions": [
+        "Cook penne in salted boiling water until al dente. Reserve 1/4 cup pasta water before draining.",
+        "Heat olive oil in a large skillet over medium-high heat. Saute zucchini and yellow squash for 3 minutes.",
+        "Add cherry tomatoes, peas, and garlic. Cook 2-3 minutes until tomatoes soften.",
+        "Add drained pasta and a splash of pasta water. Toss until everything is coated.",
+        "Top with grated Parmesan, fresh basil, and red pepper flakes."
+      ],
+      "tags": ["balanced", "whole-grain", "vegetarian", "family-friendly"]
+    },
+    "bal_fish_tacos": {
+      "name": "Blackened Fish Tacos",
+      "description": "Crispy blackened cod in warm corn tortillas with mango slaw and chipotle lime crema",
+      "calories": 460,
+      "protein": 30.0,
+      "carbs": 44.0,
+      "fat": 18.0,
+      "fiber": 6.0,
+      "prepTime": 15,
+      "cookTime": 10,
+      "ingredients": [
+        "5 oz cod fillet",
+        "2 corn tortillas (6-inch)",
+        "1/2 cup shredded purple cabbage",
+        "1/4 cup diced mango",
+        "2 tbsp plain Greek yogurt",
+        "1 tsp chipotle in adobo, minced",
+        "1 lime, juiced (divided)",
+        "1 tsp smoked paprika",
+        "1/2 tsp garlic powder",
+        "1/2 tsp cumin",
+        "1 tsp olive oil"
+      ],
+      "instructions": [
+        "Mix smoked paprika, garlic powder, cumin, salt, and pepper. Coat cod fillet with the spice rub.",
+        "Heat olive oil in a skillet over medium-high heat. Cook cod 3-4 minutes per side until blackened and flaky.",
+        "Toss shredded cabbage and mango with half the lime juice for the slaw.",
+        "Mix Greek yogurt with chipotle and remaining lime juice for the crema.",
+        "Warm corn tortillas, fill with flaked cod, top with mango slaw and chipotle lime crema."
+      ],
+      "tags": ["balanced", "lean-protein", "omega-3", "quick"]
+    },
+    "bal_tofu_curry": {
+      "name": "Coconut Tofu Curry",
+      "description": "Golden coconut curry with crispy tofu, chickpeas, and spinach served over basmati rice",
+      "calories": 505,
+      "protein": 22.0,
+      "carbs": 54.0,
+      "fat": 22.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "5 oz extra-firm tofu, cubed and pressed",
+        "1/3 cup canned chickpeas, drained",
+        "1/3 cup light coconut milk",
+        "1 cup baby spinach",
+        "1/2 cup canned diced tomatoes",
+        "1/2 cup cooked basmati rice",
+        "1 tbsp yellow curry paste",
+        "1 tsp coconut oil",
+        "1/4 medium onion, diced",
+        "Fresh cilantro for garnish"
+      ],
+      "instructions": [
+        "Heat coconut oil in a skillet and fry tofu cubes until golden on all sides, about 6 minutes. Set aside.",
+        "In the same pan, saute onion for 3 minutes. Stir in curry paste for 30 seconds.",
+        "Add diced tomatoes and coconut milk. Simmer 10 minutes until slightly thickened.",
+        "Add chickpeas and spinach, cook 3 minutes until spinach wilts.",
+        "Return tofu to the curry and gently fold in.",
+        "Serve over basmati rice, garnished with fresh cilantro."
+      ],
+      "tags": ["balanced", "vegetarian", "whole-grain", "meal-prep"]
+    },
+    "bal_pork_tenderloin": {
+      "name": "Maple-Glazed Pork Tenderloin",
+      "description": "Juicy roasted pork tenderloin with a maple-Dijon glaze, roasted Brussels sprouts, and mashed sweet potato",
+      "calories": 530,
+      "protein": 36.0,
+      "carbs": 48.0,
+      "fat": 20.0,
+      "fiber": 7.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "5 oz pork tenderloin",
+        "1 tbsp maple syrup",
+        "1 tsp Dijon mustard",
+        "1 cup Brussels sprouts, halved",
+        "1 medium sweet potato, peeled and cubed",
+        "1 tbsp olive oil",
+        "1 tbsp butter",
+        "Salt, pepper, garlic powder to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400F. Season pork with salt, pepper, and garlic powder.",
+        "Mix maple syrup and Dijon mustard. Brush half the glaze over the pork.",
+        "Toss Brussels sprouts with olive oil, salt, and pepper. Arrange around pork on a baking sheet.",
+        "Roast for 20-25 minutes, brushing remaining glaze on pork halfway through. Internal temp should reach 145F.",
+        "Meanwhile, boil sweet potato cubes until tender, drain, and mash with butter and a pinch of salt.",
+        "Let pork rest 5 minutes, slice, and serve with Brussels sprouts and mashed sweet potato."
+      ],
+      "tags": ["balanced", "lean-protein", "family-friendly"]
+    },
+    "bal_chicken_stir_fry_thai": {
+      "name": "Thai Basil Chicken",
+      "description": "Fragrant Thai basil chicken with bell peppers and onions over steamed jasmine rice",
+      "calories": 485,
+      "protein": 34.0,
+      "carbs": 48.0,
+      "fat": 17.0,
+      "fiber": 3.5,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "5 oz chicken breast, thinly sliced",
+        "3/4 cup cooked jasmine rice",
+        "1/2 red bell pepper, sliced",
+        "1/4 medium onion, sliced",
+        "2 cloves garlic, minced",
+        "1 Thai chili or 1/4 tsp red pepper flakes",
+        "1 cup fresh Thai basil leaves",
+        "1 tbsp fish sauce",
+        "1 tbsp oyster sauce",
+        "1 tsp brown sugar",
+        "1 tbsp vegetable oil"
+      ],
+      "instructions": [
+        "Heat oil in a wok over high heat. Add garlic and chili, stir for 15 seconds.",
+        "Add chicken and stir-fry 4-5 minutes until cooked through and lightly browned.",
+        "Add bell pepper and onion, cook 2-3 minutes until slightly softened.",
+        "Stir in fish sauce, oyster sauce, and brown sugar. Toss to coat.",
+        "Remove from heat, fold in Thai basil leaves until just wilted.",
+        "Serve immediately over steamed jasmine rice."
+      ],
+      "tags": ["balanced", "lean-protein", "quick"]
+    },
+    "bal_sheet_pan_sausage": {
+      "name": "Sheet Pan Sausage and Vegetables",
+      "description": "Roasted chicken sausage with colorful bell peppers, red onion, and fingerling potatoes",
+      "calories": 470,
+      "protein": 28.0,
+      "carbs": 44.0,
+      "fat": 20.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "2 chicken sausage links (precooked), sliced",
+        "1 red bell pepper, chunked",
+        "1 green bell pepper, chunked",
+        "1/2 red onion, chunked",
+        "6 fingerling potatoes, halved",
+        "1.5 tbsp olive oil",
+        "1 tsp Italian seasoning",
+        "1/2 tsp smoked paprika",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425F. Line a large baking sheet with parchment paper.",
+        "Toss sliced sausage, bell peppers, onion, and potatoes with olive oil, Italian seasoning, paprika, salt, and pepper.",
+        "Spread in a single layer on the baking sheet, ensuring nothing overlaps.",
+        "Roast for 25-30 minutes, tossing halfway through, until potatoes are golden and vegetables are caramelized.",
+        "Serve directly from the sheet pan."
+      ],
+      "tags": ["balanced", "lean-protein", "meal-prep", "family-friendly", "quick"]
+    },
+    "bal_miso_glazed_cod": {
+      "name": "Miso-Glazed Cod with Bok Choy",
+      "description": "Sweet white miso-glazed cod fillet with sauteed baby bok choy and steamed brown rice",
+      "calories": 465,
+      "protein": 34.0,
+      "carbs": 46.0,
+      "fat": 15.0,
+      "fiber": 4.5,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "5 oz cod fillet",
+        "1 tbsp white miso paste",
+        "1 tsp mirin",
+        "1 tsp honey",
+        "2 heads baby bok choy, halved",
+        "3/4 cup cooked brown rice",
+        "1 tsp sesame oil",
+        "1 tsp sesame seeds",
+        "1 green onion, sliced"
+      ],
+      "instructions": [
+        "Preheat oven broiler to high. Mix miso paste, mirin, and honey into a smooth glaze.",
+        "Pat cod dry and place on a foil-lined baking sheet. Brush generously with miso glaze.",
+        "Broil for 8-10 minutes until the top is caramelized and fish flakes easily.",
+        "Meanwhile, heat sesame oil in a pan and saute bok choy cut-side down for 3 minutes, then flip and cook 2 more.",
+        "Serve cod over brown rice alongside bok choy. Garnish with sesame seeds and green onion."
+      ],
+      "tags": ["balanced", "lean-protein", "omega-3", "whole-grain"]
+    },
+    "bal_stuffed_sweet_potato": {
+      "name": "Loaded Stuffed Sweet Potato",
+      "description": "Baked sweet potato stuffed with seasoned ground turkey, black beans, cheese, and fresh salsa",
+      "calories": 495,
+      "protein": 30.0,
+      "carbs": 52.0,
+      "fat": 18.0,
+      "fiber": 9.0,
+      "prepTime": 10,
+      "cookTime": 45,
+      "ingredients": [
+        "1 large sweet potato",
+        "4 oz lean ground turkey (93%)",
+        "1/4 cup canned black beans, drained",
+        "2 tbsp shredded cheddar cheese",
+        "2 tbsp pico de gallo",
+        "1 tbsp plain Greek yogurt",
+        "1/2 tsp cumin",
+        "1/2 tsp chili powder",
+        "1 tsp olive oil"
+      ],
+      "instructions": [
+        "Preheat oven to 400F. Pierce sweet potato with a fork and bake 40-45 minutes until tender.",
+        "While potato bakes, heat olive oil in a skillet and brown ground turkey with cumin and chili powder.",
+        "Add black beans to the turkey and warm through for 2 minutes.",
+        "Split the sweet potato open, fluff the inside with a fork.",
+        "Fill with turkey-bean mixture, top with cheddar, pico de gallo, and Greek yogurt."
+      ],
+      "tags": ["balanced", "lean-protein", "family-friendly"]
+    },
+    "bal_mediterranean_salmon": {
+      "name": "Mediterranean Baked Salmon",
+      "description": "Oven-baked salmon with cherry tomatoes, Kalamata olives, capers, and orzo pasta",
+      "calories": 540,
+      "protein": 36.0,
+      "carbs": 42.0,
+      "fat": 24.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "5 oz salmon fillet",
+        "1/2 cup cherry tomatoes, halved",
+        "6 Kalamata olives, halved",
+        "1 tbsp capers, drained",
+        "2/3 cup cooked orzo pasta",
+        "1 tbsp olive oil",
+        "1 tsp dried oregano",
+        "1 lemon wedge",
+        "2 tbsp fresh parsley, chopped",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400F. Place salmon on a parchment-lined baking sheet.",
+        "Arrange cherry tomatoes, olives, and capers around the salmon. Drizzle everything with olive oil and season with oregano, salt, and pepper.",
+        "Bake 15-18 minutes until salmon flakes easily with a fork.",
+        "Cook orzo according to package directions and toss with a squeeze of lemon and parsley.",
+        "Serve salmon over orzo, spooning the roasted tomato-olive mixture on top."
+      ],
+      "tags": ["balanced", "lean-protein", "omega-3"]
+    },
+    "bal_veggie_chili": {
+      "name": "Three-Bean Vegetable Chili",
+      "description": "Hearty vegetarian chili with kidney beans, black beans, and pintos in a smoky tomato broth",
+      "calories": 410,
+      "protein": 22.0,
+      "carbs": 58.0,
+      "fat": 10.0,
+      "fiber": 16.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "1/3 cup canned kidney beans, drained",
+        "1/3 cup canned black beans, drained",
+        "1/3 cup canned pinto beans, drained",
+        "1 cup canned crushed tomatoes",
+        "1/2 cup low-sodium vegetable broth",
+        "1/2 medium zucchini, diced",
+        "1/2 medium carrot, diced",
+        "1/4 medium onion, diced",
+        "1 clove garlic, minced",
+        "1 tsp chili powder",
+        "1/2 tsp cumin",
+        "1/2 tsp smoked paprika",
+        "1 tbsp olive oil",
+        "1 tbsp shredded cheddar for topping"
+      ],
+      "instructions": [
+        "Heat olive oil in a pot over medium heat. Saute onion and carrot for 4 minutes.",
+        "Add garlic, chili powder, cumin, and smoked paprika. Stir 30 seconds.",
+        "Add crushed tomatoes, vegetable broth, all three beans, and zucchini.",
+        "Bring to a boil, then reduce heat and simmer 20-25 minutes until thickened.",
+        "Ladle into a bowl and top with shredded cheddar."
+      ],
+      "tags": ["balanced", "vegetarian", "meal-prep", "family-friendly", "whole-grain"]
+    },
+    "bal_teriyaki_chicken": {
+      "name": "Teriyaki Chicken with Steamed Vegetables",
+      "description": "Glossy teriyaki-glazed chicken thigh over fluffy rice with steamed broccoli and carrots",
+      "calories": 505,
+      "protein": 34.0,
+      "carbs": 52.0,
+      "fat": 16.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "5 oz boneless skinless chicken thigh",
+        "3/4 cup cooked white rice",
+        "1 cup broccoli florets",
+        "1/2 medium carrot, sliced",
+        "2 tbsp low-sodium soy sauce",
+        "1 tbsp mirin",
+        "1 tsp honey",
+        "1 tsp cornstarch mixed with 1 tbsp water",
+        "1 tsp vegetable oil",
+        "1 tsp sesame seeds"
+      ],
+      "instructions": [
+        "Mix soy sauce, mirin, and honey for the teriyaki sauce.",
+        "Heat oil in a skillet over medium-high heat. Cook chicken thigh 5-6 minutes per side until golden and cooked through.",
+        "Pour teriyaki sauce over chicken, add cornstarch slurry, and simmer until sauce thickens and glazes the chicken.",
+        "Steam broccoli and carrots for 4-5 minutes until tender-crisp.",
+        "Slice chicken, serve over rice alongside steamed vegetables. Sprinkle with sesame seeds."
+      ],
+      "tags": ["balanced", "lean-protein", "family-friendly"]
+    },
+    "bal_greek_salad_chicken": {
+      "name": "Greek Salad with Grilled Chicken",
+      "description": "Classic Greek salad with juicy grilled chicken, feta, olives, and oregano vinaigrette with warm pita",
+      "calories": 490,
+      "protein": 36.0,
+      "carbs": 32.0,
+      "fat": 24.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "5 oz chicken breast, grilled",
+        "2 cups chopped romaine lettuce",
+        "1/4 cup diced cucumber",
+        "1/4 cup cherry tomatoes, halved",
+        "2 tbsp crumbled feta cheese",
+        "5 Kalamata olives",
+        "2 tbsp thinly sliced red onion",
+        "1/2 whole wheat pita",
+        "1 tbsp extra virgin olive oil",
+        "1 tsp red wine vinegar",
+        "1/2 tsp dried oregano"
+      ],
+      "instructions": [
+        "Season and grill chicken breast 5-6 minutes per side. Let rest and slice.",
+        "Arrange romaine lettuce on a plate and top with cucumber, tomatoes, olives, red onion, and feta.",
+        "Whisk olive oil, red wine vinegar, and oregano for the dressing.",
+        "Place sliced grilled chicken on top of the salad.",
+        "Drizzle with dressing and serve with warm pita wedge."
+      ],
+      "tags": ["balanced", "lean-protein", "quick"]
+    },
+    "bal_trail_mix": {
+      "name": "Homemade Trail Mix",
+      "description": "Crunchy mix of almonds, walnuts, pumpkin seeds, dark chocolate chips, and dried apricots",
+      "calories": 310,
+      "protein": 10.0,
+      "carbs": 28.0,
+      "fat": 20.0,
+      "fiber": 4.5,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "2 tbsp raw almonds",
+        "1 tbsp walnut halves",
+        "1 tbsp pumpkin seeds",
+        "1 tbsp dark chocolate chips",
+        "2 tbsp dried apricots, chopped",
+        "1 tbsp unsweetened coconut flakes"
+      ],
+      "instructions": [
+        "Combine all ingredients in a small bowl or container.",
+        "Toss gently to mix evenly.",
+        "Store in an airtight container for up to 2 weeks. Portion into snack bags for grab-and-go."
+      ],
+      "tags": ["balanced", "quick", "meal-prep", "vegetarian"]
+    },
+    "bal_apple_peanut_butter": {
+      "name": "Apple Slices with Peanut Butter",
+      "description": "Crisp apple slices paired with creamy natural peanut butter and a sprinkle of granola",
+      "calories": 295,
+      "protein": 9.0,
+      "carbs": 36.0,
+      "fat": 15.0,
+      "fiber": 5.5,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "1 medium apple, cored and sliced",
+        "2 tbsp natural peanut butter",
+        "1 tbsp low-sugar granola"
+      ],
+      "instructions": [
+        "Core and slice the apple into 8-10 wedges.",
+        "Arrange on a plate with peanut butter in a small bowl for dipping.",
+        "Sprinkle granola over the peanut butter for added crunch."
+      ],
+      "tags": ["balanced", "quick", "vegetarian", "family-friendly"]
+    },
+    "bal_hummus_veggie_plate": {
+      "name": "Hummus and Veggie Dippers",
+      "description": "Creamy roasted red pepper hummus with crisp carrots, celery, cucumber, and whole wheat pita chips",
+      "calories": 280,
+      "protein": 10.0,
+      "carbs": 34.0,
+      "fat": 13.0,
+      "fiber": 7.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1/3 cup roasted red pepper hummus",
+        "1 medium carrot, cut into sticks",
+        "2 celery stalks, cut into sticks",
+        "1/4 medium cucumber, sliced",
+        "8 whole wheat pita chips"
+      ],
+      "instructions": [
+        "Arrange carrot sticks, celery sticks, and cucumber slices on a plate.",
+        "Place hummus in a small bowl alongside the vegetables.",
+        "Add pita chips on the side for extra crunch."
+      ],
+      "tags": ["balanced", "quick", "vegetarian", "whole-grain"]
+    },
+    "bal_protein_energy_balls": {
+      "name": "Oat and Date Energy Balls",
+      "description": "No-bake energy balls made with oats, dates, almond butter, and dark chocolate chips",
+      "calories": 275,
+      "protein": 8.0,
+      "carbs": 34.0,
+      "fat": 13.0,
+      "fiber": 4.0,
+      "prepTime": 15,
+      "cookTime": 0,
+      "ingredients": [
+        "1/3 cup rolled oats",
+        "3 Medjool dates, pitted",
+        "1 tbsp almond butter",
+        "1 tbsp dark chocolate chips",
+        "1 tsp honey",
+        "1 tbsp ground flaxseed",
+        "Pinch of salt"
+      ],
+      "instructions": [
+        "Pulse dates in a food processor until they form a sticky paste.",
+        "Add oats, almond butter, flaxseed, honey, and salt. Pulse until combined but still slightly chunky.",
+        "Fold in chocolate chips by hand.",
+        "Roll mixture into 4 balls and refrigerate for at least 30 minutes before eating.",
+        "Store in the fridge for up to 1 week."
+      ],
+      "tags": ["balanced", "meal-prep", "quick", "vegetarian", "whole-grain"]
+    },
+    "bal_greek_yogurt_parfait": {
+      "name": "Strawberry Granola Parfait",
+      "description": "Layered Greek yogurt parfait with fresh strawberries, crunchy granola, and a honey drizzle",
+      "calories": 305,
+      "protein": 18.0,
+      "carbs": 40.0,
+      "fat": 8.0,
+      "fiber": 3.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "3/4 cup plain Greek yogurt (2%)",
+        "1/2 cup fresh strawberries, sliced",
+        "3 tbsp crunchy granola",
+        "1 tsp honey",
+        "1 tsp chia seeds"
+      ],
+      "instructions": [
+        "Layer half the yogurt in a glass or jar.",
+        "Add a layer of sliced strawberries and a tablespoon of granola.",
+        "Repeat with remaining yogurt, strawberries, and granola.",
+        "Top with chia seeds and a drizzle of honey."
+      ],
+      "tags": ["balanced", "quick", "vegetarian", "lean-protein"]
+    },
+    "bal_cottage_cheese_fruit": {
+      "name": "Cottage Cheese and Pineapple Bowl",
+      "description": "Low-fat cottage cheese topped with fresh pineapple chunks, sunflower seeds, and a dash of cinnamon",
+      "calories": 265,
+      "protein": 22.0,
+      "carbs": 28.0,
+      "fat": 8.0,
+      "fiber": 2.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "3/4 cup low-fat cottage cheese",
+        "1/2 cup fresh pineapple chunks",
+        "1 tbsp sunflower seeds",
+        "Dash of cinnamon"
+      ],
+      "instructions": [
+        "Scoop cottage cheese into a bowl.",
+        "Top with fresh pineapple chunks and sunflower seeds.",
+        "Sprinkle with cinnamon and serve."
+      ],
+      "tags": ["balanced", "quick", "lean-protein", "vegetarian"]
+    },
+    "bal_edamame_snack": {
+      "name": "Spiced Edamame with Sea Salt",
+      "description": "Steamed edamame pods tossed with sea salt, garlic powder, and a hint of chili flakes",
+      "calories": 225,
+      "protein": 18.0,
+      "carbs": 16.0,
+      "fat": 9.0,
+      "fiber": 8.0,
+      "prepTime": 2,
+      "cookTime": 5,
+      "ingredients": [
+        "1.5 cups frozen edamame in pods",
+        "1/2 tsp sea salt",
+        "1/4 tsp garlic powder",
+        "Pinch of red pepper flakes"
+      ],
+      "instructions": [
+        "Steam or microwave edamame according to package directions until heated through.",
+        "Drain and toss with sea salt, garlic powder, and red pepper flakes.",
+        "Serve warm and pop beans out of pods to eat."
+      ],
+      "tags": ["balanced", "quick", "vegetarian", "lean-protein"]
+    },
+    "bal_banana_nut_muffin": {
+      "name": "Whole Wheat Banana Nut Muffin",
+      "description": "A moist whole wheat banana muffin studded with walnuts, served with a smear of cream cheese",
+      "calories": 310,
+      "protein": 8.0,
+      "carbs": 40.0,
+      "fat": 14.0,
+      "fiber": 3.5,
+      "prepTime": 10,
+      "cookTime": 22,
+      "ingredients": [
+        "1/3 cup whole wheat flour",
+        "1 small ripe banana, mashed",
+        "1 tbsp honey",
+        "1 tbsp coconut oil, melted",
+        "1 small egg",
+        "1 tbsp chopped walnuts",
+        "1/4 tsp baking soda",
+        "Pinch of salt",
+        "1 tbsp cream cheese for serving"
+      ],
+      "instructions": [
+        "Preheat oven to 350F. Line a muffin tin with paper liners.",
+        "Mix mashed banana, egg, honey, and melted coconut oil in a bowl.",
+        "Stir in flour, baking soda, and salt until just combined. Fold in walnuts.",
+        "Pour batter into one muffin cup. Bake 18-22 minutes until a toothpick comes out clean.",
+        "Let cool slightly and serve with a smear of cream cheese. Recipe makes 1 large muffin."
+      ],
+      "tags": ["balanced", "whole-grain", "vegetarian", "family-friendly"]
+    },
+    "bal_cheese_crackers": {
+      "name": "Cheese and Whole Grain Crackers",
+      "description": "Sharp cheddar cheese slices with whole grain crackers, grapes, and a few almonds",
+      "calories": 320,
+      "protein": 14.0,
+      "carbs": 28.0,
+      "fat": 18.0,
+      "fiber": 3.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "1.5 oz sharp cheddar cheese, sliced",
+        "8 whole grain crackers",
+        "1/2 cup red grapes",
+        "8 raw almonds"
+      ],
+      "instructions": [
+        "Arrange cheddar slices and crackers on a small plate.",
+        "Add grapes and almonds alongside.",
+        "Enjoy as a balanced snack — pair cheese with crackers and alternate with fruit and nuts."
+      ],
+      "tags": ["balanced", "quick", "family-friendly", "whole-grain"]
+    },
+    "bal_smoothie_green": {
+      "name": "Green Power Smoothie",
+      "description": "Vibrant green smoothie with spinach, banana, protein powder, and almond butter",
+      "calories": 330,
+      "protein": 22.0,
+      "carbs": 36.0,
+      "fat": 12.0,
+      "fiber": 5.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1 cup baby spinach",
+        "1 small banana",
+        "1 scoop vanilla protein powder (whey or plant-based)",
+        "1 tbsp almond butter",
+        "1 cup unsweetened almond milk",
+        "3 ice cubes"
+      ],
+      "instructions": [
+        "Add almond milk and spinach to a blender. Blend until smooth.",
+        "Add banana, protein powder, almond butter, and ice cubes.",
+        "Blend on high for 45-60 seconds until completely smooth and creamy.",
+        "Pour into a glass and serve immediately."
+      ],
+      "tags": ["balanced", "quick", "lean-protein", "meal-prep"]
+    }
+  },
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "bal_overnight_oats",
+          "lunch": "bal_chicken_grain_bowl",
+          "dinner": "bal_baked_salmon_dinner",
+          "snack": "bal_apple_peanut_butter"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "bal_veggie_scramble",
+          "lunch": "bal_turkey_sandwich",
+          "dinner": "bal_beef_stir_fry",
+          "snack": "bal_trail_mix"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "bal_greek_yogurt_bowl",
+          "lunch": "bal_lentil_soup",
+          "dinner": "bal_grilled_chicken_dinner",
+          "snack": "bal_hummus_veggie_plate"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "bal_banana_pancakes",
+          "lunch": "bal_chicken_caesar_wrap",
+          "dinner": "bal_fish_tacos",
+          "snack": "bal_greek_yogurt_parfait"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "bal_avocado_toast_egg",
+          "lunch": "bal_salmon_salad",
+          "dinner": "bal_pasta_primavera",
+          "snack": "bal_protein_energy_balls"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "bal_shakshuka",
+          "lunch": "bal_mediterranean_plate",
+          "dinner": "bal_pork_tenderloin",
+          "snack": "bal_edamame_snack"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "bal_smoothie_bowl",
+          "lunch": "bal_tuna_poke_bowl",
+          "dinner": "bal_tofu_curry",
+          "snack": "bal_cottage_cheese_fruit"
+        }
+      ]
+    },
+    {
+      "weekNumber": 2,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "bal_oatmeal_apple",
+          "lunch": "bal_black_bean_bowl",
+          "dinner": "bal_chicken_stir_fry_thai",
+          "snack": "bal_smoothie_green"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "bal_breakfast_wrap",
+          "lunch": "bal_caprese_panini",
+          "dinner": "bal_miso_glazed_cod",
+          "snack": "bal_cheese_crackers"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "bal_cottage_cheese_toast",
+          "lunch": "bal_chicken_tortilla_soup",
+          "dinner": "bal_sheet_pan_sausage",
+          "snack": "bal_trail_mix"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "bal_chia_pudding",
+          "lunch": "bal_shrimp_stir_fry",
+          "dinner": "bal_turkey_stuffed_pepper",
+          "snack": "bal_apple_peanut_butter"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "bal_veggie_scramble",
+          "lunch": "bal_asian_noodle_salad",
+          "dinner": "bal_mediterranean_salmon",
+          "snack": "bal_greek_yogurt_parfait"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "bal_frittata",
+          "lunch": "bal_greek_salad_chicken",
+          "dinner": "bal_stuffed_sweet_potato",
+          "snack": "bal_banana_nut_muffin"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "bal_banana_pancakes",
+          "lunch": "bal_tuna_poke_bowl",
+          "dinner": "bal_veggie_chili",
+          "snack": "bal_hummus_veggie_plate"
+        }
+      ]
+    },
+    {
+      "weekNumber": 3,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "bal_smoothie_bowl",
+          "lunch": "bal_turkey_sandwich",
+          "dinner": "bal_teriyaki_chicken",
+          "snack": "bal_protein_energy_balls"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "bal_avocado_toast_egg",
+          "lunch": "bal_lentil_soup",
+          "dinner": "bal_beef_stir_fry",
+          "snack": "bal_cottage_cheese_fruit"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "bal_greek_yogurt_bowl",
+          "lunch": "bal_chicken_grain_bowl",
+          "dinner": "bal_fish_tacos",
+          "snack": "bal_edamame_snack"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "bal_breakfast_wrap",
+          "lunch": "bal_mediterranean_plate",
+          "dinner": "bal_teriyaki_chicken",
+          "snack": "bal_smoothie_green"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "bal_overnight_oats",
+          "lunch": "bal_salmon_salad",
+          "dinner": "bal_pasta_primavera",
+          "snack": "bal_cheese_crackers"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "bal_shakshuka",
+          "lunch": "bal_black_bean_bowl",
+          "dinner": "bal_grilled_chicken_dinner",
+          "snack": "bal_banana_nut_muffin"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "bal_oatmeal_apple",
+          "lunch": "bal_chicken_caesar_wrap",
+          "dinner": "bal_tofu_curry",
+          "snack": "bal_trail_mix"
+        }
+      ]
+    },
+    {
+      "weekNumber": 4,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "bal_chia_pudding",
+          "lunch": "bal_shrimp_stir_fry",
+          "dinner": "bal_pork_tenderloin",
+          "snack": "bal_apple_peanut_butter"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "bal_cottage_cheese_toast",
+          "lunch": "bal_asian_noodle_salad",
+          "dinner": "bal_baked_salmon_dinner",
+          "snack": "bal_hummus_veggie_plate"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "bal_frittata",
+          "lunch": "bal_chicken_tortilla_soup",
+          "dinner": "bal_sheet_pan_sausage",
+          "snack": "bal_greek_yogurt_parfait"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "bal_banana_pancakes",
+          "lunch": "bal_caprese_panini",
+          "dinner": "bal_chicken_stir_fry_thai",
+          "snack": "bal_protein_energy_balls"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "bal_veggie_scramble",
+          "lunch": "bal_greek_salad_chicken",
+          "dinner": "bal_miso_glazed_cod",
+          "snack": "bal_edamame_snack"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "bal_smoothie_bowl",
+          "lunch": "bal_tuna_poke_bowl",
+          "dinner": "bal_mediterranean_salmon",
+          "snack": "bal_banana_nut_muffin"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "bal_avocado_toast_egg",
+          "lunch": "bal_veggie_chili",
+          "dinner": "bal_stuffed_sweet_potato",
+          "snack": "bal_smoothie_green"
+        }
+      ]
+    }
+  ]
+}

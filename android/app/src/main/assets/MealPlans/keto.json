@@ -1,0 +1,1622 @@
+{
+  "dietType": "keto",
+  "displayName": "Keto",
+  "description": "High-fat, very low-carb diet designed to put your body into ketosis for efficient fat burning",
+  "benefits": [
+    "Rapid fat loss",
+    "Improved mental clarity",
+    "Reduced appetite and cravings",
+    "Better blood sugar control",
+    "Sustained energy levels"
+  ],
+  "restrictions": [
+    "Less than 20g net carbs daily",
+    "No grains or sugar",
+    "Limited fruits (berries only)",
+    "No starchy vegetables",
+    "No legumes"
+  ],
+  "meals": {
+    "keto_bacon_eggs_avocado": {
+      "name": "Bacon, Eggs & Avocado Plate",
+      "description": "Classic keto breakfast with crispy bacon, sunny-side-up eggs, and creamy avocado slices",
+      "calories": 620,
+      "protein": 28.0,
+      "carbs": 4.0,
+      "fat": 54.0,
+      "fiber": 3.5,
+      "prepTime": 5,
+      "cookTime": 12,
+      "ingredients": [
+        "4 slices thick-cut bacon",
+        "3 large eggs",
+        "1/2 medium avocado, sliced",
+        "1 tbsp butter",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Cook bacon in a large skillet over medium heat until crispy, about 8 minutes. Transfer to a paper towel-lined plate.",
+        "Drain most of the bacon grease, leaving about 1 tablespoon in the pan. Add butter and let it melt.",
+        "Crack eggs into the skillet and cook sunny-side-up for 3-4 minutes until whites are set but yolks are still runny.",
+        "Plate the eggs alongside the crispy bacon and avocado slices. Season with salt and pepper."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "dairy-free"]
+    },
+    "keto_cream_cheese_scramble": {
+      "name": "Cream Cheese Scrambled Eggs",
+      "description": "Ultra-creamy scrambled eggs folded with cream cheese and fresh chives",
+      "calories": 480,
+      "protein": 24.0,
+      "carbs": 2.5,
+      "fat": 41.0,
+      "fiber": 0.0,
+      "prepTime": 3,
+      "cookTime": 6,
+      "ingredients": [
+        "4 large eggs",
+        "2 oz cream cheese, cubed",
+        "1 tbsp butter",
+        "1 tbsp fresh chives, chopped",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Whisk eggs in a bowl with a pinch of salt and pepper.",
+        "Melt butter in a non-stick skillet over medium-low heat.",
+        "Pour in the eggs and gently stir with a spatula, letting curds form slowly.",
+        "When eggs are halfway set, fold in the cream cheese cubes and continue stirring gently until just cooked through.",
+        "Remove from heat, top with fresh chives, and serve immediately."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_sausage_egg_cups": {
+      "name": "Sausage & Cheese Egg Muffins",
+      "description": "Portable egg muffins loaded with pork sausage, cheddar, and bell pepper",
+      "calories": 510,
+      "protein": 30.0,
+      "carbs": 3.0,
+      "fat": 42.0,
+      "fiber": 0.5,
+      "prepTime": 10,
+      "cookTime": 22,
+      "ingredients": [
+        "6 large eggs",
+        "4 oz ground pork sausage",
+        "1/2 cup shredded cheddar cheese",
+        "2 tbsp diced green bell pepper",
+        "2 tbsp heavy cream",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Grease a 6-cup muffin tin with butter or cooking spray.",
+        "Brown the pork sausage in a skillet over medium heat, breaking it into small crumbles. Drain any excess grease.",
+        "Whisk eggs with heavy cream, salt, and pepper. Stir in the cooked sausage, cheddar cheese, and diced bell pepper.",
+        "Divide the mixture evenly among the 6 muffin cups.",
+        "Bake for 18-22 minutes until puffed and golden. Let cool 2 minutes before removing from the tin."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "meal-prep"]
+    },
+    "keto_bulletproof_coffee_plate": {
+      "name": "Bulletproof Coffee & Ham Roll-Ups",
+      "description": "Rich butter coffee paired with ham and cream cheese roll-ups for a quick keto morning",
+      "calories": 490,
+      "protein": 18.0,
+      "carbs": 2.0,
+      "fat": 46.0,
+      "fiber": 0.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "12 oz brewed coffee",
+        "1 tbsp unsalted butter",
+        "1 tbsp MCT oil or coconut oil",
+        "4 slices deli ham",
+        "2 oz cream cheese",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Brew a strong cup of coffee. Pour into a blender.",
+        "Add butter and MCT oil to the hot coffee. Blend on high for 20 seconds until frothy and creamy.",
+        "Spread about 1/2 oz cream cheese onto each ham slice. Roll them up tightly.",
+        "Pour the bulletproof coffee into a mug and serve alongside the ham roll-ups."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "quick"]
+    },
+    "keto_mushroom_swiss_omelette": {
+      "name": "Mushroom & Swiss Omelette",
+      "description": "Fluffy three-egg omelette stuffed with sautéed mushrooms and melted Swiss cheese",
+      "calories": 530,
+      "protein": 32.0,
+      "carbs": 4.0,
+      "fat": 43.0,
+      "fiber": 0.5,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "3 large eggs",
+        "1 cup sliced cremini mushrooms",
+        "2 slices Swiss cheese",
+        "1 tbsp butter",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a non-stick skillet over medium-high heat. Sauté mushrooms with a pinch of salt for 4-5 minutes until golden. Remove and set aside.",
+        "Wipe the skillet, reduce heat to medium, and add butter.",
+        "Whisk eggs with salt and pepper. Pour into the skillet, tilting to spread evenly.",
+        "When the edges begin to set, place Swiss cheese slices and sautéed mushrooms on one half.",
+        "Fold the omelette over the filling, cook 1 more minute, and slide onto a plate."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_smoked_salmon_plate": {
+      "name": "Smoked Salmon Breakfast Plate",
+      "description": "Silky smoked salmon with cream cheese, capers, and cucumber rounds",
+      "calories": 440,
+      "protein": 30.0,
+      "carbs": 4.0,
+      "fat": 34.0,
+      "fiber": 1.0,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "4 oz smoked salmon",
+        "2 oz cream cheese",
+        "1/2 medium cucumber, sliced into rounds",
+        "1 tbsp capers, drained",
+        "1 tbsp fresh dill",
+        "1 tbsp extra virgin olive oil",
+        "Squeeze of lemon juice"
+      ],
+      "instructions": [
+        "Arrange cucumber rounds on a plate in a single layer.",
+        "Spread a small amount of cream cheese on each cucumber round.",
+        "Drape smoked salmon slices over the cucumber rounds.",
+        "Sprinkle capers and fresh dill over the top. Drizzle with olive oil and a squeeze of lemon."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "no-cook"]
+    },
+    "keto_coconut_chia_pudding": {
+      "name": "Coconut Chia Seed Pudding",
+      "description": "Thick and creamy chia pudding made with full-fat coconut milk, topped with toasted coconut flakes",
+      "calories": 420,
+      "protein": 8.0,
+      "carbs": 8.0,
+      "fat": 38.0,
+      "fiber": 10.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "3 tbsp chia seeds",
+        "1 cup full-fat coconut milk (canned)",
+        "1/2 tsp vanilla extract",
+        "1 tbsp unsweetened toasted coconut flakes",
+        "5 drops liquid stevia (optional)",
+        "Pinch of cinnamon"
+      ],
+      "instructions": [
+        "In a jar or bowl, combine chia seeds, coconut milk, vanilla extract, stevia, and cinnamon. Stir well.",
+        "Cover and refrigerate for at least 4 hours or overnight, stirring once after the first 30 minutes.",
+        "When ready to serve, stir the pudding and top with toasted coconut flakes.",
+        "Add a splash more coconut milk if you prefer a thinner consistency."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "dairy-free", "meal-prep"]
+    },
+    "keto_western_scramble": {
+      "name": "Western-Style Scramble",
+      "description": "Hearty scramble with diced ham, green peppers, onion, and pepper jack cheese",
+      "calories": 540,
+      "protein": 34.0,
+      "carbs": 5.0,
+      "fat": 43.0,
+      "fiber": 1.0,
+      "prepTime": 8,
+      "cookTime": 10,
+      "ingredients": [
+        "4 large eggs",
+        "3 oz diced ham",
+        "2 tbsp diced green bell pepper",
+        "1 tbsp diced white onion",
+        "1/4 cup shredded pepper jack cheese",
+        "1 tbsp butter",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Melt butter in a skillet over medium heat. Sauté diced ham, bell pepper, and onion for 3-4 minutes until the vegetables soften.",
+        "Whisk eggs with salt and pepper, then pour into the skillet over the ham and vegetables.",
+        "Stir gently with a spatula, forming soft curds.",
+        "When eggs are nearly set, sprinkle pepper jack cheese on top. Cover for 30 seconds to melt.",
+        "Serve immediately."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_almond_flour_pancakes": {
+      "name": "Almond Flour Pancakes with Butter",
+      "description": "Fluffy low-carb pancakes made with almond flour, served with a generous pat of butter",
+      "calories": 520,
+      "protein": 20.0,
+      "carbs": 6.0,
+      "fat": 46.0,
+      "fiber": 3.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "1 cup almond flour",
+        "2 large eggs",
+        "2 tbsp cream cheese, softened",
+        "1/2 tsp baking powder",
+        "1/4 tsp cinnamon",
+        "2 tbsp butter (for cooking and topping)",
+        "Pinch of salt"
+      ],
+      "instructions": [
+        "Whisk together almond flour, baking powder, cinnamon, and salt in a bowl.",
+        "In a separate bowl, beat eggs with softened cream cheese until smooth. Combine with the dry ingredients.",
+        "Heat 1 tablespoon of butter in a non-stick skillet over medium-low heat.",
+        "Pour about 3 tablespoons of batter per pancake. Cook for 2-3 minutes until bubbles form on the surface, then flip and cook another 1-2 minutes.",
+        "Serve topped with remaining butter."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_egg_bacon_cheese_wrap": {
+      "name": "Egg, Bacon & Cheese Lettuce Wrap",
+      "description": "Scrambled eggs with bacon and melted cheddar wrapped in crisp butter lettuce leaves",
+      "calories": 500,
+      "protein": 30.0,
+      "carbs": 3.0,
+      "fat": 41.0,
+      "fiber": 1.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "3 large eggs",
+        "3 slices bacon",
+        "1/4 cup shredded cheddar cheese",
+        "3 large butter lettuce leaves",
+        "1 tbsp butter",
+        "Hot sauce (optional)"
+      ],
+      "instructions": [
+        "Cook bacon in a skillet until crispy. Transfer to a paper towel-lined plate and chop into pieces.",
+        "Pour off most of the bacon grease. Add butter to the same skillet over medium heat.",
+        "Scramble eggs in the butter until just set. Stir in chopped bacon and cheddar cheese.",
+        "Divide the egg mixture among the butter lettuce leaves. Add hot sauce if desired, and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_chorizo_egg_skillet": {
+      "name": "Chorizo & Egg Breakfast Skillet",
+      "description": "Spicy Mexican chorizo cooked with eggs and topped with avocado and sour cream",
+      "calories": 610,
+      "protein": 32.0,
+      "carbs": 5.0,
+      "fat": 52.0,
+      "fiber": 3.0,
+      "prepTime": 5,
+      "cookTime": 12,
+      "ingredients": [
+        "4 oz Mexican chorizo, casing removed",
+        "3 large eggs",
+        "1/4 medium avocado, diced",
+        "2 tbsp sour cream",
+        "1 tbsp fresh cilantro, chopped",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Cook chorizo in a skillet over medium heat, breaking it apart with a spoon, for 5-6 minutes until browned and cooked through.",
+        "Make three small wells in the chorizo and crack an egg into each well.",
+        "Cover the skillet and cook for 4-5 minutes until the egg whites are set.",
+        "Top with diced avocado, sour cream, and cilantro. Serve directly from the skillet."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_spinach_feta_frittata": {
+      "name": "Spinach & Feta Frittata",
+      "description": "Light and airy frittata packed with fresh spinach, crumbled feta, and sun-dried tomatoes",
+      "calories": 470,
+      "protein": 28.0,
+      "carbs": 5.0,
+      "fat": 38.0,
+      "fiber": 1.5,
+      "prepTime": 8,
+      "cookTime": 18,
+      "ingredients": [
+        "5 large eggs",
+        "2 cups fresh baby spinach",
+        "1/3 cup crumbled feta cheese",
+        "2 tbsp chopped sun-dried tomatoes (oil-packed)",
+        "2 tbsp heavy cream",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat broiler to high. Heat olive oil in an oven-safe skillet over medium heat.",
+        "Add spinach and sauté for 1-2 minutes until wilted. Spread evenly in the skillet.",
+        "Whisk eggs with heavy cream, salt, and pepper. Pour over the spinach.",
+        "Scatter feta and sun-dried tomatoes on top. Cook undisturbed for 5-6 minutes until the edges set.",
+        "Transfer skillet to the broiler and cook for 2-3 minutes until the top is golden and puffed.",
+        "Let cool 2 minutes, slice into wedges, and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_cobb_salad": {
+      "name": "Classic Keto Cobb Salad",
+      "description": "Rows of grilled chicken, bacon, avocado, hard-boiled egg, and blue cheese over crisp romaine",
+      "calories": 650,
+      "protein": 42.0,
+      "carbs": 8.0,
+      "fat": 50.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 0,
+      "ingredients": [
+        "4 oz grilled chicken breast, diced",
+        "3 slices bacon, cooked and crumbled",
+        "1/2 medium avocado, diced",
+        "1 large hard-boiled egg, quartered",
+        "2 tbsp crumbled blue cheese",
+        "3 cups chopped romaine lettuce",
+        "2 tbsp ranch dressing (full-fat)",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Arrange chopped romaine lettuce on a large plate or shallow bowl.",
+        "Arrange the grilled chicken, bacon crumbles, avocado, and hard-boiled egg in neat rows on top of the lettuce.",
+        "Sprinkle crumbled blue cheese across the salad.",
+        "Drizzle with ranch dressing. Season with salt and pepper and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_chicken_caesar_wrap": {
+      "name": "Chicken Caesar Lettuce Wraps",
+      "description": "Grilled chicken thighs with creamy Caesar dressing and parmesan wrapped in romaine leaves",
+      "calories": 560,
+      "protein": 38.0,
+      "carbs": 4.0,
+      "fat": 44.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "6 oz boneless skinless chicken thighs",
+        "4 large romaine lettuce leaves",
+        "2 tbsp Caesar dressing (full-fat)",
+        "2 tbsp shaved parmesan",
+        "1 tbsp olive oil",
+        "1/2 tsp garlic powder",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken thighs with garlic powder, salt, and pepper.",
+        "Heat olive oil in a skillet over medium-high heat. Cook chicken for 6-7 minutes per side until the internal temperature reaches 165°F.",
+        "Let chicken rest for 3 minutes, then slice into strips.",
+        "Divide chicken strips among the romaine leaves. Drizzle with Caesar dressing and top with shaved parmesan.",
+        "Roll up and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_tuna_salad_stuffed_avocado": {
+      "name": "Tuna Salad Stuffed Avocado",
+      "description": "Creamy tuna salad with celery and mayo served in a halved ripe avocado",
+      "calories": 520,
+      "protein": 30.0,
+      "carbs": 6.0,
+      "fat": 42.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 can (5 oz) albacore tuna, drained",
+        "1 medium avocado, halved and pitted",
+        "2 tbsp mayonnaise",
+        "1 stalk celery, finely diced",
+        "1 tsp Dijon mustard",
+        "1 tsp lemon juice",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "In a bowl, combine drained tuna, mayonnaise, diced celery, Dijon mustard, and lemon juice. Mix well.",
+        "Season the tuna salad with salt and pepper to taste.",
+        "Scoop a generous amount of tuna salad into each avocado half.",
+        "Serve immediately, or chill for 15 minutes for a colder salad."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "no-cook"]
+    },
+    "keto_burger_lettuce_wrap": {
+      "name": "Bacon Cheeseburger Lettuce Wrap",
+      "description": "Juicy beef patty with melted cheddar, bacon, pickles, and special sauce in a lettuce bun",
+      "calories": 680,
+      "protein": 44.0,
+      "carbs": 4.0,
+      "fat": 54.0,
+      "fiber": 1.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "6 oz ground beef (80/20)",
+        "2 slices cheddar cheese",
+        "2 slices bacon, cooked",
+        "4 large iceberg lettuce leaves",
+        "2 dill pickle slices",
+        "1 tbsp mayonnaise",
+        "1 tsp yellow mustard",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Form ground beef into a patty about 3/4-inch thick. Season both sides generously with salt and pepper.",
+        "Cook the patty in a hot skillet or on a grill over medium-high heat for 4-5 minutes per side for medium.",
+        "In the last minute of cooking, top the patty with cheddar cheese slices and cover to melt.",
+        "Mix mayonnaise and mustard to make a sauce. Spread onto the lettuce leaves.",
+        "Wrap the cheeseburger, bacon, and pickles in the lettuce leaves and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "carnivore"]
+    },
+    "keto_grilled_chicken_salad": {
+      "name": "Grilled Chicken & Avocado Salad",
+      "description": "Tender grilled chicken over mixed greens with avocado, cucumber, and lemon-olive oil dressing",
+      "calories": 540,
+      "protein": 36.0,
+      "carbs": 7.0,
+      "fat": 42.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 14,
+      "ingredients": [
+        "6 oz boneless skinless chicken breast",
+        "3 cups mixed greens",
+        "1/2 medium avocado, sliced",
+        "1/4 cup sliced cucumber",
+        "2 tbsp extra virgin olive oil",
+        "1 tbsp lemon juice",
+        "1 tsp dried oregano",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken breast with oregano, salt, and pepper. Drizzle with 1 tablespoon olive oil.",
+        "Grill or pan-sear the chicken over medium-high heat for 6-7 minutes per side until cooked through.",
+        "Let chicken rest for 3 minutes, then slice against the grain.",
+        "Arrange mixed greens on a plate. Top with sliced chicken, avocado, and cucumber.",
+        "Whisk together remaining olive oil and lemon juice. Drizzle over the salad."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_broccoli_cheddar_soup": {
+      "name": "Creamy Broccoli Cheddar Soup",
+      "description": "Thick and velvety broccoli soup loaded with sharp cheddar and a swirl of heavy cream",
+      "calories": 480,
+      "protein": 18.0,
+      "carbs": 9.0,
+      "fat": 40.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "3 cups broccoli florets",
+        "1 cup shredded sharp cheddar cheese",
+        "1/2 cup heavy cream",
+        "1 cup chicken broth",
+        "2 tbsp butter",
+        "1/4 cup diced white onion",
+        "1 clove garlic, minced",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Melt butter in a pot over medium heat. Sauté onion and garlic for 2-3 minutes until fragrant.",
+        "Add broccoli florets and chicken broth. Bring to a boil, then reduce to a simmer and cook for 12-15 minutes until broccoli is tender.",
+        "Use an immersion blender to partially blend the soup, leaving some chunks for texture.",
+        "Stir in heavy cream and cheddar cheese over low heat until the cheese is fully melted.",
+        "Season with salt and pepper. Serve hot."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_antipasto_plate": {
+      "name": "Italian Antipasto Plate",
+      "description": "A keto charcuterie spread with salami, mozzarella, olives, roasted peppers, and olive oil",
+      "calories": 580,
+      "protein": 26.0,
+      "carbs": 6.0,
+      "fat": 50.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "3 oz Genoa salami, sliced",
+        "3 oz fresh mozzarella, sliced",
+        "8 Kalamata olives",
+        "3 tbsp roasted red peppers (jarred)",
+        "1 tbsp extra virgin olive oil",
+        "1/2 tsp dried Italian seasoning",
+        "Fresh basil leaves"
+      ],
+      "instructions": [
+        "Arrange salami slices, mozzarella, and roasted red peppers on a plate.",
+        "Scatter Kalamata olives around the plate.",
+        "Drizzle everything with olive oil and sprinkle with Italian seasoning.",
+        "Garnish with fresh basil leaves and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "no-cook"]
+    },
+    "keto_egg_salad_lettuce_cups": {
+      "name": "Egg Salad Lettuce Cups",
+      "description": "Classic creamy egg salad with Dijon mustard and chives served in crisp butter lettuce cups",
+      "calories": 460,
+      "protein": 24.0,
+      "carbs": 3.0,
+      "fat": 40.0,
+      "fiber": 1.0,
+      "prepTime": 12,
+      "cookTime": 12,
+      "ingredients": [
+        "4 large eggs",
+        "3 tbsp mayonnaise",
+        "1 tsp Dijon mustard",
+        "1 tbsp chopped chives",
+        "4 butter lettuce leaves",
+        "Paprika for garnish",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Place eggs in a saucepan, cover with cold water, and bring to a boil. Once boiling, cover and remove from heat. Let sit for 10-12 minutes.",
+        "Transfer eggs to an ice bath for 5 minutes, then peel.",
+        "Chop the eggs and place in a bowl. Add mayonnaise, Dijon mustard, chives, salt, and pepper. Mix gently.",
+        "Spoon egg salad into butter lettuce cups, sprinkle with paprika, and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_buffalo_chicken_bowl": {
+      "name": "Buffalo Chicken Bowl",
+      "description": "Shredded buffalo chicken over cauliflower rice with blue cheese crumbles and ranch drizzle",
+      "calories": 560,
+      "protein": 40.0,
+      "carbs": 7.0,
+      "fat": 42.0,
+      "fiber": 2.5,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "6 oz boneless skinless chicken thighs",
+        "3 tbsp buffalo hot sauce (Frank's-style)",
+        "1 tbsp butter",
+        "1.5 cups riced cauliflower",
+        "2 tbsp crumbled blue cheese",
+        "1 tbsp ranch dressing",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken thighs with salt and pepper. Cook in olive oil over medium-high heat for 6-7 minutes per side.",
+        "Shred the cooked chicken with two forks. Toss with melted butter and buffalo sauce.",
+        "Sauté riced cauliflower in the same skillet for 4-5 minutes until tender.",
+        "Serve the buffalo chicken over the cauliflower rice. Top with blue cheese crumbles and a drizzle of ranch."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_chef_salad": {
+      "name": "Keto Chef's Salad",
+      "description": "Hearty salad with turkey, ham, Swiss cheese, hard-boiled egg, and creamy ranch",
+      "calories": 580,
+      "protein": 38.0,
+      "carbs": 6.0,
+      "fat": 46.0,
+      "fiber": 3.0,
+      "prepTime": 12,
+      "cookTime": 0,
+      "ingredients": [
+        "3 oz sliced deli turkey",
+        "2 oz sliced deli ham",
+        "2 slices Swiss cheese, cut into strips",
+        "1 large hard-boiled egg, sliced",
+        "3 cups chopped iceberg lettuce",
+        "1/4 cup cherry tomatoes, halved",
+        "2 tbsp ranch dressing (full-fat)",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Arrange chopped lettuce on a large plate.",
+        "Roll the turkey and ham slices and place on the lettuce. Arrange Swiss cheese strips alongside.",
+        "Add sliced hard-boiled egg and cherry tomato halves.",
+        "Drizzle with ranch dressing, season with salt and pepper, and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "no-cook"]
+    },
+    "keto_shrimp_avocado_bowl": {
+      "name": "Garlic Butter Shrimp & Avocado Bowl",
+      "description": "Succulent garlic butter shrimp served over spinach with sliced avocado and lemon",
+      "calories": 500,
+      "protein": 34.0,
+      "carbs": 6.0,
+      "fat": 38.0,
+      "fiber": 4.0,
+      "prepTime": 8,
+      "cookTime": 8,
+      "ingredients": [
+        "6 oz large shrimp, peeled and deveined",
+        "2 tbsp butter",
+        "2 cloves garlic, minced",
+        "2 cups fresh baby spinach",
+        "1/2 medium avocado, sliced",
+        "1 tbsp lemon juice",
+        "Red pepper flakes to taste",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Melt butter in a skillet over medium-high heat. Add garlic and cook for 30 seconds until fragrant.",
+        "Add shrimp in a single layer. Season with salt, pepper, and red pepper flakes. Cook for 2-3 minutes per side until pink and opaque.",
+        "Remove shrimp from the skillet. Add spinach and toss just until wilted, about 1 minute.",
+        "Plate the spinach, top with shrimp and avocado slices. Squeeze lemon juice over everything."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_philly_cheesesteak_bowl": {
+      "name": "Philly Cheesesteak Bowl",
+      "description": "Shaved ribeye with sautéed peppers and onions, smothered in melted provolone over cauliflower rice",
+      "calories": 640,
+      "protein": 42.0,
+      "carbs": 8.0,
+      "fat": 50.0,
+      "fiber": 2.5,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "6 oz shaved ribeye steak",
+        "2 slices provolone cheese",
+        "1/4 cup sliced green bell pepper",
+        "2 tbsp sliced white onion",
+        "1 cup riced cauliflower",
+        "1 tbsp olive oil",
+        "1 tbsp butter",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a skillet over medium-high heat. Sauté bell pepper and onion for 3-4 minutes until softened.",
+        "Push vegetables to the side. Add shaved ribeye to the skillet and cook for 3-4 minutes, stirring to break apart.",
+        "Season with salt and pepper. Lay provolone slices over the steak and cover for 1 minute to melt.",
+        "In a separate pan, sauté riced cauliflower in butter for 4-5 minutes.",
+        "Serve the cheesesteak mixture over the cauliflower rice."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_ribeye_steak": {
+      "name": "Pan-Seared Ribeye with Garlic Butter",
+      "description": "Perfectly seared bone-in ribeye basted with garlic herb butter and served with roasted asparagus",
+      "calories": 780,
+      "protein": 52.0,
+      "carbs": 4.0,
+      "fat": 62.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 18,
+      "ingredients": [
+        "10 oz bone-in ribeye steak",
+        "2 tbsp butter",
+        "2 cloves garlic, smashed",
+        "2 sprigs fresh thyme",
+        "1 bunch asparagus (8 spears), trimmed",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Remove the steak from the fridge 30 minutes before cooking. Pat dry and season liberally with salt and pepper.",
+        "Toss asparagus with olive oil, salt, and pepper. Roast in a 400°F oven for 10-12 minutes.",
+        "Heat a cast-iron skillet over high heat until smoking. Sear the ribeye for 4 minutes per side for medium-rare.",
+        "Reduce heat to medium. Add butter, garlic, and thyme to the skillet. Tilt the pan and baste the steak with the melted garlic butter for 1-2 minutes.",
+        "Rest the steak for 5 minutes before slicing. Serve with roasted asparagus."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "carnivore"]
+    },
+    "keto_salmon_lemon_dill": {
+      "name": "Baked Salmon with Lemon-Dill Butter",
+      "description": "Flaky Atlantic salmon fillet glazed with lemon-dill compound butter, served with steamed broccoli",
+      "calories": 580,
+      "protein": 42.0,
+      "carbs": 5.0,
+      "fat": 44.0,
+      "fiber": 3.0,
+      "prepTime": 8,
+      "cookTime": 16,
+      "ingredients": [
+        "7 oz Atlantic salmon fillet, skin-on",
+        "2 tbsp butter, softened",
+        "1 tbsp fresh dill, chopped",
+        "1 tsp lemon zest",
+        "1 tbsp lemon juice",
+        "1.5 cups broccoli florets",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Line a baking sheet with parchment paper.",
+        "Mix softened butter with dill, lemon zest, and a pinch of salt to make compound butter.",
+        "Place salmon skin-side down on the baking sheet. Season with salt and pepper. Spread the compound butter over the top.",
+        "Squeeze lemon juice over the fillet. Bake for 14-16 minutes until the salmon flakes easily.",
+        "Meanwhile, steam broccoli for 4-5 minutes until tender-crisp. Toss with olive oil and salt.",
+        "Serve the salmon alongside the steamed broccoli."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_pork_chops_mushroom": {
+      "name": "Pork Chops with Creamy Mushroom Sauce",
+      "description": "Thick-cut pork chops seared golden and smothered in a rich mushroom cream sauce",
+      "calories": 620,
+      "protein": 44.0,
+      "carbs": 5.0,
+      "fat": 48.0,
+      "fiber": 1.0,
+      "prepTime": 8,
+      "cookTime": 22,
+      "ingredients": [
+        "8 oz bone-in pork chop",
+        "1 cup sliced cremini mushrooms",
+        "1/3 cup heavy cream",
+        "2 tbsp butter",
+        "1 clove garlic, minced",
+        "1/2 tsp dried thyme",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Pat the pork chop dry and season both sides with salt, pepper, and thyme.",
+        "Heat 1 tablespoon butter in a skillet over medium-high heat. Sear pork chop for 5-6 minutes per side until golden and cooked to 145°F. Remove and rest.",
+        "In the same skillet, add the remaining butter and sauté mushrooms for 4-5 minutes until browned.",
+        "Add garlic and cook 30 seconds. Pour in heavy cream and stir, scraping up any browned bits.",
+        "Simmer the sauce for 2-3 minutes until slightly thickened. Season with salt and pepper.",
+        "Pour the mushroom cream sauce over the rested pork chop and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_chicken_thigh_pesto": {
+      "name": "Pesto Chicken Thighs with Zucchini",
+      "description": "Crispy-skinned chicken thighs coated in basil pesto, served over sautéed zucchini noodles",
+      "calories": 590,
+      "protein": 40.0,
+      "carbs": 6.0,
+      "fat": 46.0,
+      "fiber": 2.0,
+      "prepTime": 8,
+      "cookTime": 25,
+      "ingredients": [
+        "2 bone-in, skin-on chicken thighs (about 8 oz total)",
+        "2 tbsp basil pesto",
+        "1 medium zucchini, spiralized",
+        "1 tbsp olive oil",
+        "1 tbsp butter",
+        "1 tbsp grated parmesan",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Season chicken thighs with salt and pepper.",
+        "Heat olive oil in an oven-safe skillet over medium-high heat. Place chicken skin-side down and sear for 5 minutes until the skin is crispy and golden.",
+        "Flip the chicken, brush the top with pesto, and transfer the skillet to the oven. Roast for 18-20 minutes until internal temperature reaches 165°F.",
+        "While the chicken roasts, sauté zucchini noodles in butter over medium heat for 2-3 minutes until just tender.",
+        "Serve the pesto chicken thighs over the zucchini noodles. Sprinkle with parmesan."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_cauliflower_mac_cheese": {
+      "name": "Cauliflower Mac & Cheese",
+      "description": "Roasted cauliflower baked in a rich three-cheese sauce until bubbly and golden",
+      "calories": 480,
+      "protein": 22.0,
+      "carbs": 9.0,
+      "fat": 38.0,
+      "fiber": 3.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "3 cups cauliflower florets",
+        "1/2 cup shredded sharp cheddar cheese",
+        "1/4 cup shredded gruyere cheese",
+        "2 tbsp cream cheese",
+        "1/3 cup heavy cream",
+        "1 tbsp butter",
+        "1/2 tsp garlic powder",
+        "1/2 tsp mustard powder",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Steam cauliflower florets for 5-6 minutes until fork-tender. Drain well.",
+        "In a saucepan, melt butter over medium heat. Add heavy cream, cream cheese, garlic powder, and mustard powder, whisking until smooth.",
+        "Remove from heat and stir in cheddar and gruyere until melted and creamy.",
+        "Place cauliflower in a baking dish and pour the cheese sauce over the top. Stir gently to coat.",
+        "Bake for 20 minutes until bubbly and golden on top. Let cool 5 minutes before serving."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_chicken_alfredo_spaghetti_squash": {
+      "name": "Chicken Alfredo Spaghetti Squash",
+      "description": "Roasted spaghetti squash tossed in a creamy parmesan Alfredo sauce with sliced grilled chicken",
+      "calories": 560,
+      "protein": 36.0,
+      "carbs": 10.0,
+      "fat": 42.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 40,
+      "ingredients": [
+        "1/2 medium spaghetti squash",
+        "5 oz grilled chicken breast, sliced",
+        "1/3 cup heavy cream",
+        "2 tbsp butter",
+        "1/4 cup grated parmesan cheese",
+        "1 clove garlic, minced",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste",
+        "Fresh parsley for garnish"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Cut spaghetti squash in half lengthwise and scoop out the seeds. Drizzle cut side with olive oil and season with salt.",
+        "Place cut-side down on a baking sheet and roast for 35-40 minutes until tender. Scrape out the strands with a fork.",
+        "Melt butter in a skillet over medium heat. Add garlic and sauté for 30 seconds.",
+        "Pour in heavy cream and bring to a gentle simmer. Stir in parmesan cheese until melted and smooth.",
+        "Add spaghetti squash strands and sliced chicken to the sauce. Toss to coat.",
+        "Serve garnished with fresh parsley."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_lamb_chops_mint": {
+      "name": "Grilled Lamb Chops with Mint Butter",
+      "description": "Tender lamb loin chops grilled to perfection and topped with fresh mint compound butter",
+      "calories": 680,
+      "protein": 46.0,
+      "carbs": 2.0,
+      "fat": 54.0,
+      "fiber": 1.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "4 lamb loin chops (about 8 oz total)",
+        "2 tbsp butter, softened",
+        "1 tbsp fresh mint, finely chopped",
+        "1 tsp lemon zest",
+        "1 tbsp olive oil",
+        "1 tsp garlic powder",
+        "1/2 tsp dried rosemary",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Mix softened butter with chopped mint and lemon zest. Shape into a small log, wrap in plastic wrap, and refrigerate.",
+        "Rub lamb chops with olive oil, garlic powder, rosemary, salt, and pepper.",
+        "Heat a grill or grill pan over high heat. Cook lamb chops for 3-4 minutes per side for medium-rare.",
+        "Let rest for 3 minutes. Top each chop with a slice of the cold mint butter and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "carnivore"]
+    },
+    "keto_shrimp_scampi_zoodles": {
+      "name": "Shrimp Scampi over Zoodles",
+      "description": "Plump shrimp in a garlicky white wine butter sauce served over tender zucchini noodles",
+      "calories": 460,
+      "protein": 34.0,
+      "carbs": 7.0,
+      "fat": 34.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "6 oz large shrimp, peeled and deveined",
+        "2 medium zucchini, spiralized",
+        "3 tbsp butter",
+        "3 cloves garlic, minced",
+        "2 tbsp dry white wine",
+        "1 tbsp lemon juice",
+        "Red pepper flakes to taste",
+        "2 tbsp fresh parsley, chopped",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Melt 2 tablespoons of butter in a large skillet over medium-high heat. Add shrimp, season with salt and pepper, and cook 2 minutes per side until pink. Remove from skillet.",
+        "Add the remaining tablespoon of butter and garlic. Sauté for 30 seconds.",
+        "Deglaze with white wine and lemon juice, scraping up any browned bits. Simmer for 1 minute.",
+        "Add zucchini noodles and toss in the sauce for 2 minutes until just tender.",
+        "Return the shrimp to the skillet, toss to combine, and garnish with parsley and red pepper flakes."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_stuffed_bell_peppers": {
+      "name": "Keto Stuffed Bell Peppers",
+      "description": "Bell peppers filled with seasoned ground beef, cauliflower rice, and melted mozzarella",
+      "calories": 560,
+      "protein": 38.0,
+      "carbs": 10.0,
+      "fat": 42.0,
+      "fiber": 3.0,
+      "prepTime": 15,
+      "cookTime": 30,
+      "ingredients": [
+        "2 medium bell peppers, halved and seeded",
+        "6 oz ground beef (80/20)",
+        "1/2 cup riced cauliflower",
+        "1/2 cup shredded mozzarella cheese",
+        "1/4 cup sugar-free marinara sauce",
+        "1 tsp Italian seasoning",
+        "1/2 tsp garlic powder",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Place bell pepper halves in a baking dish.",
+        "Brown ground beef in a skillet over medium-high heat. Drain excess grease.",
+        "Add riced cauliflower, marinara sauce, Italian seasoning, garlic powder, salt, and pepper to the beef. Cook for 3-4 minutes.",
+        "Divide the filling among the bell pepper halves. Top with mozzarella cheese.",
+        "Cover with foil and bake for 20 minutes. Remove foil and bake another 10 minutes until cheese is bubbly and golden."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_baked_chicken_wings": {
+      "name": "Crispy Baked Chicken Wings",
+      "description": "Perfectly crispy oven-baked wings tossed in garlic parmesan butter sauce",
+      "calories": 580,
+      "protein": 44.0,
+      "carbs": 2.0,
+      "fat": 44.0,
+      "fiber": 0.0,
+      "prepTime": 10,
+      "cookTime": 45,
+      "ingredients": [
+        "1 lb chicken wings (about 8 pieces)",
+        "2 tbsp butter, melted",
+        "2 tbsp grated parmesan cheese",
+        "2 cloves garlic, minced",
+        "1 tbsp olive oil",
+        "1/2 tsp baking powder",
+        "1/2 tsp paprika",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F. Line a baking sheet with a wire rack.",
+        "Pat wings dry thoroughly. Toss with olive oil, baking powder, paprika, salt, and pepper.",
+        "Arrange wings in a single layer on the rack. Bake for 40-45 minutes, flipping halfway, until crispy and golden.",
+        "While wings bake, combine melted butter, minced garlic, and parmesan in a large bowl.",
+        "Toss the hot wings in the garlic parmesan butter and serve immediately."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_meatballs_marinara": {
+      "name": "Italian Meatballs in Marinara",
+      "description": "Juicy beef and pork meatballs simmered in sugar-free marinara, topped with melted mozzarella",
+      "calories": 600,
+      "protein": 42.0,
+      "carbs": 8.0,
+      "fat": 44.0,
+      "fiber": 2.0,
+      "prepTime": 15,
+      "cookTime": 25,
+      "ingredients": [
+        "4 oz ground beef",
+        "4 oz ground pork",
+        "1/4 cup almond flour",
+        "1 large egg",
+        "2 tbsp grated parmesan cheese",
+        "1 tsp Italian seasoning",
+        "1/2 cup sugar-free marinara sauce",
+        "1/4 cup shredded mozzarella",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. In a bowl, combine ground beef, ground pork, almond flour, egg, parmesan, Italian seasoning, salt, and pepper. Mix until just combined.",
+        "Roll the mixture into 8 meatballs. Place on an oiled baking sheet.",
+        "Bake for 15 minutes until browned on the outside.",
+        "Transfer meatballs to an oven-safe dish. Spoon marinara sauce over them and top with mozzarella.",
+        "Broil for 2-3 minutes until the cheese is melted and bubbly. Serve hot."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_taco_bowl": {
+      "name": "Keto Taco Bowl",
+      "description": "Seasoned ground beef over shredded lettuce with cheese, sour cream, avocado, and salsa",
+      "calories": 620,
+      "protein": 36.0,
+      "carbs": 8.0,
+      "fat": 50.0,
+      "fiber": 4.0,
+      "prepTime": 8,
+      "cookTime": 12,
+      "ingredients": [
+        "6 oz ground beef (80/20)",
+        "2 cups shredded romaine lettuce",
+        "1/4 medium avocado, diced",
+        "1/4 cup shredded Mexican blend cheese",
+        "2 tbsp sour cream",
+        "2 tbsp sugar-free salsa",
+        "1 tsp chili powder",
+        "1/2 tsp cumin",
+        "1/2 tsp garlic powder",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Brown ground beef in a skillet over medium-high heat, breaking it apart as it cooks.",
+        "Add chili powder, cumin, garlic powder, and salt. Stir and cook for 2 more minutes.",
+        "Arrange shredded lettuce in a bowl. Top with the seasoned beef.",
+        "Add diced avocado, shredded cheese, sour cream, and salsa on top. Serve immediately."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_tuscan_chicken": {
+      "name": "Creamy Tuscan Chicken",
+      "description": "Pan-seared chicken breast in a sun-dried tomato and spinach cream sauce with parmesan",
+      "calories": 590,
+      "protein": 42.0,
+      "carbs": 7.0,
+      "fat": 44.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 22,
+      "ingredients": [
+        "6 oz boneless skinless chicken breast",
+        "1/3 cup heavy cream",
+        "2 cups fresh baby spinach",
+        "2 tbsp chopped sun-dried tomatoes (oil-packed)",
+        "2 tbsp grated parmesan cheese",
+        "1 clove garlic, minced",
+        "1 tbsp olive oil",
+        "1 tbsp butter",
+        "1/2 tsp Italian seasoning",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken breast with Italian seasoning, salt, and pepper.",
+        "Heat olive oil in a skillet over medium-high heat. Sear chicken for 6-7 minutes per side until cooked through. Remove and set aside.",
+        "Reduce heat to medium. Add butter and garlic, sautéing for 30 seconds.",
+        "Pour in heavy cream, add sun-dried tomatoes and parmesan. Stir until the sauce thickens slightly, about 3 minutes.",
+        "Add spinach and stir until wilted. Return the chicken to the skillet, spooning sauce over the top.",
+        "Serve the chicken with plenty of sauce."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_blackened_fish_tacos": {
+      "name": "Blackened Fish Tacos in Cheese Shells",
+      "description": "Spicy blackened cod served in crispy baked cheese shells with cabbage slaw and chipotle mayo",
+      "calories": 520,
+      "protein": 38.0,
+      "carbs": 5.0,
+      "fat": 40.0,
+      "fiber": 2.0,
+      "prepTime": 12,
+      "cookTime": 15,
+      "ingredients": [
+        "6 oz cod fillet",
+        "1/2 cup shredded cheddar cheese (for shells)",
+        "1 cup shredded green cabbage",
+        "2 tbsp mayonnaise",
+        "1 tsp chipotle powder",
+        "1 tsp paprika",
+        "1/2 tsp garlic powder",
+        "1/2 tsp cumin",
+        "1 tbsp olive oil",
+        "1 tsp lime juice",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F. Form two mounds of shredded cheddar on a parchment-lined baking sheet. Bake for 7-8 minutes until golden and crispy. Immediately drape over a rolling pin to shape into taco shells. Let cool.",
+        "Mix paprika, garlic powder, cumin, chipotle powder, salt, and pepper for the blackening seasoning. Coat the cod fillet on all sides.",
+        "Heat olive oil in a skillet over high heat. Sear cod for 3-4 minutes per side until blackened and cooked through. Break into chunks.",
+        "Toss shredded cabbage with lime juice and a pinch of salt.",
+        "Mix mayonnaise with a pinch of chipotle powder for the sauce.",
+        "Fill cheese shells with cabbage slaw and blackened cod. Drizzle with chipotle mayo."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_bacon_wrapped_chicken": {
+      "name": "Bacon-Wrapped Chicken with Roasted Brussels Sprouts",
+      "description": "Juicy chicken breast wrapped in crispy bacon alongside roasted Brussels sprouts with balsamic glaze",
+      "calories": 600,
+      "protein": 48.0,
+      "carbs": 9.0,
+      "fat": 42.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "6 oz boneless skinless chicken breast",
+        "4 slices bacon",
+        "2 cups Brussels sprouts, halved",
+        "1 tbsp olive oil",
+        "1 tbsp balsamic vinegar (no sugar added)",
+        "1/2 tsp smoked paprika",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Season chicken breast with smoked paprika, salt, and pepper.",
+        "Wrap the chicken tightly with bacon slices, tucking the ends underneath.",
+        "Toss Brussels sprouts with olive oil, salt, and pepper. Spread on a baking sheet alongside the chicken.",
+        "Bake for 25-30 minutes until the bacon is crispy and the chicken reaches 165°F internal temperature.",
+        "Drizzle Brussels sprouts with balsamic vinegar and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_cheese_crisps": {
+      "name": "Parmesan Cheese Crisps",
+      "description": "Crispy, salty parmesan crisps baked until golden — the perfect keto chip replacement",
+      "calories": 220,
+      "protein": 16.0,
+      "carbs": 1.0,
+      "fat": 17.0,
+      "fiber": 0.0,
+      "prepTime": 5,
+      "cookTime": 8,
+      "ingredients": [
+        "1 cup shredded parmesan cheese",
+        "1/2 tsp Italian seasoning",
+        "1/4 tsp garlic powder",
+        "Pinch of black pepper"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Line a baking sheet with parchment paper.",
+        "Place tablespoon-sized mounds of parmesan on the baking sheet, spacing them 2 inches apart. Flatten slightly.",
+        "Sprinkle each mound with Italian seasoning, garlic powder, and pepper.",
+        "Bake for 5-8 minutes until golden and bubbly. Let cool completely on the baking sheet — they will crisp up as they cool."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "quick"]
+    },
+    "keto_guacamole_pork_rinds": {
+      "name": "Fresh Guacamole with Pork Rinds",
+      "description": "Chunky homemade guacamole with lime and jalapeño, scooped up with crunchy pork rinds",
+      "calories": 340,
+      "protein": 14.0,
+      "carbs": 8.0,
+      "fat": 28.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 medium ripe avocado",
+        "1 oz pork rinds",
+        "1 tbsp diced red onion",
+        "1 tbsp fresh cilantro, chopped",
+        "1/2 jalapeño, seeded and minced",
+        "1 tbsp lime juice",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Cut the avocado in half, remove the pit, and scoop the flesh into a bowl.",
+        "Mash with a fork to desired consistency — leave some chunks for texture.",
+        "Stir in diced red onion, cilantro, jalapeño, and lime juice. Season with salt.",
+        "Serve immediately with pork rinds for dipping."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "dairy-free", "no-cook"]
+    },
+    "keto_fat_bombs_pb": {
+      "name": "Peanut Butter Chocolate Fat Bombs",
+      "description": "Rich no-bake fat bombs with natural peanut butter, coconut oil, and dark cocoa powder",
+      "calories": 280,
+      "protein": 6.0,
+      "carbs": 5.0,
+      "fat": 26.0,
+      "fiber": 2.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "2 tbsp natural peanut butter (no sugar added)",
+        "1 tbsp coconut oil, melted",
+        "1 tbsp unsweetened cocoa powder",
+        "1 tbsp cream cheese, softened",
+        "5 drops liquid stevia",
+        "Pinch of sea salt"
+      ],
+      "instructions": [
+        "In a small bowl, combine peanut butter, melted coconut oil, cream cheese, cocoa powder, stevia, and sea salt. Mix until smooth.",
+        "Divide the mixture into 4 portions and roll into balls.",
+        "Place on a parchment-lined plate and freeze for at least 30 minutes until firm.",
+        "Store in the freezer and let sit at room temperature for 2-3 minutes before eating."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_celery_almond_butter": {
+      "name": "Celery Sticks with Almond Butter",
+      "description": "Crunchy celery sticks spread with creamy almond butter and a sprinkle of flaky sea salt",
+      "calories": 240,
+      "protein": 7.0,
+      "carbs": 6.0,
+      "fat": 21.0,
+      "fiber": 3.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "4 large celery stalks, trimmed",
+        "2 tbsp almond butter",
+        "Flaky sea salt to taste"
+      ],
+      "instructions": [
+        "Wash and trim the celery stalks. Cut into 4-inch pieces.",
+        "Spread almond butter generously into the celery grooves.",
+        "Sprinkle with flaky sea salt and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "dairy-free", "no-cook", "quick"]
+    },
+    "keto_bacon_wrapped_jalapenos": {
+      "name": "Bacon-Wrapped Cream Cheese Jalapeños",
+      "description": "Spicy jalapeño halves stuffed with cream cheese and wrapped in crispy bacon",
+      "calories": 310,
+      "protein": 14.0,
+      "carbs": 4.0,
+      "fat": 26.0,
+      "fiber": 1.0,
+      "prepTime": 12,
+      "cookTime": 20,
+      "ingredients": [
+        "4 medium jalapeños, halved and seeded",
+        "3 oz cream cheese, softened",
+        "4 slices bacon, cut in half",
+        "1/4 tsp garlic powder",
+        "Pinch of smoked paprika"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F. Line a baking sheet with foil and place a wire rack on top.",
+        "Mix cream cheese with garlic powder until smooth. Fill each jalapeño half with the cream cheese mixture.",
+        "Wrap each stuffed jalapeño half with a half-slice of bacon, securing with a toothpick if needed.",
+        "Place on the wire rack and bake for 18-20 minutes until the bacon is crispy.",
+        "Let cool for 3 minutes, sprinkle with smoked paprika, and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_cucumber_cream_cheese_bites": {
+      "name": "Cucumber Cream Cheese Bites",
+      "description": "Thick cucumber rounds topped with herbed cream cheese and a slice of smoked salmon",
+      "calories": 200,
+      "protein": 12.0,
+      "carbs": 4.0,
+      "fat": 15.0,
+      "fiber": 1.0,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "1 medium cucumber, sliced into 1/2-inch rounds",
+        "2 oz cream cheese, softened",
+        "2 oz smoked salmon",
+        "1 tsp fresh dill, chopped",
+        "1/2 tsp lemon zest",
+        "Pinch of black pepper"
+      ],
+      "instructions": [
+        "Mix cream cheese with dill, lemon zest, and black pepper until well combined.",
+        "Arrange cucumber rounds on a plate.",
+        "Spread a dollop of the herbed cream cheese on each cucumber round.",
+        "Top each with a small piece of smoked salmon. Serve chilled."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "no-cook", "quick"]
+    },
+    "keto_mixed_nuts": {
+      "name": "Keto Trail Mix",
+      "description": "Custom mix of macadamias, pecans, almonds, and coconut flakes with a hint of sea salt",
+      "calories": 320,
+      "protein": 6.0,
+      "carbs": 6.0,
+      "fat": 32.0,
+      "fiber": 4.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "1 oz macadamia nuts",
+        "1/2 oz pecans",
+        "1/2 oz almonds",
+        "1 tbsp unsweetened coconut flakes",
+        "Pinch of sea salt"
+      ],
+      "instructions": [
+        "Combine macadamia nuts, pecans, almonds, and coconut flakes in a small bowl or jar.",
+        "Sprinkle with sea salt and toss to distribute.",
+        "Portion into a small container or bag for an easy grab-and-go snack."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "dairy-free", "no-cook", "quick"]
+    },
+    "keto_deviled_eggs": {
+      "name": "Classic Deviled Eggs",
+      "description": "Perfectly hard-boiled eggs filled with a creamy mustard-mayo yolk mixture and dusted with paprika",
+      "calories": 280,
+      "protein": 18.0,
+      "carbs": 2.0,
+      "fat": 22.0,
+      "fiber": 0.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "4 large eggs",
+        "2 tbsp mayonnaise",
+        "1 tsp Dijon mustard",
+        "1 tsp apple cider vinegar",
+        "Paprika for garnish",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Place eggs in a saucepan, cover with water, and bring to a boil. Cover, remove from heat, and let sit for 12 minutes.",
+        "Transfer to an ice bath for 5 minutes, then peel.",
+        "Slice eggs in half lengthwise. Remove yolks and place in a bowl.",
+        "Mash yolks with mayonnaise, Dijon mustard, apple cider vinegar, salt, and pepper until smooth.",
+        "Pipe or spoon the yolk mixture back into the egg white halves. Dust with paprika and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_pepperoni_cheese_roll": {
+      "name": "Pepperoni & Mozzarella Roll-Ups",
+      "description": "Quick high-fat snack of pepperoni slices wrapped around mozzarella cheese sticks",
+      "calories": 260,
+      "protein": 16.0,
+      "carbs": 2.0,
+      "fat": 20.0,
+      "fiber": 0.0,
+      "prepTime": 3,
+      "cookTime": 0,
+      "ingredients": [
+        "2 oz pepperoni slices",
+        "2 mozzarella cheese sticks",
+        "1 tsp Italian seasoning (optional)"
+      ],
+      "instructions": [
+        "Lay out pepperoni slices, overlapping slightly to form a strip.",
+        "Place a mozzarella stick at one end and roll the pepperoni tightly around it.",
+        "Repeat with the second cheese stick. Sprinkle with Italian seasoning if desired.",
+        "Serve immediately or pack for an on-the-go snack."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "no-cook", "quick"]
+    },
+    "keto_greek_salad_chicken": {
+      "name": "Greek Salad with Grilled Chicken",
+      "description": "Crisp romaine with grilled chicken, feta, olives, cucumber, and tangy red wine vinaigrette",
+      "calories": 540,
+      "protein": 38.0,
+      "carbs": 8.0,
+      "fat": 40.0,
+      "fiber": 3.0,
+      "prepTime": 12,
+      "cookTime": 14,
+      "ingredients": [
+        "5 oz boneless skinless chicken breast",
+        "3 cups chopped romaine lettuce",
+        "1/4 cup crumbled feta cheese",
+        "6 Kalamata olives",
+        "1/4 cup diced cucumber",
+        "2 tbsp extra virgin olive oil",
+        "1 tbsp red wine vinegar",
+        "1/2 tsp dried oregano",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Season chicken with oregano, salt, and pepper. Grill or pan-sear in 1 tablespoon olive oil over medium-high heat for 6-7 minutes per side until cooked through.",
+        "Let chicken rest for 3 minutes, then slice against the grain.",
+        "Arrange romaine in a bowl. Top with sliced chicken, feta, olives, and cucumber.",
+        "Whisk remaining olive oil with red wine vinegar and a pinch of oregano. Drizzle over the salad and serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb"]
+    },
+    "keto_olives_cheese_plate": {
+      "name": "Marinated Olives & Cheese Plate",
+      "description": "A savory snack of herb-marinated olives with cubed sharp cheddar and salami slices",
+      "calories": 300,
+      "protein": 14.0,
+      "carbs": 3.0,
+      "fat": 26.0,
+      "fiber": 1.5,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "10 mixed olives (Castelvetrano and Kalamata)",
+        "1.5 oz sharp cheddar cheese, cubed",
+        "1 oz Genoa salami, sliced",
+        "1 tsp extra virgin olive oil",
+        "1/4 tsp dried Italian herbs",
+        "Pinch of red pepper flakes"
+      ],
+      "instructions": [
+        "Toss olives with olive oil, Italian herbs, and red pepper flakes in a small bowl.",
+        "Arrange the marinated olives, cheddar cubes, and salami slices on a small plate.",
+        "Let sit for 5 minutes to let the flavors meld, then serve."
+      ],
+      "tags": ["keto", "high-fat", "low-carb", "no-cook", "quick"]
+    }
+  },
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "keto_bacon_eggs_avocado",
+          "lunch": "keto_cobb_salad",
+          "dinner": "keto_ribeye_steak",
+          "snack": "keto_cheese_crisps"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "keto_cream_cheese_scramble",
+          "lunch": "keto_chicken_caesar_wrap",
+          "dinner": "keto_salmon_lemon_dill",
+          "snack": "keto_mixed_nuts"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "keto_mushroom_swiss_omelette",
+          "lunch": "keto_tuna_salad_stuffed_avocado",
+          "dinner": "keto_pork_chops_mushroom",
+          "snack": "keto_deviled_eggs"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "keto_sausage_egg_cups",
+          "lunch": "keto_broccoli_cheddar_soup",
+          "dinner": "keto_chicken_thigh_pesto",
+          "snack": "keto_bacon_wrapped_jalapenos"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "keto_chorizo_egg_skillet",
+          "lunch": "keto_burger_lettuce_wrap",
+          "dinner": "keto_shrimp_scampi_zoodles",
+          "snack": "keto_guacamole_pork_rinds"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "keto_almond_flour_pancakes",
+          "lunch": "keto_antipasto_plate",
+          "dinner": "keto_lamb_chops_mint",
+          "snack": "keto_fat_bombs_pb"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "keto_spinach_feta_frittata",
+          "lunch": "keto_buffalo_chicken_bowl",
+          "dinner": "keto_tuscan_chicken",
+          "snack": "keto_cucumber_cream_cheese_bites"
+        }
+      ]
+    },
+    {
+      "weekNumber": 2,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "keto_western_scramble",
+          "lunch": "keto_chef_salad",
+          "dinner": "keto_stuffed_bell_peppers",
+          "snack": "keto_pepperoni_cheese_roll"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "keto_smoked_salmon_plate",
+          "lunch": "keto_shrimp_avocado_bowl",
+          "dinner": "keto_baked_chicken_wings",
+          "snack": "keto_celery_almond_butter"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "keto_bulletproof_coffee_plate",
+          "lunch": "keto_egg_salad_lettuce_cups",
+          "dinner": "keto_cauliflower_mac_cheese",
+          "snack": "keto_cheese_crisps"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "keto_coconut_chia_pudding",
+          "lunch": "keto_philly_cheesesteak_bowl",
+          "dinner": "keto_blackened_fish_tacos",
+          "snack": "keto_deviled_eggs"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "keto_egg_bacon_cheese_wrap",
+          "lunch": "keto_grilled_chicken_salad",
+          "dinner": "keto_meatballs_marinara",
+          "snack": "keto_mixed_nuts"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "keto_bacon_eggs_avocado",
+          "lunch": "keto_taco_bowl",
+          "dinner": "keto_chicken_alfredo_spaghetti_squash",
+          "snack": "keto_bacon_wrapped_jalapenos"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "keto_mushroom_swiss_omelette",
+          "lunch": "keto_cobb_salad",
+          "dinner": "keto_bacon_wrapped_chicken",
+          "snack": "keto_fat_bombs_pb"
+        }
+      ]
+    },
+    {
+      "weekNumber": 3,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "keto_chorizo_egg_skillet",
+          "lunch": "keto_buffalo_chicken_bowl",
+          "dinner": "keto_salmon_lemon_dill",
+          "snack": "keto_guacamole_pork_rinds"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "keto_cream_cheese_scramble",
+          "lunch": "keto_burger_lettuce_wrap",
+          "dinner": "keto_lamb_chops_mint",
+          "snack": "keto_cucumber_cream_cheese_bites"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "keto_sausage_egg_cups",
+          "lunch": "keto_greek_salad_chicken",
+          "dinner": "keto_tuscan_chicken",
+          "snack": "keto_olives_cheese_plate"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "keto_almond_flour_pancakes",
+          "lunch": "keto_tuna_salad_stuffed_avocado",
+          "dinner": "keto_pork_chops_mushroom",
+          "snack": "keto_cheese_crisps"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "keto_spinach_feta_frittata",
+          "lunch": "keto_shrimp_avocado_bowl",
+          "dinner": "keto_taco_bowl",
+          "snack": "keto_celery_almond_butter"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "keto_smoked_salmon_plate",
+          "lunch": "keto_chicken_caesar_wrap",
+          "dinner": "keto_ribeye_steak",
+          "snack": "keto_bacon_wrapped_jalapenos"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "keto_western_scramble",
+          "lunch": "keto_broccoli_cheddar_soup",
+          "dinner": "keto_shrimp_scampi_zoodles",
+          "snack": "keto_deviled_eggs"
+        }
+      ]
+    },
+    {
+      "weekNumber": 4,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "keto_coconut_chia_pudding",
+          "lunch": "keto_chef_salad",
+          "dinner": "keto_chicken_thigh_pesto",
+          "snack": "keto_mixed_nuts"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "keto_egg_bacon_cheese_wrap",
+          "lunch": "keto_philly_cheesesteak_bowl",
+          "dinner": "keto_blackened_fish_tacos",
+          "snack": "keto_fat_bombs_pb"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "keto_bulletproof_coffee_plate",
+          "lunch": "keto_grilled_chicken_salad",
+          "dinner": "keto_stuffed_bell_peppers",
+          "snack": "keto_guacamole_pork_rinds"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "keto_bacon_eggs_avocado",
+          "lunch": "keto_egg_salad_lettuce_cups",
+          "dinner": "keto_cauliflower_mac_cheese",
+          "snack": "keto_pepperoni_cheese_roll"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "keto_mushroom_swiss_omelette",
+          "lunch": "keto_taco_bowl",
+          "dinner": "keto_baked_chicken_wings",
+          "snack": "keto_cucumber_cream_cheese_bites"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "keto_chorizo_egg_skillet",
+          "lunch": "keto_cobb_salad",
+          "dinner": "keto_chicken_alfredo_spaghetti_squash",
+          "snack": "keto_celery_almond_butter"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "keto_almond_flour_pancakes",
+          "lunch": "keto_antipasto_plate",
+          "dinner": "keto_meatballs_marinara",
+          "snack": "keto_cheese_crisps"
+        }
+      ]
+    }
+  ]
+}

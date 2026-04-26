@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mochasmindlab.mlhealth.ui.screens.*
+import com.mochasmindlab.mlhealth.ui.screens.mealplan.MealPlanScreen
 import androidx.compose.material3.Text
 import com.mochasmindlab.mlhealth.ui.theme.MLFitnessTheme
 import com.mochasmindlab.mlhealth.ui.theme.MochaBrown
