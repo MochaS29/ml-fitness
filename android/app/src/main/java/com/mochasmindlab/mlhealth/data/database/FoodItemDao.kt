@@ -32,6 +32,16 @@ interface FoodItemDao {
     
     @Query("SELECT * FROM food_items WHERE logCount > 0 ORDER BY lastLogged DESC LIMIT :limit")
     fun getRecentFoodItems(limit: Int): Flow<List<FoodItem>>
+
+    @Query("SELECT * FROM food_items WHERE isCustom = 1 ORDER BY name ASC")
+    fun getCustomFoodItems(): Flow<List<FoodItem>>
+
+    @Query(
+        "SELECT * FROM food_items " +
+        "WHERE isCustom = 1 AND (name LIKE '%' || :query || '%' OR brand LIKE '%' || :query || '%') " +
+        "ORDER BY name ASC"
+    )
+    suspend fun getAllCustomFoodsMatching(query: String): List<FoodItem>
     
     @Query("SELECT * FROM food_items WHERE barcode = :barcode")
     fun getFoodItemsByBarcode(barcode: String): Flow<List<FoodItem>>

@@ -31,6 +31,9 @@ interface ExerciseDao {
     @Query("SELECT * FROM exercise_entries WHERE date = :date ORDER BY timestamp DESC")
     fun getExercisesForDate(date: Date): Flow<List<ExerciseEntry>>
 
+    @Query("SELECT * FROM exercise_entries WHERE date = :date ORDER BY timestamp DESC")
+    suspend fun getExercisesForDateOnce(date: Date): List<ExerciseEntry>
+
     @Query("SELECT SUM(duration) FROM exercise_entries WHERE date = :date")
     suspend fun getTotalMinutesForDate(date: Date): Int?
 

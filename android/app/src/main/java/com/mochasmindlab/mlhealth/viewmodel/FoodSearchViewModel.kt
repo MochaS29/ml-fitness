@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,9 +42,7 @@ class FoodSearchViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                // TODO: Implement searchFoods in repository
-                val results = emptyList<com.mochasmindlab.mlhealth.data.models.FoodItem>()
-                _searchResults.value = results
+                _searchResults.value = foodRepository.searchAllFoods(query)
             } catch (e: Exception) {
                 _searchResults.value = emptyList()
             } finally {
@@ -54,28 +53,25 @@ class FoodSearchViewModel @Inject constructor(
 
     private fun loadRecentFoods() {
         viewModelScope.launch {
-            // TODO: Implement getRecentFoods in repository
-            /*foodRepository.getRecentFoods().collect { foods ->
+            foodRepository.getRecentFoodItems(limit = 10).collect { foods ->
                 _recentFoods.value = foods
-            }*/
+            }
         }
     }
 
     private fun loadFavoriteFoods() {
         viewModelScope.launch {
-            // TODO: Implement getFavoriteFoods in repository
-            /*foodRepository.getFavoriteFoods().collect { foods ->
+            foodRepository.getFavoriteFoodItems().collect { foods ->
                 _favoriteFoods.value = foods
-            }*/
+            }
         }
     }
 
     private fun loadCustomFoods() {
         viewModelScope.launch {
-            // TODO: Implement getCustomFoods in repository
-            /*foodRepository.getCustomFoods().collect { foods ->
+            foodRepository.getCustomFoodItems().collect { foods ->
                 _customFoods.value = foods
-            }*/
+            }
         }
     }
 

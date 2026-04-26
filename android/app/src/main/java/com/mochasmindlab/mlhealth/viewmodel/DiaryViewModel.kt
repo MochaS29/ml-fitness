@@ -141,15 +141,36 @@ class DiaryViewModel @Inject constructor(
                 // Load water intake
                 val waterIntake = database.waterDao().getTotalForDate(date) ?: 0.0
                 val waterCups = (waterIntake / 8).toInt() // Convert oz to cups
-                
+
+                // Load exercise entries
+                val exerciseEntries = database.exerciseDao().getExercisesForDateOnce(date).map { ex ->
+                    ExerciseEntryDisplay(
+                        id = ex.id.toString(),
+                        name = ex.name,
+                        duration = ex.duration,
+                        caloriesBurned = ex.caloriesBurned.toInt()
+                    )
+                }
+
+                // Load supplement entries
+                val timeFormatter = java.text.SimpleDateFormat("h:mm a", Locale.getDefault())
+                val supplementEntries = database.supplementDao().getEntriesForDate(date).map { sup ->
+                    SupplementEntryDisplay(
+                        id = sup.id.toString(),
+                        name = sup.name,
+                        amount = "${sup.servingSize} ${sup.servingUnit}",
+                        time = timeFormatter.format(sup.timestamp)
+                    )
+                }
+
                 _uiState.value = _uiState.value.copy(
                     mealEntries = mealEntries,
                     breakfastEntries = mealEntries[MealType.BREAKFAST] ?: emptyList(),
                     lunchEntries = mealEntries[MealType.LUNCH] ?: emptyList(),
                     dinnerEntries = mealEntries[MealType.DINNER] ?: emptyList(),
                     snackEntries = mealEntries[MealType.SNACK] ?: emptyList(),
-                    exerciseEntries = emptyList(), // TODO: Load from database
-                    supplementEntries = emptyList(), // TODO: Load from database
+                    exerciseEntries = exerciseEntries,
+                    supplementEntries = supplementEntries,
                     totalCalories = totalCalories,
                     totalProtein = totalProtein,
                     totalCarbs = totalCarbs,

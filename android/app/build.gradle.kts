@@ -94,6 +94,10 @@ android {
             excludes += "META-INF/versions/9/previous-compilation-data.bin"
         }
     }
+
+    androidResources {
+        noCompress += "sqlite"
+    }
 }
 
 dependencies {
