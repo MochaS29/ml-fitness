@@ -6,6 +6,7 @@ import com.mochasmindlab.mlhealth.data.database.MLFitnessDatabase
 import com.mochasmindlab.mlhealth.data.entities.*
 import com.mochasmindlab.mlhealth.data.models.Achievement
 import com.mochasmindlab.mlhealth.data.models.AchievementType
+import com.mochasmindlab.mlhealth.services.HealthConnectManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val database: MLFitnessDatabase
+    private val database: MLFitnessDatabase,
+    private val healthConnectManager: HealthConnectManager
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(DashboardUiState())
@@ -86,7 +88,15 @@ class DashboardViewModel @Inject constructor(
                 } catch (e: Exception) {
                     null
                 }
-                
+
+                // Read today's steps from Health Connect.
+                // Falls back to 0 gracefully if HC is unavailable or not permitted.
+                val todaySteps = try {
+                    healthConnectManager.readStepsToday().toInt()
+                } catch (e: Exception) {
+                    0
+                }
+
                 _uiState.value = DashboardUiState(
                     userName = "You", // Default name until loaded from preferences
                     caloriesConsumed = totalCalories.toInt(),
@@ -102,7 +112,7 @@ class DashboardViewModel @Inject constructor(
                     currentWeight = latestWeight?.weight ?: 70.0,
                     weightChange = 0f, // TODO: Calculate from previous weight
                     lastWeightDate = "Today",
-                    steps = 0, // TODO: Integrate step tracking
+                    steps = todaySteps,
                     selectedPeriod = DashboardPeriod.DAY
                 )
             } catch (e: Exception) {

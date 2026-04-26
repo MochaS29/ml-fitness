@@ -1,9 +1,17 @@
 package com.mochasmindlab.mlhealth.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.mochasmindlab.mlhealth.viewmodel.SettingsViewModel
+
+/** Composition local that exposes the current dark-mode state app-wide. */
+val LocalDarkMode = compositionLocalOf { false }
 
 // ML Fitness Colors - Matching iOS exactly
 val MochaBrown = Color(0xFF8B4513)  // Primary brand color
@@ -66,16 +74,29 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = Color.White
 )
 
+/**
+ * App theme.
+ *
+ * [darkTheme] defaults to the persisted user preference (read from [SettingsViewModel]).
+ * Callers may override it explicitly (e.g. previews) by passing a value directly.
+ * The resolved dark-mode state is also published via [LocalDarkMode] so child composables
+ * can read it without injecting the ViewModel themselves.
+ */
 @Composable
 fun MLFitnessTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean? = null,          // null = use persisted pref; non-null = caller override
+    settingsViewModel: SettingsViewModel = hiltViewModel(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val uiState by settingsViewModel.uiState.collectAsState()
+    val resolvedDark = darkTheme ?: uiState.isDarkMode
+    val colorScheme = if (resolvedDark) DarkColorScheme else LightColorScheme
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    CompositionLocalProvider(LocalDarkMode provides resolvedDark) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 }

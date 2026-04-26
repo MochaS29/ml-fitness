@@ -10,6 +10,16 @@
         android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="com.android.vending.BILLING" />
+
+    <!-- Health Connect permissions -->
+    <uses-permission android:name="android.permission.health.READ_STEPS" />
+    <uses-permission android:name="android.permission.health.READ_WEIGHT" />
+    <uses-permission android:name="android.permission.health.WRITE_WEIGHT" />
+
+    <!-- Required so the package manager resolves Health Connect provider intents -->
+    <queries>
+        <package android:name="com.google.android.apps.healthdata" />
+    </queries>
     
     <!-- Camera features -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
@@ -41,6 +51,25 @@
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode" />
+
+        <!--
+            TODO: Health Connect – Privacy Policy deep-link activity alias.
+            Production apps must declare an <activity-alias> that handles the
+            androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE intent so Health Connect
+            can surface your privacy policy URL. Example:
+
+            <activity-alias
+                android:name=".HealthConnectRationaleActivity"
+                android:exported="true"
+                android:targetActivity=".MainActivity">
+                <intent-filter>
+                    <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+                </intent-filter>
+            </activity-alias>
+
+            Add BEFORE submitting to Google Play. See:
+            https://developer.android.com/health-and-fitness/guides/health-connect/develop/get-started#privacy-policy
+        -->
     </application>
 
 </manifest>

@@ -1,8 +1,11 @@
 package com.mochasmindlab.mlhealth.utils
 
+import com.mochasmindlab.mlhealth.data.database.MLFitnessDatabase
 import com.mochasmindlab.mlhealth.data.entities.*
 import com.mochasmindlab.mlhealth.data.models.FoodItem
 import com.mochasmindlab.mlhealth.data.repository.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +17,8 @@ class DemoDataGenerator @Inject constructor(
     private val exerciseRepository: ExerciseRepository,
     private val weightRepository: WeightRepository,
     private val waterRepository: WaterRepository,
-    private val supplementRepository: SupplementRepository
+    private val supplementRepository: SupplementRepository,
+    private val database: MLFitnessDatabase
 ) {
 
     suspend fun generateDemoData(daysBack: Int = 30) {
@@ -78,7 +82,9 @@ class DemoDataGenerator @Inject constructor(
                 barcode = null,
                 // Removed imageUrl - not in FoodEntry
             )
-            // TODO: Add to database when repository is ready
+            withContext(Dispatchers.IO) {
+                database.foodDao().insert(entry)
+            }
         }
     }
 
@@ -111,7 +117,9 @@ class DemoDataGenerator @Inject constructor(
                         date = date,
                         timestamp = date
                     )
-                    // TODO: Add to database when repository is ready
+                    withContext(Dispatchers.IO) {
+                        database.exerciseDao().insertExercise(entry)
+                    }
                 }
             }
         }
@@ -138,7 +146,9 @@ class DemoDataGenerator @Inject constructor(
                     timestamp = date,
                     notes = null
                 )
-                // TODO: Add to database when repository is ready
+                withContext(Dispatchers.IO) {
+                    database.weightDao().insertWeightEntry(entry)
+                }
             }
         }
     }
@@ -193,7 +203,9 @@ class DemoDataGenerator @Inject constructor(
                         date = date,
                         timestamp = date
                     )
-                    // TODO: Add to database when repository is ready
+                    withContext(Dispatchers.IO) {
+                        database.supplementDao().insert(entry)
+                    }
                 }
             }
         }

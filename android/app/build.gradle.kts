@@ -165,6 +165,12 @@ dependencies {
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.7.1")
 
+    // Health Connect
+    implementation("androidx.health.connect:connect-client:1.1.0-alpha07")
+
+    // ListenableFuture (CameraX + Health Connect transitive — explicit for Kotlin compile resolution)
+    implementation("com.google.guava:guava:32.1.3-android")
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

@@ -38,6 +38,11 @@ class SettingsViewModel @Inject constructor(
     private fun loadPreferences() {
         viewModelScope.launch {
             launch {
+                preferencesManager.darkModeEnabled.collect { enabled ->
+                    _uiState.value = _uiState.value.copy(isDarkMode = enabled)
+                }
+            }
+            launch {
                 preferencesManager.notificationsEnabled.collect { enabled ->
                     _uiState.value = _uiState.value.copy(notificationsEnabled = enabled)
                 }
@@ -61,8 +66,11 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleDarkMode() {
-        _uiState.value = _uiState.value.copy(isDarkMode = !_uiState.value.isDarkMode)
-        // TODO: Persist dark mode preference
+        val newDarkMode = !_uiState.value.isDarkMode
+        _uiState.value = _uiState.value.copy(isDarkMode = newDarkMode)
+        viewModelScope.launch {
+            preferencesManager.setDarkMode(newDarkMode)
+        }
     }
 
     fun toggleNotifications() {

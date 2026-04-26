@@ -221,6 +221,18 @@ fun MLHealthApp(
             composable("meal_scanner") {
                 com.mochasmindlab.mlhealth.ui.screens.scanner.MealScannerScreen(navController = navController)
             }
+
+            composable("health_connect") {
+                com.mochasmindlab.mlhealth.ui.screens.healthconnect.HealthConnectScreen(navController = navController)
+            }
+
+            composable("add_custom_food") {
+                com.mochasmindlab.mlhealth.ui.screens.customfood.AddCustomFoodScreen(navController = navController)
+            }
+
+            composable("progress_reports") {
+                com.mochasmindlab.mlhealth.ui.screens.reports.ProgressReportsScreen(navController = navController)
+            }
             
             composable("reports") {
                 // TODO: Implement ReportsScreen
