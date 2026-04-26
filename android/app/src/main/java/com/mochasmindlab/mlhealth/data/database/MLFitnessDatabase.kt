@@ -62,30 +62,7 @@ abstract class MLFitnessDatabase : RoomDatabase() {
 }
 
 // ===== DAOs =====
-
-@Dao
-interface ExerciseDao {
-    @Query("SELECT * FROM exercise_entries WHERE date = :date ORDER BY timestamp DESC")
-    suspend fun getEntriesForDate(date: Date): List<ExerciseEntry>
-    
-    @Query("SELECT * FROM exercise_entries WHERE date BETWEEN :startDate AND :endDate ORDER BY timestamp DESC")
-    suspend fun getEntriesInRange(startDate: Date, endDate: Date): List<ExerciseEntry>
-    
-    @Insert
-    suspend fun insert(entry: ExerciseEntry)
-    
-    @Update
-    suspend fun update(entry: ExerciseEntry)
-    
-    @Delete
-    suspend fun delete(entry: ExerciseEntry)
-    
-    @Query("SELECT SUM(caloriesBurned) FROM exercise_entries WHERE date = :date")
-    suspend fun getTotalCaloriesForDate(date: Date): Double?
-    
-    @Query("SELECT SUM(duration) FROM exercise_entries WHERE date = :date")
-    suspend fun getTotalDurationForDate(date: Date): Int?
-}
+// ExerciseDao is defined in ExerciseDao.kt
 
 @Dao
 interface FoodDao {
@@ -139,40 +116,49 @@ interface SupplementDao {
 interface WeightDao {
     @Query("SELECT * FROM weight_entries ORDER BY date DESC LIMIT 1")
     suspend fun getLatestEntry(): WeightEntry?
-    
+
     @Query("SELECT * FROM weight_entries WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     suspend fun getEntriesInRange(startDate: Date, endDate: Date): List<WeightEntry>
-    
+
     @Query("SELECT * FROM weight_entries ORDER BY date DESC LIMIT :limit")
     suspend fun getRecentEntries(limit: Int): List<WeightEntry>
-    
+
     @Insert
     suspend fun insert(entry: WeightEntry)
-    
+
     @Update
     suspend fun update(entry: WeightEntry)
-    
+
     @Delete
     suspend fun delete(entry: WeightEntry)
+
+    // Additional methods for WeightRepository
+    @Insert
+    suspend fun insertWeightEntry(entry: WeightEntry)
+
+    @Update
+    suspend fun updateWeightEntry(entry: WeightEntry)
+
+    @Query("DELETE FROM weight_entries WHERE id = :id")
+    suspend fun deleteWeightEntry(id: UUID)
+
+    @Query("SELECT * FROM weight_entries ORDER BY date DESC")
+    fun getAllWeightEntries(): kotlinx.coroutines.flow.Flow<List<WeightEntry>>
+
+    @Query("SELECT * FROM weight_entries WHERE id = :id LIMIT 1")
+    fun getWeightEntryById(id: UUID): kotlinx.coroutines.flow.Flow<WeightEntry?>
+
+    @Query("SELECT * FROM weight_entries WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    fun getWeightEntriesBetweenDates(startDate: Date, endDate: Date): kotlinx.coroutines.flow.Flow<List<WeightEntry>>
+
+    @Query("SELECT * FROM weight_entries ORDER BY date DESC LIMIT 1")
+    suspend fun getLatestWeight(): WeightEntry?
+
+    @Query("SELECT * FROM weight_entries WHERE date = :date LIMIT 1")
+    suspend fun getWeightOnDate(date: Date): WeightEntry?
 }
 
-@Dao
-interface WaterDao {
-    @Query("SELECT * FROM water_entries WHERE DATE(timestamp / 1000, 'unixepoch') = DATE(:date / 1000, 'unixepoch')")
-    suspend fun getEntriesForDate(date: Date): List<WaterEntry>
-    
-    @Query("SELECT SUM(amount) FROM water_entries WHERE DATE(timestamp / 1000, 'unixepoch') = DATE(:date / 1000, 'unixepoch')")
-    suspend fun getTotalForDate(date: Date): Double?
-    
-    @Insert
-    suspend fun insert(entry: WaterEntry)
-    
-    @Update
-    suspend fun update(entry: WaterEntry)
-    
-    @Delete
-    suspend fun delete(entry: WaterEntry)
-}
+// WaterDao is defined in WaterDao.kt
 
 @Dao
 interface CustomFoodDao {

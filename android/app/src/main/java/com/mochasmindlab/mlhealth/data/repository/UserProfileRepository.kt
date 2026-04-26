@@ -4,6 +4,7 @@ import com.mochasmindlab.mlhealth.data.database.UserProfileDao
 import com.mochasmindlab.mlhealth.data.models.UserProfile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import com.mochasmindlab.mlhealth.utils.DateConverter
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -67,7 +68,8 @@ class UserProfileRepository @Inject constructor(
         
         val weightInKg = profile.currentWeight * 0.453592
         val heightInCm = profile.height
-        val age = java.time.Period.between(profile.birthDate, LocalDate.now()).years
+        val birthDateLocal = DateConverter.dateToLocalDate(profile.birthDate) ?: LocalDate.now()
+        val age = java.time.Period.between(birthDateLocal, LocalDate.now()).years
         
         return if (profile.gender == "Male") {
             10 * weightInKg + 6.25 * heightInCm - 5 * age + 5

@@ -174,10 +174,10 @@ fun FunctionalDashboardScreen(
                     modifier = Modifier.weight(1f),
                     title = "Calories",
                     value = "${uiState.caloriesConsumed}",
-                    subtitle = "/ ${uiState.caloriesGoal} kcal",
+                    subtitle = "/ ${uiState.calorieGoal} kcal",
                     icon = Icons.Default.LocalFireDepartment,
                     color = EnergeticOrange,
-                    progress = (uiState.caloriesConsumed.toFloat() / uiState.caloriesGoal).coerceIn(0f, 1f),
+                    progress = (uiState.caloriesConsumed.toFloat() / uiState.calorieGoal).coerceIn(0f, 1f),
                     onClick = { navController.navigate("nutrition") }
                 )
                 

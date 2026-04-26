@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mochasmindlab.mlhealth.ui.components.MetricCard
 import com.mochasmindlab.mlhealth.ui.components.AIInsightCard
-import com.mochasmindlab.mlhealth.ui.theme.MLHealthTheme
+import com.mochasmindlab.mlhealth.ui.theme.MLFitnessTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

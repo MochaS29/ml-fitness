@@ -9,6 +9,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.Date
+import java.time.ZoneId
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,26 +20,26 @@ class WeightViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
-    private val _currentWeight = MutableStateFlow(0f)
-    val currentWeight: StateFlow<Float> = _currentWeight.asStateFlow()
+    private val _currentWeight = MutableStateFlow(0.0)
+    val currentWeight: StateFlow<Double> = _currentWeight.asStateFlow()
 
-    private val _goalWeight = MutableStateFlow(0f)
-    val goalWeight: StateFlow<Float> = _goalWeight.asStateFlow()
+    private val _goalWeight = MutableStateFlow(0.0)
+    val goalWeight: StateFlow<Double> = _goalWeight.asStateFlow()
 
-    private val _startingWeight = MutableStateFlow(0f)
-    val startingWeight: StateFlow<Float> = _startingWeight.asStateFlow()
+    private val _startingWeight = MutableStateFlow(0.0)
+    val startingWeight: StateFlow<Double> = _startingWeight.asStateFlow()
 
     private val _weightHistory = MutableStateFlow<List<WeightEntry>>(emptyList())
     val weightHistory: StateFlow<List<WeightEntry>> = _weightHistory.asStateFlow()
 
-    private val _weeklyAverage = MutableStateFlow(0f)
-    val weeklyAverage: StateFlow<Float> = _weeklyAverage.asStateFlow()
+    private val _weeklyAverage = MutableStateFlow(0.0)
+    val weeklyAverage: StateFlow<Double> = _weeklyAverage.asStateFlow()
 
-    private val _monthlyProgress = MutableStateFlow(0f)
-    val monthlyProgress: StateFlow<Float> = _monthlyProgress.asStateFlow()
+    private val _monthlyProgress = MutableStateFlow(0.0)
+    val monthlyProgress: StateFlow<Double> = _monthlyProgress.asStateFlow()
 
-    private val _bmi = MutableStateFlow(0f)
-    val bmi: StateFlow<Float> = _bmi.asStateFlow()
+    private val _bmi = MutableStateFlow(0.0)
+    val bmi: StateFlow<Double> = _bmi.asStateFlow()
 
     private val _bmiCategory = MutableStateFlow("")
     val bmiCategory: StateFlow<String> = _bmiCategory.asStateFlow()
@@ -56,16 +59,16 @@ class WeightViewModel @Inject constructor(
                     _currentWeight.value = entries.first().weight
 
                     // Calculate weekly average
-                    val weekAgo = LocalDate.now().minusWeeks(1)
+                    val weekAgo = Date.from(LocalDate.now().minusWeeks(1).atStartOfDay(ZoneId.systemDefault()).toInstant())
                     val weekEntries = entries.filter { it.date >= weekAgo }
                     _weeklyAverage.value = if (weekEntries.isNotEmpty()) {
-                        weekEntries.map { it.weight }.average().toFloat()
+                        weekEntries.map { it.weight }.average()
                     } else {
                         _currentWeight.value
                     }
 
                     // Calculate monthly progress
-                    val monthAgo = LocalDate.now().minusMonths(1)
+                    val monthAgo = Date.from(LocalDate.now().minusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant())
                     val monthAgoEntry = entries.find { it.date <= monthAgo }
                     if (monthAgoEntry != null) {
                         _monthlyProgress.value = _currentWeight.value - monthAgoEntry.weight
@@ -78,17 +81,20 @@ class WeightViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 _currentWeight,
-                preferencesManager.userHeight
-            ) { weight, height ->
-                if (height > 0) {
-                    val heightInMeters = height / 100
-                    val bmiValue = weight / (heightInMeters * heightInMeters) * 703 / 2.205 // Convert lbs to kg
-                    _bmi.value = bmiValue
-                    _bmiCategory.value = when {
-                        bmiValue < 18.5 -> "Underweight"
-                        bmiValue < 25 -> "Normal"
-                        bmiValue < 30 -> "Overweight"
-                        else -> "Obese"
+                preferencesManager.userProfile
+            ) { weight, profile ->
+                profile?.let {
+                    val height = it.height
+                    if (height > 0) {
+                        val heightInMeters = height / 100
+                        val bmiValue = weight / (heightInMeters * heightInMeters)
+                        _bmi.value = bmiValue
+                        _bmiCategory.value = when {
+                            bmiValue < 18.5 -> "Underweight"
+                            bmiValue < 25 -> "Normal"
+                            bmiValue < 30 -> "Overweight"
+                            else -> "Obese"
+                        }
                     }
                 }
             }.collect()
@@ -97,38 +103,27 @@ class WeightViewModel @Inject constructor(
 
     private fun loadGoals() {
         viewModelScope.launch {
-            preferencesManager.goalWeight.collect { weight ->
-                _goalWeight.value = weight
-            }
-        }
-
-        viewModelScope.launch {
-            preferencesManager.startingWeight.collect { weight ->
-                _startingWeight.value = weight
+            preferencesManager.userProfile.collect { profile ->
+                profile?.let {
+                    _goalWeight.value = it.targetWeight.toDouble()
+                    _startingWeight.value = it.weight.toDouble()
+                }
             }
         }
     }
 
-    fun addWeightEntry(weight: Float, notes: String) {
+    fun addWeightEntry(weight: Double, notes: String) {
         viewModelScope.launch {
             val entry = WeightEntry(
                 weight = weight,
-                date = LocalDate.now(),
+                date = Date(),
                 notes = notes
             )
             weightRepository.insertWeightEntry(entry)
-
-            // Update current weight in preferences
-            preferencesManager.setCurrentWeight(weight)
-
-            // If this is the first entry, set as starting weight
-            if (_weightHistory.value.size == 1) {
-                preferencesManager.setStartingWeight(weight)
-            }
         }
     }
 
-    fun deleteWeightEntry(id: Long) {
+    fun deleteWeightEntry(id: UUID) {
         viewModelScope.launch {
             weightRepository.deleteWeightEntry(id)
         }

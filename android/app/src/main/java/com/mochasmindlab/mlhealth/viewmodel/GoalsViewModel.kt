@@ -40,7 +40,7 @@ class GoalsViewModel @Inject constructor(
                 title = type.displayName,
                 description = getGoalDescription(type, target),
                 targetValue = target.toFloatOrNull() ?: 0f,
-                deadline = LocalDate.now().plusDays(durationDays.toLong()),
+                deadline = java.util.Date(System.currentTimeMillis() + (durationDays.toLong() * 24 * 60 * 60 * 1000)),
                 isActive = true
             )
             goalsRepository.insertGoal(goal)
@@ -54,7 +54,7 @@ class GoalsViewModel @Inject constructor(
                 val updatedGoal = it.copy(
                     isActive = it.isCompleted,
                     isCompleted = !it.isCompleted,
-                    completedDate = if (!it.isCompleted) LocalDate.now() else null,
+                    completedDate = if (!it.isCompleted) java.util.Date() else null,
                     progress = if (!it.isCompleted) 100 else it.progress
                 )
                 goalsRepository.updateGoal(updatedGoal)
@@ -77,7 +77,7 @@ class GoalsViewModel @Inject constructor(
                     currentValue = currentValue,
                     progress = progress,
                     isCompleted = progress >= 100,
-                    completedDate = if (progress >= 100) LocalDate.now() else null
+                    completedDate = if (progress >= 100) java.util.Date() else null
                 )
                 goalsRepository.updateGoal(updatedGoal)
             }

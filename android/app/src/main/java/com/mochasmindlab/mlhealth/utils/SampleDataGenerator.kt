@@ -116,11 +116,11 @@ class SampleDataGenerator @Inject constructor(
             
             // Add water entries for today
             val waterEntries = listOf(
-                WaterEntry(amount = 16.0, unit = "oz", timestamp = Date(today.time + 28800000)), // 8 AM
-                WaterEntry(amount = 8.0, unit = "oz", timestamp = Date(today.time + 36000000)), // 10 AM
-                WaterEntry(amount = 16.0, unit = "oz", timestamp = Date(today.time + 43200000)), // 12 PM
-                WaterEntry(amount = 8.0, unit = "oz", timestamp = Date(today.time + 54000000)), // 3 PM
-                WaterEntry(amount = 16.0, unit = "oz", timestamp = Date(today.time + 61200000)) // 5 PM
+                WaterEntry(amount = 16.0, unit = WaterUnit.OZ, timestamp = Date(today.time + 28800000)), // 8 AM
+                WaterEntry(amount = 8.0, unit = WaterUnit.OZ, timestamp = Date(today.time + 36000000)), // 10 AM
+                WaterEntry(amount = 16.0, unit = WaterUnit.OZ, timestamp = Date(today.time + 43200000)), // 12 PM
+                WaterEntry(amount = 8.0, unit = WaterUnit.OZ, timestamp = Date(today.time + 54000000)), // 3 PM
+                WaterEntry(amount = 16.0, unit = WaterUnit.OZ, timestamp = Date(today.time + 61200000)) // 5 PM
             )
             
             waterEntries.forEach { database.waterDao().insert(it) }
@@ -253,7 +253,7 @@ class SampleDataGenerator @Inject constructor(
                 
                 // Add water
                 val waterAmount = 48.0 + (Math.random() * 32 - 16) // 48-80 oz
-                database.waterDao().insert(WaterEntry(amount = waterAmount, unit = "oz", timestamp = date))
+                database.waterDao().insert(WaterEntry(amount = waterAmount, unit = WaterUnit.OZ, timestamp = date))
                 
                 // Add exercise
                 if (i % 2 == 0) { // Exercise every other day

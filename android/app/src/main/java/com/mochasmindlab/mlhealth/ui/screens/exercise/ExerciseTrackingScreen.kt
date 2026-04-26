@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.mochasmindlab.mlhealth.data.models.ExerciseEntry
+import com.mochasmindlab.mlhealth.data.entities.ExerciseEntry
 import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.viewmodel.ExerciseViewModel
 import java.time.LocalDate
@@ -138,7 +139,7 @@ fun ExerciseTrackingScreen(
                             navController.navigate("edit_exercise/${exercise.id}")
                         },
                         onDelete = {
-                            viewModel.deleteExercise(exercise.id)
+                            viewModel.deleteExercise(exercise)
                         }
                     )
                 }
@@ -349,7 +350,7 @@ fun ExerciseEntryCard(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    exercise.emoji ?: "💪",
+                    "💪", // Default emoji
                     fontSize = 24.sp
                 )
             }
@@ -366,7 +367,7 @@ fun ExerciseEntryCard(
                 )
                 Row {
                     Text(
-                        "${exercise.minutes} min",
+                        "${exercise.duration} min",
                         fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

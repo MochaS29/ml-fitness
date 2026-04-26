@@ -3,6 +3,7 @@ package com.mochasmindlab.mlhealth.data.repository
 import com.mochasmindlab.mlhealth.data.database.FoodItemDao
 import com.mochasmindlab.mlhealth.data.models.FoodItem
 import kotlinx.coroutines.flow.Flow
+import com.mochasmindlab.mlhealth.utils.DateConverter
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,7 +39,7 @@ class FoodRepository @Inject constructor(
     
     suspend fun logFoodItem(foodItem: FoodItem, mealType: String, date: LocalDate) {
         val updatedItem = foodItem.copy(
-            lastLogged = date,
+            lastLogged = DateConverter.localDateToDate(date),
             logCount = foodItem.logCount + 1
         )
         foodDao.updateFoodItem(updatedItem)

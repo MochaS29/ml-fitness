@@ -139,8 +139,8 @@ class RestaurantFoodService {
             val fiber = food["nf_dietary_fiber"]?.jsonPrimitive?.floatOrNull ?: 0f
             val sugar = food["nf_sugars"]?.jsonPrimitive?.floatOrNull ?: 0f
             val sodium = food["nf_sodium"]?.jsonPrimitive?.floatOrNull ?: 0f
-            val saturatedFat = food["nf_saturated_fat"]?.jsonPrimitive?.floatOrNull ?: 0f
-            val cholesterol = food["nf_cholesterol"]?.jsonPrimitive?.floatOrNull ?: 0f
+            // These fields could be used for extended nutrition info in the future
+            // val cholesterol = food["nf_cholesterol"]?.jsonPrimitive?.floatOrNull ?: 0f
 
             val servingQty = food["serving_qty"]?.jsonPrimitive?.floatOrNull ?: 1f
             val servingUnit = food["serving_unit"]?.jsonPrimitive?.content ?: "serving"
@@ -157,14 +157,10 @@ class RestaurantFoodService {
                 fiber = fiber,
                 sugar = sugar,
                 sodium = sodium,
-                saturatedFat = saturatedFat,
-                cholesterol = cholesterol,
                 servingSize = servingQty.toString(),
                 servingUnit = servingUnit,
-                servingWeightGrams = servingWeight,
                 isCustom = false,
                 isFavorite = false,
-                isRestaurantFood = true,
                 lastLogged = null,
                 logCount = 0,
                 createdAt = Date()
@@ -191,10 +187,8 @@ class RestaurantFoodService {
                 fiber = 3f,
                 sugar = 9f,
                 sodium = 1010f,
-                saturatedFat = 11f,
                 servingSize = "1",
-                servingUnit = "burger",
-                isRestaurantFood = true
+                servingUnit = "burger"
             ),
             FoodItem(
                 name = "Quarter Pounder with Cheese",
@@ -206,10 +200,8 @@ class RestaurantFoodService {
                 fiber = 2f,
                 sugar = 10f,
                 sodium = 1140f,
-                saturatedFat = 12f,
                 servingSize = "1",
-                servingUnit = "burger",
-                isRestaurantFood = true
+                servingUnit = "burger"
             ),
             FoodItem(
                 name = "Medium French Fries",
@@ -221,10 +213,8 @@ class RestaurantFoodService {
                 fiber = 4f,
                 sugar = 0f,
                 sodium = 260f,
-                saturatedFat = 2f,
                 servingSize = "1",
-                servingUnit = "medium",
-                isRestaurantFood = true
+                servingUnit = "medium"
             ),
             FoodItem(
                 name = "10 Piece Chicken McNuggets",
@@ -236,10 +226,8 @@ class RestaurantFoodService {
                 fiber = 1f,
                 sugar = 0f,
                 sodium = 840f,
-                saturatedFat = 4f,
                 servingSize = "10",
-                servingUnit = "pieces",
-                isRestaurantFood = true
+                servingUnit = "pieces"
             ),
 
             // Starbucks
@@ -253,10 +241,8 @@ class RestaurantFoodService {
                 fiber = 0f,
                 sugar = 17f,
                 sodium = 170f,
-                saturatedFat = 4.5f,
                 servingSize = "16",
-                servingUnit = "fl oz",
-                isRestaurantFood = true
+                servingUnit = "fl oz"
             ),
             FoodItem(
                 name = "Venti Caramel Frappuccino",
@@ -268,10 +254,8 @@ class RestaurantFoodService {
                 fiber = 0f,
                 sugar = 68f,
                 sodium = 320f,
-                saturatedFat = 11f,
                 servingSize = "24",
-                servingUnit = "fl oz",
-                isRestaurantFood = true
+                servingUnit = "fl oz"
             ),
 
             // Subway
@@ -285,10 +269,8 @@ class RestaurantFoodService {
                 fiber = 3f,
                 sugar = 5f,
                 sodium = 1260f,
-                saturatedFat = 6f,
                 servingSize = "1",
-                servingUnit = "6 inch sub",
-                isRestaurantFood = true
+                servingUnit = "6 inch sub"
             ),
             FoodItem(
                 name = "Footlong Turkey Breast",
@@ -300,10 +282,8 @@ class RestaurantFoodService {
                 fiber = 10f,
                 sugar = 14f,
                 sodium = 1460f,
-                saturatedFat = 2f,
                 servingSize = "1",
-                servingUnit = "footlong",
-                isRestaurantFood = true
+                servingUnit = "footlong"
             ),
 
             // Chipotle
@@ -317,10 +297,8 @@ class RestaurantFoodService {
                 fiber = 11f,
                 sugar = 6f,
                 sodium = 1435f,
-                saturatedFat = 8f,
                 servingSize = "1",
-                servingUnit = "bowl",
-                isRestaurantFood = true
+                servingUnit = "bowl"
             ),
             FoodItem(
                 name = "Chips and Guacamole",
@@ -332,10 +310,8 @@ class RestaurantFoodService {
                 fiber = 12f,
                 sugar = 4f,
                 sodium = 850f,
-                saturatedFat = 7f,
                 servingSize = "1",
-                servingUnit = "serving",
-                isRestaurantFood = true
+                servingUnit = "serving"
             )
         )
 
@@ -352,7 +328,7 @@ class RestaurantFoodService {
 // Extension to FoodItem for restaurant foods
 fun FoodItem.isHealthyOption(): Boolean {
     return calories < 500 &&
-           saturatedFat < 10 &&
+           fat < 15 &&  // Using total fat instead of saturated fat
            sodium < 1000 &&
            fiber > 3
 }

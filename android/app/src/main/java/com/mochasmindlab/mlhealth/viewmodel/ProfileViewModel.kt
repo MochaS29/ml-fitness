@@ -66,7 +66,7 @@ class ProfileViewModel @Inject constructor(
     fun saveProfile() {
         viewModelScope.launch {
             userProfileRepository.updateUserProfile(_userProfile.value.copy(
-                lastUpdated = LocalDate.now()
+                lastUpdated = java.util.Date()
             ))
         }
     }
@@ -115,7 +115,10 @@ class ProfileViewModel @Inject constructor(
         // Mifflin-St Jeor Equation
         val weightInKg = profile.currentWeight * 0.453592
         val heightInCm = profile.height
-        val age = java.time.Period.between(profile.birthDate, LocalDate.now()).years
+        val age = java.time.Period.between(
+            profile.birthDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate(),
+            LocalDate.now()
+        ).years
 
         return if (profile.gender == "Male") {
             10 * weightInKg + 6.25 * heightInCm - 5 * age + 5
@@ -126,7 +129,7 @@ class ProfileViewModel @Inject constructor(
 
     fun signOut() {
         viewModelScope.launch {
-            preferencesManager.clearAll()
+            preferencesManager.clearAllPreferences()
             // Additional sign out logic
         }
     }

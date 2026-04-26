@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mochasmindlab.mlhealth.data.database.MLFitnessDatabase
 import com.mochasmindlab.mlhealth.data.entities.FoodEntry
 import com.mochasmindlab.mlhealth.data.entities.WaterEntry
+import com.mochasmindlab.mlhealth.data.entities.WaterUnit
 import com.mochasmindlab.mlhealth.data.models.MealType
 import com.mochasmindlab.mlhealth.ui.screens.FoodEntryDisplay
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,28 +25,28 @@ class DiaryViewModel @Inject constructor(
     val uiState: StateFlow<DiaryUiState> = _uiState.asStateFlow()
     
     init {
-        loadDiaryData()
+        loadDiaryDataInternal()
     }
-    
+
     fun selectToday() {
         _uiState.value = _uiState.value.copy(selectedDate = Date())
-        loadDiaryData()
+        loadDiaryDataInternal()
     }
-    
+
     fun previousDay() {
         val calendar = Calendar.getInstance()
         calendar.time = _uiState.value.selectedDate
         calendar.add(Calendar.DAY_OF_YEAR, -1)
         _uiState.value = _uiState.value.copy(selectedDate = calendar.time)
-        loadDiaryData()
+        loadDiaryDataInternal()
     }
-    
+
     fun nextDay() {
         val calendar = Calendar.getInstance()
         calendar.time = _uiState.value.selectedDate
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         _uiState.value = _uiState.value.copy(selectedDate = calendar.time)
-        loadDiaryData()
+        loadDiaryDataInternal()
     }
     
     fun addWaterCup() {
@@ -54,11 +55,11 @@ class DiaryViewModel @Inject constructor(
                 val entry = WaterEntry(
                     id = UUID.randomUUID(),
                     amount = 8.0, // 8 oz per cup
-                    unit = "oz",
+                    unit = WaterUnit.OZ,
                     timestamp = Date()
                 )
                 database.waterDao().insert(entry)
-                loadDiaryData()
+                loadDiaryDataInternal()
             } catch (e: Exception) {
                 // Handle error
             }
@@ -74,7 +75,7 @@ class DiaryViewModel @Inject constructor(
                     val entries = database.waterDao().getEntriesForDate(_uiState.value.selectedDate)
                     if (entries.isNotEmpty()) {
                         database.waterDao().delete(entries.last())
-                        loadDiaryData()
+                        loadDiaryDataInternal()
                     }
                 }
             } catch (e: Exception) {
@@ -91,7 +92,7 @@ class DiaryViewModel @Inject constructor(
                 val entryToDelete = foodEntries.find { it.id.toString() == entry.id }
                 if (entryToDelete != null) {
                     database.foodDao().delete(entryToDelete)
-                    loadDiaryData()
+                    loadDiaryDataInternal()
                 }
             } catch (e: Exception) {
                 // Handle error
@@ -99,7 +100,12 @@ class DiaryViewModel @Inject constructor(
         }
     }
     
-    private fun loadDiaryData() {
+    fun loadDiaryData(date: Date = _uiState.value.selectedDate) {
+        _uiState.value = _uiState.value.copy(selectedDate = date)
+        loadDiaryDataInternal()
+    }
+
+    private fun loadDiaryDataInternal() {
         viewModelScope.launch {
             try {
                 val date = _uiState.value.selectedDate
@@ -138,6 +144,12 @@ class DiaryViewModel @Inject constructor(
                 
                 _uiState.value = _uiState.value.copy(
                     mealEntries = mealEntries,
+                    breakfastEntries = mealEntries[MealType.BREAKFAST] ?: emptyList(),
+                    lunchEntries = mealEntries[MealType.LUNCH] ?: emptyList(),
+                    dinnerEntries = mealEntries[MealType.DINNER] ?: emptyList(),
+                    snackEntries = mealEntries[MealType.SNACK] ?: emptyList(),
+                    exerciseEntries = emptyList(), // TODO: Load from database
+                    supplementEntries = emptyList(), // TODO: Load from database
                     totalCalories = totalCalories,
                     totalProtein = totalProtein,
                     totalCarbs = totalCarbs,
@@ -158,13 +170,36 @@ class DiaryViewModel @Inject constructor(
 data class DiaryUiState(
     val selectedDate: Date = Date(),
     val mealEntries: Map<MealType, List<FoodEntryDisplay>> = emptyMap(),
+    val breakfastEntries: List<FoodEntryDisplay> = emptyList(),
+    val lunchEntries: List<FoodEntryDisplay> = emptyList(),
+    val dinnerEntries: List<FoodEntryDisplay> = emptyList(),
+    val snackEntries: List<FoodEntryDisplay> = emptyList(),
+    val exerciseEntries: List<ExerciseEntryDisplay> = emptyList(),
+    val supplementEntries: List<SupplementEntryDisplay> = emptyList(),
     val totalCalories: Int = 0,
     val totalProtein: Float = 0f,
     val totalCarbs: Float = 0f,
     val totalFat: Float = 0f,
     val caloriesGoal: Int = 2200,
+    val proteinGoal: Float = 50f,
+    val carbsGoal: Float = 275f,
+    val fatGoal: Float = 65f,
     val waterCups: Int = 0,
     val waterGoal: Int = 8,
     val isLoading: Boolean = true,
     val error: String? = null
+)
+
+data class ExerciseEntryDisplay(
+    val id: String,
+    val name: String,
+    val duration: Int,
+    val caloriesBurned: Int
+)
+
+data class SupplementEntryDisplay(
+    val id: String,
+    val name: String,
+    val amount: String,
+    val time: String
 )

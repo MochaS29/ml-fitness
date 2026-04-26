@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -667,7 +668,7 @@ fun Goal.getDeadlineText(): String {
     return deadline?.let {
         val daysLeft = java.time.temporal.ChronoUnit.DAYS.between(
             java.time.LocalDate.now(),
-            it
+            java.time.Instant.ofEpochMilli(it.time).atZone(java.time.ZoneId.systemDefault()).toLocalDate()
         )
         when {
             daysLeft < 0 -> "Overdue"

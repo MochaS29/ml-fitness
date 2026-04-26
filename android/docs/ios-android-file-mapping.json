@@ -1,0 +1,116 @@
+{
+  "models": {
+    "ios": {
+      "ExerciseEntry": "Models/ExerciseEntry.swift",
+      "FoodEntry": "Models/FoodEntry.swift",
+      "SupplementEntry": "Models/SupplementEntry.swift",
+      "WeightEntry": "Models/WeightEntry.swift",
+      "WaterEntry": "Models/WaterEntry.swift",
+      "CustomFood": "Models/CustomFood.swift",
+      "CustomRecipe": "Models/CustomRecipe.swift",
+      "MealPlan": "Models/MealPlan.swift",
+      "Goal": "Models/Goal.swift",
+      "UserProfile": "Models/UserProfile.swift"
+    },
+    "android": {
+      "ExerciseEntry": "data/entities/CoreEntities.kt",
+      "FoodEntry": "data/entities/CoreEntities.kt",
+      "SupplementEntry": "data/entities/CoreEntities.kt",
+      "WeightEntry": "data/entities/CoreEntities.kt",
+      "WaterEntry": "data/entities/CoreEntities.kt",
+      "CustomFood": "data/entities/CoreEntities.kt",
+      "CustomRecipe": "data/entities/CoreEntities.kt",
+      "MealPlan": "data/entities/CoreEntities.kt",
+      "Goal": "data/models/Models.kt",
+      "UserProfile": "data/models/Models.kt"
+    }
+  },
+  "views": {
+    "ios": {
+      "Dashboard": "Views/HybridDashboardView.swift",
+      "Diary": "Views/DiaryView.swift",
+      "FoodTracking": "Views/FoodTrackingView.swift",
+      "ExerciseTracking": "Views/ExerciseTrackingView.swift",
+      "WeightTracking": "Views/WeightTrackingView.swift",
+      "WaterTracking": "Views/WaterTrackingView.swift",
+      "SupplementTracking": "Views/EnhancedSupplementTrackingView.swift",
+      "MealPlanning": "Views/MealPlanning/EnhancedMealPlanningView.swift",
+      "Goals": "Views/Goals/GoalsView.swift",
+      "Profile": "Views/ProfileView.swift",
+      "Settings": "Views/MoreView.swift"
+    },
+    "android": {
+      "Dashboard": "ui/screens/DashboardScreen.kt",
+      "Diary": "ui/screens/DiaryScreen.kt",
+      "FoodTracking": "ui/screens/FoodTrackingScreen.kt",
+      "ExerciseTracking": "ui/screens/ExerciseTrackingScreen.kt",
+      "WeightTracking": "ui/screens/WeightTrackingScreen.kt",
+      "WaterTracking": "ui/screens/WaterTrackingScreen.kt",
+      "SupplementTracking": "ui/screens/SupplementTrackingScreen.kt",
+      "MealPlanning": "ui/screens/MealPlanningScreen.kt",
+      "Goals": "ui/screens/GoalsScreen.kt",
+      "Profile": "ui/screens/ProfileScreen.kt",
+      "Settings": "ui/screens/SettingsScreen.kt"
+    }
+  },
+  "features": {
+    "BarcodeScan": {
+      "ios": [
+        "Views/BarcodeScannerView.swift",
+        "Services/BarcodeService.swift"
+      ],
+      "android": [
+        "ui/screens/BarcodeScanScreen.kt",
+        "services/BarcodeService.kt"
+      ]
+    },
+    "AIInsights": {
+      "ios": [
+        "Views/AllAIInsightsView.swift",
+        "Services/AIService.swift"
+      ],
+      "android": [
+        "ui/screens/AIInsightsScreen.kt",
+        "services/AIService.kt"
+      ]
+    },
+    "Achievements": {
+      "ios": [
+        "Services/AchievementManager.swift",
+        "Views/CelebrationView.swift"
+      ],
+      "android": [
+        "services/AchievementManager.kt",
+        "ui/components/CelebrationView.kt"
+      ]
+    },
+    "IntermittentFasting": {
+      "ios": [
+        "Views/IntermittentFastingView.swift",
+        "Models/FastingSession.swift"
+      ],
+      "android": [
+        "ui/screens/FastingScreen.kt",
+        "data/models/FastingSession.kt"
+      ]
+    },
+    "RecipeImport": {
+      "ios": [
+        "Views/ImportRecipeView.swift",
+        "Services/RecipeImportService.swift"
+      ],
+      "android": [
+        "ui/screens/RecipeImportScreen.kt",
+        "services/RecipeImportService.kt"
+      ]
+    }
+  },
+  "colors": {
+    "ios": "Styles/Colors.swift",
+    "android": "ui/theme/Color.kt"
+  },
+  "navigation": {
+    "ios": "ContentView.swift",
+    "android": "navigation/Navigation.kt"
+  }
+}

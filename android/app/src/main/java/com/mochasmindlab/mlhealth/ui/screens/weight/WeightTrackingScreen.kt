@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.mochasmindlab.mlhealth.data.models.WeightEntry
+import com.mochasmindlab.mlhealth.data.entities.WeightEntry
 import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.viewmodel.WeightViewModel
 import java.time.LocalDate
@@ -94,9 +94,9 @@ fun WeightTrackingScreen(
             // Current Weight Card
             item {
                 CurrentWeightCard(
-                    currentWeight = currentWeight,
-                    goalWeight = goalWeight,
-                    startingWeight = startingWeight,
+                    currentWeight = currentWeight.toFloat(),
+                    goalWeight = goalWeight.toFloat(),
+                    startingWeight = startingWeight.toFloat(),
                     onAddWeight = { showAddDialog = true }
                 )
             }
@@ -104,7 +104,7 @@ fun WeightTrackingScreen(
             // BMI Card
             item {
                 BMICard(
-                    bmi = bmi,
+                    bmi = bmi.toFloat(),
                     category = bmiCategory
                 )
             }
@@ -113,16 +113,16 @@ fun WeightTrackingScreen(
             item {
                 WeightProgressChart(
                     weightHistory = weightHistory,
-                    goalWeight = goalWeight
+                    goalWeight = goalWeight.toFloat()
                 )
             }
 
             // Statistics
             item {
                 WeightStatisticsCard(
-                    weeklyAverage = weeklyAverage,
-                    monthlyProgress = monthlyProgress,
-                    totalLost = startingWeight - currentWeight
+                    weeklyAverage = weeklyAverage.toFloat(),
+                    monthlyProgress = monthlyProgress.toFloat(),
+                    totalLost = (startingWeight - currentWeight).toFloat()
                 )
             }
 
@@ -153,7 +153,7 @@ fun WeightTrackingScreen(
         AddWeightDialog(
             onDismiss = { showAddDialog = false },
             onAdd = { weight, notes ->
-                viewModel.addWeightEntry(weight, notes)
+                viewModel.addWeightEntry(weight.toDouble(), notes)
                 showAddDialog = false
             }
         )
@@ -435,7 +435,7 @@ fun WeightProgressChart(
                     val chartWidth = size.width - (padding * 2)
                     val chartHeight = size.height - padding
 
-                    val weights = weightHistory.map { it.weight }
+                    val weights = weightHistory.map { it.weight.toFloat() }
                     val minWeight = (weights.minOrNull() ?: 0f) - 5
                     val maxWeight = (weights.maxOrNull() ?: 100f) + 5
                     val weightRange = maxWeight - minWeight
@@ -454,7 +454,7 @@ fun WeightProgressChart(
                         val path = Path()
                         weightHistory.forEachIndexed { index, entry ->
                             val x = padding + (index.toFloat() / (weightHistory.size - 1)) * chartWidth
-                            val y = chartHeight - ((entry.weight - minWeight) / weightRange * chartHeight)
+                            val y = chartHeight - ((entry.weight.toFloat() - minWeight) / weightRange * chartHeight)
 
                             if (index == 0) {
                                 path.moveTo(x, y)
@@ -583,13 +583,13 @@ fun WeightEntryCard(
         ) {
             Column {
                 Text(
-                    entry.date.format(DateTimeFormatter.ofPattern("MMM d, yyyy")),
+                    java.time.Instant.ofEpochMilli(entry.date.time).atZone(java.time.ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ofPattern("MMM d, yyyy")),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                if (entry.notes.isNotEmpty()) {
+                if (!entry.notes.isNullOrEmpty()) {
                     Text(
-                        entry.notes,
+                        entry.notes ?: "",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                     )

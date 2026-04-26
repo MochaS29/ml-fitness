@@ -47,10 +47,14 @@ class WaterRepository @Inject constructor(
 
     suspend fun addQuickWaterEntry(ozAmount: Float) {
         val waterEntry = WaterEntry(
-            amount = ozAmount,
+            amount = ozAmount.toDouble(),
             unit = WaterUnit.OZ,
             timestamp = Date()
         )
         waterDao.insert(waterEntry)
+    }
+
+    fun getWaterEntriesBetweenDates(startDate: Date, endDate: Date): Flow<List<WaterEntry>> = flow {
+        emit(waterDao.getEntriesBetweenDates(startDate, endDate))
     }
 }

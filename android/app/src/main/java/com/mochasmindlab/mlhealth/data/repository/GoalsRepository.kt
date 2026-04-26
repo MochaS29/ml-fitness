@@ -5,6 +5,7 @@ import com.mochasmindlab.mlhealth.data.models.Goal
 import com.mochasmindlab.mlhealth.data.models.GoalType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import com.mochasmindlab.mlhealth.utils.DateConverter
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,7 +38,7 @@ class GoalsRepository @Inject constructor(
                 currentValue = currentValue,
                 progress = progress,
                 isCompleted = progress >= 100,
-                completedDate = if (progress >= 100) LocalDate.now() else null
+                completedDate = if (progress >= 100) DateConverter.localDateToDate(LocalDate.now()) else null
             )
             goalsDao.updateGoal(updatedGoal)
         }
@@ -48,7 +49,7 @@ class GoalsRepository @Inject constructor(
         goal?.let {
             val updatedGoal = it.copy(
                 isCompleted = true,
-                completedDate = LocalDate.now(),
+                completedDate = DateConverter.localDateToDate(LocalDate.now()),
                 progress = 100,
                 isActive = false
             )
@@ -63,7 +64,7 @@ class GoalsRepository @Inject constructor(
                 isCompleted = false,
                 completedDate = null,
                 isActive = true,
-                deadline = newDeadline,
+                deadline = DateConverter.localDateToDate(newDeadline) ?: java.util.Date(),
                 progress = 0,
                 currentValue = 0f
             )
@@ -75,7 +76,11 @@ class GoalsRepository @Inject constructor(
         val allGoals = goalsDao.getAllGoals().first()
         val activeGoals = allGoals.filter { it.isActive }
         val completedGoals = allGoals.filter { it.isCompleted }
-        val overdueGoals = activeGoals.filter { it.deadline < LocalDate.now() }
+        val overdueGoals = activeGoals.filter {
+            it.deadline?.let { deadline ->
+                DateConverter.dateToLocalDate(deadline)?.isBefore(LocalDate.now())
+            } ?: false
+        }
         
         return mapOf(
             "total" to allGoals.size,
@@ -89,7 +94,8 @@ class GoalsRepository @Inject constructor(
         val futureDate = LocalDate.now().plusDays(days.toLong())
         val activeGoals = goalsDao.getActiveGoals().first()
         return activeGoals.filter { 
-            it.deadline <= futureDate && it.deadline >= LocalDate.now()
+            val deadlineDate = DateConverter.dateToLocalDate(it.deadline)
+            deadlineDate != null && deadlineDate <= futureDate && deadlineDate >= LocalDate.now()
         }.sortedBy { it.deadline }
     }
 }

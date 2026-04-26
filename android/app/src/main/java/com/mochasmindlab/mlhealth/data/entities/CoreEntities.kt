@@ -64,14 +64,29 @@ data class WeightEntry(
     val notes: String? = null
 )
 
+// ===== WATER UNIT ENUM =====
+enum class WaterUnit(val displayName: String, val ozConversionFactor: Double) {
+    OZ("fl oz", 1.0),
+    ML("ml", 0.033814),
+    L("L", 33.814),
+    CUP("cup", 8.0),
+    PINT("pint", 16.0),
+    QUART("quart", 32.0),
+    GALLON("gallon", 128.0)
+}
+
 // ===== WATER ENTRY =====
 @Entity(tableName = "water_entries")
 data class WaterEntry(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
     val amount: Double = 8.0,
-    val unit: String = "oz",
+    val unit: WaterUnit = WaterUnit.OZ,
     val timestamp: Date = Date()
-)
+) {
+    fun getAmountInOz(): Double {
+        return amount * unit.ozConversionFactor
+    }
+}
 
 // ===== CUSTOM FOOD =====
 @Entity(tableName = "custom_foods")

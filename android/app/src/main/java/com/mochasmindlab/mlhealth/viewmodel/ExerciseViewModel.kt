@@ -2,7 +2,7 @@ package com.mochasmindlab.mlhealth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mochasmindlab.mlhealth.data.models.ExerciseEntry
+import com.mochasmindlab.mlhealth.data.entities.ExerciseEntry
 import com.mochasmindlab.mlhealth.data.repository.ExerciseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +12,9 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
+import java.time.ZoneId
+import java.util.Date
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,10 +41,11 @@ class ExerciseViewModel @Inject constructor(
 
     fun loadExercisesForDate(date: LocalDate) {
         viewModelScope.launch {
-            exerciseRepository.getExercisesForDate(date).collect { exercises ->
+            val dateAsDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())
+            exerciseRepository.getExercisesForDate(dateAsDate).collect { exercises ->
                 _todayExercises.value = exercises
-                _totalCaloriesBurned.value = exercises.sumOf { it.caloriesBurned }
-                _totalMinutes.value = exercises.sumOf { it.minutes }
+                _totalCaloriesBurned.value = exercises.sumOf { it.caloriesBurned.toInt() }
+                _totalMinutes.value = exercises.sumOf { it.duration }
             }
         }
     }
@@ -59,7 +63,8 @@ class ExerciseViewModel @Inject constructor(
             for (i in 0..6) {
                 val date = startOfWeek.plusDays(i.toLong())
                 val dayName = date.dayOfWeek.name.take(3)
-                val minutes = exerciseRepository.getTotalMinutesForDate(date)
+                val dateAsDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant())
+                val minutes = exerciseRepository.getTotalMinutesForDate(dateAsDate) ?: 0
                 stats.add(dayName to minutes)
             }
             _weeklyStats.value = stats
@@ -70,10 +75,11 @@ class ExerciseViewModel @Inject constructor(
         viewModelScope.launch {
             val entry = ExerciseEntry(
                 name = name,
-                minutes = duration,
-                caloriesBurned = calories,
-                date = LocalDate.now(),
-                type = "Other"
+                category = "Other",
+                type = "Other",
+                date = Date(),
+                duration = duration,
+                caloriesBurned = calories.toDouble()
             )
             exerciseRepository.insertExercise(entry)
             loadTodayExercises()
@@ -81,9 +87,9 @@ class ExerciseViewModel @Inject constructor(
         }
     }
 
-    fun deleteExercise(id: Long) {
+    fun deleteExercise(exercise: ExerciseEntry) {
         viewModelScope.launch {
-            exerciseRepository.deleteExercise(id)
+            exerciseRepository.deleteExercise(exercise)
             loadTodayExercises()
             loadWeeklyStats()
         }

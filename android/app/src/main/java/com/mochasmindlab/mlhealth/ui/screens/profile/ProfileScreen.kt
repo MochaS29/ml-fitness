@@ -94,7 +94,7 @@ fun ProfileScreen(
                 StatsOverviewCard(
                     currentStreak = currentStreak,
                     totalDaysTracked = totalDaysTracked,
-                    memberSince = userProfile.createdDate
+                    memberSince = java.time.Instant.ofEpochMilli(userProfile.createdDate.time).atZone(java.time.ZoneId.systemDefault()).toLocalDate()
                 )
             }
 
@@ -125,7 +125,7 @@ fun ProfileScreen(
             item {
                 DietaryPreferencesCard(
                     dietType = userProfile.dietType,
-                    allergies = userProfile.allergies,
+                    allergies = userProfile.dietaryPreferences,
                     onPreferencesClick = {
                         navController.navigate("food_preferences")
                     }
@@ -397,7 +397,7 @@ fun BodyMetricsCard(
 
                     MetricItem(
                         label = "Age",
-                        value = "${Period.between(userProfile.birthDate, LocalDate.now()).years}",
+                        value = "${Period.between(java.time.Instant.ofEpochMilli(userProfile.birthDate.time).atZone(java.time.ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).years}",
                         icon = Icons.Default.Cake
                     )
                 }

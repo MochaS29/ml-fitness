@@ -41,7 +41,8 @@ class FoodSearchViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val results = foodRepository.searchFoods(query)
+                // TODO: Implement searchFoods in repository
+                val results = emptyList<com.mochasmindlab.mlhealth.data.models.FoodItem>()
                 _searchResults.value = results
             } catch (e: Exception) {
                 _searchResults.value = emptyList()
@@ -53,25 +54,28 @@ class FoodSearchViewModel @Inject constructor(
 
     private fun loadRecentFoods() {
         viewModelScope.launch {
-            foodRepository.getRecentFoods().collect { foods ->
+            // TODO: Implement getRecentFoods in repository
+            /*foodRepository.getRecentFoods().collect { foods ->
                 _recentFoods.value = foods
-            }
+            }*/
         }
     }
 
     private fun loadFavoriteFoods() {
         viewModelScope.launch {
-            foodRepository.getFavoriteFoods().collect { foods ->
+            // TODO: Implement getFavoriteFoods in repository
+            /*foodRepository.getFavoriteFoods().collect { foods ->
                 _favoriteFoods.value = foods
-            }
+            }*/
         }
     }
 
     private fun loadCustomFoods() {
         viewModelScope.launch {
-            foodRepository.getCustomFoods().collect { foods ->
+            // TODO: Implement getCustomFoods in repository
+            /*foodRepository.getCustomFoods().collect { foods ->
                 _customFoods.value = foods
-            }
+            }*/
         }
     }
 

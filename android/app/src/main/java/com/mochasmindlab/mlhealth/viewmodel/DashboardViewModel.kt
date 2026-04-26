@@ -35,9 +35,27 @@ class DashboardViewModel @Inject constructor(
             try {
                 val today = Date()
                 
-                // Load calories - these might be null initially
+                // Load calories and macros - these might be null initially
                 val totalCalories = try {
                     database.foodDao().getTotalCaloriesForDate(today) ?: 0.0
+                } catch (e: Exception) {
+                    0.0
+                }
+
+                val totalProtein = try {
+                    database.foodDao().getTotalProteinForDate(today) ?: 0.0
+                } catch (e: Exception) {
+                    0.0
+                }
+
+                val totalCarbs = try {
+                    database.foodDao().getTotalCarbsForDate(today) ?: 0.0
+                } catch (e: Exception) {
+                    0.0
+                }
+
+                val totalFat = try {
+                    database.foodDao().getTotalFatForDate(today) ?: 0.0
                 } catch (e: Exception) {
                     0.0
                 }
@@ -51,7 +69,13 @@ class DashboardViewModel @Inject constructor(
                 
                 // Load exercise
                 val exerciseMinutes = try {
-                    database.exerciseDao().getTotalDurationForDate(today) ?: 0
+                    database.exerciseDao().getTotalMinutesForDate(today) ?: 0
+                } catch (e: Exception) {
+                    0
+                }
+
+                val exerciseCalories = try {
+                    database.exerciseDao().getTotalCaloriesBurnedForDate(today)?.toInt() ?: 0
                 } catch (e: Exception) {
                     0
                 }
@@ -66,12 +90,19 @@ class DashboardViewModel @Inject constructor(
                 _uiState.value = DashboardUiState(
                     userName = "You", // Default name until loaded from preferences
                     caloriesConsumed = totalCalories.toInt(),
-                    caloriesGoal = 2200,
+                    calorieGoal = 2200,
+                    proteinGrams = totalProtein.toFloat(),
+                    carbsGrams = totalCarbs.toFloat(),
+                    fatGrams = totalFat.toFloat(),
                     waterCups = (waterIntake / 8).toInt(), // Convert oz to cups
                     waterGoal = 8,
                     exerciseMinutes = exerciseMinutes,
                     exerciseGoal = 60,
+                    exerciseCalories = exerciseCalories,
                     currentWeight = latestWeight?.weight ?: 70.0,
+                    weightChange = 0f, // TODO: Calculate from previous weight
+                    lastWeightDate = "Today",
+                    steps = 0, // TODO: Integrate step tracking
                     selectedPeriod = DashboardPeriod.DAY
                 )
             } catch (e: Exception) {
@@ -79,7 +110,7 @@ class DashboardViewModel @Inject constructor(
                 _uiState.value = DashboardUiState(
                     userName = "You",
                     caloriesConsumed = 0,
-                    caloriesGoal = 2200,
+                    calorieGoal = 2200,
                     waterCups = 0,
                     waterGoal = 8,
                     exerciseMinutes = 0,
@@ -137,7 +168,7 @@ class DashboardViewModel @Inject constructor(
                 
                 // Check exercise
                 val exerciseMinutes = try {
-                    database.exerciseDao().getTotalDurationForDate(Date()) ?: 0
+                    database.exerciseDao().getTotalMinutesForDate(Date()) ?: 0
                 } catch (e: Exception) {
                     0
                 }
@@ -193,12 +224,19 @@ class DashboardViewModel @Inject constructor(
 data class DashboardUiState(
     val userName: String = "",
     val caloriesConsumed: Int = 0,
-    val caloriesGoal: Int = 2200,
+    val calorieGoal: Int = 2200,
+    val proteinGrams: Float = 0f,
+    val carbsGrams: Float = 0f,
+    val fatGrams: Float = 0f,
     val waterCups: Int = 0,
     val waterGoal: Int = 8,
     val exerciseMinutes: Int = 0,
     val exerciseGoal: Int = 60,
+    val exerciseCalories: Int = 0,
     val currentWeight: Double = 0.0,
+    val weightChange: Float = 0f,
+    val lastWeightDate: String = "Today",
+    val steps: Int = 0,
     val selectedPeriod: DashboardPeriod = DashboardPeriod.DAY,
     val isLoading: Boolean = false
 )

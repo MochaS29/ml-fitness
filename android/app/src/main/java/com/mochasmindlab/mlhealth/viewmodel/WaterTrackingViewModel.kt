@@ -110,7 +110,7 @@ class WaterTrackingViewModel @Inject constructor(
             try {
                 _uiState.update { it.copy(isLoading = true) }
                 val waterEntry = WaterEntry(
-                    amount = amount,
+                    amount = amount.toDouble(),
                     unit = unit,
                     timestamp = Date()
                 )

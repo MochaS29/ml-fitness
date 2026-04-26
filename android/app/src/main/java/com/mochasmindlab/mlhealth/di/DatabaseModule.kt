@@ -77,4 +77,19 @@ object DatabaseModule {
     fun provideGroceryListDao(database: MLFitnessDatabase): GroceryListDao {
         return database.groceryListDao()
     }
+
+    @Provides
+    fun provideFoodItemDao(database: MLFitnessDatabase): FoodItemDao {
+        return database.foodItemDao()
+    }
+
+    @Provides
+    fun provideUserProfileDao(database: MLFitnessDatabase): UserProfileDao {
+        return database.userProfileDao()
+    }
+
+    @Provides
+    fun provideGoalsDao(database: MLFitnessDatabase): GoalsDao {
+        return database.goalsDao()
+    }
 }

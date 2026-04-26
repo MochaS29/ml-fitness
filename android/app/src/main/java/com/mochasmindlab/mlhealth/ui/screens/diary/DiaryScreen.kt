@@ -20,11 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.mochasmindlab.mlhealth.data.models.FoodEntry
-import com.mochasmindlab.mlhealth.data.models.ExerciseEntry
+import com.mochasmindlab.mlhealth.ui.screens.FoodEntryDisplay
 import com.mochasmindlab.mlhealth.data.models.MealType
 import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.viewmodel.DiaryViewModel
+import com.mochasmindlab.mlhealth.viewmodel.ExerciseEntryDisplay
+import com.mochasmindlab.mlhealth.utils.DateConverter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -84,7 +85,9 @@ fun DiaryScreen(
                     selectedDate = selectedDate,
                     onDateChange = {
                         selectedDate = it
-                        viewModel.loadDiaryData(it)
+                        DateConverter.localDateToDate(it)?.let { date ->
+                            viewModel.loadDiaryData(date)
+                        }
                     }
                 )
             }
@@ -112,7 +115,7 @@ fun DiaryScreen(
                             navController.navigate("food_search/$mealType")
                         },
                         onDeleteEntry = { entry ->
-                            viewModel.deleteFoodEntry(entry.id)
+                            viewModel.deleteFoodEntry(entry)
                         }
                     )
                 }
@@ -239,7 +242,7 @@ fun DailySummaryCard(uiState: com.mochasmindlab.mlhealth.viewmodel.DiaryUiState)
                 SummaryItem(
                     label = "Calories",
                     value = "${uiState.totalCalories}",
-                    goal = "${uiState.calorieGoal}",
+                    goal = "${uiState.caloriesGoal}",
                     color = MochaBrown
                 )
                 SummaryItem(
@@ -266,7 +269,7 @@ fun DailySummaryCard(uiState: com.mochasmindlab.mlhealth.viewmodel.DiaryUiState)
 
             // Calorie progress bar
             LinearProgressIndicator(
-                progress = (uiState.totalCalories.toFloat() / uiState.calorieGoal).coerceIn(0f, 1f),
+                progress = (uiState.totalCalories.toFloat() / uiState.caloriesGoal).coerceIn(0f, 1f),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp)
@@ -310,9 +313,9 @@ fun SummaryItem(
 @Composable
 fun MealSection(
     mealType: MealType,
-    entries: List<FoodEntry>,
+    entries: List<FoodEntryDisplay>,
     onAddClick: () -> Unit,
-    onDeleteEntry: (FoodEntry) -> Unit
+    onDeleteEntry: (FoodEntryDisplay) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth()
@@ -377,7 +380,7 @@ fun MealSection(
 
 @Composable
 fun FoodEntryItem(
-    entry: FoodEntry,
+    entry: FoodEntryDisplay,
     onDelete: () -> Unit
 ) {
     Row(
@@ -426,7 +429,7 @@ fun FoodEntryItem(
 
 @Composable
 fun ExerciseSection(
-    exercises: List<ExerciseEntry>,
+    exercises: List<ExerciseEntryDisplay>,
     onAddClick: () -> Unit
 ) {
     Card(
@@ -479,7 +482,7 @@ fun ExerciseSection(
                             fontSize = 14.sp
                         )
                         Text(
-                            text = "${exercise.minutes} min • ${exercise.caloriesBurned} cal",
+                            text = "${exercise.duration} min • ${exercise.caloriesBurned} cal",
                             fontSize = 13.sp,
                             color = ExerciseOrange
                         )

@@ -91,7 +91,7 @@ fun DashboardScreen(
             // Weight Card
             item {
                 WeightCard(
-                    currentWeight = uiState.currentWeight,
+                    currentWeight = uiState.currentWeight.toFloat(),
                     weightChange = uiState.weightChange,
                     lastUpdated = uiState.lastWeightDate
                 )

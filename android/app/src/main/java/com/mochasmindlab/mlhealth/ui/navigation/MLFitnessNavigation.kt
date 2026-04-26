@@ -150,10 +150,12 @@ fun MLFitnessNavigation(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("onboarding") {
-                OnboardingScreen(
-                    navController = navController,
-                    preferencesManager = preferencesManager
-                )
+                preferencesManager?.let {
+                    OnboardingScreen(
+                        navController = navController,
+                        preferencesManager = it
+                    )
+                }
             }
 
             composable(Screen.Dashboard.route) {

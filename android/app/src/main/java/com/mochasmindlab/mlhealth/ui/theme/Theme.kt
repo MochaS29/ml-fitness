@@ -28,6 +28,18 @@ val FastingOrange = Color(0xFFFF9800)
 val SleepBlue = Color(0xFF3F51B5)
 val GoldStar = Color(0xFFFFD700)
 
+// MindLabs specific colors
+val MindLabsPurple = Color(0xFF6B46C1)  // Brand purple for MindLabs
+val NutritionGreen = Color(0xFF10B981)  // Nutrition/health green
+
+// Additional UI colors for screens
+val HydrationBlue = Color(0xFF00BCD4)  // Water tracking
+val ExerciseGreen = Color(0xFF4CAF50)  // Exercise
+val EnergeticOrange = Color(0xFFFF5722)  // Energy/calories
+val MindfulTeal = Color(0xFF00796B)  // Mindfulness
+val BalancedPurple = Color(0xFF9C27B0)  // Balance
+val CalorieRed = Color(0xFFEF4444)  // Calorie/warning
+
 private val LightColorScheme = lightColorScheme(
     primary = MochaBrown,
     onPrimary = Color.White,
