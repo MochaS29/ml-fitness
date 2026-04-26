@@ -1,280 +1,102 @@
-# ML Health Android
+# MindLab Fitness — Android
 
-A comprehensive Android health and fitness tracking app built with Kotlin, Jetpack Compose, and Room Database.
+Android port of the iOS app **MindLab Fitness** (App Store: *Fitness & Calorie Tracker — AI Meal Scanner & Planner*). The iOS app is the source of truth for feature behavior; this port aims for feature parity.
 
-## Features
+- iOS source repo: https://github.com/MochaS29/HealthTracker-iOS
+- Android repo: https://github.com/MochaS29/MLHealthAndroid
+- Application ID: `com.mochasmindlab.mlhealth`
 
-### 🍎 Nutrition Tracking
-- Comprehensive food database
-- Barcode scanning for quick entry
-- Custom food creation
-- Meal categorization (breakfast, lunch, dinner, snacks)
-- Nutritional breakdown (calories, macros, vitamins, minerals)
-- Food search and filtering
+## Status
 
-### 💪 Exercise & Fitness
-- Exercise database with 70+ activities
-- Custom workout creation
-- Calorie burn calculation
-- Duration and intensity tracking
-- Exercise history and statistics
-- Workout plans and routines
+Active port, resumed April 2026. The app builds and runs but several core features are stubs. See the matrix below.
 
-### 🥗 Enhanced Meal Planning & Recipes (NEW)
-- **Dynamic Recipe System with 1000+ Recipes**
-  - Local Room Database for offline access
-  - Optional API sync for new recipes
-  - 5 comprehensive meal plans (Mediterranean, Keto, Intermittent Fasting, Family-Friendly, Vegetarian)
-  - Full monthly menus (4 weeks per plan)
-  - Complete nutrition information
-  - Step-by-step cooking instructions
-- **Recipe Features**
-  - Advanced search and filtering
-  - Dietary tags (gluten-free, vegan, dairy-free, etc.)
-  - Difficulty levels (easy, medium, hard)
-  - Prep and cook time estimates
-  - User favorites system
-  - Personal notes on recipes
-  - Cooking history tracking
-- **Meal Planning Tools**
-  - Weekly and monthly meal planners
-  - Smart meal suggestions based on preferences
-  - Automatic shopping list generation
-  - Recipe scaling for different serving sizes
-  - Meal prep optimization
+| Feature | Status | Notes |
+|---|---|---|
+| Onboarding | Implemented | DataStore-backed completion flag |
+| User profile | Implemented | BMR/TDEE calculation, DataStore prefs |
+| Water tracking | Implemented | Animated wave UI; reminders pending |
+| Weight tracking | Implemented | Room-backed, BMI display |
+| Barcode scanner (food) | Implemented | OFF → USDA → Spoonacular fallback chain |
+| Dashboard | Partial | Calories/macros/water from DB; step count + week/month aggregation pending |
+| Food diary | Partial | Food entries load; exercise + supplement entries not yet wired |
+| Food search UI | Partial | Tabs render; search/recent/favorites/custom-foods all stubbed |
+| Food database (53K USDA) | Not started | iOS ships an FTS5 SQLite asset that needs to be bundled here |
+| Meal scanner (Claude AI) | Not started | iOS uses `claude-sonnet-4-6` via Anthropic API |
+| Meal plans + recipes | Stub | iOS ships 8 plans / 400 recipes as JSON; Android shows "coming soon" |
+| Reminders / notifications | Not started | WorkManager dependency present, no scheduling logic |
+| Achievements / streaks | Stub | Routes to `ComingSoonScreen` |
+| Google Play Billing / paywall | Not started | iOS uses StoreKit 2 for Pro IAP |
+| Health Connect | Not started | iOS uses HealthKit for steps + weight |
+| Add custom food, progress charts | Stub | Routes to `ComingSoonScreen` |
+| Settings — dark mode, clear data | Partial | UI present; persistence/clear not implemented |
 
-### 📊 Analytics & Insights
-- Daily nutrition summary dashboard
-- Progress tracking with visual charts
-- Goal achievement monitoring
-- Weekly and monthly reports
-- Trend analysis for health metrics
-- Nutrient intake visualization
+## Tech Stack
 
-### 💊 Supplement Management
-- Supplement tracking and reminders
-- Dosage scheduling
-- Vitamin/mineral intake monitoring
-- Supplement regime management
-- Interaction warnings
+- **Language**: Kotlin 1.9.20
+- **UI**: Jetpack Compose (Compose UI 1.5.4, Material3 1.1.2, compiler ext 1.5.4)
+- **Build**: Android Gradle Plugin 8.12.3, Gradle 8.13
+- **Architecture**: MVVM, Hilt DI
+- **Persistence**: Room 2.6.0, DataStore Preferences 1.0.0
+- **Networking**: Ktor client 1.6.7, OkHttp 4.11.0
+- **Camera / barcode**: CameraX 1.1.0-beta01, ML Kit barcode-scanning 17.0.2
+- **Background work**: WorkManager 2.7.1
 
-### 🎯 Goal Setting
-- Custom nutrition goals
-- Weight management targets
-- Fitness objectives
-- Water intake goals
-- Intermittent fasting support
+`minSdk` 26, `compileSdk`/`targetSdk` 34. Three product flavors: `development`, `staging`, `production`. ProGuard enabled in release.
 
-### 👤 User Profile
-- Personal health metrics
-- Activity level configuration
-- Dietary preferences and restrictions
-- Allergy management
-- Recipe preferences
+## Project Layout
 
-## Technical Architecture
+```
+app/src/main/java/com/mochasmindlab/mlhealth/
+├── data/
+│   ├── database/        Room database, DAOs (Food, Exercise, Water, Weight, Supplement, Goals, etc.)
+│   ├── entities/        Room entities (CoreEntities.kt, SupplementRegime.kt)
+│   ├── models/          Domain models
+│   ├── preferences/     PreferencesManager (DataStore)
+│   └── repository/      Per-feature repositories
+├── di/                  Hilt modules (DatabaseModule.kt)
+├── services/            Network/API services (FoodBarcodeService, RestaurantFoodService, SupplementAPIService)
+├── ui/
+│   ├── navigation/      MLFitnessNavigation (active nav host)
+│   ├── screens/         Feature screens (Compose)
+│   └── theme/
+├── utils/               DemoDataGenerator, SampleDataGenerator, DateConverter, UnitConversions
+└── viewmodel/           Per-screen ViewModels
+docs/
+├── BARCODE_SCANNER_UI_SPECS.md      Shared iOS/Android design spec
+├── NIH_SUPPLEMENT_DATABASE_GUIDE.md
+└── ios-android-file-mapping.json    iOS→Android file cross-reference
+```
 
-### Tech Stack
-- **Language**: Kotlin
-- **UI**: Jetpack Compose
-- **Database**: Room
-- **Architecture**: MVVM with Clean Architecture
-- **DI**: Hilt
-- **Networking**: Retrofit (optional for API)
-- **Image Loading**: Coil
+The Compose nav host at `ui/navigation/MLFitnessNavigation.kt` is the active one. A second nav file (`navigation/MLHealthNavHost.kt`) exists but is partially wired and slated for removal.
 
-### Data Storage
-- **Room Database** for local persistence
-- **SharedPreferences** for settings
-- **Hybrid Recipe System**:
-  - Local Room Database for instant access
-  - Optional API backend for updates
-  - Bundled recipes for offline use
+## Build
 
-### Recipe System Components
-- `RecipeEntity.kt` - Room entity and data models
-- `RecipeDao.kt` - Database access object
-- `RecipeRepository.kt` - Repository pattern implementation
-- `RecipeViewModel.kt` - ViewModel for UI state
-- Optional API service for content updates
-
-## Setup Instructions
-
-### Requirements
-- Android Studio Arctic Fox or later
-- Kotlin 1.8+
-- Minimum SDK: API 24 (Android 7.0)
-- Target SDK: API 34 (Android 14)
-
-### Installation
-
-1. Clone the repository
 ```bash
-git clone <repository-url>
-cd MLHealthAndroid
+./gradlew assembleDevelopmentDebug      # default dev build
+./gradlew assembleProductionRelease     # signed release
+./gradlew test                           # unit tests
+./gradlew connectedAndroidTest           # instrumented tests
 ```
 
-2. Open in Android Studio
-3. Sync project with Gradle files
-4. Run on emulator or physical device
+## Configuration
 
-### Database Setup
-The app will automatically:
-1. Create Room database on first launch
-2. Load bundled recipes from assets/initial_recipes.json
-3. Sync with API if configured
+API keys and other secrets live in `local.properties` (untracked). The `app/build.gradle.kts` reads them into BuildConfig fields.
 
-### Recipe API Configuration (Optional)
+Required keys (placeholders are accepted for development):
+- `usda.api.key` — USDA FoodData Central
+- `anthropic.api.key` — Claude API for meal scanner (Phase 2)
 
-To enable dynamic recipe updates:
+Open Food Facts requires no key.
 
-1. Add API URL to local.properties:
-```properties
-recipe.api.url=https://your-api-endpoint.com
-recipe.api.enabled=true
-```
+## iOS Reference
 
-2. Or configure in code:
-```kotlin
-class AppModule {
-    @Provides
-    fun provideRecipeApiService(): RecipeApiService? {
-        return if (BuildConfig.RECIPE_API_ENABLED) {
-            Retrofit.Builder()
-                .baseUrl(BuildConfig.RECIPE_API_URL)
-                .build()
-                .create(RecipeApiService::class.java)
-        } else null
-    }
-}
-```
+When porting a feature, check these in order:
+1. `docs/ios-android-file-mapping.json` — file-path mapping for Swift ↔ Kotlin equivalents
+2. The iOS source at `/Users/mocha/Development/iOS-Apps/HealthTracker/` (or the public repo)
+3. The shared design specs in `docs/`
 
-## Project Structure
-
-```
-MLHealthAndroid/
-├── app/
-│   ├── src/main/java/com/mlhealth/
-│   │   ├── data/
-│   │   │   ├── local/
-│   │   │   │   ├── RecipeEntity.kt      # Room entities
-│   │   │   │   ├── RecipeDao.kt         # DAOs
-│   │   │   │   └── MLFitnessDatabase.kt # Database
-│   │   │   ├── remote/
-│   │   │   │   └── RecipeApiService.kt  # API service
-│   │   │   └── repository/
-│   │   │       └── RecipeRepository.kt  # Repository
-│   │   ├── ui/
-│   │   │   ├── screens/
-│   │   │   │   ├── MealPlanScreen.kt
-│   │   │   │   ├── RecipeListScreen.kt
-│   │   │   │   └── RecipeDetailScreen.kt
-│   │   │   ├── components/
-│   │   │   └── theme/
-│   │   ├── viewmodel/
-│   │   │   └── RecipeViewModel.kt
-│   │   └── di/
-│   │       └── AppModule.kt
-│   └── assets/
-│       └── initial_recipes.json         # Bundled recipes
-└── build.gradle.kts
-```
-
-## Key Features Implementation
-
-### Recipe System
-- Hybrid storage approach (Room + optional API)
-- Offline-first architecture
-- User data (favorites, notes) stored locally
-- Background sync using WorkManager
-- Efficient data caching
-
-### Performance Optimizations
-- Lazy loading with Paging 3
-- Image caching with Coil
-- Background processing for sync
-- Efficient Room queries with Flow
-- Compose performance optimizations
-
-## Testing
-
-Run tests:
-```bash
-./gradlew test                # Unit tests
-./gradlew connectedAndroidTest # Instrumented tests
-```
-
-## Documentation
-
-- [Recipe Integration Guide](RECIPE_INTEGRATION.md)
-- [Recipe System Architecture](../../RECIPE_SYSTEM_ARCHITECTURE.md)
-- [Backend API Documentation](../../Web-Projects/health-app-backend/README.md)
-
-## Build & Release
-
-### Debug Build
-```bash
-./gradlew assembleDebug
-```
-
-### Release Build
-```bash
-./gradlew assembleRelease
-```
-
-## Dependencies
-
-Key dependencies:
-```kotlin
-// Room
-implementation("androidx.room:room-runtime:2.6.0")
-implementation("androidx.room:room-ktx:2.6.0")
-
-// Compose
-implementation("androidx.compose.ui:ui:1.5.4")
-implementation("androidx.compose.material3:material3:1.1.2")
-
-// Hilt
-implementation("com.google.dagger:hilt-android:2.48")
-
-// Networking (optional)
-implementation("com.squareup.retrofit2:retrofit:2.9.0")
-
-// Image Loading
-implementation("io.coil-kt:coil-compose:2.4.0")
-```
-
-## Privacy & Data
-
-- All personal data stored locally on device
-- Optional API sync (user controlled)
-- Recipe content cached locally
-- No tracking or analytics
-- Camera permission only for barcode scanning
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests
-5. Submit a pull request
+The iOS app has zero third-party library dependencies — every external integration is a raw HTTPS call. That makes the network/service layers a near-direct port; the differences are framework-level (HealthKit → Health Connect, StoreKit 2 → Play Billing, UNUserNotificationCenter → WorkManager + NotificationManagerCompat).
 
 ## License
 
-© 2024 ML Health. All rights reserved.
-
-## Support
-
-For issues or questions, please create an issue in the repository.
-
-## Upcoming Features
-
-- [ ] Wearable device integration
-- [ ] Social recipe sharing
-- [ ] Restaurant menu integration
-- [ ] AI-powered meal recommendations
-- [ ] Family meal planning
-- [ ] Budget tracking
-- [ ] Grocery list sharing
-- [ ] Meal prep scheduling
+© 2026 Mocha's MindLab Inc. All rights reserved.
