@@ -327,6 +327,22 @@ class PreferencesManager @Inject constructor(
     val isProUser: Flow<Boolean> = dataStore.data
         .map { it[PreferenceKeys.IS_PRO_USER] ?: false }
 
+    // ===== Allergens =====
+
+    private object AllergenKeys {
+        val ALLERGENS = stringSetPreferencesKey("allergens")
+    }
+
+    /** Observe the user's saved allergen IDs (each value is a [FoodAllergy] enum name). */
+    val allergens: Flow<Set<String>> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[AllergenKeys.ALLERGENS] ?: emptySet() }
+
+    /** Persist the full allergen set (replaces any previous value). */
+    suspend fun setAllergens(set: Set<String>) {
+        dataStore.edit { it[AllergenKeys.ALLERGENS] = set }
+    }
+
     // ===== Achievements =====
 
     private object AchievementKeys {

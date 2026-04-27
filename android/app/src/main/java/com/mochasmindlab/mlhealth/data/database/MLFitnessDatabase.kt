@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.*
 import com.mochasmindlab.mlhealth.data.entities.*
 import com.mochasmindlab.mlhealth.data.models.Goal
+// Sleep tracking import — added by sleep-tracking agent
+import com.mochasmindlab.mlhealth.data.entities.SleepEntry
 import java.util.Date
 import java.util.UUID
 
@@ -21,9 +23,15 @@ import java.util.UUID
         GroceryList::class,
         com.mochasmindlab.mlhealth.data.models.FoodItem::class,
         com.mochasmindlab.mlhealth.data.models.UserProfile::class,
-        Goal::class
+        Goal::class,
+        BodyMeasurementEntry::class,
+        // Sleep tracking — added by sleep-tracking agent (gap #10).
+        SleepEntry::class,
+        // Intermittent fasting — added by fasting agent (gap #9). Bumps DB v4 → v5.
+        // fallbackToDestructiveMigration() in DatabaseModule handles it safely.
+        com.mochasmindlab.mlhealth.data.entities.FastingSession::class
     ],
-    version = 2,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(Converters::class, NutrientMapConverter::class, StringListConverter::class)
@@ -42,7 +50,10 @@ abstract class MLFitnessDatabase : RoomDatabase() {
     abstract fun foodItemDao(): FoodItemDao
     abstract fun userProfileDao(): UserProfileDao
     abstract fun goalsDao(): GoalsDao
-    
+    abstract fun bodyMeasurementDao(): BodyMeasurementDao
+    abstract fun sleepDao(): SleepDao
+    abstract fun fastingDao(): FastingDao
+
     companion object {
         @Volatile
         private var INSTANCE: MLFitnessDatabase? = null

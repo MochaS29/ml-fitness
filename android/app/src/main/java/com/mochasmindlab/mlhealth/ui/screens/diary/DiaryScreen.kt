@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import android.content.Intent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,6 +28,7 @@ import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.viewmodel.DiaryViewModel
 import com.mochasmindlab.mlhealth.viewmodel.ExerciseEntryDisplay
 import com.mochasmindlab.mlhealth.utils.DateConverter
+import com.mochasmindlab.mlhealth.utils.DiaryShareFormatter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -37,6 +40,7 @@ fun DiaryScreen(
     onAddClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
 
     Scaffold(
@@ -49,6 +53,20 @@ fun DiaryScreen(
                     )
                 },
                 actions = {
+                    IconButton(onClick = {
+                        val text = DiaryShareFormatter.format(uiState)
+                        val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                            putExtra(Intent.EXTRA_TEXT, text)
+                            type = "text/plain"
+                        }
+                        context.startActivity(Intent.createChooser(sendIntent, "Share diary"))
+                    }) {
+                        Icon(
+                            Icons.Default.Share,
+                            contentDescription = "Share diary",
+                            tint = MochaBrown
+                        )
+                    }
                     IconButton(onClick = { navController.navigate("copy_from_previous") }) {
                         Icon(
                             Icons.Default.ContentCopy,

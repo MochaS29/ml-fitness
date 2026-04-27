@@ -3,6 +3,7 @@ package com.mochasmindlab.mlhealth.di
 import android.content.Context
 import androidx.room.Room
 import com.mochasmindlab.mlhealth.data.database.*
+import com.mochasmindlab.mlhealth.data.database.SleepDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -91,5 +92,20 @@ object DatabaseModule {
     @Provides
     fun provideGoalsDao(database: MLFitnessDatabase): GoalsDao {
         return database.goalsDao()
+    }
+
+    @Provides
+    fun provideBodyMeasurementDao(database: MLFitnessDatabase): BodyMeasurementDao {
+        return database.bodyMeasurementDao()
+    }
+
+    @Provides
+    fun provideSleepDao(database: MLFitnessDatabase): SleepDao {
+        return database.sleepDao()
+    }
+
+    @Provides
+    fun provideFastingDao(database: MLFitnessDatabase): FastingDao {
+        return database.fastingDao()
     }
 }

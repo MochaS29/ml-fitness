@@ -120,7 +120,7 @@ internal fun StatChip(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Row(
-                verticalAlignment = Alignment.Baseline,
+                verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(value,
@@ -156,7 +156,7 @@ internal fun MacroBar(label: String, value: Double, goal: Double, unit: String, 
             )
         }
         LinearProgressIndicator(
-            progress = { progress },
+            progress = progress,
             modifier = Modifier.fillMaxWidth().height(8.dp),
             color = color,
             trackColor = color.copy(alpha = 0.15f)

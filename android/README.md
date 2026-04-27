@@ -80,11 +80,20 @@ The Compose nav host at `ui/navigation/MLFitnessNavigation.kt` is the active one
 
 ## Configuration
 
-API keys and other secrets live in `local.properties` (untracked). The `app/build.gradle.kts` reads them into BuildConfig fields.
+API keys live in `local.properties` (gitignored from new entries — but the file is checked in for `sdk.dir`). The `app/build.gradle.kts` reads them into BuildConfig fields, accessed at runtime via `SecretsManager`.
 
-Required keys (placeholders are accepted for development):
-- `usda.api.key` — USDA FoodData Central
-- `anthropic.api.key` — Claude API for meal scanner (Phase 2)
+To enable the AI meal scanner (gap #3 / Phase 2.C):
+
+1. Open `local.properties` at the project root.
+2. Add this line (uncomment if it's already there as a comment):
+   ```
+   anthropic.api.key=sk-ant-api03-...your-real-key...
+   ```
+3. Rebuild — `./gradlew :app:assembleDevelopmentDebug` — the key gets baked into `BuildConfig.ANTHROPIC_API_KEY`.
+4. Run the app, open the meal scanner from the bottom-bar FAB or the AddMenu, take a photo. `MealAnalysisService` will POST to `https://api.anthropic.com/v1/messages` with `claude-sonnet-4-6` and vision.
+5. Without a key, `SecretsManager.anthropicAPIKey` returns `null` and `MealAnalysisService` short-circuits with an `apiKeyMissing` error — the scanner UI shows a friendly "API key not configured" message rather than crashing.
+
+The other API keys (USDA, Spoonacular, Nutritionix, Open Food Facts) are currently hardcoded in `config/ApiConfig.kt` — security debt to clean up later (move to BuildConfig + local.properties).
 
 Open Food Facts requires no key.
 

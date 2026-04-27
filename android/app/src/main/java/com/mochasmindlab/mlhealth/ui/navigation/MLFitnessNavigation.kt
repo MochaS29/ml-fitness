@@ -239,19 +239,45 @@ fun MLFitnessNavigation(
             }
 
             composable("recipes") {
-                ComingSoonScreen(
-                    title = "Recipes",
-                    message = "Discover healthy recipes",
-                    navController = navController
+                com.mochasmindlab.mlhealth.ui.screens.recipes.RecipeLibraryScreen(navController)
+            }
+
+            composable("add_custom_recipe") {
+                com.mochasmindlab.mlhealth.ui.screens.recipes.AddCustomRecipeScreen(navController)
+            }
+
+            composable("recipe_detail/{recipeId}") { entry ->
+                val id = entry.arguments?.getString("recipeId").orEmpty()
+                com.mochasmindlab.mlhealth.ui.screens.recipes.RecipeDetailScreen(
+                    navController = navController,
+                    recipeId = id
+                )
+            }
+
+            composable("body_measurements") {
+                com.mochasmindlab.mlhealth.ui.screens.measurements.BodyMeasurementsScreen(navController)
+            }
+
+            composable("sleep") {
+                com.mochasmindlab.mlhealth.ui.screens.sleep.SleepTrackingScreen(navController)
+            }
+
+            composable("allergen_preferences") {
+                com.mochasmindlab.mlhealth.ui.screens.preferences.AllergenPreferencesScreen(navController)
+            }
+
+            composable("rda") {
+                com.mochasmindlab.mlhealth.ui.screens.rda.RDAScreen(navController)
+            }
+
+            composable("fasting") {
+                com.mochasmindlab.mlhealth.ui.screens.fasting.FastingScreen(
+                    onBack = { navController.navigateUp() }
                 )
             }
 
             composable("add_custom_food") {
-                ComingSoonScreen(
-                    title = "Add Custom Food",
-                    message = "Create your own food entries",
-                    navController = navController
-                )
+                com.mochasmindlab.mlhealth.ui.screens.customfood.AddCustomFoodScreen(navController)
             }
 
             composable("barcode_scanner/{mealType}") { backStackEntry ->

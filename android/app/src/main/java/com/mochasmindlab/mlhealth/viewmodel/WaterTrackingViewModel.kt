@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mochasmindlab.mlhealth.data.entities.WaterEntry
 import com.mochasmindlab.mlhealth.data.entities.WaterUnit
+import com.mochasmindlab.mlhealth.data.models.AchievementEvent
 import com.mochasmindlab.mlhealth.data.repository.WaterRepository
+import com.mochasmindlab.mlhealth.services.AchievementManager
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WaterTrackingViewModel @Inject constructor(
     private val waterRepository: WaterRepository,
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
+    private val achievementManager: AchievementManager
 ) : ViewModel() {
 
     // UI State
@@ -58,6 +61,13 @@ class WaterTrackingViewModel @Inject constructor(
                 val totalOz = entries.sumOf { it.getAmountInOz().toDouble() }.toFloat()
                 val glasses = (totalOz / 8).toInt()
                 val progress = (totalOz / _waterGoalOz.value) * 100
+
+                val previousTotal = _uiState.value.totalOuncesToday
+                val goal = _waterGoalOz.value.toFloat()
+                // Fire celebration when the user just crossed the goal
+                if (previousTotal < goal && totalOz >= goal) {
+                    achievementManager.checkAndUnlock(AchievementEvent.WaterGoalHit(glasses))
+                }
 
                 _uiState.update { currentState ->
                     currentState.copy(

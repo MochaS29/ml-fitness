@@ -40,23 +40,13 @@ data class CuisinePreference(
     val preference: PreferenceLevel
 )
 
-// ===== FASTING =====
-@Serializable
-data class FastingSession(
-    val id: String = UUID.randomUUID().toString(),
-    var startTime: Long, // Timestamp
-    var plannedDuration: Long, // Duration in milliseconds
-    var actualEndTime: Long? = null,
-    var fastingPlan: FastingPlan,
-    var notes: String? = null
-)
 
 // ===== RECIPE =====
 @Serializable
 data class Recipe(
     val id: String = UUID.randomUUID().toString(),
     var name: String,
-    var category: RecipeCategory,
+    var category: String,
     var prepTime: Int, // minutes
     var cookTime: Int, // minutes
     var servings: Int,
@@ -184,11 +174,6 @@ enum class HealthCondition {
 }
 
 @Serializable
-enum class RecipeCategory {
-    BREAKFAST, LUNCH, DINNER, DESSERT, SNACK, APPETIZER, BEVERAGE, SALAD, SOUP, SIDE_DISH
-}
-
-@Serializable
 enum class IngredientUnit {
     CUP, TABLESPOON, TEASPOON, OUNCE, POUND, GRAM, KILOGRAM, MILLILITER, LITER, 
     PIECE, CLOVE, PINCH, DASH, CAN, PACKAGE, BUNCH
@@ -259,17 +244,9 @@ enum class AchievementType {
     STEP_GOAL, SUPPLEMENT_CONSISTENCY, STREAK, OTHER
 }
 
-@Serializable
-enum class FastingPlan {
-    SIXTEEN_EIGHT, EIGHTEEN_SIX, TWENTY_FOUR, FIVE_TWO, OMAD, CUSTOM
-}
 
 @Serializable
 enum class NutrientUnit {
     MG, MCG, G, IU
 }
 
-@Serializable
-enum class LifeStage {
-    STANDARD, PREGNANT, BREASTFEEDING
-}

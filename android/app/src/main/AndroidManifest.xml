@@ -15,6 +15,8 @@
     <uses-permission android:name="android.permission.health.READ_STEPS" />
     <uses-permission android:name="android.permission.health.READ_WEIGHT" />
     <uses-permission android:name="android.permission.health.WRITE_WEIGHT" />
+    <!-- Sleep tracking — added by sleep-tracking agent (gap #10) -->
+    <uses-permission android:name="android.permission.health.READ_SLEEP" />
 
     <!-- Required so the package manager resolves Health Connect provider intents -->
     <queries>
