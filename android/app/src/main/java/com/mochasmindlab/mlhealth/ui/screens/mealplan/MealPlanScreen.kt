@@ -103,14 +103,33 @@ fun MealPlanScreen(
         }
     }
 
+    var pendingLogRecipe by remember { mutableStateOf<PlanRecipe?>(null) }
+
     detailPlanRecipe?.let { recipe ->
         PlanRecipeDetailSheet(
             recipe = recipe,
             onDismiss = { detailPlanRecipe = null },
-            onLog = { mealType ->
-                viewModel.logRecipeToDiary(recipe, mealType)
+            onLog = {
+                pendingLogRecipe = recipe
                 detailPlanRecipe = null
             }
+        )
+    }
+
+    pendingLogRecipe?.let { recipe ->
+        com.mochasmindlab.mlhealth.ui.components.ServingSizeSheet(
+            title = recipe.name,
+            subtitle = recipe.description.takeIf { it.isNotBlank() },
+            perServingCalories = recipe.calories,
+            perServingProtein = recipe.protein,
+            perServingCarbs = recipe.carbs,
+            perServingFat = recipe.fat,
+            servingLabel = "serving",
+            onConfirm = { servings, mealType ->
+                viewModel.logRecipeToDiary(recipe, mealType, servings)
+                pendingLogRecipe = null
+            },
+            onDismiss = { pendingLogRecipe = null }
         )
     }
 }
@@ -248,7 +267,7 @@ private fun MealRow(label: String, recipe: PlanRecipe, onClick: () -> Unit) {
 private fun PlanRecipeDetailSheet(
     recipe: PlanRecipe,
     onDismiss: () -> Unit,
-    onLog: (mealType: String) -> Unit
+    onLog: () -> Unit
 ) {
     ModalBottomSheet(onDismissRequest = onDismiss) {
         LazyColumn(
@@ -347,28 +366,13 @@ private fun PlanRecipeDetailSheet(
 
             item {
                 Spacer(Modifier.height(20.dp))
-                Text("Log to today's diary", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                Spacer(Modifier.height(8.dp))
-                Row(
+                Button(
+                    onClick = onLog,
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    contentPadding = PaddingValues(vertical = 14.dp)
                 ) {
-                    listOf("Breakfast", "Lunch", "Dinner", "Snack").forEach { mt ->
-                        Button(
-                            onClick = { onLog(mt) },
-                            modifier = Modifier.weight(1f),
-                            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp)
-                        ) {
-                            Text(mt.take(1), fontWeight = FontWeight.Bold)
-                        }
-                    }
+                    Text("Log to Diary", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    "B / L / D / S",
-                    fontSize = 11.sp,
-                    color = Color.Gray
-                )
             }
         }
     }

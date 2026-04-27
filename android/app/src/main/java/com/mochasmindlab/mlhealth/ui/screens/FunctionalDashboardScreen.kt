@@ -29,7 +29,8 @@ fun FunctionalDashboardScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val aiInsights by viewModel.aiInsights.collectAsStateWithLifecycle()
-    
+    val streak by viewModel.streakManager.currentStreak.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -73,7 +74,7 @@ fun FunctionalDashboardScreen(
                     FilterChip(
                         selected = uiState.selectedPeriod == period,
                         onClick = { viewModel.selectPeriod(period) },
-                        label = { 
+                        label = {
                             Text(when(period) {
                                 DashboardPeriod.DAY -> "Day"
                                 DashboardPeriod.WEEK -> "Week"
@@ -83,7 +84,12 @@ fun FunctionalDashboardScreen(
                     )
                 }
             }
-            
+
+            // Logging streak card — only when there's an active streak
+            if (streak > 0) {
+                StreakCard(streak = streak)
+            }
+
             // AI Insights Section
             if (aiInsights.isNotEmpty()) {
                 Card(
@@ -267,6 +273,41 @@ fun FunctionalDashboardScreen(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun StreakCard(streak: Int) {
+    val (emoji, label) = when {
+        streak >= 30 -> "🏆" to "Legendary streak"
+        streak >= 14 -> "🏅" to "On fire"
+        streak >= 7 -> "⚡️" to "Building momentum"
+        streak >= 3 -> "🔥" to "Heating up"
+        else -> "🌱" to "Just getting started"
+    }
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFFFA500).copy(alpha = 0.12f)
+        )
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(emoji, fontSize = 32.sp)
+            Spacer(Modifier.width(14.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    "$streak day${if (streak == 1) "" else "s"} streak",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(label, fontSize = 13.sp, color = Color.Gray)
             }
         }
     }

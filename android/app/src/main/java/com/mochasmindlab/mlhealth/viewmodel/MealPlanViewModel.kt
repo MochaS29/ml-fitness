@@ -70,10 +70,15 @@ class MealPlanViewModel @Inject constructor(
     }
 
     /**
-     * Logs the given meal-plan recipe as a FoodEntry on the chosen date + meal type.
+     * Logs the given meal-plan recipe as a FoodEntry on the chosen date + meal type with serving count.
      * Mirrors iOS "Log This Meal" on ProfessionalRecipeDetailView.
      */
-    fun logRecipeToDiary(recipe: PlanRecipe, mealType: String, date: Date = startOfDay(Date())) {
+    fun logRecipeToDiary(
+        recipe: PlanRecipe,
+        mealType: String,
+        servings: Double = 1.0,
+        date: Date = startOfDay(Date())
+    ) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val entry = FoodEntry(
@@ -86,7 +91,7 @@ class MealPlanViewModel @Inject constructor(
                     mealType = mealType.lowercase(),
                     servingSize = "1",
                     servingUnit = "serving",
-                    servingCount = 1.0,
+                    servingCount = servings,
                     calories = recipe.calories.toDouble(),
                     protein = recipe.protein,
                     carbs = recipe.carbs,

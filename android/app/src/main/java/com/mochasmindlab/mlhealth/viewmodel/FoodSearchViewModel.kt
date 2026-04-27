@@ -97,9 +97,9 @@ class FoodSearchViewModel @Inject constructor(
 
     /**
      * Insert a FoodItem (search result, recent, favorite, or custom) as a FoodEntry
-     * on today's date with the given meal type. Default servings = 1.
+     * on today's date with the given meal type and serving count.
      */
-    fun logFoodToDiary(food: FoodItem, mealType: String) {
+    fun logFoodToDiary(food: FoodItem, mealType: String, servings: Double = 1.0) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val cal = Calendar.getInstance().apply {
@@ -118,7 +118,7 @@ class FoodSearchViewModel @Inject constructor(
                     mealType = mealType.lowercase(),
                     servingSize = food.servingSize,
                     servingUnit = food.servingUnit,
-                    servingCount = 1.0,
+                    servingCount = servings,
                     calories = food.calories.toDouble(),
                     protein = food.protein.toDouble(),
                     carbs = food.carbs.toDouble(),

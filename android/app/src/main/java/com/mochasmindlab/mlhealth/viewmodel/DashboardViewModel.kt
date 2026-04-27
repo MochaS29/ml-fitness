@@ -7,6 +7,7 @@ import com.mochasmindlab.mlhealth.data.entities.*
 import com.mochasmindlab.mlhealth.data.models.Achievement
 import com.mochasmindlab.mlhealth.data.models.AchievementType
 import com.mochasmindlab.mlhealth.services.HealthConnectManager
+import com.mochasmindlab.mlhealth.services.LoggingStreakManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val database: MLFitnessDatabase,
-    private val healthConnectManager: HealthConnectManager
+    private val healthConnectManager: HealthConnectManager,
+    val streakManager: LoggingStreakManager
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(DashboardUiState())

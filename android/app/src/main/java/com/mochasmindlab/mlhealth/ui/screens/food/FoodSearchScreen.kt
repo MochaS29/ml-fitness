@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mochasmindlab.mlhealth.data.models.FoodItem
 import com.mochasmindlab.mlhealth.data.models.MealType
+import com.mochasmindlab.mlhealth.ui.components.ServingSizeSheet
 import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.viewmodel.FoodSearchViewModel
 import kotlinx.coroutines.launch
@@ -36,6 +37,7 @@ fun FoodSearchScreen(
     var searchQuery by remember { mutableStateOf("") }
     var showBarcodeScanner by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableStateOf(0) }
+    var pendingFood by remember { mutableStateOf<FoodItem?>(null) }
     val searchResults by viewModel.searchResults.collectAsState()
     val recentFoods by viewModel.recentFoods.collectAsState()
     val favoriteFoods by viewModel.favoriteFoods.collectAsState()
@@ -164,7 +166,7 @@ fun FoodSearchScreen(
                                 FoodItemCard(
                                     food = food,
                                     onClick = {
-                                        viewModel.logFoodToDiary(food, mealType.name); navController.popBackStack()
+                                        pendingFood = food
                                     }
                                 )
                             }
@@ -173,7 +175,7 @@ fun FoodSearchScreen(
                                 FoodItemCard(
                                     food = food,
                                     onClick = {
-                                        viewModel.logFoodToDiary(food, mealType.name); navController.popBackStack()
+                                        pendingFood = food
                                     }
                                 )
                             }
@@ -185,7 +187,7 @@ fun FoodSearchScreen(
                             FoodItemCard(
                                 food = food,
                                 onClick = {
-                                    viewModel.logFoodToDiary(food, mealType.name); navController.popBackStack()
+                                    pendingFood = food
                                 }
                             )
                         }
@@ -196,7 +198,7 @@ fun FoodSearchScreen(
                             FoodItemCard(
                                 food = food,
                                 onClick = {
-                                    viewModel.logFoodToDiary(food, mealType.name); navController.popBackStack()
+                                    pendingFood = food
                                 },
                                 showFavoriteIcon = true
                             )
@@ -239,7 +241,7 @@ fun FoodSearchScreen(
                             FoodItemCard(
                                 food = food,
                                 onClick = {
-                                    viewModel.logFoodToDiary(food, mealType.name); navController.popBackStack()
+                                    pendingFood = food
                                 },
                                 isCustom = true
                             )
@@ -256,6 +258,25 @@ fun FoodSearchScreen(
             navController.navigate("barcode_scanner/$mealType")
             showBarcodeScanner = false
         }
+    }
+
+    pendingFood?.let { food ->
+        ServingSizeSheet(
+            title = food.name,
+            subtitle = food.brand,
+            perServingCalories = food.calories,
+            perServingProtein = food.protein.toDouble(),
+            perServingCarbs = food.carbs.toDouble(),
+            perServingFat = food.fat.toDouble(),
+            servingLabel = food.servingUnit.ifBlank { "serving" },
+            initialMealType = mealType.name.lowercase(),
+            onConfirm = { servings, mt ->
+                viewModel.logFoodToDiary(food, mt, servings)
+                pendingFood = null
+                navController.popBackStack()
+            },
+            onDismiss = { pendingFood = null }
+        )
     }
 }
 
