@@ -164,7 +164,7 @@ fun FoodSearchScreen(
                                 FoodItemCard(
                                     food = food,
                                     onClick = {
-                                        navController.navigate("food_detail/${food.id}/$mealType")
+                                        viewModel.logFoodToDiary(food, mealType.name); navController.popBackStack()
                                     }
                                 )
                             }
@@ -173,7 +173,7 @@ fun FoodSearchScreen(
                                 FoodItemCard(
                                     food = food,
                                     onClick = {
-                                        navController.navigate("food_detail/${food.id}/$mealType")
+                                        viewModel.logFoodToDiary(food, mealType.name); navController.popBackStack()
                                     }
                                 )
                             }
@@ -185,7 +185,7 @@ fun FoodSearchScreen(
                             FoodItemCard(
                                 food = food,
                                 onClick = {
-                                    navController.navigate("food_detail/${food.id}/$mealType")
+                                    viewModel.logFoodToDiary(food, mealType.name); navController.popBackStack()
                                 }
                             )
                         }
@@ -196,7 +196,7 @@ fun FoodSearchScreen(
                             FoodItemCard(
                                 food = food,
                                 onClick = {
-                                    navController.navigate("food_detail/${food.id}/$mealType")
+                                    viewModel.logFoodToDiary(food, mealType.name); navController.popBackStack()
                                 },
                                 showFavoriteIcon = true
                             )
@@ -239,7 +239,7 @@ fun FoodSearchScreen(
                             FoodItemCard(
                                 food = food,
                                 onClick = {
-                                    navController.navigate("food_detail/${food.id}/$mealType")
+                                    viewModel.logFoodToDiary(food, mealType.name); navController.popBackStack()
                                 },
                                 isCustom = true
                             )

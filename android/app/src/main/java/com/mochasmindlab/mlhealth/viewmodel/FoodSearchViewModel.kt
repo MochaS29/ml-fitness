@@ -2,19 +2,30 @@ package com.mochasmindlab.mlhealth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mochasmindlab.mlhealth.data.database.MLFitnessDatabase
+import com.mochasmindlab.mlhealth.data.entities.FoodEntry
 import com.mochasmindlab.mlhealth.data.models.FoodItem
 import com.mochasmindlab.mlhealth.data.repository.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Calendar
+import java.util.Date
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class FoodSearchViewModel @Inject constructor(
-    private val foodRepository: FoodRepository
+    private val foodRepository: FoodRepository,
+    private val database: MLFitnessDatabase
 ) : ViewModel() {
 
     private val _searchResults = MutableStateFlow<List<FoodItem>>(emptyList())
@@ -78,6 +89,47 @@ class FoodSearchViewModel @Inject constructor(
     fun toggleFavorite(foodId: Long) {
         viewModelScope.launch {
             foodRepository.toggleFavorite(foodId)
+        }
+    }
+
+    private val _logged = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    val logged: SharedFlow<String> = _logged.asSharedFlow()
+
+    /**
+     * Insert a FoodItem (search result, recent, favorite, or custom) as a FoodEntry
+     * on today's date with the given meal type. Default servings = 1.
+     */
+    fun logFoodToDiary(food: FoodItem, mealType: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val cal = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                val entry = FoodEntry(
+                    id = UUID.randomUUID(),
+                    name = food.name,
+                    brand = food.brand,
+                    barcode = food.barcode,
+                    date = cal.time,
+                    timestamp = Date(),
+                    mealType = mealType.lowercase(),
+                    servingSize = food.servingSize,
+                    servingUnit = food.servingUnit,
+                    servingCount = 1.0,
+                    calories = food.calories.toDouble(),
+                    protein = food.protein.toDouble(),
+                    carbs = food.carbs.toDouble(),
+                    fat = food.fat.toDouble(),
+                    fiber = food.fiber.toDouble(),
+                    sugar = food.sugar.toDouble(),
+                    sodium = food.sodium.toDouble()
+                )
+                database.foodDao().insert(entry)
+            }
+            _logged.tryEmit(food.name)
         }
     }
 }

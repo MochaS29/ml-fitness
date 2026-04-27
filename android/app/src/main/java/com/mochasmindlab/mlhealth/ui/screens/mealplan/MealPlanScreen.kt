@@ -36,6 +36,13 @@ fun MealPlanScreen(
     val state by viewModel.state.collectAsState()
     var detailPlanRecipe by remember { mutableStateOf<PlanRecipe?>(null) }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(Unit) {
+        viewModel.toast.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -46,7 +53,8 @@ fun MealPlanScreen(
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         if (state.isLoading) {
             Box(
@@ -96,7 +104,14 @@ fun MealPlanScreen(
     }
 
     detailPlanRecipe?.let { recipe ->
-        PlanRecipeDetailSheet(recipe = recipe, onDismiss = { detailPlanRecipe = null })
+        PlanRecipeDetailSheet(
+            recipe = recipe,
+            onDismiss = { detailPlanRecipe = null },
+            onLog = { mealType ->
+                viewModel.logRecipeToDiary(recipe, mealType)
+                detailPlanRecipe = null
+            }
+        )
     }
 }
 
@@ -230,7 +245,11 @@ private fun MealRow(label: String, recipe: PlanRecipe, onClick: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PlanRecipeDetailSheet(recipe: PlanRecipe, onDismiss: () -> Unit) {
+private fun PlanRecipeDetailSheet(
+    recipe: PlanRecipe,
+    onDismiss: () -> Unit,
+    onLog: (mealType: String) -> Unit
+) {
     ModalBottomSheet(onDismissRequest = onDismiss) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
@@ -324,6 +343,32 @@ private fun PlanRecipeDetailSheet(recipe: PlanRecipe, onDismiss: () -> Unit) {
                         color = Color.Gray
                     )
                 }
+            }
+
+            item {
+                Spacer(Modifier.height(20.dp))
+                Text("Log to today's diary", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    listOf("Breakfast", "Lunch", "Dinner", "Snack").forEach { mt ->
+                        Button(
+                            onClick = { onLog(mt) },
+                            modifier = Modifier.weight(1f),
+                            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp)
+                        ) {
+                            Text(mt.take(1), fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "B / L / D / S",
+                    fontSize = 11.sp,
+                    color = Color.Gray
+                )
             }
         }
     }

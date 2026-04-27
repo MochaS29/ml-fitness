@@ -85,8 +85,10 @@ fun MLFitnessNavigation(
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
 
-            // Don't show bottom bar on onboarding or detail screens
-            if (currentRoute != "onboarding" && !currentRoute?.contains("/")!!) {
+            // Don't show bottom bar on onboarding or detail screens.
+            // currentRoute is null during initial composition — treat that like "show".
+            val isDetailRoute = currentRoute?.contains("/") == true
+            if (currentRoute != "onboarding" && !isDetailRoute) {
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.surface,
                     contentColor = MaterialTheme.colorScheme.onSurface
