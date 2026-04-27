@@ -31,8 +31,10 @@ import androidx.compose.material3.Text
 import com.mochasmindlab.mlhealth.ui.theme.MLFitnessTheme
 import com.mochasmindlab.mlhealth.ui.theme.MochaBrown
 import com.mochasmindlab.mlhealth.ui.navigation.MLFitnessNavigation
+import com.mochasmindlab.mlhealth.ui.components.CelebrationHost
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import com.mochasmindlab.mlhealth.utils.SampleDataGenerator
+import com.mochasmindlab.mlhealth.services.AchievementManager
 import com.mochasmindlab.mlhealth.viewmodel.DashboardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -44,9 +46,12 @@ class MainActivity : ComponentActivity() {
     
     @Inject
     lateinit var preferencesManager: PreferencesManager
-    
+
     @Inject
     lateinit var sampleDataGenerator: SampleDataGenerator
+
+    @Inject
+    lateinit var achievementManager: AchievementManager
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +78,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Use the new unified navigation
-                    MLFitnessNavigation()
+                    // Wrap unified navigation with celebration overlay host
+                    CelebrationHost(achievementManager = achievementManager) {
+                        MLFitnessNavigation()
+                    }
                 }
             }
         }

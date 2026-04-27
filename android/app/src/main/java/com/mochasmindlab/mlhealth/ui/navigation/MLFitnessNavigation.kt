@@ -207,6 +207,14 @@ fun MLFitnessNavigation(
                 com.mochasmindlab.mlhealth.ui.screens.reminders.RemindersScreen(navController)
             }
 
+            composable("copy_from_previous") {
+                com.mochasmindlab.mlhealth.ui.screens.copy.CopyFromPreviousDayScreen(navController)
+            }
+
+            composable("nutrition_detail") {
+                com.mochasmindlab.mlhealth.ui.screens.nutrition.NutritionDetailScreen(navController)
+            }
+
             // Food & Nutrition
             composable("food_search/{mealType}") { backStackEntry ->
                 val mealType = try {

@@ -49,6 +49,13 @@ fun DiaryScreen(
                     )
                 },
                 actions = {
+                    IconButton(onClick = { navController.navigate("copy_from_previous") }) {
+                        Icon(
+                            Icons.Default.ContentCopy,
+                            contentDescription = "Copy from previous day",
+                            tint = MochaBrown
+                        )
+                    }
                     IconButton(onClick = onAddClick) {
                         Icon(
                             Icons.Default.Add,
@@ -371,6 +378,19 @@ fun MealSection(
                     FoodEntryItem(
                         entry = entry,
                         onDelete = { onDeleteEntry(entry) }
+                    )
+                }
+            } else {
+                Spacer(modifier = Modifier.height(8.dp))
+                TextButton(
+                    onClick = onAddClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(vertical = 12.dp)
+                ) {
+                    Text(
+                        "Add ${mealType.displayName.lowercase()}…",
+                        color = MochaBrown,
+                        fontSize = 14.sp
                     )
                 }
             }
