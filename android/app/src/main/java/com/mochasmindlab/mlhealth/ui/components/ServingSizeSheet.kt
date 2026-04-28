@@ -85,8 +85,10 @@ fun ServingSizeSheet(
                     contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp)
                 ) { Text("−", fontSize = 22.sp, fontWeight = FontWeight.Bold) }
 
+                val unitText = if (servings == 1.0) servingLabel
+                    else servingLabel.pluralize()
                 Text(
-                    formatServings(servings) + "  " + servingLabel + (if (servings != 1.0) "s" else ""),
+                    "${formatServings(servings)}  $unitText",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -163,4 +165,20 @@ private fun MacroBlock(value: String, label: String) {
 private fun formatServings(s: Double): String {
     val rounded = (s * 100).roundToInt() / 100.0
     return if (rounded == rounded.toInt().toDouble()) "${rounded.toInt()}" else "%.2f".format(rounded)
+}
+
+/**
+ * Pluralize a serving label so "1.5 serving (157g)s" doesn't happen.
+ * If the label looks like "X (Y)" we pluralize the part before the parenthetical.
+ */
+private fun String.pluralize(): String {
+    val parenIdx = indexOf('(')
+    return if (parenIdx > 0) {
+        val head = substring(0, parenIdx).trimEnd()
+        val tail = substring(parenIdx)
+        val pluralHead = if (head.endsWith("s")) head else "${head}s"
+        "$pluralHead $tail"
+    } else {
+        if (endsWith("s")) this else "${this}s"
+    }
 }

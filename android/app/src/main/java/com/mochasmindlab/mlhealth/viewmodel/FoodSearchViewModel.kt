@@ -6,7 +6,9 @@ import com.mochasmindlab.mlhealth.data.database.MLFitnessDatabase
 import com.mochasmindlab.mlhealth.data.entities.FoodEntry
 import com.mochasmindlab.mlhealth.data.models.FoodItem
 import com.mochasmindlab.mlhealth.data.repository.FoodRepository
+import com.mochasmindlab.mlhealth.di.ApplicationScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FoodSearchViewModel @Inject constructor(
     private val foodRepository: FoodRepository,
-    private val database: MLFitnessDatabase
+    private val database: MLFitnessDatabase,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _searchResults = MutableStateFlow<List<FoodItem>>(emptyList())
@@ -100,7 +103,9 @@ class FoodSearchViewModel @Inject constructor(
      * on today's date with the given meal type and serving count.
      */
     fun logFoodToDiary(food: FoodItem, mealType: String, servings: Double = 1.0) {
-        viewModelScope.launch {
+        // Use the application-scoped coroutine: viewModelScope gets cancelled
+        // when the FoodSearchScreen pops back, which races with the DB insert.
+        appScope.launch {
             withContext(Dispatchers.IO) {
                 val cal = Calendar.getInstance().apply {
                     set(Calendar.HOUR_OF_DAY, 0)

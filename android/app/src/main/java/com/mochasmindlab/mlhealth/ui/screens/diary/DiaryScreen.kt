@@ -43,6 +43,19 @@ fun DiaryScreen(
     val context = LocalContext.current
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
 
+    // Refresh diary contents whenever the screen comes back into the foreground —
+    // e.g. after the user logs a food in FoodSearchScreen and pops back here.
+    val lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                DateConverter.localDateToDate(selectedDate)?.let { viewModel.loadDiaryData(it) }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(

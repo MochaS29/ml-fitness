@@ -6,8 +6,10 @@ import com.mochasmindlab.mlhealth.data.database.MLFitnessDatabase
 import com.mochasmindlab.mlhealth.data.entities.FoodEntry
 import com.mochasmindlab.mlhealth.data.models.DietPlan
 import com.mochasmindlab.mlhealth.data.models.PlanRecipe
+import com.mochasmindlab.mlhealth.di.ApplicationScope
 import com.mochasmindlab.mlhealth.services.MealPlanLoader
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MealPlanViewModel @Inject constructor(
     private val loader: MealPlanLoader,
-    private val database: MLFitnessDatabase
+    private val database: MLFitnessDatabase,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MealPlanUiState())
@@ -79,7 +82,8 @@ class MealPlanViewModel @Inject constructor(
         servings: Double = 1.0,
         date: Date = startOfDay(Date())
     ) {
-        viewModelScope.launch {
+        // Use appScope: viewModelScope is cancelled when the recipe sheet closes.
+        appScope.launch {
             withContext(Dispatchers.IO) {
                 val entry = FoodEntry(
                     id = UUID.randomUUID(),
