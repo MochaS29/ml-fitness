@@ -135,7 +135,7 @@ class FoodBarcodeService {
 
     private suspend fun fetchFromUSDA(barcode: String): FoodItem? {
         // USDA FoodData Central API
-        val apiKey = ApiConfig.USDA_API_KEY
+        val apiKey = (SecretsManager.usdaApiKey ?: "")
 
         if (!ApiConfig.isApiConfigured("USDA")) {
             return null // Skip if no real API key
@@ -230,7 +230,7 @@ class FoodBarcodeService {
         }
 
         try {
-            val url = "${ApiConfig.SPOONACULAR_BASE_URL}/food/products/upc/$barcode?apiKey=${ApiConfig.SPOONACULAR_API_KEY}"
+            val url = "${ApiConfig.SPOONACULAR_BASE_URL}/food/products/upc/$barcode?apiKey=${(SecretsManager.spoonacularApiKey ?: "")}"
             val request = Request.Builder()
                 .url(url)
                 .header("Accept", "application/json")

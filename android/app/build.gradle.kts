@@ -13,10 +13,19 @@ val localProperties = Properties().apply {
     if (f.exists()) load(f.inputStream())
 }
 val anthropicApiKey: String = localProperties.getProperty("anthropic.api.key", "")
+val usdaApiKey: String = localProperties.getProperty("usda.api.key", "")
+val spoonacularApiKey: String = localProperties.getProperty("spoonacular.api.key", "")
+val nutritionixAppId: String = localProperties.getProperty("nutritionix.app.id", "")
+val nutritionixAppKey: String = localProperties.getProperty("nutritionix.app.key", "")
+
+val keystoreProps = Properties().apply {
+    val f = rootProject.file("keystore.properties")
+    if (f.exists()) load(f.inputStream())
+}
 
 android {
     namespace = "com.mochasmindlab.mlhealth"
-    compileSdk = 34
+    compileSdk = 35
 
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -25,15 +34,39 @@ android {
     defaultConfig {
         applicationId = "com.mochasmindlab.mlhealth"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 5
-        versionName = "1.5"
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
         buildConfigField("String", "ANTHROPIC_API_KEY", "\"$anthropicApiKey\"")
+        buildConfigField("String", "USDA_API_KEY", "\"$usdaApiKey\"")
+        buildConfigField("String", "SPOONACULAR_API_KEY", "\"$spoonacularApiKey\"")
+        buildConfigField("String", "NUTRITIONIX_APP_ID", "\"$nutritionixAppId\"")
+        buildConfigField("String", "NUTRITIONIX_APP_KEY", "\"$nutritionixAppKey\"")
+    }
+
+    signingConfigs {
+        // Release signing reads from keystore.properties (gitignored). To configure:
+        //   1. keytool -genkey -v -keystore release.keystore -alias ml-fitness \
+        //        -keyalg RSA -keysize 2048 -validity 10000
+        //   2. Create keystore.properties at the project root with:
+        //        storeFile=release.keystore
+        //        storePassword=...
+        //        keyAlias=ml-fitness
+        //        keyPassword=...
+        //   3. Add keystore.properties + the .keystore file to .gitignore.
+        if (keystoreProps.getProperty("storeFile") != null) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+            }
+        }
     }
 
     buildTypes {
@@ -53,6 +86,10 @@ android {
             buildConfigField("String", "BASE_URL", "\"https://api.mochasmindlab.com/\"")
             buildConfigField("Boolean", "ENABLE_LOGGING", "false")
             buildConfigField("Boolean", "ENABLE_DEMO_DATA", "false")
+            // Wire signing config when keystore.properties exists.
+            if (keystoreProps.getProperty("storeFile") != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     flavorDimensions += listOf("environment")

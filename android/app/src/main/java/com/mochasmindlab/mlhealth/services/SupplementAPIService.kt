@@ -272,7 +272,7 @@ class SupplementAPIService {
             val url = "https://api.nal.usda.gov/fdc/v1/foods/search?" +
                     "query=$barcode&" +
                     "dataType=Dietary%20Supplement&" +
-                    "api_key=${ApiConfig.USDA_API_KEY}"
+                    "api_key=${(SecretsManager.usdaApiKey ?: "")}"
 
             val request = Request.Builder()
                 .url(url)
@@ -334,8 +334,8 @@ class SupplementAPIService {
      * Requires API key configuration
      */
     private suspend fun searchNutritionix(barcode: String): SupplementInfo? {
-        val appId = ApiConfig.NUTRITIONIX_APP_ID
-        val appKey = ApiConfig.NUTRITIONIX_APP_KEY
+        val appId = (SecretsManager.nutritionixAppId ?: "")
+        val appKey = (SecretsManager.nutritionixAppKey ?: "")
 
         if (appId.isBlank() || appKey.isBlank()) return null
 

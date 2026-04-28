@@ -77,8 +77,8 @@ class RestaurantFoodService {
 
             val request = Request.Builder()
                 .url(url)
-                .header("x-app-id", ApiConfig.NUTRITIONIX_APP_ID)
-                .header("x-app-key", ApiConfig.NUTRITIONIX_APP_KEY)
+                .header("x-app-id", (SecretsManager.nutritionixAppId ?: ""))
+                .header("x-app-key", (SecretsManager.nutritionixAppKey ?: ""))
                 .header("Content-Type", "application/json")
                 .post(requestBody.toRequestBody("application/json".toMediaType()))
                 .build()

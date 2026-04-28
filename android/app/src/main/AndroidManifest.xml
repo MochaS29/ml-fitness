@@ -55,23 +55,21 @@
             android:value="barcode" />
 
         <!--
-            TODO: Health Connect – Privacy Policy deep-link activity alias.
-            Production apps must declare an <activity-alias> that handles the
-            androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE intent so Health Connect
-            can surface your privacy policy URL. Example:
-
-            <activity-alias
-                android:name=".HealthConnectRationaleActivity"
-                android:exported="true"
-                android:targetActivity=".MainActivity">
-                <intent-filter>
-                    <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
-                </intent-filter>
-            </activity-alias>
-
-            Add BEFORE submitting to Google Play. See:
-            https://developer.android.com/health-and-fitness/guides/health-connect/develop/get-started#privacy-policy
+            Health Connect privacy-policy rationale activity. Required by Play
+            for any app declaring health permissions: Health Connect calls this
+            intent to show users why we need their data + a privacy policy link.
+            Routes to MainActivity which inspects the intent and navigates to
+            the privacy policy / a rationale screen.
         -->
+        <activity-alias
+            android:name=".HealthConnectRationaleActivity"
+            android:exported="true"
+            android:targetActivity=".MainActivity"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+        </activity-alias>
     </application>
 
 </manifest>

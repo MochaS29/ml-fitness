@@ -59,9 +59,11 @@ class MainActivity : ComponentActivity() {
         // Enable edge-to-edge display
         WindowCompat.setDecorFitsSystemWindows(window, false)
         
-        // Generate sample data for demonstration
-        // Comment this out for production
-        sampleDataGenerator.generateSampleData()
+        // Sample data only runs in debug builds with ENABLE_DEMO_DATA=true.
+        // BuildConfig.ENABLE_DEMO_DATA is false in release; debug + dev/staging flavors keep it on.
+        if (BuildConfig.ENABLE_DEMO_DATA) {
+            sampleDataGenerator.generateSampleData()
+        }
         
         // Check if onboarding is completed
         val startDestination = runBlocking {
