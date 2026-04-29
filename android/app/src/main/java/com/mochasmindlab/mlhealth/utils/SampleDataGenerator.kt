@@ -15,20 +15,37 @@ class SampleDataGenerator @Inject constructor(
 ) {
     fun generateSampleData() {
         CoroutineScope(Dispatchers.IO).launch {
-            // Check if data already exists
-            val existingFood = database.foodDao().getEntriesForDate(Date())
-            if (existingFood.isNotEmpty()) {
-                return@launch // Data already exists
+            // Idempotence: if ANY food entry exists in the DB, do nothing.
+            // The previous check only looked at today's entries — so if the device
+            // clock crossed midnight between launches, the generator would insert
+            // a new "today" payload + another full historical 6-day batch every
+            // launch, resulting in hundreds of phantom entries (e.g. 200+ cups
+            // of water, 50+ duplicate breakfasts).
+            val totalCount = database.foodDao().getTotalFoodEntryCount()
+            if (totalCount > 0) {
+                return@launch
             }
             
-            // Generate sample data for today
-            val today = Date()
-            val yesterday = Date(System.currentTimeMillis() - 86400000)
-            val twoDaysAgo = Date(System.currentTimeMillis() - 172800000)
-            val threeDaysAgo = Date(System.currentTimeMillis() - 259200000)
-            val fourDaysAgo = Date(System.currentTimeMillis() - 345600000)
-            val fiveDaysAgo = Date(System.currentTimeMillis() - 432000000)
-            val sixDaysAgo = Date(System.currentTimeMillis() - 518400000)
+            // Generate sample data — use START-OF-DAY for the `date` column so the
+            // dashboard's `WHERE date = :today` exact-match queries succeed.
+            // The `timestamp` column keeps the actual moment for ordering.
+            fun startOfDay(d: Date): Date {
+                val cal = Calendar.getInstance().apply {
+                    time = d
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                return cal.time
+            }
+            val today = startOfDay(Date())
+            val yesterday = startOfDay(Date(System.currentTimeMillis() - 86400000))
+            val twoDaysAgo = startOfDay(Date(System.currentTimeMillis() - 172800000))
+            val threeDaysAgo = startOfDay(Date(System.currentTimeMillis() - 259200000))
+            val fourDaysAgo = startOfDay(Date(System.currentTimeMillis() - 345600000))
+            val fiveDaysAgo = startOfDay(Date(System.currentTimeMillis() - 432000000))
+            val sixDaysAgo = startOfDay(Date(System.currentTimeMillis() - 518400000))
             
             // Add food entries for today
             val todayFoods = listOf(

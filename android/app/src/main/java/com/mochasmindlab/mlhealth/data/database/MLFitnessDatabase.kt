@@ -77,31 +77,35 @@ abstract class MLFitnessDatabase : RoomDatabase() {
 
 @Dao
 interface FoodDao {
-    @Query("SELECT * FROM food_entries WHERE date = :date ORDER BY timestamp DESC")
+    // All date-filter queries use SQL DATE() so they match by calendar day
+    // regardless of the time-of-day component in the stored millis value.
+    // This matches WaterDao's pattern and is robust to inserts that don't
+    // bother to normalize to start-of-day.
+    @Query("SELECT * FROM food_entries WHERE DATE(date/1000, 'unixepoch') = DATE(:date/1000, 'unixepoch') ORDER BY timestamp DESC")
     suspend fun getEntriesForDate(date: Date): List<FoodEntry>
-    
-    @Query("SELECT * FROM food_entries WHERE mealType = :mealType AND date = :date")
+
+    @Query("SELECT * FROM food_entries WHERE mealType = :mealType AND DATE(date/1000, 'unixepoch') = DATE(:date/1000, 'unixepoch')")
     suspend fun getEntriesForMeal(mealType: String, date: Date): List<FoodEntry>
-    
+
     @Insert
     suspend fun insert(entry: FoodEntry)
-    
+
     @Update
     suspend fun update(entry: FoodEntry)
-    
+
     @Delete
     suspend fun delete(entry: FoodEntry)
-    
-    @Query("SELECT SUM(calories * servingCount) FROM food_entries WHERE date = :date")
+
+    @Query("SELECT SUM(calories * servingCount) FROM food_entries WHERE DATE(date/1000, 'unixepoch') = DATE(:date/1000, 'unixepoch')")
     suspend fun getTotalCaloriesForDate(date: Date): Double?
-    
-    @Query("SELECT SUM(protein * servingCount) FROM food_entries WHERE date = :date")
+
+    @Query("SELECT SUM(protein * servingCount) FROM food_entries WHERE DATE(date/1000, 'unixepoch') = DATE(:date/1000, 'unixepoch')")
     suspend fun getTotalProteinForDate(date: Date): Double?
-    
-    @Query("SELECT SUM(carbs * servingCount) FROM food_entries WHERE date = :date")
+
+    @Query("SELECT SUM(carbs * servingCount) FROM food_entries WHERE DATE(date/1000, 'unixepoch') = DATE(:date/1000, 'unixepoch')")
     suspend fun getTotalCarbsForDate(date: Date): Double?
     
-    @Query("SELECT SUM(fat * servingCount) FROM food_entries WHERE date = :date")
+    @Query("SELECT SUM(fat * servingCount) FROM food_entries WHERE DATE(date/1000, 'unixepoch') = DATE(:date/1000, 'unixepoch')")
     suspend fun getTotalFatForDate(date: Date): Double?
 
     /** Returns all distinct logged dates (as timestamps), newest first. Suspend version for one-shot queries. */

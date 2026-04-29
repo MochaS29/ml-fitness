@@ -37,7 +37,16 @@ class DashboardViewModel @Inject constructor(
     private fun loadDashboardData() {
         viewModelScope.launch {
             try {
-                val today = Date()
+                // Use start-of-day so the SQL `WHERE date = :date` exact-match
+                // queries line up with FoodEntry rows whose `date` column was
+                // also normalized to start-of-day (in SampleDataGenerator and
+                // the diary log flows).
+                val today = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }.time
                 
                 // Load calories and macros - these might be null initially
                 val totalCalories = try {
