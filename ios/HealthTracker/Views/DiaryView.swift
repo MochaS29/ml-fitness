@@ -590,6 +590,7 @@ struct DiaryView: View {
             exerciseEntries: exerciseEntries,
             selectedDate: selectedDate
         )
+        viewModel.refreshActiveEnergy(for: selectedDate)
     }
 
     private func addFoodEntry(foodItem: FoodItem, mealType: MealType) {

@@ -256,6 +256,27 @@ class HealthKitManager: ObservableObject {
         healthStore.execute(query)
     }
 
+    func fetchActiveEnergy(from startDate: Date, to endDate: Date, completion: @escaping (Double) -> Void) {
+        let energyType = HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+
+        let query = HKStatisticsQuery(quantityType: energyType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
+            guard let result = result, let sum = result.sumQuantity() else {
+                DispatchQueue.main.async {
+                    completion(0)
+                }
+                return
+            }
+
+            let kcal = sum.doubleValue(for: .kilocalorie())
+            DispatchQueue.main.async {
+                completion(kcal)
+            }
+        }
+
+        healthStore.execute(query)
+    }
+
     func fetchTodaySteps(completion: @escaping (Double?) -> Void) {
         let stepsType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let startOfDay = Calendar.current.startOfDay(for: Date())

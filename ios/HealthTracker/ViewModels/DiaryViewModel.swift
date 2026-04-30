@@ -29,6 +29,22 @@ class DiaryViewModel: ObservableObject {
             : 50
     }
 
+    /// Asks HealthKit for the day's active energy burned and uses it if it exceeds
+    /// the manually-logged exercise total. Apple Watch/iPhone-tracked activity (steps,
+    /// workouts) writes to `activeEnergyBurned`, so this surfaces real-world burn even
+    /// when the user hasn't manually logged exercise.
+    func refreshActiveEnergy(for date: Date) {
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: date)
+        guard let end = calendar.date(byAdding: .day, value: 1, to: start) else { return }
+        HealthKitManager.shared.fetchActiveEnergy(from: start, to: end) { [weak self] kcal in
+            guard let self = self else { return }
+            if kcal > self.dailySummary.caloriesBurned {
+                self.dailySummary.caloriesBurned = kcal
+            }
+        }
+    }
+
     // MARK: - Water
 
     /// Fetches water entries for `date` and returns the total in ounces.
