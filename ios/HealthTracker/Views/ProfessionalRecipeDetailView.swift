@@ -524,13 +524,49 @@ struct ProfessionalRecipeDetailView: View {
     // MARK: - Nutrition Tab
 
     private var nutritionContent: some View {
-        VStack {
+        VStack(spacing: 16) {
             if let nutrition = recipe.nutrition {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                     nutritionTiles(nutrition: nutrition)
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 16)
+
+                let micros = micronutrientRows(from: nutrition)
+                if !micros.isEmpty {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("Vitamins & Minerals")
+                            .font(.headline)
+                            .padding(.horizontal, 16)
+                            .padding(.top, 4)
+                            .padding(.bottom, 8)
+
+                        VStack(spacing: 0) {
+                            ForEach(micros, id: \.label) { row in
+                                HStack {
+                                    Text(row.label)
+                                        .font(.subheadline)
+                                    Spacer()
+                                    Text("\(formatMicro(row.value)) \(row.unit)")
+                                        .font(.subheadline.weight(.medium))
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 10)
+                                Divider().padding(.leading, 16)
+                            }
+                        }
+                        .background(Color(UIColor.systemBackground))
+                        .cornerRadius(12)
+                        .padding(.horizontal, 16)
+
+                        Text("Per serving")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal, 16)
+                            .padding(.top, 6)
+                    }
+                }
             } else {
                 Text("No nutrition data available.")
                     .font(.body)
@@ -543,6 +579,46 @@ struct ProfessionalRecipeDetailView: View {
                     .padding(.top, 16)
             }
         }
+    }
+
+    private struct MicroRow {
+        let label: String
+        let value: Double
+        let unit: String
+    }
+
+    private func micronutrientRows(from n: NutritionInfo) -> [MicroRow] {
+        var rows: [MicroRow] = []
+        func add(_ label: String, _ value: Double?, _ unit: String) {
+            if let v = value, v > 0 { rows.append(.init(label: label, value: v, unit: unit)) }
+        }
+        add("Vitamin A", n.vitaminA, "mcg")
+        add("Vitamin C", n.vitaminC, "mg")
+        add("Vitamin D", n.vitaminD, "mcg")
+        add("Vitamin E", n.vitaminE, "mg")
+        add("Vitamin K", n.vitaminK, "mcg")
+        add("Thiamin (B1)", n.thiamin, "mg")
+        add("Riboflavin (B2)", n.riboflavin, "mg")
+        add("Niacin (B3)", n.niacin, "mg")
+        add("Vitamin B6", n.vitaminB6, "mg")
+        add("Folate", n.folate, "mcg")
+        add("Vitamin B12", n.vitaminB12, "mcg")
+        add("Biotin", n.biotin, "mcg")
+        add("Pantothenic Acid", n.pantothenicAcid, "mg")
+        add("Calcium", n.calcium, "mg")
+        add("Iron", n.iron, "mg")
+        add("Magnesium", n.magnesium, "mg")
+        add("Phosphorus", n.phosphorus, "mg")
+        add("Potassium", n.potassium, "mg")
+        add("Zinc", n.zinc, "mg")
+        add("Copper", n.copper, "mg")
+        add("Manganese", n.manganese, "mg")
+        add("Selenium", n.selenium, "mcg")
+        return rows
+    }
+
+    private func formatMicro(_ value: Double) -> String {
+        value < 1 ? String(format: "%.1f", value) : "\(Int(value.rounded()))"
     }
 
     @ViewBuilder

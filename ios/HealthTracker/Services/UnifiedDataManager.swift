@@ -60,6 +60,9 @@ class UnifiedDataManager: ObservableObject {
         fiber: Double = 0,
         sugar: Double = 0,
         sodium: Double = 0,
+        cholesterol: Double = 0,
+        saturatedFat: Double = 0,
+        additionalNutrients: [String: Double]? = nil,
         servingSize: String = "1",
         servingUnit: String = "serving",
         mealType: MealType = .snack,
@@ -79,6 +82,11 @@ class UnifiedDataManager: ObservableObject {
         entry.fiber = fiber
         entry.sugar = sugar
         entry.sodium = sodium
+        entry.cholesterol = cholesterol
+        entry.saturatedFat = saturatedFat
+        if let extras = additionalNutrients, !extras.isEmpty {
+            entry.additionalNutrients = extras
+        }
         entry.servingSize = servingSize
         entry.servingUnit = servingUnit
         entry.mealType = mealType.rawValue
@@ -125,6 +133,56 @@ class UnifiedDataManager: ObservableObject {
 
     func deleteFoodEntry(_ entry: FoodEntry) {
         context.delete(entry)
+        saveContext()
+    }
+
+    /// Persist a user-created food (from manual entry / "Create [name]") so it stays
+    /// searchable even after every diary entry referencing it has been deleted.
+    /// Deduped by name+brand — repeated saves update the existing record.
+    func saveUserCustomFood(
+        name: String,
+        brand: String? = nil,
+        calories: Double,
+        protein: Double,
+        carbs: Double,
+        fat: Double,
+        fiber: Double = 0,
+        sugar: Double = 0,
+        sodium: Double = 0,
+        cholesterol: Double = 0,
+        saturatedFat: Double = 0,
+        additionalNutrients: [String: Double]? = nil,
+        servingSize: String = "1",
+        servingUnit: String = "serving"
+    ) {
+        let request: NSFetchRequest<CustomFood> = CustomFood.fetchRequest()
+        request.predicate = NSPredicate(format: "name ==[cd] %@ AND brand ==[cd] %@",
+                                        name, brand ?? "")
+        request.fetchLimit = 1
+
+        let food = (try? context.fetch(request))?.first ?? CustomFood(context: context)
+        if food.id == nil { food.id = UUID() }
+        if food.createdDate == nil { food.createdDate = Date() }
+        food.name = name
+        food.brand = brand
+        food.category = FoodCategory.other.rawValue
+        food.servingSize = servingSize
+        food.servingUnit = servingUnit
+        food.calories = calories
+        food.protein = protein
+        food.carbs = carbs
+        food.fat = fat
+        food.fiber = fiber
+        food.sugar = sugar
+        food.sodium = sodium
+        food.cholesterol = cholesterol
+        food.saturatedFat = saturatedFat
+        if let extras = additionalNutrients, !extras.isEmpty {
+            food.additionalNutrients = extras
+        }
+        food.source = "User"
+        food.isUserCreated = true
+
         saveContext()
     }
 
@@ -381,12 +439,12 @@ class UnifiedDataManager: ObservableObject {
         }
     }
 
-    /// Search cached USDA API foods in CoreData.
+    /// Search cached USDA API foods AND user-created custom foods in CoreData.
     func searchCachedFoods(_ query: String) -> [FoodItem] {
         let request: NSFetchRequest<CustomFood> = CustomFood.fetchRequest()
         request.predicate = NSPredicate(
-            format: "(name CONTAINS[cd] %@ OR brand CONTAINS[cd] %@) AND source == %@",
-            query, query, "usda_api"
+            format: "(name CONTAINS[cd] %@ OR brand CONTAINS[cd] %@) AND source IN %@",
+            query, query, ["usda_api", "User"]
         )
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         request.fetchLimit = 15

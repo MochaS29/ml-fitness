@@ -55,6 +55,76 @@ struct UnifiedFoodSearchSheet: View {
         return dataManager.getRecentFoods()
     }
 
+    /// User's previously-logged foods (FoodEntry) and user-created custom foods
+    /// (CustomFood) that match the current search query. Surfaces familiar items
+    /// above generic database hits so re-logging is one tap, and keeps custom foods
+    /// retrievable even after every diary entry referencing them is deleted.
+    var userPriorMatches: [FoodItem] {
+        guard !searchText.isEmpty else { return [] }
+        let context = PersistenceController.shared.container.viewContext
+        var seen = Set<String>()
+        var out: [FoodItem] = []
+
+        // Recent diary entries first — most recently logged surfaces highest.
+        let entryRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
+        entryRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", searchText)
+        entryRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        entryRequest.fetchLimit = 100
+        if let entries = try? context.fetch(entryRequest) {
+            for entry in entries {
+                guard let name = entry.name else { continue }
+                let key = "\(name.lowercased())-\(entry.brand?.lowercased() ?? "")"
+                guard !seen.contains(key) else { continue }
+                seen.insert(key)
+                let count = entry.servingCount > 0 ? entry.servingCount : 1.0
+                out.append(FoodItem(
+                    name: name, brand: entry.brand,
+                    category: .other,
+                    servingSize: entry.servingSize ?? "1",
+                    servingUnit: entry.servingUnit ?? "serving",
+                    calories: entry.calories / count, protein: entry.protein / count,
+                    carbs: entry.carbs / count, fat: entry.fat / count, fiber: entry.fiber / count,
+                    sugar: entry.sugar / count, sodium: entry.sodium / count,
+                    cholesterol: nil, saturatedFat: nil, barcode: entry.barcode, isCommon: false
+                ))
+                if out.count == 10 { break }
+            }
+        }
+
+        // User-created CustomFoods — these survive diary deletion.
+        if out.count < 10 {
+            let customRequest: NSFetchRequest<CustomFood> = CustomFood.fetchRequest()
+            customRequest.predicate = NSPredicate(
+                format: "(name CONTAINS[cd] %@ OR brand CONTAINS[cd] %@) AND isUserCreated == YES",
+                searchText, searchText
+            )
+            customRequest.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: false)]
+            customRequest.fetchLimit = 20
+            if let customs = try? context.fetch(customRequest) {
+                for c in customs {
+                    guard let name = c.name else { continue }
+                    let key = "\(name.lowercased())-\(c.brand?.lowercased() ?? "")"
+                    guard !seen.contains(key) else { continue }
+                    seen.insert(key)
+                    out.append(FoodItem(
+                        name: name, brand: c.brand,
+                        category: FoodCategory(rawValue: c.category ?? "") ?? .other,
+                        servingSize: c.servingSize ?? "1",
+                        servingUnit: c.servingUnit ?? "serving",
+                        calories: c.calories, protein: c.protein,
+                        carbs: c.carbs, fat: c.fat, fiber: c.fiber,
+                        sugar: c.sugar, sodium: c.sodium,
+                        cholesterol: c.cholesterol, saturatedFat: c.saturatedFat,
+                        barcode: c.barcode, isCommon: false
+                    ))
+                    if out.count == 10 { break }
+                }
+            }
+        }
+
+        return out
+    }
+
     // Recent foods filtered to current meal type (last 10 entries for this meal type)
     var mealTypeRecentFoods: [FoodItem] {
         let context = PersistenceController.shared.container.viewContext
@@ -165,6 +235,18 @@ struct UnifiedFoodSearchSheet: View {
 
                     // Search Results or Recent/Common Foods
                     if !searchText.isEmpty {
+                        // Your Foods — items you've logged before that match this query
+                        let priorMatches = userPriorMatches
+                        if !priorMatches.isEmpty {
+                            Section("Your Foods") {
+                                ForEach(priorMatches, id: \.id) { food in
+                                    FoodRowView(food: food, isFavourite: favourites.isFavourite(food), onStar: { favourites.toggle(food) }) {
+                                        selectFood(food)
+                                    }
+                                }
+                            }
+                        }
+
                         // Local results (instant)
                         if !localResults.isEmpty {
                             Section("Local Results") {
@@ -268,13 +350,39 @@ struct UnifiedFoodSearchSheet: View {
             ManualFoodEntrySheet(
                 foodName: searchText,
                 mealType: selectedMealType,
-                onSave: { name, calories, protein, carbs, fat in
+                onSave: { payload in
+                    let extras = payload.additionalNutrients.isEmpty ? nil : payload.additionalNutrients
+                    // Persist as a reusable CustomFood so it survives diary deletions
+                    // and shows up in future searches.
+                    dataManager.saveUserCustomFood(
+                        name: payload.name,
+                        calories: payload.calories,
+                        protein: payload.protein,
+                        carbs: payload.carbs,
+                        fat: payload.fat,
+                        fiber: payload.fiber,
+                        sugar: payload.sugar,
+                        sodium: payload.sodium,
+                        cholesterol: payload.cholesterol,
+                        saturatedFat: payload.saturatedFat,
+                        additionalNutrients: extras,
+                        servingSize: payload.servingSize,
+                        servingUnit: payload.servingUnit
+                    )
                     dataManager.addFoodEntry(
-                        name: name,
-                        calories: calories,
-                        protein: protein,
-                        carbs: carbs,
-                        fat: fat,
+                        name: payload.name,
+                        calories: payload.calories,
+                        protein: payload.protein,
+                        carbs: payload.carbs,
+                        fat: payload.fat,
+                        fiber: payload.fiber,
+                        sugar: payload.sugar,
+                        sodium: payload.sodium,
+                        cholesterol: payload.cholesterol,
+                        saturatedFat: payload.saturatedFat,
+                        additionalNutrients: extras,
+                        servingSize: payload.servingSize,
+                        servingUnit: payload.servingUnit,
                         mealType: selectedMealType
                     )
                     dismiss()
@@ -780,21 +888,45 @@ private extension Double {
 
 // MARK: - Manual Entry Sheet
 
+struct ManualFoodEntryPayload {
+    var name: String
+    var calories: Double
+    var protein: Double
+    var carbs: Double
+    var fat: Double
+    var fiber: Double
+    var sugar: Double
+    var sodium: Double
+    var cholesterol: Double
+    var saturatedFat: Double
+    var additionalNutrients: [String: Double]
+    var servingSize: String
+    var servingUnit: String
+}
+
 struct ManualFoodEntrySheet: View {
     @Environment(\.dismiss) private var dismiss
     let foodName: String
     let mealType: MealType
-    let onSave: (String, Double, Double, Double, Double) -> Void
+    let onSave: (ManualFoodEntryPayload) -> Void
 
     @State private var name: String
     @State private var calories = ""
     @State private var protein = ""
     @State private var carbs = ""
     @State private var fat = ""
+    @State private var fiber = ""
+    @State private var sugar = ""
+    @State private var sodium = ""
+    @State private var cholesterol = ""
+    @State private var saturatedFat = ""
     @State private var servingSize = "1"
     @State private var servingUnit = "serving"
 
-    init(foodName: String, mealType: MealType, onSave: @escaping (String, Double, Double, Double, Double) -> Void) {
+    @State private var showingAdditionalNutrients = false
+    @State private var additionalNutrients: [String: Double] = [:]
+
+    init(foodName: String, mealType: MealType, onSave: @escaping (ManualFoodEntryPayload) -> Void) {
         self.foodName = foodName
         self.mealType = mealType
         self.onSave = onSave
@@ -821,51 +953,59 @@ struct ManualFoodEntrySheet: View {
                 }
 
                 Section("Nutrition") {
-                    HStack {
-                        Label("Calories", systemImage: "flame")
-                        Spacer()
-                        TextField("0", text: $calories)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 80)
-                        Text("cal")
-                            .foregroundColor(.secondary)
+                    nutritionField("Calories", text: $calories, unit: "cal", icon: "flame", iconColor: .orange)
+                    nutritionField("Protein", text: $protein, unit: "g", icon: "p.square", iconColor: .red)
+                    nutritionField("Carbs", text: $carbs, unit: "g", icon: "c.square", iconColor: .blue)
+                    nutritionField("Fat", text: $fat, unit: "g", icon: "f.square", iconColor: .green)
+                    nutritionField("Fiber", text: $fiber, unit: "g", icon: "leaf", iconColor: .green)
+                    nutritionField("Sugar", text: $sugar, unit: "g", icon: "cube", iconColor: .pink)
+                    nutritionField("Sodium", text: $sodium, unit: "mg", icon: "drop", iconColor: .blue)
+                    nutritionField("Cholesterol", text: $cholesterol, unit: "mg", icon: "heart", iconColor: .red)
+                    nutritionField("Saturated Fat", text: $saturatedFat, unit: "g", icon: "f.square.fill", iconColor: .green)
+                }
+
+                Section {
+                    Button(action: { showingAdditionalNutrients.toggle() }) {
+                        HStack {
+                            Text("Additional Nutrients")
+                            Spacer()
+                            Image(systemName: showingAdditionalNutrients ? "chevron.up" : "chevron.down")
+                        }
                     }
 
-                    HStack {
-                        Label("Protein", systemImage: "p.square")
-                            .foregroundColor(.red)
-                        Spacer()
-                        TextField("0", text: $protein)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 80)
-                        Text("g")
-                            .foregroundColor(.secondary)
-                    }
+                    if showingAdditionalNutrients {
+                        Group {
+                            Text("Vitamins").font(.headline)
+                            extraNutrientRow("Vitamin A", key: "vitamin_a", unit: "mcg")
+                            extraNutrientRow("Vitamin C", key: "vitamin_c", unit: "mg")
+                            extraNutrientRow("Vitamin D", key: "vitamin_d", unit: "mcg")
+                            extraNutrientRow("Vitamin E", key: "vitamin_e", unit: "mg")
+                            extraNutrientRow("Vitamin K", key: "vitamin_k", unit: "mcg")
+                            extraNutrientRow("Thiamin (B1)", key: "thiamin", unit: "mg")
+                            extraNutrientRow("Riboflavin (B2)", key: "riboflavin", unit: "mg")
+                            extraNutrientRow("Niacin (B3)", key: "niacin", unit: "mg")
+                            extraNutrientRow("Vitamin B6", key: "vitamin_b6", unit: "mg")
+                            extraNutrientRow("Folate", key: "folate", unit: "mcg")
+                        }
 
-                    HStack {
-                        Label("Carbs", systemImage: "c.square")
-                            .foregroundColor(.blue)
-                        Spacer()
-                        TextField("0", text: $carbs)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 80)
-                        Text("g")
-                            .foregroundColor(.secondary)
-                    }
+                        Group {
+                            extraNutrientRow("Vitamin B12", key: "vitamin_b12", unit: "mcg")
+                            extraNutrientRow("Biotin", key: "biotin", unit: "mcg")
+                            extraNutrientRow("Pantothenic Acid", key: "pantothenic_acid", unit: "mg")
+                        }
 
-                    HStack {
-                        Label("Fat", systemImage: "f.square")
-                            .foregroundColor(.green)
-                        Spacer()
-                        TextField("0", text: $fat)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 80)
-                        Text("g")
-                            .foregroundColor(.secondary)
+                        Group {
+                            Text("Minerals").font(.headline)
+                            extraNutrientRow("Calcium", key: "calcium", unit: "mg")
+                            extraNutrientRow("Iron", key: "iron", unit: "mg")
+                            extraNutrientRow("Magnesium", key: "magnesium", unit: "mg")
+                            extraNutrientRow("Phosphorus", key: "phosphorus", unit: "mg")
+                            extraNutrientRow("Potassium", key: "potassium", unit: "mg")
+                            extraNutrientRow("Zinc", key: "zinc", unit: "mg")
+                            extraNutrientRow("Copper", key: "copper", unit: "mg")
+                            extraNutrientRow("Manganese", key: "manganese", unit: "mg")
+                            extraNutrientRow("Selenium", key: "selenium", unit: "mcg")
+                        }
                     }
                 }
             }
@@ -880,17 +1020,64 @@ struct ManualFoodEntrySheet: View {
 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        let caloriesValue = Double(calories) ?? 0
-                        let proteinValue = Double(protein) ?? 0
-                        let carbsValue = Double(carbs) ?? 0
-                        let fatValue = Double(fat) ?? 0
-
-                        onSave(name, caloriesValue, proteinValue, carbsValue, fatValue)
+                        let payload = ManualFoodEntryPayload(
+                            name: name,
+                            calories: Double(calories) ?? 0,
+                            protein: Double(protein) ?? 0,
+                            carbs: Double(carbs) ?? 0,
+                            fat: Double(fat) ?? 0,
+                            fiber: Double(fiber) ?? 0,
+                            sugar: Double(sugar) ?? 0,
+                            sodium: Double(sodium) ?? 0,
+                            cholesterol: Double(cholesterol) ?? 0,
+                            saturatedFat: Double(saturatedFat) ?? 0,
+                            additionalNutrients: additionalNutrients.filter { $0.value > 0 },
+                            servingSize: servingSize,
+                            servingUnit: servingUnit
+                        )
+                        onSave(payload)
                         dismiss()
                     }
                     .disabled(!isValid)
                 }
             }
         }
+    }
+
+    @ViewBuilder
+    private func nutritionField(_ label: String, text: Binding<String>, unit: String, icon: String, iconColor: Color) -> some View {
+        HStack {
+            Label(label, systemImage: icon)
+                .foregroundColor(iconColor)
+            Spacer()
+            TextField("0", text: text)
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+                .frame(width: 80)
+            Text(unit)
+                .foregroundColor(.secondary)
+        }
+    }
+
+    @ViewBuilder
+    private func extraNutrientRow(_ label: String, key: String, unit: String) -> some View {
+        HStack {
+            Text(label)
+            Spacer()
+            TextField("0", value: extraBinding(for: key), format: .number)
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 80)
+                .keyboardType(.decimalPad)
+            Text(unit)
+                .foregroundColor(.secondary)
+                .frame(width: 40, alignment: .leading)
+        }
+    }
+
+    private func extraBinding(for key: String) -> Binding<Double> {
+        Binding<Double>(
+            get: { additionalNutrients[key] ?? 0 },
+            set: { additionalNutrients[key] = $0 }
+        )
     }
 }

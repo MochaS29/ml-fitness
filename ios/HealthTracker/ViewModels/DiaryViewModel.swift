@@ -26,7 +26,7 @@ class DiaryViewModel: ObservableObject {
             : Double(AppConstants.Defaults.dailyCalorieGoal)
         dailySummary.proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0
             ? Double(defaults.integer(forKey: "proteinGoal"))
-            : 50
+            : Double(AppConstants.Defaults.dailyProteinGrams)
     }
 
     /// Asks HealthKit for the day's active energy burned and uses it if it exceeds
@@ -118,6 +118,17 @@ class DiaryViewModel: ObservableObject {
                 for (key, value) in nutrients {
                     totals[key, default: 0] += value
                 }
+            }
+        }
+        return totals
+    }
+
+    func foodAdditionalNutrients(from foodEntries: FetchedResults<FoodEntry>) -> [String: Double] {
+        var totals: [String: Double] = [:]
+        for entry in foodEntries {
+            guard let extras = entry.additionalNutrients else { continue }
+            for (key, value) in extras {
+                totals[key, default: 0] += value
             }
         }
         return totals

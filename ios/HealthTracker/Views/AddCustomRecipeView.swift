@@ -26,6 +26,10 @@ struct AddCustomRecipeView: View {
         fiber: 0, sugar: 0, sodium: 0
     )
     
+    // Additional nutrients (manually entered at recipe level — vitamins, minerals)
+    @State private var showingAdditionalNutrients = false
+    @State private var additionalNutrients: [String: Double] = [:]
+
     // Tags
     @State private var tags: [String] = []
     @State private var currentTag = ""
@@ -86,6 +90,7 @@ struct AddCustomRecipeView: View {
             instructionsSection
             tagsSection
             nutritionSection
+            additionalNutrientsSection
         }
     }
     
@@ -259,7 +264,78 @@ struct AddCustomRecipeView: View {
                 .foregroundColor(.secondary)
         }
     }
-    
+
+    private var additionalNutrientsSection: some View {
+        Section {
+            Button(action: { showingAdditionalNutrients.toggle() }) {
+                HStack {
+                    Text("Additional Nutrients")
+                    Spacer()
+                    Image(systemName: showingAdditionalNutrients ? "chevron.up" : "chevron.down")
+                }
+            }
+
+            if showingAdditionalNutrients {
+                Group {
+                    Text("Vitamins").font(.headline)
+                    extraNutrientRow("Vitamin A", key: "vitamin_a", unit: "mcg")
+                    extraNutrientRow("Vitamin C", key: "vitamin_c", unit: "mg")
+                    extraNutrientRow("Vitamin D", key: "vitamin_d", unit: "mcg")
+                    extraNutrientRow("Vitamin E", key: "vitamin_e", unit: "mg")
+                    extraNutrientRow("Vitamin K", key: "vitamin_k", unit: "mcg")
+                    extraNutrientRow("Thiamin (B1)", key: "thiamin", unit: "mg")
+                    extraNutrientRow("Riboflavin (B2)", key: "riboflavin", unit: "mg")
+                    extraNutrientRow("Niacin (B3)", key: "niacin", unit: "mg")
+                    extraNutrientRow("Vitamin B6", key: "vitamin_b6", unit: "mg")
+                    extraNutrientRow("Folate", key: "folate", unit: "mcg")
+                }
+
+                Group {
+                    extraNutrientRow("Vitamin B12", key: "vitamin_b12", unit: "mcg")
+                    extraNutrientRow("Biotin", key: "biotin", unit: "mcg")
+                    extraNutrientRow("Pantothenic Acid", key: "pantothenic_acid", unit: "mg")
+                }
+
+                Group {
+                    Text("Minerals").font(.headline)
+                    extraNutrientRow("Calcium", key: "calcium", unit: "mg")
+                    extraNutrientRow("Iron", key: "iron", unit: "mg")
+                    extraNutrientRow("Magnesium", key: "magnesium", unit: "mg")
+                    extraNutrientRow("Phosphorus", key: "phosphorus", unit: "mg")
+                    extraNutrientRow("Potassium", key: "potassium", unit: "mg")
+                    extraNutrientRow("Zinc", key: "zinc", unit: "mg")
+                    extraNutrientRow("Copper", key: "copper", unit: "mg")
+                    extraNutrientRow("Manganese", key: "manganese", unit: "mg")
+                    extraNutrientRow("Selenium", key: "selenium", unit: "mcg")
+                }
+            }
+        } footer: {
+            Text("Per serving. Add what you know — leave the rest blank.")
+        }
+    }
+
+    @ViewBuilder
+    private func extraNutrientRow(_ label: String, key: String, unit: String) -> some View {
+        HStack {
+            Text(label)
+            Spacer()
+            TextField("0", value: extraBinding(for: key), format: .number)
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 80)
+                .keyboardType(.decimalPad)
+            Text(unit)
+                .foregroundColor(.secondary)
+                .frame(width: 40, alignment: .leading)
+        }
+    }
+
+    private func extraBinding(for key: String) -> Binding<Double> {
+        Binding<Double>(
+            get: { additionalNutrients[key] ?? 0 },
+            set: { additionalNutrients[key] = $0 }
+        )
+    }
+
     func deleteIngredient(at offsets: IndexSet) {
         ingredients.remove(atOffsets: offsets)
         calculateNutrition()
@@ -329,6 +405,10 @@ struct AddCustomRecipeView: View {
         customRecipe.fiber = calculatedNutrition.fiber ?? 0
         customRecipe.sugar = calculatedNutrition.sugar ?? 0
         customRecipe.sodium = calculatedNutrition.sodium ?? 0
+        let extras = additionalNutrients.filter { $0.value > 0 }
+        if !extras.isEmpty {
+            customRecipe.additionalNutrients = extras
+        }
         customRecipe.isUserCreated = true
         customRecipe.createdDate = Date()
         customRecipe.source = "User"

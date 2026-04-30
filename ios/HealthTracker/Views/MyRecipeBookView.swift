@@ -829,15 +829,7 @@ struct CustomRecipeDetailView: View {
                 IngredientModel(name: $0, amount: 1, unit: .piece, category: .other)
             },
             instructions: customRecipe.instructions ?? [],
-            nutrition: NutritionInfo(
-                calories: customRecipe.calories,
-                protein: customRecipe.protein,
-                carbs: customRecipe.carbs,
-                fat: customRecipe.fat,
-                fiber: customRecipe.fiber,
-                sugar: customRecipe.sugar,
-                sodium: customRecipe.sodium
-            ),
+            nutrition: NutritionInfo.fromCustomRecipe(customRecipe),
             source: customRecipe.source,
             tags: customRecipe.tags ?? [],
             isFavorite: customRecipe.isFavorite
