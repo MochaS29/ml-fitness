@@ -18,6 +18,7 @@ class DashboardViewModel: ObservableObject {
     @Published var dailyStepGoal: Int = UserDefaults.standard.integer(forKey: "dailyStepGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyStepGoal") : AppConstants.Defaults.dailyStepGoal
     @Published var dailyCalorieGoal: Int = UserDefaults.standard.integer(forKey: "dailyCalorieGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyCalorieGoal") : AppConstants.Defaults.dailyCalorieGoal
     @Published var dailyWaterGoal: Int = UserDefaults.standard.integer(forKey: "dailyWaterGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyWaterGoal") : AppConstants.Defaults.dailyWaterGlasses
+    @Published var dailyExerciseGoal: Int = UserDefaults.standard.integer(forKey: "dailyExerciseGoal") > 0 ? UserDefaults.standard.integer(forKey: "dailyExerciseGoal") : AppConstants.Defaults.dailyExerciseMinutes
     @Published var weightGoal: Double = UserDefaults.standard.double(forKey: "weightGoal")
 
     init() {
@@ -30,6 +31,7 @@ class DashboardViewModel: ObservableObject {
         loadTodayWaterIntake()
         loadTodayExerciseData()
         loadTodayCalories()
+        recomputeTrends()
         // Score is recalculated inside each load's async completion block
 
         // Listen for UserDefaults changes to refresh goals
@@ -72,6 +74,7 @@ class DashboardViewModel: ObservableObject {
         loadTodayCalories()
         loadLatestWeight()  // Reload weight when data changes
         calculateHealthScore()
+        recomputeTrends()
     }
 
     private func calculateHealthScore() {
@@ -88,9 +91,9 @@ class DashboardViewModel: ObservableObject {
             print("Step score: \(stepScore)")
         }
 
-        // Exercise score (0-100, 30 min = 100%)
-        if todayExercise > 0 {
-            let exerciseScore = min(Double(todayExercise) / 30.0 * 100, 100)
+        // Exercise score (0-100 based on goal)
+        if dailyExerciseGoal > 0 && todayExercise > 0 {
+            let exerciseScore = min(Double(todayExercise) / Double(dailyExerciseGoal) * 100, 100)
             score += exerciseScore
             componentsCount += 1
         }
@@ -291,6 +294,11 @@ class DashboardViewModel: ObservableObject {
                 self.waterGoal = newWaterGoal
             } else {
                 self.waterGoal = self.dailyWaterGoal
+            }
+
+            let newExerciseGoal = UserDefaults.standard.integer(forKey: "dailyExerciseGoal")
+            if newExerciseGoal > 0 {
+                self.dailyExerciseGoal = newExerciseGoal
             }
 
             if newWeightGoal > 0 {
@@ -502,15 +510,19 @@ class DashboardViewModel: ObservableObject {
         Int((Double(todayWater) / Double(waterGoal)) * 100)
     }
     
-    // Trends
-    var calorieTrend: MetricCardWithTrend.Trend = .up
-    var calorieTrendPercent = 8
-    var stepsTrend: MetricCardWithTrend.Trend = .up
-    var stepsTrendPercent = 15
-    var weightTrend: MetricCardWithTrend.Trend = .down
-    var weightTrendPercent = -2  // Lost 2% this week
-    var waterTrend: MetricCardWithTrend.Trend = .neutral
-    var waterTrendPercent = 0
+    // Trends — computed by recomputeTrends() from real CoreData/HealthKit data.
+    // Window adapts to tenure: <4 weeks = 7d vs prior 7d; <1y = 30d vs prior 30d; ≥1y = 365d vs prior 365d.
+    @Published var trendWindowLabel: String = "vs last week"
+    @Published var calorieTrend: MetricCardWithTrend.Trend = .neutral
+    @Published var calorieTrendPercent = 0
+    @Published var stepsTrend: MetricCardWithTrend.Trend = .neutral
+    @Published var stepsTrendPercent = 0
+    @Published var weightTrend: MetricCardWithTrend.Trend = .neutral
+    @Published var weightTrendPercent = 0
+    @Published var waterTrend: MetricCardWithTrend.Trend = .neutral
+    @Published var waterTrendPercent = 0
+    @Published var exerciseTrend: MetricCardWithTrend.Trend = .neutral
+    @Published var exerciseTrendPercent = 0
 
     // Sparkline Data (last 7 days)
     // TODO: Replace with real historical data
@@ -814,8 +826,13 @@ class DashboardViewModel: ObservableObject {
             }
         }
 
-        // Add vitamins and minerals from supplements
+        // Combined vitamins and minerals: food (additionalNutrients) + supplements
         let supplementNutrients = getTodaySupplementNutrients()
+        let foodNutrients = getTodayFoodAdditionalNutrients()
+        var combinedNutrients = supplementNutrients
+        for (key, value) in foodNutrients {
+            combinedNutrients[key, default: 0] += value
+        }
 
         // Common vitamins with their RDAs
         let vitaminRDAs: [(id: String, name: String, rda: Double, unit: String, color: Color)] = [
@@ -846,7 +863,7 @@ class DashboardViewModel: ObservableObject {
 
         // Add vitamins to breakdown
         for vitamin in vitaminRDAs {
-            if let amount = supplementNutrients[vitamin.id], amount > 0 {
+            if let amount = combinedNutrients[vitamin.id], amount > 0 {
                 let percentage = (amount / vitamin.rda) * 100
                 nutrients.append(NutrientBreakdown(
                     name: vitamin.name,
@@ -860,7 +877,7 @@ class DashboardViewModel: ObservableObject {
 
         // Add minerals to breakdown
         for mineral in mineralRDAs {
-            if let amount = supplementNutrients[mineral.id], amount > 0 {
+            if let amount = combinedNutrients[mineral.id], amount > 0 {
                 let percentage = (amount / mineral.rda) * 100
                 nutrients.append(NutrientBreakdown(
                     name: mineral.name,
@@ -895,6 +912,27 @@ class DashboardViewModel: ObservableObject {
             }
         } catch {
             print("Error fetching supplement entries: \(error)")
+        }
+
+        return totalNutrients
+    }
+
+    private func getTodayFoodAdditionalNutrients() -> [String: Double] {
+        var totalNutrients: [String: Double] = [:]
+
+        let request = NSFetchRequest<FoodEntry>(entityName: "FoodEntry")
+        request.predicate = .forDay()
+
+        do {
+            let entries = try viewContext.fetch(request)
+            for entry in entries {
+                guard let extras = entry.additionalNutrients else { continue }
+                for (key, value) in extras {
+                    totalNutrients[key, default: 0] += value
+                }
+            }
+        } catch {
+            print("Error fetching food entries: \(error)")
         }
 
         return totalNutrients
@@ -1067,6 +1105,153 @@ class DashboardViewModel: ObservableObject {
             return (currentWeight - 3)...(currentWeight + 3)
         case .month:
             return (currentWeight - 5)...(currentWeight + 5)
+        }
+    }
+
+    // MARK: - Real Trend Computation
+
+    private enum TrendWindow {
+        case week, month, year
+        var days: Int {
+            switch self {
+            case .week: return 7
+            case .month: return 30
+            case .year: return 365
+            }
+        }
+        var label: String {
+            switch self {
+            case .week: return "vs last week"
+            case .month: return "vs last month"
+            case .year: return "vs last year"
+            }
+        }
+    }
+
+    /// Earliest user-logged date across food/water/exercise/weight. Nil if no data.
+    private func earliestEntryDate() -> Date? {
+        var earliest: Date?
+        let entities: [(String, String)] = [
+            ("FoodEntry", "timestamp"),
+            ("WaterEntry", "timestamp"),
+            ("ExerciseEntry", "timestamp"),
+            ("WeightEntry", "timestamp")
+        ]
+        for (entity, key) in entities {
+            let r = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+            r.sortDescriptors = [NSSortDescriptor(key: key, ascending: true)]
+            r.fetchLimit = 1
+            r.resultType = .managedObjectResultType
+            if let results = try? viewContext.fetch(r) as? [NSManagedObject],
+               let first = results.first,
+               let date = first.value(forKey: key) as? Date {
+                if earliest == nil || date < earliest! { earliest = date }
+            }
+        }
+        return earliest
+    }
+
+    private func selectTrendWindow() -> TrendWindow {
+        guard let earliest = earliestEntryDate() else { return .week }
+        let days = Calendar.current.dateComponents([.day], from: earliest, to: Date()).day ?? 0
+        if days < 28 { return .week }
+        if days < 365 { return .month }
+        return .year
+    }
+
+    /// Sum of a Double key from a Core Data entity within [start, end).
+    private func sumDouble(entity: String, key: String, from start: Date, to end: Date) -> Double {
+        let r = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+        r.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", start as NSDate, end as NSDate)
+        r.resultType = .dictionaryResultType
+        let exp = NSExpressionDescription()
+        exp.name = "total"
+        exp.expression = NSExpression(forFunction: "sum:", arguments: [NSExpression(forKeyPath: key)])
+        exp.expressionResultType = .doubleAttributeType
+        r.propertiesToFetch = [exp]
+        guard let results = try? viewContext.fetch(r) as? [[String: Any]],
+              let total = results.first?["total"] as? Double else { return 0 }
+        return total
+    }
+
+    /// Latest weight in [start, end), or nil if none.
+    private func latestWeight(from start: Date, to end: Date) -> Double? {
+        let r: NSFetchRequest<WeightEntry> = WeightEntry.fetchRequest()
+        r.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", start as NSDate, end as NSDate)
+        r.sortDescriptors = [NSSortDescriptor(keyPath: \WeightEntry.timestamp, ascending: false)]
+        r.fetchLimit = 1
+        return (try? viewContext.fetch(r))?.first?.weight
+    }
+
+    private func percentChange(current: Double, prior: Double) -> Int {
+        if prior == 0 {
+            if current == 0 { return 0 }
+            return 100  // up from nothing
+        }
+        return Int(((current - prior) / prior * 100).rounded())
+    }
+
+    private func trendDirection(_ percent: Int) -> MetricCardWithTrend.Trend {
+        if percent > 1 { return .up }
+        if percent < -1 { return .down }
+        return .neutral
+    }
+
+    /// Compute all trend percentages from real data. Call after any data change.
+    func recomputeTrends() {
+        let window = selectTrendWindow()
+        let now = Date()
+        let cal = Calendar.current
+        guard let currentStart = cal.date(byAdding: .day, value: -window.days, to: now),
+              let priorStart = cal.date(byAdding: .day, value: -2 * window.days, to: now) else { return }
+
+        // Calories: sum FoodEntry.calories
+        let calNow = sumDouble(entity: "FoodEntry", key: "calories", from: currentStart, to: now)
+        let calPrior = sumDouble(entity: "FoodEntry", key: "calories", from: priorStart, to: currentStart)
+        let calPct = percentChange(current: calNow, prior: calPrior)
+
+        // Water: sum WaterEntry.amount (oz)
+        let watNow = sumDouble(entity: "WaterEntry", key: "amount", from: currentStart, to: now)
+        let watPrior = sumDouble(entity: "WaterEntry", key: "amount", from: priorStart, to: currentStart)
+        let watPct = percentChange(current: watNow, prior: watPrior)
+
+        // Exercise: sum ExerciseEntry.duration (min)
+        let exNow = sumDouble(entity: "ExerciseEntry", key: "duration", from: currentStart, to: now)
+        let exPrior = sumDouble(entity: "ExerciseEntry", key: "duration", from: priorStart, to: currentStart)
+        let exPct = percentChange(current: exNow, prior: exPrior)
+
+        // Weight: latest in current window vs latest in prior window
+        let weightNow = latestWeight(from: currentStart, to: now) ?? currentWeight
+        let weightPrior = latestWeight(from: priorStart, to: currentStart)
+        let weightPct: Int
+        if let p = weightPrior, p > 0, weightNow > 0 {
+            weightPct = percentChange(current: weightNow, prior: p)
+        } else {
+            weightPct = 0
+        }
+
+        // Steps: HealthKit (async — apply when ready)
+        HealthKitManager.shared.fetchSteps(from: currentStart, to: now) { [weak self] currentSteps in
+            HealthKitManager.shared.fetchSteps(from: priorStart, to: currentStart) { priorSteps in
+                let stepPct = self?.percentChange(current: currentSteps, prior: priorSteps) ?? 0
+                DispatchQueue.main.async {
+                    self?.stepsTrendPercent = stepPct
+                    self?.stepsTrend = self?.trendDirection(stepPct) ?? .neutral
+                }
+            }
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.trendWindowLabel = window.label
+            self.calorieTrendPercent = calPct
+            self.calorieTrend = self.trendDirection(calPct)
+            self.waterTrendPercent = watPct
+            self.waterTrend = self.trendDirection(watPct)
+            self.exerciseTrendPercent = exPct
+            self.exerciseTrend = self.trendDirection(exPct)
+            self.weightTrendPercent = weightPct
+            self.weightTrend = self.trendDirection(weightPct)
         }
     }
 }
