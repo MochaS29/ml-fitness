@@ -144,7 +144,7 @@ struct DiaryView: View {
                 ExerciseEntrySheet()
             }
             .sheet(isPresented: $showingWaterEntry) {
-                WaterEntrySheet()
+                WaterTrackingView()
             }
             .sheet(isPresented: $showingSupplementEntry) {
                 ManualSupplementEntryView(targetDate: selectedDate)
@@ -157,6 +157,13 @@ struct DiaryView: View {
             }
             .onChange(of: selectedDate) {
                 updateFetchRequests()
+                updateDailySummary()
+            }
+            // Recompute summary when entries are added/removed from any source
+            // (e.g. QuickAddMenu, Meal Scanner, EditFoodEntrySheet servings change).
+            .onChange(of: foodEntries.count) { updateDailySummary() }
+            .onChange(of: exerciseEntries.count) { updateDailySummary() }
+            .onReceive(NotificationCenter.default.publisher(for: .NSManagedObjectContextDidSave)) { _ in
                 updateDailySummary()
             }
             .onAppear {
@@ -460,12 +467,11 @@ struct DiaryView: View {
     // MARK: - Diary Nutrition Analytics
 
     private var diaryNutritionSection: some View {
-        let defaults = UserDefaults.standard
-        let calorieGoal = Double(defaults.integer(forKey: "calorieGoal")) > 0
-            ? Double(defaults.integer(forKey: "calorieGoal")) : Double(AppConstants.Defaults.dailyCalorieGoal)
-        let proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0
-            ? Double(defaults.integer(forKey: "proteinGoal")) : 50.0
+        let calorieGoal = viewModel.dailySummary.calorieGoal
+        let proteinGoal = viewModel.dailySummary.proteinGoal
         let suppNutrients = viewModel.supplementNutrients(from: supplementEntries)
+        let foodNutrients = viewModel.foodAdditionalNutrients(from: foodEntries)
+        let combinedNutrients = foodNutrients + suppNutrients
 
         return VStack(alignment: .leading, spacing: 0) {
             // Header
@@ -521,12 +527,12 @@ struct DiaryView: View {
                         }
                         .background(Color(UIColor.secondarySystemGroupedBackground))
 
-                        // Supplement nutrients (only shown when supplements are logged)
-                        if !suppNutrients.isEmpty {
+                        // Vitamins & minerals — combined food + supplement totals
+                        if !combinedNutrients.isEmpty {
                             Divider().padding(.leading)
 
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("From Supplements")
+                                Text("Vitamins & Minerals")
                                     .font(.caption)
                                     .fontWeight(.semibold)
                                     .foregroundColor(.secondary)
@@ -548,7 +554,7 @@ struct DiaryView: View {
                                 ]
 
                                 ForEach(vitaminRDAs, id: \.id) { vit in
-                                    if let amount = suppNutrients[vit.id], amount > 0 {
+                                    if let amount = combinedNutrients[vit.id], amount > 0 {
                                         DiaryNutrientRow(
                                             name: vit.name,
                                             value: amount,
@@ -700,6 +706,7 @@ struct FoodEntryRow: View {
     let entry: FoodEntry
     var onDelete: (() -> Void)? = nil
     @State private var selectedRecipe: RecipeModel?
+    @State private var showingEdit = false
 
     var body: some View {
         HStack {
@@ -739,9 +746,20 @@ struct FoodEntryRow: View {
         .padding(.vertical, 12)
         .contentShape(Rectangle())
         .onTapGesture {
-            if let name = entry.name, let recipe = findRecipe(named: name) {
-                selectedRecipe = recipe
-            }
+            showingEdit = true
+        }
+        .sheet(isPresented: $showingEdit) {
+            EditFoodEntrySheet(
+                entry: entry,
+                onViewRecipe: {
+                    if let name = entry.name, let recipe = findRecipe(named: name) {
+                        showingEdit = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                            selectedRecipe = recipe
+                        }
+                    }
+                }
+            )
         }
         .sheet(item: $selectedRecipe) { recipe in
             ProfessionalRecipeDetailView(recipe: recipe)
@@ -785,6 +803,232 @@ struct FoodEntryRow: View {
             }
         }
         return nil
+    }
+}
+
+// MARK: - Edit Food Entry Sheet
+
+struct EditFoodEntrySheet: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
+
+    @ObservedObject var entry: FoodEntry
+    var onViewRecipe: (() -> Void)? = nil
+
+    @ObservedObject private var favourites = FavouriteFoodsManager.shared
+
+    @State private var servings: Double = 1.0
+    @State private var mealType: MealType = .breakfast
+    @State private var originalServings: Double = 1.0
+
+    /// Per-1-serving FoodItem snapshot for favourites (so it round-trips back to search later).
+    private var asFoodItem: FoodItem {
+        FoodItem(
+            name: entry.name ?? "Unknown",
+            brand: entry.brand,
+            category: .other,
+            servingSize: entry.servingSize ?? "1",
+            servingUnit: entry.servingUnit ?? "serving",
+            calories: basePerServing.calories,
+            protein: basePerServing.protein,
+            carbs: basePerServing.carbs,
+            fat: basePerServing.fat,
+            fiber: basePerServing.fiber,
+            sugar: basePerServing.sugar,
+            sodium: basePerServing.sodium,
+            cholesterol: nil, saturatedFat: nil, barcode: entry.barcode, isCommon: false
+        )
+    }
+
+    /// Per-1-serving macros, captured on appear so re-scaling stays accurate even after multiple edits.
+    @State private var basePerServing = (
+        calories: 0.0, protein: 0.0, carbs: 0.0, fat: 0.0,
+        fiber: 0.0, sugar: 0.0, sodium: 0.0
+    )
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section("Item") {
+                    Text(entry.name ?? "Unknown Food")
+                        .font(.headline)
+                    if let brand = entry.brand {
+                        Text(brand)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                Section("Servings") {
+                    HStack {
+                        Text("Servings")
+                        Spacer()
+                        Stepper(value: $servings, in: 0.25...20, step: 0.25) {
+                            Text(servingDisplay)
+                                .frame(minWidth: 60, alignment: .trailing)
+                        }
+                    }
+                    if let unit = entry.servingUnit {
+                        Text("Per serving: \(entry.servingSize ?? "1") \(unit)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                Section("Meal") {
+                    Picker("Meal Type", selection: $mealType) {
+                        ForEach(MealType.allCases, id: \.self) { type in
+                            Text(type.rawValue).tag(type)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+
+                Section("Nutrition (preview)") {
+                    macroRow("Calories", value: basePerServing.calories * servings, unit: "cal")
+                    macroRow("Protein", value: basePerServing.protein * servings, unit: "g")
+                    macroRow("Carbs", value: basePerServing.carbs * servings, unit: "g")
+                    macroRow("Fat", value: basePerServing.fat * servings, unit: "g")
+                }
+
+                if let extras = scaledExtras(), !extras.isEmpty {
+                    Section("Vitamins & Minerals") {
+                        ForEach(extras, id: \.label) { row in
+                            macroRow(row.label, value: row.value, unit: row.unit)
+                        }
+                    }
+                }
+
+                if onViewRecipe != nil {
+                    Section {
+                        Button(action: { onViewRecipe?() }) {
+                            Label("View Recipe Details", systemImage: "book")
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Edit Entry")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    HStack(spacing: 16) {
+                        Button(action: { favourites.toggle(asFoodItem) }) {
+                            let isFav = favourites.isFavourite(asFoodItem)
+                            Image(systemName: isFav ? "star.fill" : "star")
+                                .foregroundColor(isFav ? .yellow : .secondary)
+                        }
+                        .accessibilityLabel("Favourite")
+                        Button("Save") { save() }
+                            .fontWeight(.semibold)
+                    }
+                }
+            }
+            .onAppear { loadInitialState() }
+        }
+    }
+
+    private var servingDisplay: String {
+        servings == servings.rounded() ? "\(Int(servings))" : String(format: "%.2f", servings)
+    }
+
+    private func macroRow(_ label: String, value: Double, unit: String) -> some View {
+        HStack {
+            Text(label)
+            Spacer()
+            Text("\(Int(value.rounded())) \(unit)")
+                .foregroundColor(.secondary)
+        }
+    }
+
+    private struct ExtraNutrientRow {
+        let label: String
+        let value: Double
+        let unit: String
+    }
+
+    private func scaledExtras() -> [ExtraNutrientRow]? {
+        let count = entry.servingCount > 0 ? entry.servingCount : 1.0
+        let scale = servings / count
+        var rows: [ExtraNutrientRow] = []
+
+        if entry.cholesterol > 0 {
+            rows.append(.init(label: "Cholesterol", value: entry.cholesterol * scale, unit: "mg"))
+        }
+        if entry.saturatedFat > 0 {
+            rows.append(.init(label: "Saturated Fat", value: entry.saturatedFat * scale, unit: "g"))
+        }
+
+        if let extras = entry.additionalNutrients {
+            let order: [(key: String, label: String, unit: String)] = [
+                ("vitamin_a", "Vitamin A", "mcg"),
+                ("vitamin_c", "Vitamin C", "mg"),
+                ("vitamin_d", "Vitamin D", "mcg"),
+                ("vitamin_e", "Vitamin E", "mg"),
+                ("vitamin_k", "Vitamin K", "mcg"),
+                ("thiamin", "Thiamin (B1)", "mg"),
+                ("riboflavin", "Riboflavin (B2)", "mg"),
+                ("niacin", "Niacin (B3)", "mg"),
+                ("vitamin_b6", "Vitamin B6", "mg"),
+                ("folate", "Folate", "mcg"),
+                ("vitamin_b12", "Vitamin B12", "mcg"),
+                ("biotin", "Biotin", "mcg"),
+                ("pantothenic_acid", "Pantothenic Acid", "mg"),
+                ("calcium", "Calcium", "mg"),
+                ("iron", "Iron", "mg"),
+                ("magnesium", "Magnesium", "mg"),
+                ("phosphorus", "Phosphorus", "mg"),
+                ("potassium", "Potassium", "mg"),
+                ("zinc", "Zinc", "mg"),
+                ("copper", "Copper", "mg"),
+                ("manganese", "Manganese", "mg"),
+                ("selenium", "Selenium", "mcg"),
+            ]
+            for item in order {
+                if let v = extras[item.key], v > 0 {
+                    rows.append(.init(label: item.label, value: v * scale, unit: item.unit))
+                }
+            }
+        }
+        return rows
+    }
+
+    private func loadInitialState() {
+        let count = entry.servingCount > 0 ? entry.servingCount : 1.0
+        originalServings = count
+        servings = count
+        basePerServing = (
+            calories: entry.calories / count,
+            protein: entry.protein / count,
+            carbs: entry.carbs / count,
+            fat: entry.fat / count,
+            fiber: entry.fiber / count,
+            sugar: entry.sugar / count,
+            sodium: entry.sodium / count
+        )
+        mealType = MealType(rawValue: entry.mealType ?? "") ?? .defaultForCurrentTime()
+    }
+
+    private func save() {
+        entry.servingCount = servings
+        entry.calories = basePerServing.calories * servings
+        entry.protein = basePerServing.protein * servings
+        entry.carbs = basePerServing.carbs * servings
+        entry.fat = basePerServing.fat * servings
+        entry.fiber = basePerServing.fiber * servings
+        entry.sugar = basePerServing.sugar * servings
+        entry.sodium = basePerServing.sodium * servings
+        entry.mealType = mealType.rawValue
+
+        do {
+            try viewContext.save()
+            PhoneConnectivityManager.shared.sendDailyUpdate()
+            dismiss()
+        } catch {
+            print("Error saving food entry edit: \(error)")
+        }
     }
 }
 
