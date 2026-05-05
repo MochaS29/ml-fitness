@@ -19,6 +19,7 @@ then build the SQLite database in the current directory.
 
 import csv
 import io
+import json
 import os
 import re
 import sqlite3
@@ -51,8 +52,11 @@ USDA_DOWNLOADS = {
     "branded": "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_branded_food_csv_2025-12-18.zip",
 }
 
-# Nutrient IDs from USDA (used in food_nutrient.csv)
+# Nutrient IDs from USDA (used in food_nutrient.csv).
+# Values map to either a column on `foods` (macros) or a key in the
+# `additionalNutrients` JSON column (vitamins/minerals).
 NUTRIENT_IDS = {
+    # Macros — stored as columns
     1008: "calories",       # Energy (kcal)
     1003: "protein",        # Protein (g)
     1005: "carbs",          # Carbohydrate, by difference (g)
@@ -63,6 +67,42 @@ NUTRIENT_IDS = {
     1093: "sodium",         # Sodium, Na (mg)
     1253: "cholesterol",    # Cholesterol (mg)
     1258: "saturatedFat",   # Fatty acids, total saturated (g)
+
+    # Vitamins — stored as JSON keys (must match AddCustomFoodView /
+    # NutritionInfo+Foods key convention).
+    1106: "vitamin_a",      # Vitamin A, RAE (mcg)
+    1162: "vitamin_c",      # Vitamin C, total ascorbic acid (mg)
+    1114: "vitamin_d",      # Vitamin D (D2 + D3) (mcg)
+    1109: "vitamin_e",      # Vitamin E (alpha-tocopherol) (mg)
+    1185: "vitamin_k",      # Vitamin K (phylloquinone) (mcg)
+    1165: "thiamin",        # Thiamin (mg)
+    1166: "riboflavin",     # Riboflavin (mg)
+    1167: "niacin",         # Niacin (mg)
+    1175: "vitamin_b6",     # Vitamin B-6 (mg)
+    1177: "folate",         # Folate, total (mcg)
+    1178: "vitamin_b12",    # Vitamin B-12 (mcg)
+    1176: "biotin",         # Biotin (mcg) — may be sparse
+    1170: "pantothenic_acid",  # Pantothenic acid (mg) — may be sparse
+
+    # Minerals — stored as JSON keys
+    1087: "calcium",        # Calcium (mg)
+    1089: "iron",           # Iron (mg)
+    1090: "magnesium",      # Magnesium (mg)
+    1091: "phosphorus",     # Phosphorus (mg)
+    1092: "potassium",      # Potassium (mg)
+    1095: "zinc",           # Zinc (mg)
+    1098: "copper",         # Copper (mg)
+    1101: "manganese",      # Manganese (mg)
+    1103: "selenium",       # Selenium (mcg)
+}
+
+# Keys that go into additionalNutrients JSON (everything except macros).
+ADDITIONAL_NUTRIENT_KEYS = {
+    "vitamin_a", "vitamin_c", "vitamin_d", "vitamin_e", "vitamin_k",
+    "thiamin", "riboflavin", "niacin", "vitamin_b6", "folate", "vitamin_b12",
+    "biotin", "pantothenic_acid",
+    "calcium", "iron", "magnesium", "phosphorus", "potassium", "zinc",
+    "copper", "manganese", "selenium",
 }
 
 # Top brand owners to include from Branded Foods
@@ -175,6 +215,14 @@ def is_common_food(name: str) -> bool:
         if term in name_lower:
             return True
     return False
+
+
+def extras_json(nutr: dict) -> Optional[str]:
+    """Serialise vitamin/mineral keys (>0) from a nutrient dict as JSON, or None."""
+    extras = {k: v for k, v in nutr.items() if k in ADDITIONAL_NUTRIENT_KEYS and v and v > 0}
+    if not extras:
+        return None
+    return json.dumps(extras, separators=(",", ":"))
 
 
 def is_top_brand(brand_owner: str) -> bool:
@@ -415,6 +463,7 @@ def process_foundation_and_legacy(data_type: str, base_dir: Path) -> list:
                     "sodium": nutr.get("sodium", 0),
                     "cholesterol": nutr.get("cholesterol"),
                     "saturatedFat": nutr.get("saturatedFat"),
+                    "additionalNutrients": extras_json(nutr),
                     "dataType": data_type,
                     "isCommon": is_common_food(name),
                 })
@@ -516,6 +565,7 @@ def process_branded(base_dir: Path) -> list:
                     "sodium": nutr.get("sodium", 0),
                     "cholesterol": nutr.get("cholesterol"),
                     "saturatedFat": nutr.get("saturatedFat"),
+                    "additionalNutrients": extras_json(nutr),
                     "dataType": "branded",
                     "isCommon": is_common_food(name),
                 })
@@ -536,7 +586,10 @@ def build_database(all_foods: list):
     conn = sqlite3.connect(str(OUTPUT_DB))
     cursor = conn.cursor()
 
-    # Create main foods table
+    # Create main foods table.
+    # `additionalNutrients` is a JSON string of {"vitamin_a": 90, "calcium": 12, ...}
+    # matching the iOS additionalNutrients dict pattern. Keeps schema stable as
+    # we add nutrients without column migrations.
     cursor.execute("""
         CREATE TABLE foods (
             fdcId INTEGER PRIMARY KEY,
@@ -554,6 +607,7 @@ def build_database(all_foods: list):
             sodium REAL,
             cholesterol REAL,
             saturatedFat REAL,
+            additionalNutrients TEXT,
             dataType TEXT NOT NULL,
             isCommon INTEGER NOT NULL DEFAULT 0
         )
@@ -564,8 +618,8 @@ def build_database(all_foods: list):
         INSERT OR IGNORE INTO foods
         (fdcId, name, brand, category, servingSize, servingUnit,
          calories, protein, carbs, fat, fiber, sugar, sodium,
-         cholesterol, saturatedFat, dataType, isCommon)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         cholesterol, saturatedFat, additionalNutrients, dataType, isCommon)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
 
     rows = []
@@ -586,6 +640,7 @@ def build_database(all_foods: list):
             food["sodium"],
             food["cholesterol"],
             food["saturatedFat"],
+            food.get("additionalNutrients"),
             food["dataType"],
             1 if food["isCommon"] else 0,
         ))

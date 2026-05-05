@@ -62,7 +62,7 @@ class LocalFoodDatabase {
         let sql = """
             SELECT f.fdcId, f.name, f.brand, f.category, f.servingSize, f.servingUnit,
                    f.calories, f.protein, f.carbs, f.fat, f.fiber, f.sugar, f.sodium,
-                   f.cholesterol, f.saturatedFat, f.isCommon
+                   f.cholesterol, f.saturatedFat, f.additionalNutrients, f.isCommon
             FROM foods f
             JOIN foods_fts fts ON f.fdcId = fts.rowid
             WHERE foods_fts MATCH ?
@@ -102,7 +102,7 @@ class LocalFoodDatabase {
         let sql = """
             SELECT fdcId, name, brand, category, servingSize, servingUnit,
                    calories, protein, carbs, fat, fiber, sugar, sodium,
-                   cholesterol, saturatedFat, isCommon
+                   cholesterol, saturatedFat, additionalNutrients, isCommon
             FROM foods
             WHERE name LIKE ? OR brand LIKE ?
             ORDER BY isCommon DESC,
@@ -140,7 +140,7 @@ class LocalFoodDatabase {
         let sql = """
             SELECT fdcId, name, brand, category, servingSize, servingUnit,
                    calories, protein, carbs, fat, fiber, sugar, sodium,
-                   cholesterol, saturatedFat, isCommon
+                   cholesterol, saturatedFat, additionalNutrients, isCommon
             FROM foods WHERE fdcId = ?
             """
 
@@ -166,7 +166,7 @@ class LocalFoodDatabase {
         let sql = """
             SELECT fdcId, name, brand, category, servingSize, servingUnit,
                    calories, protein, carbs, fat, fiber, sugar, sodium,
-                   cholesterol, saturatedFat, isCommon
+                   cholesterol, saturatedFat, additionalNutrients, isCommon
             FROM foods
             WHERE isCommon = 1
             ORDER BY name
@@ -226,7 +226,21 @@ class LocalFoodDatabase {
         let sodium: Double? = sqlite3_column_type(stmt, 12) != SQLITE_NULL ? sqlite3_column_double(stmt, 12) : nil
         let cholesterol: Double? = sqlite3_column_type(stmt, 13) != SQLITE_NULL ? sqlite3_column_double(stmt, 13) : nil
         let saturatedFat: Double? = sqlite3_column_type(stmt, 14) != SQLITE_NULL ? sqlite3_column_double(stmt, 14) : nil
-        let isCommon = sqlite3_column_int(stmt, 15) == 1
+        let extras: [String: Double]? = {
+            guard sqlite3_column_type(stmt, 15) != SQLITE_NULL,
+                  let cString = sqlite3_column_text(stmt, 15) else { return nil }
+            let json = String(cString: cString)
+            guard let data = json.data(using: .utf8),
+                  let dict = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else { return nil }
+            // USDA values are stored as Numbers (Double) in the JSON.
+            var result: [String: Double] = [:]
+            for (k, v) in dict {
+                if let d = v as? Double { result[k] = d }
+                else if let i = v as? Int { result[k] = Double(i) }
+            }
+            return result.isEmpty ? nil : result
+        }()
+        let isCommon = sqlite3_column_int(stmt, 16) == 1
 
         let category = FoodCategory(rawValue: categoryStr) ?? .other
 
@@ -246,7 +260,8 @@ class LocalFoodDatabase {
             cholesterol: cholesterol,
             saturatedFat: saturatedFat,
             barcode: nil,
-            isCommon: isCommon
+            isCommon: isCommon,
+            additionalNutrients: extras
         )
     }
 
