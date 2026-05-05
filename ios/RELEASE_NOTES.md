@@ -1,5 +1,91 @@
 # ML Fitness iOS - Release Notes 📱
 
+## Version 2.3.1 - Polish Release ✨
+**Submitted for Review:** April 28, 2026
+**Build:** 2.3.1 (12)
+**Status:** Pending Apple review
+
+A focused polish release on top of 2.3.0. Smarter defaults, more user-editable goals, real trend data, edit-from-diary, favourites everywhere, and a pile of dark-mode and accuracy fixes.
+
+---
+
+### 🎯 Editable Goals (more of them, more places they show up)
+- **NEW**: Editable Exercise minutes goal (was hardcoded 30 min)
+- **NEW**: Editable Protein grams goal (was hardcoded 50 g)
+- All six goals — Steps, Calories, Water, Exercise, Protein, Target Weight — are now set from More → Set Goals
+- Every goal is reflected directly on the Dashboard:
+  - Water card: "of N glasses goal" (was just %)
+  - Exercise card: "of N min goal" (was "0 sessions")
+  - Calorie donut center: "X / of N cal" (was just calories)
+- Health-score formula now respects your real exercise goal
+
+### 🍽️ Diary Improvements
+- **NEW**: Tap any food entry to edit servings (Stepper, 0.25 increments) and reassign meal type — macros rescale live
+- **NEW**: Add to Diary auto-selects the right meal by time of day (breakfast morning, lunch midday, dinner evening, snack otherwise)
+- **FIXED**: Top-bar Eaten/Protein totals stay in sync when food is added from any source (Quick Add, Meal Scanner, edit sheet) — no more mismatch with meal section sums
+
+### ⭐ Favourites Everywhere
+- **NEW**: Star button on barcode-scanned products
+- **NEW**: Star button in the diary edit sheet
+- All favouriting flows through the same FavouriteFoodsManager; favourites pin to the top of food search
+
+### 🔍 Smarter Search
+- **NEW**: "Your Foods" section shows up at the top of search results — items you've previously logged that match your query, ranked above generic database results, with macros from your prior entries
+- One-tap re-logging of foods you eat regularly
+
+### 📊 Real Adaptive Trends (no more placeholders)
+- Steps, Calories, Water, Exercise, and Weight cards now show real % change computed from your actual data
+- **Adaptive window** that scales with how long you've used the app:
+  - Less than 4 weeks of data → week vs prior week
+  - 4 weeks to 1 year → 30 days vs prior 30 days
+  - 1 year+ → year vs prior year
+- "Trends shown vs last week/month/year" caption tells you which window is active
+
+### 🎨 Dashboard Reorganized
+- Nutrition Distribution card moved up directly under the goal section
+- **NEW**: Calories Eaten / Goal / Left counter at the top of the Nutrition Distribution card (turns red and reads "Over" when you exceed your goal)
+- Four metric blocks (Steps, Weight, Exercise, Water) now sit below the nutrition card
+
+### 💧 Water Tracking
+- **FIXED**: Changing your water goal now propagates to the Water Intake page (was hardcoded to 8 glasses)
+- **UNIFIED**: All "Log Water" entry points (Diary +, Dashboard FAB, Add to Diary) now open the same rich Water Intake page with droplet quick-add and reminder controls
+
+### 📅 Meal Plan
+- **FIXED**: Selected meal plan and current week now persist between launches (was resetting to "No Meal Plan Selected" each time)
+
+### 🌙 Dark Mode
+- **FIXED**: Weight Tracking page now renders correctly in dark mode (cards were white-on-dark and unreadable)
+- The four core neutral colors (`softCream`, `lightGray`, `deepCharcoal`, `cardBackground`) are now adaptive across the app — fixes other views using `.cardStyle()` too
+
+### ⚖️ Weight Trend
+- **FIXED**: Default time range changed from Week to Month so chart shows data immediately
+- **FIXED**: Week / Month filters now use rolling 7-day / 30-day windows instead of "since the start of this calendar week/month" — no more empty trend on Monday mornings
+- **NEW**: Added Year option to time range picker (rolling 365-day window) — better for tracking long-term, sustainable weight loss
+
+### 📷 Meal Scanner
+- **FIXED**: "Add to Food Diary" button no longer cut off behind the home indicator on iPhones with safe-area home bars
+
+### 🔒 Privacy
+- Privacy policy expanded with detailed disclosures about our use of Apple HealthKit, the AI meal scanner, and on-device data storage.
+
+### 🎉 Celebrations
+- **FIXED**: Logging celebration only fires once per day, even across app relaunches (was re-firing every time you reopened the app and logged another meal)
+- Dedupe set now persists to UserDefaults scoped to today's date — naturally rolls over at midnight
+- New `loggedToday` master key collapses all food-logging celebrations into one fire per day
+- Weight-loss celebrations still fire once per day, every day there's a new loss
+
+---
+
+### 🔧 Technical Notes
+- New UserDefaults keys: `dailyExerciseGoal` (Int min), `proteinGoal` (Int g), `selectedMealPlanId`, `selectedMealPlanWeek`, `celebratedToday_keys`, `celebratedToday_date`
+- `MealType.defaultForCurrentTime()` helper for time-of-day meal selection
+- `FoodProduct.toFoodItem()` lets barcode results flow through the favourites system
+- `DashboardViewModel.recomputeTrends()` runs on init and every CoreData save
+- `DiaryView` now listens for `.NSManagedObjectContextDidSave` to refresh the daily summary
+- `AchievementDetector` persists daily celebration dedupe set to UserDefaults
+
+---
+
 ## Version 1.5.0 - Major Release 🎉
 **Release Date:** [Your Release Date]
 **Build:** 1.5.0 (150)
