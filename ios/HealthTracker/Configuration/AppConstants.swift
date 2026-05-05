@@ -6,6 +6,8 @@ enum AppConstants {
         static let dailyStepGoal = 8000
         static let dailyWaterGlasses = 8
         static let waterGlassOunces = 8.0
+        static let dailyExerciseMinutes = 30
+        static let dailyProteinGrams = 50
     }
     enum MET {
         // MET values used in exercise calorie estimation
