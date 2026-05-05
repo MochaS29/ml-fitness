@@ -8,7 +8,7 @@ struct AddMenuView: View {
     @AppStorage("freeMealScansUsed") private var freeMealScansUsed = 0
 
     let selectedDate: Date
-    @State private var selectedMealType: MealType = .breakfast
+    @State private var selectedMealType: MealType = .defaultForCurrentTime()
     @State private var activeSheet: ActiveSheet?
 
     private static let freeScansAllowed = 3
@@ -53,7 +53,7 @@ struct AddMenuView: View {
             case .weightEntry:
                 QuickWeightAddView(selectedDate: selectedDate)
             case .waterEntry:
-                QuickWaterAddView(selectedDate: selectedDate)
+                WaterTrackingView()
             case .mealScanner:
                 MealPhotoAnalyzerView()
             }
@@ -147,101 +147,6 @@ struct AddMenuView: View {
         }
     }
     
-}
-
-// Quick water add view
-struct QuickWaterAddView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.dismiss) private var dismiss
-    
-    let selectedDate: Date
-    @State private var waterAmount: Double = 8
-    @State private var unit: String = "oz"
-    
-    var body: some View {
-        NavigationView {
-            Form {
-                Section("Amount") {
-                    HStack {
-                        TextField("Amount", value: $waterAmount, format: .number)
-                            .keyboardType(.decimalPad)
-                        
-                        Picker("Unit", selection: $unit) {
-                            Text("oz").tag("oz")
-                            Text("ml").tag("ml")
-                            Text("cups").tag("cups")
-                            Text("liters").tag("liters")
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                    }
-                }
-                
-                Section {
-                    // Quick presets
-                    HStack(spacing: 12) {
-                        ForEach([8, 16, 20, 32], id: \.self) { amount in
-                            Button(action: {
-                                waterAmount = Double(amount)
-                                unit = "oz"
-                            }) {
-                                Text("\(amount) oz")
-                                    .font(.caption)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.blue)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.blue.opacity(0.1))
-                                    .cornerRadius(15)
-                            }
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Log Water")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        saveWaterEntry()
-                    }
-                }
-            }
-        }
-    }
-    
-    private func saveWaterEntry() {
-        let entry = WaterEntry(context: viewContext)
-        entry.id = UUID()
-        entry.amount = convertToOunces(amount: waterAmount, unit: unit)
-        entry.timestamp = selectedDate
-        entry.unit = "oz"
-        
-        do {
-            try viewContext.save()
-            dismiss()
-        } catch {
-            print("Error saving water entry: \(error)")
-        }
-    }
-    
-    private func convertToOunces(amount: Double, unit: String) -> Double {
-        switch unit {
-        case "ml":
-            return amount * 0.033814
-        case "cups":
-            return amount * 8
-        case "liters":
-            return amount * 33.814
-        default:
-            return amount
-        }
-    }
 }
 
 // Quick weight add view

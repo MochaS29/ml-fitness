@@ -8,7 +8,7 @@ struct WeightTrackingView: View {
 
     @State private var currentWeight: Double = 0
     @State private var showingAddWeight = false
-    @State private var selectedTimeRange = TimeRange.week
+    @State private var selectedTimeRange = TimeRange.month
     @State private var weightHistory: [WeightDataPoint] = []
     @State private var isHealthKitAuthorized = false
     @State private var selectedTab = 0
@@ -107,22 +107,20 @@ struct WeightTrackingView: View {
     var filteredWeights: [WeightDataPoint] {
         let calendar = Calendar.current
         let endDate = Date()
+        // Rolling window — last N days, not "since start of this calendar week".
+        // Otherwise on Monday morning the .week view shows ~1 day of data.
         let startDate: Date
-        
         switch selectedTimeRange {
         case .today:
             startDate = calendar.startOfDay(for: endDate)
         case .week:
-            // Get the start of the current week
-            let weekday = calendar.component(.weekday, from: endDate)
-            let daysToSubtract = weekday - calendar.firstWeekday
-            startDate = calendar.date(byAdding: .day, value: -daysToSubtract, to: calendar.startOfDay(for: endDate)) ?? endDate
+            startDate = calendar.date(byAdding: .day, value: -7, to: endDate) ?? endDate
         case .month:
-            // Get the start of the current month
-            let components = calendar.dateComponents([.year, .month], from: endDate)
-            startDate = calendar.date(from: components) ?? endDate
+            startDate = calendar.date(byAdding: .day, value: -30, to: endDate) ?? endDate
+        case .year:
+            startDate = calendar.date(byAdding: .day, value: -365, to: endDate) ?? endDate
         }
-        
+
         return weights.compactMap { entry in
             guard let timestamp = entry.timestamp,
                   timestamp >= startDate else { return nil }
@@ -550,14 +548,16 @@ extension TimeRange {
         case .today: return .hour
         case .week: return .day
         case .month: return .weekOfMonth
+        case .year: return .month
         }
     }
-    
+
     var dateFormat: Date.FormatStyle {
         switch self {
         case .today: return .dateTime.hour()
         case .week: return .dateTime.weekday(.abbreviated)
         case .month: return .dateTime.day()
+        case .year: return .dateTime.month(.abbreviated)
         }
     }
 }

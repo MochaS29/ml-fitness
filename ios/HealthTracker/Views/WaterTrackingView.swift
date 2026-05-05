@@ -11,10 +11,15 @@ struct WaterTrackingView: View {
         animation: .default)
     private var todayWaterEntries: FetchedResults<WaterEntry>
 
-    @State private var waterGoal: Int = AppConstants.Defaults.dailyWaterGlasses // 8 glasses of 8oz each
+    @State private var waterGoal: Int = WaterTrackingView.loadWaterGoal()
     @State private var showingAddCustom = false
     @State private var customAmount: String = ""
     @State private var showingReminderSettings = false
+
+    private static func loadWaterGoal() -> Int {
+        let saved = UserDefaults.standard.integer(forKey: "dailyWaterGoal")
+        return saved > 0 ? saved : AppConstants.Defaults.dailyWaterGlasses
+    }
 
     var totalOuncesToday: Double {
         todayWaterEntries.reduce(0) { $0 + $1.amount }
@@ -224,6 +229,12 @@ struct WaterTrackingView: View {
         }
         .sheet(isPresented: $showingReminderSettings) {
             WaterReminderSettingsView()
+        }
+        .onAppear {
+            waterGoal = WaterTrackingView.loadWaterGoal()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)) { _ in
+            waterGoal = WaterTrackingView.loadWaterGoal()
         }
         .alert("Add Custom Amount", isPresented: $showingAddCustom) {
             TextField("Amount (oz)", text: $customAmount)

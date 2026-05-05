@@ -8,7 +8,7 @@ struct QuickAddMenu: View {
 
     let selectedDate: Date
 
-    @State private var selectedMealType: MealType = .breakfast
+    @State private var selectedMealType: MealType = .defaultForCurrentTime()
     @State private var activeSheet: ActiveSheet?
 
     private static let freeScansAllowed = 3
@@ -53,7 +53,7 @@ struct QuickAddMenu: View {
             case .weightEntry:
                 QuickWeightAddView(selectedDate: selectedDate)
             case .waterEntry:
-                QuickWaterAddView(selectedDate: selectedDate)
+                WaterTrackingView()
             case .mealScanner:
                 MealPhotoAnalyzerView()
             }
