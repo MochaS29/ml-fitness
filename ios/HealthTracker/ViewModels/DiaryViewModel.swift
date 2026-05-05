@@ -9,13 +9,18 @@ class DiaryViewModel: ObservableObject {
     // MARK: - Daily Summary
 
     /// Recalculates `dailySummary` from the current fetch results and UserDefaults goals.
+    /// Supplements that record macros (e.g. collagen, whey) contribute to calorie/protein totals.
     func updateDailySummary(
         foodEntries: FetchedResults<FoodEntry>,
         exerciseEntries: FetchedResults<ExerciseEntry>,
+        supplementEntries: FetchedResults<SupplementEntry>,
         selectedDate: Date
     ) {
-        dailySummary.calories = foodEntries.reduce(0) { $0 + $1.calories }
-        dailySummary.protein = foodEntries.reduce(0) { $0 + $1.protein }
+        let suppCalories = supplementEntries.reduce(0.0) { $0 + ($1.nutrients?["calories"] ?? 0) }
+        let suppProtein  = supplementEntries.reduce(0.0) { $0 + ($1.nutrients?["protein"]  ?? 0) }
+
+        dailySummary.calories = foodEntries.reduce(0) { $0 + $1.calories } + suppCalories
+        dailySummary.protein = foodEntries.reduce(0) { $0 + $1.protein } + suppProtein
         dailySummary.caloriesBurned = exerciseEntries.reduce(0) { $0 + $1.caloriesBurned }
         dailySummary.exerciseMinutes = Double(exerciseEntries.reduce(0) { $0 + Int($1.duration) })
         dailySummary.waterOunces = calculateWaterOunces(for: selectedDate)
@@ -82,33 +87,40 @@ class DiaryViewModel: ObservableObject {
     }
 
     // MARK: - Nutrition aggregates
+    // Each totalX(from:supplements:) sums the food column plus any matching key
+    // from supplement.nutrients, so protein-style supplements (collagen, whey)
+    // contribute to daily macros and fibre supplements contribute to fibre, etc.
 
-    func totalCalories(from foodEntries: FetchedResults<FoodEntry>) -> Double {
-        foodEntries.reduce(0) { $0 + $1.calories }
+    private func suppSum(_ supplements: FetchedResults<SupplementEntry>, key: String) -> Double {
+        supplements.reduce(0.0) { $0 + ($1.nutrients?[key] ?? 0) }
     }
 
-    func totalProtein(from foodEntries: FetchedResults<FoodEntry>) -> Double {
-        foodEntries.reduce(0) { $0 + $1.protein }
+    func totalCalories(from foodEntries: FetchedResults<FoodEntry>, supplements: FetchedResults<SupplementEntry>) -> Double {
+        foodEntries.reduce(0) { $0 + $1.calories } + suppSum(supplements, key: "calories")
     }
 
-    func totalCarbs(from foodEntries: FetchedResults<FoodEntry>) -> Double {
-        foodEntries.reduce(0) { $0 + $1.carbs }
+    func totalProtein(from foodEntries: FetchedResults<FoodEntry>, supplements: FetchedResults<SupplementEntry>) -> Double {
+        foodEntries.reduce(0) { $0 + $1.protein } + suppSum(supplements, key: "protein")
     }
 
-    func totalFat(from foodEntries: FetchedResults<FoodEntry>) -> Double {
-        foodEntries.reduce(0) { $0 + $1.fat }
+    func totalCarbs(from foodEntries: FetchedResults<FoodEntry>, supplements: FetchedResults<SupplementEntry>) -> Double {
+        foodEntries.reduce(0) { $0 + $1.carbs } + suppSum(supplements, key: "carbs")
     }
 
-    func totalFiber(from foodEntries: FetchedResults<FoodEntry>) -> Double {
-        foodEntries.reduce(0) { $0 + $1.fiber }
+    func totalFat(from foodEntries: FetchedResults<FoodEntry>, supplements: FetchedResults<SupplementEntry>) -> Double {
+        foodEntries.reduce(0) { $0 + $1.fat } + suppSum(supplements, key: "fat")
     }
 
-    func totalSugar(from foodEntries: FetchedResults<FoodEntry>) -> Double {
-        foodEntries.reduce(0) { $0 + $1.sugar }
+    func totalFiber(from foodEntries: FetchedResults<FoodEntry>, supplements: FetchedResults<SupplementEntry>) -> Double {
+        foodEntries.reduce(0) { $0 + $1.fiber } + suppSum(supplements, key: "fiber")
     }
 
-    func totalSodium(from foodEntries: FetchedResults<FoodEntry>) -> Double {
-        foodEntries.reduce(0) { $0 + $1.sodium }
+    func totalSugar(from foodEntries: FetchedResults<FoodEntry>, supplements: FetchedResults<SupplementEntry>) -> Double {
+        foodEntries.reduce(0) { $0 + $1.sugar } + suppSum(supplements, key: "sugar")
+    }
+
+    func totalSodium(from foodEntries: FetchedResults<FoodEntry>, supplements: FetchedResults<SupplementEntry>) -> Double {
+        foodEntries.reduce(0) { $0 + $1.sodium } + suppSum(supplements, key: "sodium")
     }
 
     func supplementNutrients(from supplementEntries: FetchedResults<SupplementEntry>) -> [String: Double] {
@@ -139,7 +151,8 @@ class DiaryViewModel: ObservableObject {
     func generateDiaryShareText(
         selectedDate: Date,
         foodEntries: FetchedResults<FoodEntry>,
-        exerciseEntries: FetchedResults<ExerciseEntry>
+        exerciseEntries: FetchedResults<ExerciseEntry>,
+        supplementEntries: FetchedResults<SupplementEntry>
     ) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .full
@@ -149,7 +162,7 @@ class DiaryViewModel: ObservableObject {
 
         let goal = UserDefaults.standard.integer(forKey: "dailyCalorieGoal") > 0
             ? UserDefaults.standard.integer(forKey: "dailyCalorieGoal") : AppConstants.Defaults.dailyCalorieGoal
-        let eaten = Int(totalCalories(from: foodEntries))
+        let eaten = Int(totalCalories(from: foodEntries, supplements: supplementEntries))
         let burned = Int(exerciseEntries.reduce(0) { $0 + $1.caloriesBurned })
         lines.append("🔥 Calories: \(eaten) eaten · \(burned) burned · \(max(0, goal + burned - eaten)) remaining")
 
@@ -173,7 +186,7 @@ class DiaryViewModel: ObservableObject {
         }
 
         lines.append("")
-        lines.append("Macros: P \(String(format: "%.0f", totalProtein(from: foodEntries)))g · C \(String(format: "%.0f", totalCarbs(from: foodEntries)))g · F \(String(format: "%.0f", totalFat(from: foodEntries)))g")
+        lines.append("Macros: P \(String(format: "%.0f", totalProtein(from: foodEntries, supplements: supplementEntries)))g · C \(String(format: "%.0f", totalCarbs(from: foodEntries, supplements: supplementEntries)))g · F \(String(format: "%.0f", totalFat(from: foodEntries, supplements: supplementEntries)))g")
         lines.append("")
         lines.append("Logged with MindLab Fitness")
         return lines.joined(separator: "\n")

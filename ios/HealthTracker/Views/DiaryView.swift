@@ -121,7 +121,8 @@ struct DiaryView: View {
                         shareText = viewModel.generateDiaryShareText(
                             selectedDate: selectedDate,
                             foodEntries: foodEntries,
-                            exerciseEntries: exerciseEntries
+                            exerciseEntries: exerciseEntries,
+                            supplementEntries: supplementEntries
                         )
                         showingShareSheet = true
                     }) {
@@ -163,6 +164,7 @@ struct DiaryView: View {
             // (e.g. QuickAddMenu, Meal Scanner, EditFoodEntrySheet servings change).
             .onChange(of: foodEntries.count) { updateDailySummary() }
             .onChange(of: exerciseEntries.count) { updateDailySummary() }
+            .onChange(of: supplementEntries.count) { updateDailySummary() }
             .onReceive(NotificationCenter.default.publisher(for: .NSManagedObjectContextDidSave)) { _ in
                 updateDailySummary()
             }
@@ -481,8 +483,8 @@ struct DiaryView: View {
                         .font(.headline)
                         .foregroundColor(.primary)
                     Spacer()
-                    if !foodEntries.isEmpty {
-                        Text("\(Int(viewModel.totalCalories(from: foodEntries))) kcal")
+                    if !foodEntries.isEmpty || !supplementEntries.isEmpty {
+                        Text("\(Int(viewModel.totalCalories(from: foodEntries, supplements: supplementEntries))) kcal")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -507,10 +509,10 @@ struct DiaryView: View {
                     } else {
                         // Macro progress bars
                         VStack(spacing: 12) {
-                            DiaryMacroBar(label: "Calories", value: viewModel.totalCalories(from: foodEntries), goal: calorieGoal, unit: "kcal", color: .orange)
-                            DiaryMacroBar(label: "Protein",  value: viewModel.totalProtein(from: foodEntries),  goal: proteinGoal, unit: "g",    color: .blue)
-                            DiaryMacroBar(label: "Carbs",    value: viewModel.totalCarbs(from: foodEntries),    goal: 275,          unit: "g",    color: .green)
-                            DiaryMacroBar(label: "Fat",      value: viewModel.totalFat(from: foodEntries),      goal: 78,           unit: "g",    color: Color(red: 1, green: 0.8, blue: 0))
+                            DiaryMacroBar(label: "Calories", value: viewModel.totalCalories(from: foodEntries, supplements: supplementEntries), goal: calorieGoal, unit: "kcal", color: .orange)
+                            DiaryMacroBar(label: "Protein",  value: viewModel.totalProtein(from: foodEntries, supplements: supplementEntries),  goal: proteinGoal, unit: "g",    color: .blue)
+                            DiaryMacroBar(label: "Carbs",    value: viewModel.totalCarbs(from: foodEntries, supplements: supplementEntries),    goal: 275,          unit: "g",    color: .green)
+                            DiaryMacroBar(label: "Fat",      value: viewModel.totalFat(from: foodEntries, supplements: supplementEntries),      goal: 78,           unit: "g",    color: Color(red: 1, green: 0.8, blue: 0))
                         }
                         .padding()
                         .background(Color(UIColor.secondarySystemGroupedBackground))
@@ -519,11 +521,11 @@ struct DiaryView: View {
 
                         // Additional nutrients from food
                         VStack(spacing: 0) {
-                            DiaryNutrientRow(name: "Fiber",  value: viewModel.totalFiber(from: foodEntries),  unit: "g",  goal: 28,   goalPrefix: "", color: .brown)
+                            DiaryNutrientRow(name: "Fiber",  value: viewModel.totalFiber(from: foodEntries, supplements: supplementEntries),  unit: "g",  goal: 28,   goalPrefix: "", color: .brown)
                             Divider().padding(.leading)
-                            DiaryNutrientRow(name: "Sugar",  value: viewModel.totalSugar(from: foodEntries),  unit: "g",  goal: 50,   goalPrefix: "< ", color: .pink)
+                            DiaryNutrientRow(name: "Sugar",  value: viewModel.totalSugar(from: foodEntries, supplements: supplementEntries),  unit: "g",  goal: 50,   goalPrefix: "< ", color: .pink)
                             Divider().padding(.leading)
-                            DiaryNutrientRow(name: "Sodium", value: viewModel.totalSodium(from: foodEntries), unit: "mg", goal: 2300, goalPrefix: "< ", color: .gray)
+                            DiaryNutrientRow(name: "Sodium", value: viewModel.totalSodium(from: foodEntries, supplements: supplementEntries), unit: "mg", goal: 2300, goalPrefix: "< ", color: .gray)
                         }
                         .background(Color(UIColor.secondarySystemGroupedBackground))
 
@@ -594,6 +596,7 @@ struct DiaryView: View {
         viewModel.updateDailySummary(
             foodEntries: foodEntries,
             exerciseEntries: exerciseEntries,
+            supplementEntries: supplementEntries,
             selectedDate: selectedDate
         )
         viewModel.refreshActiveEnergy(for: selectedDate)

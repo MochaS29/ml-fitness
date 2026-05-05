@@ -11,6 +11,14 @@ struct ManualSupplementEntryView: View {
     @State private var brand = ""
     @State private var servingSize = "1 tablet"
     @State private var nutrients: [ManualNutrientEntry] = []
+
+    // Macro contributions (per serving) — populated for protein-style supplements
+    // (collagen, whey, etc.). Stored in nutrients dict under "calories"/"protein"/
+    // "carbs"/"fat" keys so daily totals can pick them up.
+    @State private var calories = ""
+    @State private var protein = ""
+    @State private var carbs = ""
+    @State private var fat = ""
     @State private var showingNutrientPicker = false
     @State private var showingSupplementSelection = false
     @State private var showingBarcodeScanner = false
@@ -65,7 +73,18 @@ struct ManualSupplementEntryView: View {
                     TextField("Brand (Optional)", text: $brand)
                     TextField("Serving Size", text: $servingSize)
                 }
-                
+
+                Section {
+                    macroField("Calories", text: $calories, unit: "cal")
+                    macroField("Protein", text: $protein, unit: "g")
+                    macroField("Carbs", text: $carbs, unit: "g")
+                    macroField("Fat", text: $fat, unit: "g")
+                } header: {
+                    Text("Macros (per serving)")
+                } footer: {
+                    Text("Use this for protein-style supplements (collagen, whey, etc.). Values count toward your daily macro totals.")
+                }
+
                 Section("Nutrients") {
                     ForEach(nutrients.indices, id: \.self) { index in
                         NutrientEntryRow(entry: $nutrients[index]) {
@@ -140,6 +159,21 @@ struct ManualSupplementEntryView: View {
             .fullScreenCover(isPresented: $showingBarcodeScanner) {
                 SupplementBarcodeScannerView()
             }
+        }
+    }
+
+    @ViewBuilder
+    private func macroField(_ label: String, text: Binding<String>, unit: String) -> some View {
+        HStack {
+            Text(label)
+            Spacer()
+            TextField("0", text: text)
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+                .frame(width: 80)
+            Text(unit)
+                .foregroundColor(.secondary)
+                .frame(width: 30, alignment: .leading)
         }
     }
 
@@ -225,6 +259,12 @@ struct ManualSupplementEntryView: View {
         for nutrient in nutrients {
             nutrientDict[nutrient.id] = nutrient.amount
         }
+
+        // Include macros if entered (non-zero). Keys match the diary aggregator.
+        if let v = Double(calories), v > 0 { nutrientDict["calories"] = v }
+        if let v = Double(protein), v > 0 { nutrientDict["protein"] = v }
+        if let v = Double(carbs), v > 0 { nutrientDict["carbs"] = v }
+        if let v = Double(fat), v > 0 { nutrientDict["fat"] = v }
 
         // Set nutrients directly - Core Data will handle the transformation
         if !nutrientDict.isEmpty {
