@@ -211,8 +211,22 @@ struct FoodProduct {
     let fiber: Double
     let sugar: Double
     let sodium: Double
-    
+
     var displayName: String {
         return "\(brand) \(name)"
+    }
+
+    /// Converts to a FoodItem so it can flow into FavouriteFoodsManager / search recents.
+    func toFoodItem() -> FoodItem {
+        FoodItem(
+            name: displayName,
+            brand: brand.isEmpty ? nil : brand,
+            category: .other,
+            servingSize: "1",
+            servingUnit: servingSize,
+            calories: calories, protein: protein, carbs: carbs, fat: fat,
+            fiber: fiber, sugar: sugar, sodium: sodium,
+            cholesterol: nil, saturatedFat: nil, barcode: barcode, isCommon: false
+        )
     }
 }

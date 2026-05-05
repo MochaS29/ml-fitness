@@ -176,7 +176,12 @@ struct ProductDetailsView: View {
     @Binding var servingMultiplier: Double
     let onSave: () -> Void
     let onCancel: () -> Void
-    
+
+    @ObservedObject private var favourites = FavouriteFoodsManager.shared
+
+    private var asFoodItem: FoodItem { product.toFoodItem() }
+    private var isFavourite: Bool { favourites.isFavourite(asFoodItem) }
+
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
@@ -283,6 +288,13 @@ struct ProductDetailsView: View {
                     Button("Cancel") {
                         onCancel()
                     }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { favourites.toggle(asFoodItem) }) {
+                        Image(systemName: isFavourite ? "star.fill" : "star")
+                            .foregroundColor(isFavourite ? .yellow : .secondary)
+                    }
+                    .accessibilityLabel(isFavourite ? "Remove from favourites" : "Add to favourites")
                 }
             }
         }
