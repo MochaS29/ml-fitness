@@ -13,6 +13,10 @@ xcuserdata/
 build/
 build_pm/
 DerivedData/
+
+# App Store / marketing screenshots — kept in iCloud / Shared with You,
+# not tracked in git to avoid bloating history with binary media.
+Screenshots/
 *.moved-aside
 *.pbxuser
 !default.pbxuser
