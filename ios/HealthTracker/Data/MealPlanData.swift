@@ -52,12 +52,31 @@ class MealPlanData {
 
 // MARK: - Meal Plan Manager
 class MealPlanManager: ObservableObject {
-    @Published var selectedPlanType: MealPlanType?
-    @Published var currentWeek: Int = 1
+    @Published var selectedPlanType: MealPlanType? {
+        didSet {
+            UserDefaults.standard.set(selectedPlanType?.id, forKey: Self.selectedPlanIdKey)
+        }
+    }
+    @Published var currentWeek: Int = 1 {
+        didSet {
+            UserDefaults.standard.set(currentWeek, forKey: Self.currentWeekKey)
+        }
+    }
     @Published var favoriteMeals: Set<String> = []
     @Published var shoppingList: [String] = []
 
     private let mealData = MealPlanData.shared
+
+    private static let selectedPlanIdKey = "selectedMealPlanId"
+    private static let currentWeekKey = "selectedMealPlanWeek"
+
+    init() {
+        if let savedId = UserDefaults.standard.string(forKey: Self.selectedPlanIdKey) {
+            selectedPlanType = mealData.allMealPlans.first { $0.id == savedId }
+        }
+        let savedWeek = UserDefaults.standard.integer(forKey: Self.currentWeekKey)
+        currentWeek = savedWeek > 0 ? savedWeek : 1
+    }
 
     func selectPlan(_ planId: String) {
         selectedPlanType = mealData.allMealPlans.first { $0.id == planId }
