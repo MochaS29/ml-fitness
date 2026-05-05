@@ -56,10 +56,38 @@ class AchievementDetector: ObservableObject {
     private var celebratedToday = Set<String>()  // Track what we've celebrated today
     private var lastCheckedDate: Date?
 
+    // Persistence keys — scoped to a date string so we naturally roll over at midnight
+    // and re-fires don't happen across app relaunches within the same day.
+    private static let setKey = "celebratedToday_keys"
+    private static let dateKey = "celebratedToday_date"
+
     init(context: NSManagedObjectContext) {
         self.viewContext = context
+        loadPersistedCelebrations()
         setupNotifications()
         resetDailyCelebrations()
+    }
+
+    private func loadPersistedCelebrations() {
+        let defaults = UserDefaults.standard
+        let savedDateString = defaults.string(forKey: Self.dateKey) ?? ""
+        if savedDateString == Self.todayKey() {
+            let saved = defaults.stringArray(forKey: Self.setKey) ?? []
+            celebratedToday = Set(saved)
+            lastCheckedDate = Date()
+        }
+    }
+
+    private func persistCelebrations() {
+        let defaults = UserDefaults.standard
+        defaults.set(Array(celebratedToday), forKey: Self.setKey)
+        defaults.set(Self.todayKey(), forKey: Self.dateKey)
+    }
+
+    private static func todayKey() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: Date())
     }
 
     private func setupNotifications() {
@@ -120,6 +148,7 @@ class AchievementDetector: ObservableObject {
             let lastDay = calendar.startOfDay(for: lastDate)
             if lastDay != today {
                 celebratedToday.removeAll()
+                persistCelebrations()
             }
         }
         lastCheckedDate = Date()
@@ -142,6 +171,7 @@ class AchievementDetector: ObservableObject {
         if latestWeight < previousWeight {
             let weightLost = previousWeight - latestWeight
             celebratedToday.insert("weightLoss")
+            persistCelebrations()
             triggerCelebration(.weightLoss(pounds: weightLost))
         }
     }
@@ -162,6 +192,7 @@ class AchievementDetector: ObservableObject {
         // Check if hit 30 minutes of exercise
         if totalMinutes >= 30 {
             celebratedToday.insert("exercise30")
+            persistCelebrations()
             triggerCelebration(.exerciseGoal(minutes: totalMinutes, calories: Int(totalCalories)))
         }
     }
@@ -182,6 +213,7 @@ class AchievementDetector: ObservableObject {
             // Within 5% of target
             if percentageOff <= 5 && !celebratedToday.contains("calorieTarget") {
                 celebratedToday.insert("calorieTarget")
+                persistCelebrations()
                 triggerCelebration(.calorieTarget(calories: Int(totalCalories), target: Int(targetCalories)))
             }
         }
@@ -205,10 +237,17 @@ class AchievementDetector: ObservableObject {
             }
         }
 
-        // Celebrate streaks at specific milestones
+        // Celebrate streaks at specific milestones — but only once per day across all logs.
+        // Also collapses any streak fire today under a single "loggedToday" key so we
+        // never celebrate logging more than once per day, even if the streak number changes.
         let streakKey = "streak\(streak)"
-        if [2, 3, 7, 14, 21, 30].contains(streak) && !celebratedToday.contains(streakKey) {
+        let onceKey = "loggedToday"
+        if [2, 3, 7, 14, 21, 30].contains(streak)
+            && !celebratedToday.contains(streakKey)
+            && !celebratedToday.contains(onceKey) {
             celebratedToday.insert(streakKey)
+            celebratedToday.insert(onceKey)
+            persistCelebrations()
             triggerCelebration(.loggingStreak(days: streak))
         }
     }
