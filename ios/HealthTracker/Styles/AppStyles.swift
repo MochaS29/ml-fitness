@@ -1,26 +1,40 @@
 import SwiftUI
 
+// MARK: - Dynamic neutral helpers (light/dark adaptive)
+private func dynamicUIColor(light: UIColor, dark: UIColor) -> UIColor {
+    UIColor { trait in trait.userInterfaceStyle == .dark ? dark : light }
+}
+
 // MARK: - Mocha's Mindful Tech Brand Colors
 extension Color {
-    // Core Brand Colors
+    // Core Brand Colors (fixed — brand identity)
     static let mochaBrown = Color(red: 139/255, green: 69/255, blue: 19/255)      // #8B4513
     static let mindfulTeal = Color(red: 74/255, green: 155/255, blue: 155/255)    // #4A9B9B
     static let wellnessGreen = Color(red: 127/255, green: 176/255, blue: 105/255) // #7FB069
-    static let softCream = Color(red: 249/255, green: 247/255, blue: 244/255)     // #F9F7F4
-    
-    // Supporting Neutrals
-    static let warmWhite = Color(red: 254/255, green: 254/255, blue: 254/255)     // #FEFEFE
-    static let lightGray = Color(red: 232/255, green: 230/255, blue: 227/255)     // #E8E6E3
-    static let deepCharcoal = Color(red: 44/255, green: 44/255, blue: 44/255)     // #2C2C2C
-    
+
+    // Supporting Neutrals — DYNAMIC: adapt to light/dark mode so content stays readable.
+    static let warmWhite = Color(red: 254/255, green: 254/255, blue: 254/255)     // #FEFEFE — kept fixed for accent text on colored buttons
+    static let softCream = Color(uiColor: dynamicUIColor(
+        light: UIColor(red: 249/255, green: 247/255, blue: 244/255, alpha: 1),
+        dark:  UIColor(red:  18/255, green:  18/255, blue:  18/255, alpha: 1)
+    ))
+    static let lightGray = Color(uiColor: dynamicUIColor(
+        light: UIColor(red: 232/255, green: 230/255, blue: 227/255, alpha: 1),
+        dark:  UIColor(red:  60/255, green:  60/255, blue:  63/255, alpha: 1)
+    ))
+    static let deepCharcoal = Color(uiColor: dynamicUIColor(
+        light: UIColor(red:  44/255, green:  44/255, blue:  44/255, alpha: 1),
+        dark:  UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+    ))
+
     // App Specific Colors (matching brand psychology)
     static let primaryAccent = mochaBrown        // Headers, Navigation, Primary Branding
     static let secondaryAccent = mindfulTeal     // Focus features, Secondary CTAs
     static let successGreen = wellnessGreen      // Health features, Success states
-    static let background = softCream            // Main background
-    static let cardBackground = warmWhite        // Card surfaces
-    static let primaryText = deepCharcoal        // Primary text
-    
+    static let background = softCream            // Main background (adapts)
+    static let cardBackground = Color(uiColor: .secondarySystemGroupedBackground)  // Card surfaces (adapts)
+    static let primaryText = deepCharcoal        // Primary text (adapts)
+
     // Nutrient status colors (aligned with brand)
     static let adequateGreen = wellnessGreen
     static let deficientOrange = Color(red: 255/255, green: 149/255, blue: 0/255)
