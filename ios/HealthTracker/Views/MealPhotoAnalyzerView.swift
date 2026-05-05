@@ -48,6 +48,7 @@ struct MealPhotoAnalyzerView: View {
                                 analyzingOverlay
                             } else if let result = analysisResult {
                                 resultsSheet(result: result, geo: geo)
+                                addToDiaryButton(result: result, geo: geo)
                             } else {
                                 analyzePanel(geo: geo)
                             }
@@ -191,20 +192,23 @@ struct MealPhotoAnalyzerView: View {
         .frame(width: geo.size.width, height: sheetHeight)
         .background(.regularMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 20))
-        .overlay(alignment: .bottom) {
-            // Add to diary button always visible at bottom
-            Button(action: { saveToFoodDiary(items: result.items) }) {
-                Text("Add to Food Diary")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-            }
-            .padding(.horizontal)
-            .padding(.bottom, 24)
-        }
         .offset(y: currentOffset)
+    }
+
+    /// "Add to Food Diary" button anchored to the screen, not the sheet — stays
+    /// visible at the bottom regardless of sheet drag position.
+    private func addToDiaryButton(result: MealAnalysis, geo: GeometryProxy) -> some View {
+        Button(action: { saveToFoodDiary(items: result.items) }) {
+            Text("Add to Food Diary")
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.green)
+                .foregroundColor(.white)
+                .cornerRadius(12)
+                .shadow(color: .black.opacity(0.18), radius: 8, x: 0, y: 2)
+        }
+        .padding(.horizontal)
+        .padding(.bottom, max(geo.safeAreaInsets.bottom, 16) + 8)
     }
 
     private var expanded: CGFloat { expandedOffset }
