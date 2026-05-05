@@ -17,6 +17,9 @@ struct FavouriteFood: Codable, Identifiable {
     let fiber: Double
     let sugar: Double?
     let sodium: Double?
+    let cholesterol: Double?
+    let saturatedFat: Double?
+    let additionalNutrients: [String: Double]?
 
     init(from food: FoodItem) {
         self.id = UUID()
@@ -32,6 +35,9 @@ struct FavouriteFood: Codable, Identifiable {
         self.fiber = food.fiber
         self.sugar = food.sugar
         self.sodium = food.sodium
+        self.cholesterol = food.cholesterol
+        self.saturatedFat = food.saturatedFat
+        self.additionalNutrients = food.additionalNutrients
     }
 
     func toFoodItem() -> FoodItem {
@@ -41,7 +47,9 @@ struct FavouriteFood: Codable, Identifiable {
             servingSize: servingSize, servingUnit: servingUnit,
             calories: calories, protein: protein, carbs: carbs, fat: fat,
             fiber: fiber, sugar: sugar, sodium: sodium,
-            cholesterol: nil, saturatedFat: nil, barcode: nil, isCommon: false
+            cholesterol: cholesterol, saturatedFat: saturatedFat,
+            barcode: nil, isCommon: false,
+            additionalNutrients: additionalNutrients
         )
     }
 }

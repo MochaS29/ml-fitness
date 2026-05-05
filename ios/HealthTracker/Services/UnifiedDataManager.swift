@@ -120,6 +120,9 @@ class UnifiedDataManager: ObservableObject {
             fiber: foodItem.fiber,
             sugar: foodItem.sugar ?? 0,
             sodium: foodItem.sodium ?? 0,
+            cholesterol: foodItem.cholesterol ?? 0,
+            saturatedFat: foodItem.saturatedFat ?? 0,
+            additionalNutrients: foodItem.additionalNutrients,
             servingSize: foodItem.servingSize,
             servingUnit: foodItem.servingUnit,
             mealType: mealType,
@@ -427,6 +430,9 @@ class UnifiedDataManager: ObservableObject {
         cached.sodium = food.sodium ?? 0
         cached.cholesterol = food.cholesterol ?? 0
         cached.saturatedFat = food.saturatedFat ?? 0
+        if let extras = food.additionalNutrients, !extras.isEmpty {
+            cached.additionalNutrients = extras
+        }
         cached.barcode = food.barcode
         cached.source = "usda_api"
         cached.isUserCreated = false
@@ -470,7 +476,8 @@ class UnifiedDataManager: ObservableObject {
                 cholesterol: cached.cholesterol,
                 saturatedFat: cached.saturatedFat,
                 barcode: cached.barcode,
-                isCommon: false
+                isCommon: false,
+                additionalNutrients: cached.additionalNutrients
             )
         }
     }
@@ -503,10 +510,11 @@ class UnifiedDataManager: ObservableObject {
                     fiber: entry.fiber,
                     sugar: entry.sugar,
                     sodium: entry.sodium,
-                    cholesterol: nil,
-                    saturatedFat: nil,
+                    cholesterol: entry.cholesterol,
+                    saturatedFat: entry.saturatedFat,
                     barcode: entry.barcode,
-                    isCommon: true
+                    isCommon: true,
+                    additionalNutrients: entry.additionalNutrients
                 )
                 uniqueFoods.append(foodItem)
 

@@ -115,6 +115,10 @@ struct USDAFoodItem: Identifiable {
     let fiber: Double?
     let sugar: Double?
     let sodium: Double?
+    var cholesterol: Double? = nil
+    var saturatedFat: Double? = nil
+    /// Vitamin/mineral data (vitamin_c, calcium, potassium, etc.) when USDA returns it.
+    var additionalNutrients: [String: Double]? = nil
 
     // Convert to FoodItem for existing app compatibility
     func toFoodItem() -> FoodItem {
@@ -131,10 +135,11 @@ struct USDAFoodItem: Identifiable {
             fiber: fiber ?? 0,
             sugar: sugar ?? 0,
             sodium: sodium ?? 0,
-            cholesterol: nil,
-            saturatedFat: nil,
+            cholesterol: cholesterol,
+            saturatedFat: saturatedFat,
             barcode: nil,
-            isCommon: false
+            isCommon: false,
+            additionalNutrients: additionalNutrients
         )
     }
 }
@@ -156,18 +161,62 @@ struct USDAServiceFoodResponse: Codable {
     let foodNutrients: [USDAServiceNutrient]
 
     func toUSDAFood() -> USDAFoodItem {
-        // Extract nutrients from the response (USDA values are always per 100g)
-        let calsPer100 = foodNutrients.first(where: { $0.nutrientName == "Energy" })?.value ?? 0
-        let protPer100 = foodNutrients.first(where: { $0.nutrientName == "Protein" })?.value ?? 0
-        let carbsPer100 = foodNutrients.first(where: { $0.nutrientName == "Carbohydrate, by difference" })?.value ?? 0
-        let fatPer100 = foodNutrients.first(where: { $0.nutrientName == "Total lipid (fat)" })?.value ?? 0
-        let fiberPer100 = foodNutrients.first(where: { $0.nutrientName == "Fiber, total dietary" })?.value
-        let sugarPer100 = foodNutrients.first(where: { $0.nutrientName == "Sugars, total including NLEA" })?.value
-        let sodiumPer100 = foodNutrients.first(where: { $0.nutrientName == "Sodium, Na" })?.value
+        // USDA values are always per 100g. Match by nutrient name (USDA API returns
+        // names; the bulk USDAFoodImporter matches by nutrient ID instead).
+        func value(_ nameMatchers: String...) -> Double? {
+            for n in foodNutrients {
+                let nm = n.nutrientName
+                if nameMatchers.contains(where: { nm == $0 || nm.hasPrefix($0) }) {
+                    return n.value
+                }
+            }
+            return nil
+        }
+
+        let calsPer100 = value("Energy") ?? 0
+        let protPer100 = value("Protein") ?? 0
+        let carbsPer100 = value("Carbohydrate, by difference") ?? 0
+        let fatPer100 = value("Total lipid (fat)") ?? 0
+        let fiberPer100 = value("Fiber, total dietary")
+        let sugarPer100 = value("Sugars, total including NLEA", "Sugars, total")
+        let sodiumPer100 = value("Sodium, Na")
+        let cholPer100 = value("Cholesterol")
+        let satFatPer100 = value("Fatty acids, total saturated")
 
         // Scale from per-100g to the actual serving size
         let serving = servingSize ?? 100
         let scale = serving / 100.0
+
+        // Capture vitamins/minerals into a dict keyed for AddCustomFoodView /
+        // NutritionInfo+Foods. Only add keys whose source values are present.
+        let vitMineralMap: [(matcher: String, key: String)] = [
+            ("Vitamin A, RAE", "vitamin_a"),
+            ("Vitamin C, total ascorbic acid", "vitamin_c"),
+            ("Vitamin D (D2 + D3)", "vitamin_d"),
+            ("Vitamin E (alpha-tocopherol)", "vitamin_e"),
+            ("Vitamin K (phylloquinone)", "vitamin_k"),
+            ("Thiamin", "thiamin"),
+            ("Riboflavin", "riboflavin"),
+            ("Niacin", "niacin"),
+            ("Vitamin B-6", "vitamin_b6"),
+            ("Vitamin B-12", "vitamin_b12"),
+            ("Folate, total", "folate"),
+            ("Calcium, Ca", "calcium"),
+            ("Iron, Fe", "iron"),
+            ("Magnesium, Mg", "magnesium"),
+            ("Phosphorus, P", "phosphorus"),
+            ("Potassium, K", "potassium"),
+            ("Zinc, Zn", "zinc"),
+            ("Copper, Cu", "copper"),
+            ("Manganese, Mn", "manganese"),
+            ("Selenium, Se", "selenium")
+        ]
+        var extras: [String: Double] = [:]
+        for (matcher, key) in vitMineralMap {
+            if let v = value(matcher), v > 0 {
+                extras[key] = v * scale
+            }
+        }
 
         return USDAFoodItem(
             fdcId: fdcId,
@@ -181,7 +230,10 @@ struct USDAServiceFoodResponse: Codable {
             fat: fatPer100 * scale,
             fiber: fiberPer100.map { $0 * scale },
             sugar: sugarPer100.map { $0 * scale },
-            sodium: sodiumPer100.map { $0 * scale }
+            sodium: sodiumPer100.map { $0 * scale },
+            cholesterol: cholPer100.map { $0 * scale },
+            saturatedFat: satFatPer100.map { $0 * scale },
+            additionalNutrients: extras.isEmpty ? nil : extras
         )
     }
 }

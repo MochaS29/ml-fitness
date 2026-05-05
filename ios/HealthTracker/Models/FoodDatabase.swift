@@ -18,6 +18,10 @@ struct FoodItem: Identifiable {
     let saturatedFat: Double?
     let barcode: String?
     let isCommon: Bool // Common foods appear first in search
+    /// Vitamin/mineral data when available (USDA imports populate ~26 keys).
+    /// Keys match the AddCustomFoodView/NutritionInfo+Foods convention
+    /// ("vitamin_a", "calcium", "potassium", etc.).
+    var additionalNutrients: [String: Double]? = nil
 }
 
 enum FoodCategory: String, CaseIterable {
