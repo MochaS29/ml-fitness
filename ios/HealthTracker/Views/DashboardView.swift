@@ -72,11 +72,20 @@ struct DashboardView: View {
 
                 // Delay loading heavy widgets
                 if widgetsEnabled {
+                    // Nutrition Distribution + Calories Left (under goal section per user feedback)
+                    nutritionDistributionCard
+
                     // Key Metrics Cards — 4 blocks
                     metricsOverview
 
-                    // Nutrition Distribution Chart
-                    nutritionDistributionCard
+                    // Trend window indicator (adapts to how long user has used the app)
+                    HStack {
+                        Spacer()
+                        Text("Trends shown \(viewModel.trendWindowLabel)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal, 4)
 
                     // Supplement Stats Widget
                     SupplementStatsWidget(showingDetail: Binding(
@@ -413,7 +422,7 @@ struct DashboardView: View {
                 value: "\(viewModel.todaySteps)",
                 subtitle: "of \(viewModel.stepGoal) goal",
                 trend: viewModel.stepsTrend,
-                trendValue: "+\(viewModel.stepsTrendPercent)%",
+                trendValue: signedPercent(viewModel.stepsTrendPercent),
                 icon: "figure.walk",
                 color: .green,
                 sparklineData: viewModel.stepsSparkline
@@ -427,7 +436,7 @@ struct DashboardView: View {
                 value: String(format: "%.1f lbs", viewModel.currentWeight),
                 subtitle: String(format: "%.1f lbs to goal", viewModel.currentWeight - viewModel.targetWeight),
                 trend: viewModel.weightTrend,
-                trendValue: "\(viewModel.weightTrendPercent)%",
+                trendValue: signedPercent(viewModel.weightTrendPercent),
                 icon: "scalemass.fill",
                 color: .blue,
                 sparklineData: viewModel.weightSparkline
@@ -439,9 +448,9 @@ struct DashboardView: View {
             MetricCardWithTrend(
                 title: "Exercise",
                 value: "\(viewModel.todayExercise) min",
-                subtitle: "\(viewModel.exerciseSessions) sessions",
-                trend: .up,
-                trendValue: "+15%",
+                subtitle: "of \(viewModel.dailyExerciseGoal) min goal",
+                trend: viewModel.exerciseTrend,
+                trendValue: signedPercent(viewModel.exerciseTrendPercent),
                 icon: "figure.run",
                 color: .orange,
                 sparklineData: viewModel.exerciseSparkline
@@ -453,9 +462,9 @@ struct DashboardView: View {
             MetricCardWithTrend(
                 title: "Water",
                 value: "\(viewModel.todayWater)",
-                subtitle: "\(viewModel.waterPercentage)% hydrated",
+                subtitle: "of \(viewModel.waterGoal) glasses goal",
                 trend: viewModel.waterTrend,
-                trendValue: "\(viewModel.waterTrendPercent)%",
+                trendValue: signedPercent(viewModel.waterTrendPercent),
                 icon: "drop.fill",
                 color: .cyan,
                 sparklineData: viewModel.waterSparkline
@@ -465,11 +474,30 @@ struct DashboardView: View {
             }
         }
     }
-    
+
+    private func signedPercent(_ value: Int) -> String {
+        value > 0 ? "+\(value)%" : "\(value)%"
+    }
+
+    private func calorieStat(label: String, value: String, color: Color) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.title3)
+                .fontWeight(.bold)
+                .foregroundColor(color)
+            Text(label)
+                .font(.caption2)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
     // MARK: - Nutrition Distribution Card
 
     private var nutritionDistributionCard: some View {
-        Button(action: { activeSheet = .nutritionDetail }) {
+        let remaining = viewModel.dailyCalorieGoal - viewModel.todayCalories
+        let isOver = remaining < 0
+        return Button(action: { activeSheet = .nutritionDetail }) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text("Nutrition Distribution")
@@ -479,6 +507,19 @@ struct DashboardView: View {
                     Image(systemName: "chevron.right")
                         .font(.caption)
                         .foregroundColor(.secondary)
+                }
+
+                // Calories: Eaten / Goal / Remaining
+                HStack(spacing: 0) {
+                    calorieStat(label: "Eaten", value: "\(viewModel.todayCalories)", color: .primary)
+                    Divider().frame(height: 32)
+                    calorieStat(label: "Goal", value: "\(viewModel.dailyCalorieGoal)", color: .secondary)
+                    Divider().frame(height: 32)
+                    calorieStat(
+                        label: isOver ? "Over" : "Left",
+                        value: "\(abs(remaining))",
+                        color: isOver ? .red : .wellnessGreen
+                    )
                 }
 
                 Chart {
@@ -496,11 +537,11 @@ struct DashboardView: View {
                 .frame(height: 200)
                 .chartBackground { chartProxy in
                     GeometryReader { geometry in
-                        VStack {
+                        VStack(spacing: 2) {
                             Text("\(viewModel.todayCalories)")
                                 .font(.title2)
                                 .fontWeight(.bold)
-                            Text("calories")
+                            Text("of \(viewModel.dailyCalorieGoal) cal")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
