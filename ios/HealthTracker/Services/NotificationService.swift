@@ -440,4 +440,8 @@ extension Notification.Name {
     static let openWaterLogging = Notification.Name("openWaterLogging")
     static let openExerciseLogging = Notification.Name("openExerciseLogging")
     static let notificationTapped = Notification.Name("notificationTapped")
+    /// Posted by UnifiedFoodSearchSheet after a successful food add. Wrapping
+    /// menu sheets (AddMenuView / QuickAddMenu) listen so they auto-dismiss
+    /// alongside the search sheet, returning the user to their origin tab.
+    static let didLogFoodFromSearch = Notification.Name("didLogFoodFromSearch")
 }

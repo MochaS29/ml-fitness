@@ -58,6 +58,12 @@ struct AddMenuView: View {
                 MealPhotoAnalyzerView()
             }
         }
+        // Once a food is logged from the search sheet, also dismiss the wrapping
+        // menu so the user lands back on Diary / Dashboard.
+        .onReceive(NotificationCenter.default.publisher(for: .didLogFoodFromSearch)) { _ in
+            activeSheet = nil
+            dismiss()
+        }
     }
     
     private var listContent: some View {

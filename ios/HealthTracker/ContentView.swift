@@ -61,8 +61,11 @@ struct ContentView: View {
             .tabViewStyle(.automatic)
             .onChange(of: selectedTab) { oldValue, newValue in
                 if newValue == 2 {
-                    // Reset to previous tab and show add menu
-                    selectedTab = 0
+                    // The "+" tab is a faux tab that opens AddMenuView. Restore
+                    // to whichever tab the user came from so they land back
+                    // there once the add menu dismisses (Diary -> Diary,
+                    // Dashboard -> Dashboard, etc.).
+                    selectedTab = oldValue == 2 ? 0 : oldValue
                     showingAddMenu = true
                 }
             }

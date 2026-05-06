@@ -66,7 +66,7 @@ class LocalFoodDatabase {
             FROM foods f
             JOIN foods_fts fts ON f.fdcId = fts.rowid
             WHERE foods_fts MATCH ?
-            ORDER BY f.isCommon DESC, rank
+            ORDER BY (f.brand IS NULL OR f.brand = '') DESC, f.isCommon DESC, rank
             LIMIT ?
             """
 
@@ -105,7 +105,8 @@ class LocalFoodDatabase {
                    cholesterol, saturatedFat, additionalNutrients, isCommon
             FROM foods
             WHERE name LIKE ? OR brand LIKE ?
-            ORDER BY isCommon DESC,
+            ORDER BY (brand IS NULL OR brand = '') DESC,
+                     isCommon DESC,
                      CASE WHEN LOWER(name) = LOWER(?) THEN 0
                           WHEN LOWER(name) LIKE LOWER(? || '%') THEN 1
                           ELSE 2 END,

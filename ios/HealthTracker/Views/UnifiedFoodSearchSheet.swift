@@ -30,15 +30,25 @@ struct UnifiedFoodSearchSheet: View {
         self.targetDate = targetDate
     }
 
-    // Phase 1: Instant local results (SQLite + hardcoded DB, deduped)
+    // Phase 1: Instant local results.
+    // SQLite (53k foods with full vitamin/mineral profiles) goes first. The
+    // hardcoded FoodDatabase appends after, but we filter out any static entry
+    // whose name is already covered by a SQLite hit (e.g. SQLite returns
+    // "Bananas, raw" -> we skip the static "Banana" so users don't accidentally
+    // log the no-vitamin version). Static still shows up when SQLite has no
+    // match, so we never make people invent a custom food for things that
+    // obviously exist (orange, apple, banana, etc.).
     var localResults: [FoodItem] {
-        if searchText.isEmpty {
-            return []
-        }
+        if searchText.isEmpty { return [] }
         let sqliteResults = dataManager.searchFoodDatabase(searchText)
         let staticMatches = FoodDatabase.shared.searchFoods(searchText)
-        let existingNames = Set(sqliteResults.map { $0.name.lowercased() })
-        let uniqueStatic = staticMatches.filter { !existingNames.contains($0.name.lowercased()) }
+
+        let sqliteNames = sqliteResults.map { $0.name.lowercased() }
+        let uniqueStatic = staticMatches.filter { staticItem in
+            let staticName = staticItem.name.lowercased()
+            return !sqliteNames.contains { $0.hasPrefix(staticName) }
+        }
+
         return FoodSearchService.sortByRelevance(sqliteResults + uniqueStatic, query: searchText)
     }
 
@@ -434,6 +444,10 @@ struct UnifiedFoodSearchSheet: View {
             )
         }
         dismiss()
+        // Notify any wrapping menu sheet (AddMenuView / QuickAddMenu) so it
+        // also dismisses and the user lands back on Diary / Dashboard, not
+        // the menu mid-stack.
+        NotificationCenter.default.post(name: .didLogFoodFromSearch, object: nil)
     }
 
     private func onSearchTextChanged(_ newValue: String) {

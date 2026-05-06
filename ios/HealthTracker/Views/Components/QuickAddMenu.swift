@@ -58,6 +58,12 @@ struct QuickAddMenu: View {
                 MealPhotoAnalyzerView()
             }
         }
+        // Once a food is logged from the search sheet, also dismiss this menu so
+        // the user lands back on Diary / Dashboard instead of the menu mid-stack.
+        .onReceive(NotificationCenter.default.publisher(for: .didLogFoodFromSearch)) { _ in
+            activeSheet = nil
+            dismiss()
+        }
     }
 
     private var listContent: some View {
