@@ -128,6 +128,9 @@ class MealAnalysisService @Inject constructor(
             .url(SecretsManager.mealScanEndpoint)
             .addHeader("X-App-Secret", sharedSecret)
             .addHeader("X-Install-Id", installId)
+            // Platform header — proxy uses this to pick the right Anthropic key
+            // (when ANTHROPIC_API_KEY_ANDROID is set) and for per-platform logs.
+            .addHeader("X-Platform", "android")
             .post(requestBody.toRequestBody("application/json".toMediaType()))
             .build()
 
