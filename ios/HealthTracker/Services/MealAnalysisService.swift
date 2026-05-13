@@ -36,9 +36,11 @@ class MealAnalysisService: ObservableObject {
     @Published var isAnalyzing = false
     @Published var lastAnalysis: MealAnalysis?
 
-    // Anthropic Claude API Configuration
-    private let anthropicApiKey = SecretsManager.anthropicAPIKey
-    private let anthropicEndpoint = "https://api.anthropic.com/v1/messages"
+    // Meal-scan goes through the Vercel proxy at mochasmindlab.com/api/v1/meal-scan.
+    // The Anthropic key lives in the proxy's env vars, not in the app binary.
+    // Apps authenticate to the proxy with APP_SHARED_SECRET + a per-install UUID.
+    private let proxyEndpoint = SecretsManager.mealScanEndpoint
+    private let appSharedSecret = SecretsManager.appSharedSecret
 
     private init() {}
 
@@ -65,66 +67,27 @@ class MealAnalysisService: ObservableObject {
     // MARK: - Claude Vision API
 
     private func analyzeWithClaude(base64Image: String, completion: @escaping (Result<MealAnalysis, Error>) -> Void) {
-        let prompt = """
-        Analyze this food image and identify all food items. For each item provide:
-        1. Food name
-        2. Estimated quantity/portion size
-        3. Estimated calories
-        4. Estimated macros (protein, carbs, fat in grams)
-        5. Confidence level (0-1)
-
-        Return ONLY valid JSON with no other text, in this exact format:
-        {
-            "items": [
-                {
-                    "name": "food name",
-                    "quantity": "portion description",
-                    "calories": 0,
-                    "protein": 0,
-                    "carbs": 0,
-                    "fat": 0,
-                    "fiber": 0,
-                    "confidence": 0.0
-                }
-            ],
-            "totalCalories": 0,
-            "confidence": 0.0
-        }
-        """
-
+        // Proxy expects a minimal body — image only. Prompt + model selection
+        // are owned by the proxy so they can be tuned server-side without app
+        // updates. See Web-Projects/mochamindlabs-website/api/v1/meal-scan.js.
         let requestBody: [String: Any] = [
-            "model": "claude-sonnet-4-6",
-            "max_tokens": 1024,
-            "messages": [
-                [
-                    "role": "user",
-                    "content": [
-                        [
-                            "type": "image",
-                            "source": [
-                                "type": "base64",
-                                "media_type": "image/jpeg",
-                                "data": base64Image
-                            ]
-                        ],
-                        [
-                            "type": "text",
-                            "text": prompt
-                        ]
-                    ]
-                ]
-            ]
+            "image": base64Image
         ]
 
-        guard let url = URL(string: anthropicEndpoint) else {
+        guard let url = URL(string: proxyEndpoint) else {
             completion(.failure(AnalysisError.networkError))
+            return
+        }
+        guard !appSharedSecret.isEmpty else {
+            completion(.failure(AnalysisError.apiKeyMissing))
+            isAnalyzing = false
             return
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue(anthropicApiKey, forHTTPHeaderField: "x-api-key")
-        request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
+        request.setValue(appSharedSecret, forHTTPHeaderField: "X-App-Secret")
+        request.setValue(SecretsManager.installId, forHTTPHeaderField: "X-Install-Id")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody)
 
@@ -140,6 +103,24 @@ class MealAnalysisService: ObservableObject {
                 guard let data = data else {
                     completion(.failure(AnalysisError.noData))
                     return
+                }
+
+                // Map proxy HTTP status to friendly errors before attempting to
+                // parse — a 401/429 body won't look like an Anthropic response.
+                if let http = response as? HTTPURLResponse {
+                    switch http.statusCode {
+                    case 200...299:
+                        break
+                    case 401:
+                        completion(.failure(AnalysisError.apiKeyMissing))
+                        return
+                    case 429:
+                        completion(.failure(AnalysisError.quotaExceeded))
+                        return
+                    default:
+                        completion(.failure(AnalysisError.invalidResponse))
+                        return
+                    }
                 }
 
                 do {

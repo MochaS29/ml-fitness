@@ -24,6 +24,34 @@ enum SecretsManager {
     }
 
     // Convenience accessors
+
+    // Legacy direct-Anthropic access. Kept here only as a fallback for debug
+    // builds that haven't been updated; release builds should leave this blank
+    // in Secrets.plist so the proxy path is forced.
     static var anthropicAPIKey: String { value(for: "ANTHROPIC_API_KEY") }
+
     static var usdaAPIKey: String { value(for: "USDA_API_KEY").isEmpty ? "DEMO_KEY" : value(for: "USDA_API_KEY") }
+
+    // Proxy auth — paired with a per-install UUID (see `installId`). The shared
+    // secret is rotated only on major releases; the install UUID is unique per
+    // device and used for per-install rate limiting at the proxy.
+    static var appSharedSecret: String { value(for: "APP_SHARED_SECRET") }
+
+    static var mealScanEndpoint: String {
+        let v = value(for: "MEAL_SCAN_ENDPOINT")
+        return v.isEmpty ? "https://mochasmindlab.com/api/v1/meal-scan" : v
+    }
+
+    // Per-install identifier stored in UserDefaults. Generated on first read
+    // and never changes for the life of the install (resets only on uninstall
+    // or explicit "Clear Data"). Not personally identifying.
+    private static let installIdKey = "install_id"
+    static var installId: String {
+        if let cached = UserDefaults.standard.string(forKey: installIdKey), !cached.isEmpty {
+            return cached
+        }
+        let fresh = UUID().uuidString
+        UserDefaults.standard.set(fresh, forKey: installIdKey)
+        return fresh
+    }
 }
