@@ -36,6 +36,7 @@ fun GoalsScreen(
     viewModel: GoalsViewModel = hiltViewModel()
 ) {
     var showAddGoalDialog by remember { mutableStateOf(false) }
+    var presetGoalType by remember { mutableStateOf<GoalType?>(null) }
     val goals by viewModel.goals.collectAsState()
     val activeGoals = goals.filter { it.isActive }
     val completedGoals = goals.filter { !it.isActive }
@@ -53,20 +54,17 @@ fun GoalsScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
+                },
+                actions = {
+                    IconButton(onClick = { showAddGoalDialog = true }) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Add Goal",
+                            tint = MochaBrown
+                        )
+                    }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showAddGoalDialog = true },
-                containerColor = MochaBrown
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Add Goal",
-                    tint = Color.White
-                )
-            }
         }
     ) { paddingValues ->
         LazyColumn(
@@ -98,6 +96,7 @@ fun GoalsScreen(
             item {
                 QuickGoalsSection(
                     onQuickGoalSelected = { goalType ->
+                        presetGoalType = goalType
                         showAddGoalDialog = true
                     }
                 )
@@ -169,10 +168,15 @@ fun GoalsScreen(
 
     if (showAddGoalDialog) {
         AddGoalDialog(
-            onDismiss = { showAddGoalDialog = false },
+            initialType = presetGoalType ?: GoalType.WEIGHT_LOSS,
+            onDismiss = {
+                showAddGoalDialog = false
+                presetGoalType = null
+            },
             onAdd = { goalType, target, duration ->
                 viewModel.addGoal(goalType, target, duration)
                 showAddGoalDialog = false
+                presetGoalType = null
             }
         )
     }
@@ -538,10 +542,11 @@ fun AchievementsSection(
 
 @Composable
 fun AddGoalDialog(
+    initialType: GoalType = GoalType.WEIGHT_LOSS,
     onDismiss: () -> Unit,
     onAdd: (GoalType, String, Int) -> Unit
 ) {
-    var selectedType by remember { mutableStateOf(GoalType.WEIGHT_LOSS) }
+    var selectedType by remember { mutableStateOf(initialType) }
     var target by remember { mutableStateOf("") }
     var duration by remember { mutableStateOf("30") }
     var expanded by remember { mutableStateOf(false) }

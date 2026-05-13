@@ -1,6 +1,7 @@
 package com.mochasmindlab.mlhealth.ui.screens.dashboard
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -29,6 +30,20 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val aiInsights by viewModel.aiInsights.collectAsState()
+
+    // Refresh totals whenever we return to the dashboard — picks up entries logged
+    // (or deleted) on other screens since the VM doesn't observe DAO Flows.
+    val lifecycleOwner = androidx.compose.ui.platform.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                viewModel.refreshData()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     Scaffold(
         topBar = {
@@ -57,9 +72,16 @@ fun DashboardScreen(
                 DateHeader()
             }
 
+            // AI Insights carousel — only renders when there's something to show.
+            if (aiInsights.isNotEmpty()) {
+                item {
+                    InsightsCarousel(aiInsights, navController)
+                }
+            }
+
             // Daily Summary Cards (matching iOS)
             item {
-                DailySummaryCards(uiState)
+                DailySummaryCards(uiState, navController)
             }
 
             // Calories Card
@@ -67,7 +89,8 @@ fun DashboardScreen(
                 CaloriesCard(
                     consumed = uiState.caloriesConsumed,
                     goal = uiState.calorieGoal,
-                    remaining = uiState.calorieGoal - uiState.caloriesConsumed
+                    remaining = uiState.calorieGoal - uiState.caloriesConsumed,
+                    onClick = { navController.navigate("nutrition_detail") }
                 )
             }
 
@@ -76,7 +99,8 @@ fun DashboardScreen(
                 MacrosCard(
                     protein = uiState.proteinGrams,
                     carbs = uiState.carbsGrams,
-                    fat = uiState.fatGrams
+                    fat = uiState.fatGrams,
+                    onClick = { navController.navigate("nutrition_detail") }
                 )
             }
 
@@ -84,7 +108,8 @@ fun DashboardScreen(
             item {
                 WaterCard(
                     consumed = uiState.waterCups,
-                    goal = 8
+                    goal = 8,
+                    onClick = { navController.navigate("water") }
                 )
             }
 
@@ -93,7 +118,8 @@ fun DashboardScreen(
                 WeightCard(
                     currentWeight = uiState.currentWeight.toFloat(),
                     weightChange = uiState.weightChange,
-                    lastUpdated = uiState.lastWeightDate
+                    lastUpdated = uiState.lastWeightDate,
+                    onClick = { navController.navigate("weight") }
                 )
             }
 
@@ -101,7 +127,8 @@ fun DashboardScreen(
             item {
                 ExerciseCard(
                     minutes = uiState.exerciseMinutes,
-                    caloriesBurned = uiState.exerciseCalories
+                    caloriesBurned = uiState.exerciseCalories,
+                    onClick = { navController.navigate("exercise") }
                 )
             }
 
@@ -109,7 +136,8 @@ fun DashboardScreen(
             item {
                 StepsCard(
                     steps = uiState.steps,
-                    goal = 10000
+                    goal = 10000,
+                    onClick = { navController.navigate("exercise") }
                 )
             }
         }
@@ -138,7 +166,69 @@ fun DateHeader() {
 }
 
 @Composable
-fun DailySummaryCards(uiState: DashboardUiState) {
+fun InsightsCarousel(
+    insights: List<com.mochasmindlab.mlhealth.viewmodel.AIInsight>,
+    navController: NavController
+) {
+    Column {
+        Text(
+            text = "Today's insights",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = MochaBrown,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            items(insights.size) { i ->
+                val insight = insights[i]
+                val (emoji, color, route) = when (insight.type) {
+                    com.mochasmindlab.mlhealth.viewmodel.InsightType.HYDRATION ->
+                        Triple("💧", Color(0xFF00BCD4), "water")
+                    com.mochasmindlab.mlhealth.viewmodel.InsightType.NUTRITION ->
+                        Triple("🍎", MochaBrown, "nutrition_detail")
+                    com.mochasmindlab.mlhealth.viewmodel.InsightType.EXERCISE ->
+                        Triple("💪", Color(0xFFFF5722), "exercise")
+                    com.mochasmindlab.mlhealth.viewmodel.InsightType.WEIGHT ->
+                        Triple("⚖️", MochaBrown, "weight")
+                    com.mochasmindlab.mlhealth.viewmodel.InsightType.SLEEP ->
+                        Triple("😴", Color(0xFF7E57C2), "sleep")
+                    com.mochasmindlab.mlhealth.viewmodel.InsightType.GENERAL ->
+                        Triple("✨", MochaBrown, null)
+                }
+                Card(
+                    modifier = Modifier
+                        .width(220.dp)
+                        .clickable(enabled = route != null) {
+                            route?.let { navController.navigate(it) }
+                        },
+                    colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.08f))
+                ) {
+                    Column(modifier = Modifier.padding(14.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(emoji, fontSize = 18.sp)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                insight.title,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = color
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            insight.description,
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun DailySummaryCards(uiState: DashboardUiState, navController: NavController) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -147,7 +237,8 @@ fun DailySummaryCards(uiState: DashboardUiState) {
                 title = "Calories",
                 value = "${uiState.caloriesConsumed}",
                 subtitle = "of ${uiState.calorieGoal}",
-                color = MochaBrown
+                color = MochaBrown,
+                onClick = { navController.navigate("nutrition_detail") }
             )
         }
         item {
@@ -155,7 +246,8 @@ fun DailySummaryCards(uiState: DashboardUiState) {
                 title = "Water",
                 value = "${uiState.waterCups}",
                 subtitle = "cups",
-                color = Color(0xFF00BCD4)
+                color = Color(0xFF00BCD4),
+                onClick = { navController.navigate("water") }
             )
         }
         item {
@@ -163,7 +255,8 @@ fun DailySummaryCards(uiState: DashboardUiState) {
                 title = "Steps",
                 value = "${uiState.steps}",
                 subtitle = "steps",
-                color = Color(0xFF4CAF50)
+                color = Color(0xFF4CAF50),
+                onClick = { navController.navigate("exercise") }
             )
         }
     }
@@ -174,12 +267,14 @@ fun SummaryCard(
     title: String,
     value: String,
     subtitle: String,
-    color: Color
+    color: Color,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .width(120.dp)
-            .height(100.dp),
+            .height(100.dp)
+            .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = color.copy(alpha = 0.1f)
         )
@@ -214,10 +309,13 @@ fun SummaryCard(
 fun CaloriesCard(
     consumed: Int,
     goal: Int,
-    remaining: Int
+    remaining: Int,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
@@ -270,10 +368,13 @@ fun CaloriesCard(
 fun MacrosCard(
     protein: Float,
     carbs: Float,
-    fat: Float
+    fat: Float,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
@@ -341,10 +442,13 @@ fun MacroItem(
 @Composable
 fun WaterCard(
     consumed: Int,
-    goal: Int
+    goal: Int,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF00BCD4).copy(alpha = 0.1f)
         )
@@ -381,10 +485,13 @@ fun WaterCard(
 fun WeightCard(
     currentWeight: Float,
     weightChange: Float,
-    lastUpdated: String?
+    lastUpdated: String?,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
     ) {
         Row(
             modifier = Modifier
@@ -428,10 +535,13 @@ fun WeightCard(
 @Composable
 fun ExerciseCard(
     minutes: Int,
-    caloriesBurned: Int
+    caloriesBurned: Int,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
     ) {
         Row(
             modifier = Modifier
@@ -466,10 +576,13 @@ fun ExerciseCard(
 @Composable
 fun StepsCard(
     steps: Int,
-    goal: Int
+    goal: Int,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF4CAF50).copy(alpha = 0.1f)
         )

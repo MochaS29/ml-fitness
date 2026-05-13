@@ -4,11 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mochasmindlab.mlhealth.data.entities.WeightEntry
 import com.mochasmindlab.mlhealth.data.repository.WeightRepository
+import com.mochasmindlab.mlhealth.di.ApplicationScope
+import com.mochasmindlab.mlhealth.services.HealthConnectManager
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.Calendar
 import java.util.Date
 import java.time.ZoneId
 import java.util.UUID
@@ -17,7 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class WeightViewModel @Inject constructor(
     private val weightRepository: WeightRepository,
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
+    private val healthConnectManager: HealthConnectManager,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     private val _currentWeight = MutableStateFlow(0.0)
@@ -112,14 +118,34 @@ class WeightViewModel @Inject constructor(
         }
     }
 
-    fun addWeightEntry(weight: Double, notes: String) {
-        viewModelScope.launch {
-            val entry = WeightEntry(
-                weight = weight,
-                date = Date(),
-                notes = notes
+    fun addWeightEntry(weight: Double, notes: String, date: Date = Date()) {
+        // Normalize to start-of-day so dashboard's getWeightOnDate / getLatestEntry
+        // queries align across days. appScope outlives the dialog so the insert
+        // isn't dropped if the screen recomposes.
+        val startOfDay = Calendar.getInstance().apply {
+            time = date
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.time
+        appScope.launch {
+            weightRepository.insertWeightEntry(
+                WeightEntry(weight = weight, date = startOfDay, notes = notes)
             )
-            weightRepository.insertWeightEntry(entry)
+
+            // Mirror to Health Connect when the user has granted write permission.
+            // The user enters lbs, but HC stores kilograms. Fails silently if HC is
+            // unavailable or not permitted — local entry above is still persisted.
+            runCatching {
+                if (healthConnectManager.hasAllPermissions()) {
+                    val kg = weight * 0.45359237
+                    healthConnectManager.writeWeightKg(
+                        weight = kg,
+                        time = startOfDay.toInstant()
+                    )
+                }
+            }
         }
     }
 

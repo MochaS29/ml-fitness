@@ -6,9 +6,11 @@ import com.mochasmindlab.mlhealth.data.entities.WaterEntry
 import com.mochasmindlab.mlhealth.data.entities.WaterUnit
 import com.mochasmindlab.mlhealth.data.models.AchievementEvent
 import com.mochasmindlab.mlhealth.data.repository.WaterRepository
+import com.mochasmindlab.mlhealth.di.ApplicationScope
 import com.mochasmindlab.mlhealth.services.AchievementManager
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
@@ -18,7 +20,8 @@ import javax.inject.Inject
 class WaterTrackingViewModel @Inject constructor(
     private val waterRepository: WaterRepository,
     private val preferencesManager: PreferencesManager,
-    private val achievementManager: AchievementManager
+    private val achievementManager: AchievementManager,
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
     // UI State
@@ -47,9 +50,13 @@ class WaterTrackingViewModel @Inject constructor(
     }
 
     private fun loadWaterGoal() {
+        // Canonical goal is in cups (PreferencesManager.dailyWaterGoal) — that's
+        // what Goals writes and Dashboard reads. Convert to oz for this screen's
+        // ounces-based progress UI (1 cup = 8 oz). Previously this read a separate
+        // WATER_GOAL_OZ key that no other screen updated.
         viewModelScope.launch {
-            preferencesManager.waterGoalOz.collect { goal ->
-                _waterGoalOz.value = goal
+            preferencesManager.dailyWaterGoal.collect { cups ->
+                _waterGoalOz.value = cups * 8
                 updateProgressCalculations()
             }
         }
@@ -91,17 +98,14 @@ class WaterTrackingViewModel @Inject constructor(
     }
 
     fun addWater(ounces: Float) {
-        viewModelScope.launch {
+        // appScope so the insert isn't cancelled when the screen pops back
+        // (callers typically navigate away immediately after add).
+        appScope.launch {
             try {
-                _uiState.update { it.copy(isLoading = true) }
                 waterRepository.addQuickWaterEntry(ounces)
-                _uiState.update { it.copy(isLoading = false) }
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = "Failed to add water entry: ${e.message}"
-                    )
+                    it.copy(errorMessage = "Failed to add water entry: ${e.message}")
                 }
             }
         }
@@ -116,22 +120,17 @@ class WaterTrackingViewModel @Inject constructor(
     }
 
     fun addCustomAmount(amount: Float, unit: WaterUnit) {
-        viewModelScope.launch {
+        appScope.launch {
             try {
-                _uiState.update { it.copy(isLoading = true) }
                 val waterEntry = WaterEntry(
                     amount = amount.toDouble(),
                     unit = unit,
                     timestamp = Date()
                 )
                 waterRepository.addWaterEntry(waterEntry)
-                _uiState.update { it.copy(isLoading = false) }
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = "Failed to add water entry: ${e.message}"
-                    )
+                    it.copy(errorMessage = "Failed to add water entry: ${e.message}")
                 }
             }
         }
@@ -151,8 +150,12 @@ class WaterTrackingViewModel @Inject constructor(
 
     fun updateWaterGoal(newGoalOz: Int) {
         viewModelScope.launch {
-            preferencesManager.setWaterGoalOz(newGoalOz)
-            _waterGoalOz.value = newGoalOz
+            // Persist in cups (canonical) so Goals/Dashboard see the change. Keep
+            // the legacy oz key in sync too for any older code paths still reading it.
+            val cups = (newGoalOz / 8).coerceAtLeast(1)
+            preferencesManager.updateDailyWaterGoal(cups)
+            preferencesManager.setWaterGoalOz(cups * 8)
+            _waterGoalOz.value = cups * 8
             updateProgressCalculations()
         }
     }

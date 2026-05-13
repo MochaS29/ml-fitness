@@ -20,7 +20,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mochasmindlab.mlhealth.ui.theme.MochaBrown
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
+import com.mochasmindlab.mlhealth.utils.SampleDataGenerator
 import com.mochasmindlab.mlhealth.BuildConfig
+import androidx.compose.ui.platform.LocalContext
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+
+/** Hilt entry point so the composable can grab the singleton SampleDataGenerator. */
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface MoreScreenEntryPoint {
+    fun sampleDataGenerator(): SampleDataGenerator
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,6 +41,18 @@ fun MoreScreen(
     navController: NavController,
     preferencesManager: PreferencesManager? = null
 ) {
+    val context = LocalContext.current
+    val sampleDataGenerator = remember {
+        EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            MoreScreenEntryPoint::class.java
+        ).sampleDataGenerator()
+    }
+    var demoMessage by remember { mutableStateOf<String?>(null) }
+    val snackbar = remember { SnackbarHostState() }
+    LaunchedEffect(demoMessage) {
+        demoMessage?.let { snackbar.showSnackbar(it); demoMessage = null }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -38,7 +63,8 @@ fun MoreScreen(
                     )
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbar) }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -118,11 +144,23 @@ fun MoreScreen(
                 MoreMenuItem("Recipe Manager", Icons.Default.MenuBook) {
                     navController.navigate("recipes")
                 },
+                MoreMenuItem("Grocery List", Icons.Default.ShoppingCart) {
+                    navController.navigate("grocery_list")
+                },
                 MoreMenuItem("Progress Charts", Icons.Default.ShowChart) {
                     navController.navigate("progress")
                 },
+                MoreMenuItem("Achievements", Icons.Default.EmojiEvents) {
+                    navController.navigate("achievements")
+                },
                 MoreMenuItem("Goals", Icons.Default.Flag) {
                     navController.navigate("goals")
+                },
+                MoreMenuItem("Health Connect", Icons.Default.MonitorHeart) {
+                    navController.navigate("health_connect")
+                },
+                MoreMenuItem("Upgrade to Pro", Icons.Default.WorkspacePremium) {
+                    navController.navigate("paywall")
                 }
             )
 
@@ -238,7 +276,10 @@ fun MoreScreen(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { /* Generate demo data */ },
+                            .clickable {
+                                sampleDataGenerator.generateSampleData()
+                                demoMessage = "Demo data inserted (if no entries existed)"
+                            },
                         colors = CardDefaults.cardColors(
                             containerColor = Color.Red.copy(alpha = 0.1f)
                         )

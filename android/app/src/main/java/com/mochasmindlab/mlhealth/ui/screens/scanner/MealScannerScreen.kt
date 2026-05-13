@@ -44,6 +44,8 @@ fun MealScannerScreen(
     val analysis by viewModel.analysis.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val selectedMealType by viewModel.selectedMealType.collectAsState()
+    val mealScanCount by viewModel.mealScanCount.collectAsState()
+    val isPro by viewModel.isPro.collectAsState()
 
     val context = LocalContext.current
     var capturedBitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -96,7 +98,17 @@ fun MealScannerScreen(
             when (phase) {
                 ScanPhase.Idle -> IdleContent(
                     onTakePhoto = { takePictureLauncher.launch(null) },
-                    onPickGallery = { pickImageLauncher.launch("image/*") }
+                    onPickGallery = { pickImageLauncher.launch("image/*") },
+                    freeScansLeft = (3 - mealScanCount).coerceAtLeast(0),
+                    isPro = isPro
+                )
+
+                ScanPhase.Paywall -> PaywallGate(
+                    onUpgrade = { navController.navigate("paywall") },
+                    onCancel = {
+                        viewModel.reset()
+                        navController.popBackStack()
+                    }
                 )
 
                 ScanPhase.Capturing -> {
@@ -138,7 +150,43 @@ fun MealScannerScreen(
 }
 
 @Composable
-private fun IdleContent(onTakePhoto: () -> Unit, onPickGallery: () -> Unit) {
+private fun PaywallGate(onUpgrade: () -> Unit, onCancel: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("⭐", fontSize = 48.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            "You've used your 3 free scans",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            "Upgrade to Pro for unlimited AI meal scans, advanced charts, and full Health Connect sync.",
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            color = Color.Gray
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = onUpgrade, modifier = Modifier.fillMaxWidth()) {
+            Text("See Pro options")
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        TextButton(onClick = onCancel) { Text("Not now") }
+    }
+}
+
+@Composable
+private fun IdleContent(
+    onTakePhoto: () -> Unit,
+    onPickGallery: () -> Unit,
+    freeScansLeft: Int = 3,
+    isPro: Boolean = false
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -158,7 +206,19 @@ private fun IdleContent(onTakePhoto: () -> Unit, onPickGallery: () -> Unit) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+        if (isPro) {
+            AssistChip(
+                onClick = {},
+                label = { Text("Pro · unlimited scans") }
+            )
+        } else {
+            AssistChip(
+                onClick = {},
+                label = { Text("$freeScansLeft of 3 free scans remaining") }
+            )
+        }
+        Spacer(modifier = Modifier.height(24.dp))
         Button(
             onClick = onTakePhoto,
             modifier = Modifier.fillMaxWidth()

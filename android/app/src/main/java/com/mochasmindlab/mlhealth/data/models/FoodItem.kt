@@ -1,9 +1,15 @@
 package com.mochasmindlab.mlhealth.data.models
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 
+// @Parcelize lets Compose/NavController save FoodItem through process death.
+// Without this, scanning a barcode crashed with "Can't put value with type class
+// FoodItem into saved state" when the OS reaped the activity.
+@Parcelize
 @Entity(tableName = "food_items")
 data class FoodItem(
     @PrimaryKey(autoGenerate = true)
@@ -26,4 +32,4 @@ data class FoodItem(
     val lastLogged: Date? = null,
     val logCount: Int = 0,
     val createdAt: Date = Date()
-)
+) : Parcelable

@@ -2,6 +2,7 @@ package com.mochasmindlab.mlhealth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mochasmindlab.mlhealth.data.models.DietaryPreference
 import com.mochasmindlab.mlhealth.data.models.FoodAllergy
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,6 +55,27 @@ class AllergenPreferencesViewModel @Inject constructor(
                 current + allergy
             }
             prefs.setAllergens(updated.map { it.name }.toSet())
+        }
+    }
+
+    /** Currently selected dietary preferences (vegan, keto, etc.), derived from DataStore. */
+    val dietaryPreferences: StateFlow<Set<DietaryPreference>> = prefs.dietaryPreferences
+        .map { stringSet ->
+            stringSet.mapNotNull { name ->
+                runCatching { DietaryPreference.valueOf(name) }.getOrNull()
+            }.toSet()
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptySet()
+        )
+
+    fun toggleDietaryPreference(pref: DietaryPreference) {
+        viewModelScope.launch {
+            val current = dietaryPreferences.value
+            val updated = if (pref in current) current - pref else current + pref
+            prefs.setDietaryPreferences(updated.map { it.name }.toSet())
         }
     }
 }

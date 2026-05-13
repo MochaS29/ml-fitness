@@ -37,6 +37,7 @@ fun ExerciseTrackingScreen(
 ) {
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var showQuickAdd by remember { mutableStateOf(false) }
+    var prefilledExerciseName by remember { mutableStateOf<String?>(null) }
     val exerciseEntries by viewModel.todayExercises.collectAsState()
     val totalCaloriesBurned by viewModel.totalCaloriesBurned.collectAsState()
     val totalMinutes by viewModel.totalMinutes.collectAsState()
@@ -57,23 +58,15 @@ fun ExerciseTrackingScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { navController.navigate("exercise_history") }) {
-                        Icon(Icons.Default.History, contentDescription = "History")
+                    IconButton(onClick = { showQuickAdd = true }) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Add Exercise",
+                            tint = ExerciseOrange
+                        )
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showQuickAdd = true },
-                containerColor = ExerciseOrange
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Add Exercise",
-                    tint = Color.White
-                )
-            }
         }
     ) { paddingValues ->
         LazyColumn(
@@ -116,7 +109,9 @@ fun ExerciseTrackingScreen(
             item {
                 QuickExerciseOptions(
                     onExerciseSelected = { exercise ->
-                        navController.navigate("exercise_detail/${exercise}")
+                        // Open the QuickAdd dialog pre-filled with the chosen exercise.
+                        prefilledExerciseName = exercise
+                        showQuickAdd = true
                     }
                 )
             }
@@ -136,7 +131,11 @@ fun ExerciseTrackingScreen(
                     ExerciseEntryCard(
                         exercise = exercise,
                         onEdit = {
-                            navController.navigate("edit_exercise/${exercise.id}")
+                            // Edit screen not yet built — re-open QuickAdd seeded with the
+                            // existing entry's name. User can re-log; deleting is via the
+                            // delete button.
+                            prefilledExerciseName = exercise.name
+                            showQuickAdd = true
                         },
                         onDelete = {
                             viewModel.deleteExercise(exercise)
@@ -165,7 +164,8 @@ fun ExerciseTrackingScreen(
             item {
                 PopularWorkoutsSection(
                     onWorkoutClick = { workout ->
-                        navController.navigate("workout_detail/${workout}")
+                        prefilledExerciseName = workout
+                        showQuickAdd = true
                     }
                 )
             }
@@ -174,10 +174,15 @@ fun ExerciseTrackingScreen(
 
     if (showQuickAdd) {
         QuickAddExerciseDialog(
-            onDismiss = { showQuickAdd = false },
+            initialName = prefilledExerciseName.orEmpty(),
+            onDismiss = {
+                showQuickAdd = false
+                prefilledExerciseName = null
+            },
             onAdd = { name, duration, calories ->
                 viewModel.quickAddExercise(name, duration, calories)
                 showQuickAdd = false
+                prefilledExerciseName = null
             }
         )
     }
@@ -277,8 +282,14 @@ fun QuickExerciseOptions(
         "Running" to "🏃",
         "Cycling" to "🚴",
         "Swimming" to "🏊",
-        "Gym" to "🏋️",
-        "Yoga" to "🧘"
+        "Weights" to "🏋️",
+        "Yoga" to "🧘",
+        "HIIT" to "🔥",
+        "Pilates" to "🤸",
+        "Dancing" to "💃",
+        "Hiking" to "🥾",
+        "Tennis" to "🎾",
+        "Basketball" to "🏀"
     )
 
     LazyRow(
@@ -525,12 +536,27 @@ fun PopularWorkoutsSection(
 
 @Composable
 fun QuickAddExerciseDialog(
+    initialName: String = "",
     onDismiss: () -> Unit,
     onAdd: (name: String, duration: Int, calories: Int) -> Unit
 ) {
-    var exerciseName by remember { mutableStateOf("") }
+    var exerciseName by remember(initialName) { mutableStateOf(initialName) }
     var duration by remember { mutableStateOf("") }
     var calories by remember { mutableStateOf("") }
+    var caloriesEdited by remember { mutableStateOf(false) }
+
+    // Auto-fill calories from a MET-based estimate whenever name or duration changes,
+    // unless the user has manually overridden the value.
+    LaunchedEffect(exerciseName, duration) {
+        if (!caloriesEdited) {
+            val mins = duration.toIntOrNull()
+            calories = if (mins != null && mins > 0 && exerciseName.isNotBlank()) {
+                estimateCaloriesBurned(exerciseName, mins).toString()
+            } else {
+                ""
+            }
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -550,7 +576,7 @@ fun QuickAddExerciseDialog(
 
                 OutlinedTextField(
                     value = duration,
-                    onValueChange = { duration = it },
+                    onValueChange = { duration = it.filter(Char::isDigit).take(4) },
                     label = { Text("Duration (minutes)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
@@ -558,8 +584,16 @@ fun QuickAddExerciseDialog(
 
                 OutlinedTextField(
                     value = calories,
-                    onValueChange = { calories = it },
+                    onValueChange = {
+                        calories = it.filter(Char::isDigit).take(5)
+                        caloriesEdited = true
+                    },
                     label = { Text("Calories Burned") },
+                    supportingText = {
+                        if (!caloriesEdited && calories.isNotEmpty()) {
+                            Text("Estimated — tap to adjust", fontSize = 11.sp)
+                        }
+                    },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -586,6 +620,33 @@ fun QuickAddExerciseDialog(
             }
         }
     )
+}
+
+/**
+ * Rough calories-burned estimate from exercise name + duration in minutes.
+ * Uses MET (Metabolic Equivalent of Task) values for an average ~70kg adult:
+ *   calories = MET × weight_kg × hours
+ * Matches the iOS app's approach so the user doesn't have to look up burn rates.
+ */
+private fun estimateCaloriesBurned(exerciseName: String, durationMinutes: Int): Int {
+    val name = exerciseName.lowercase()
+    val met = when {
+        "run" in name || "jog" in name -> 9.8
+        "cycl" in name || "bike" in name || "spin" in name -> 7.5
+        "swim" in name -> 7.0
+        "walk" in name || "hike" in name -> 3.8
+        "yoga" in name || "stretch" in name -> 2.5
+        "pilates" in name -> 3.0
+        "dance" in name -> 5.5
+        "row" in name -> 7.0
+        "elliptical" in name -> 5.0
+        "weight" in name || "strength" in name || "lift" in name || "gym" in name -> 5.0
+        "hiit" in name || "crossfit" in name -> 8.0
+        "tennis" in name || "soccer" in name || "basketball" in name -> 7.0
+        else -> 5.0 // Reasonable default for "general" activity
+    }
+    val weightKg = 70.0
+    return (met * weightKg * (durationMinutes / 60.0)).toInt()
 }
 
 @Composable

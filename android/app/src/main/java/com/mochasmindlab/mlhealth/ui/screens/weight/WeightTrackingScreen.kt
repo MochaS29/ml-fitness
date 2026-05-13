@@ -65,23 +65,15 @@ fun WeightTrackingScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { navController.navigate("weight_settings") }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                    IconButton(onClick = { showAddDialog = true }) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Add Weight",
+                            tint = MochaBrown
+                        )
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showAddDialog = true },
-                containerColor = MochaBrown
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Add Weight",
-                    tint = Color.White
-                )
-            }
         }
     ) { paddingValues ->
         LazyColumn(
@@ -152,8 +144,8 @@ fun WeightTrackingScreen(
     if (showAddDialog) {
         AddWeightDialog(
             onDismiss = { showAddDialog = false },
-            onAdd = { weight, notes ->
-                viewModel.addWeightEntry(weight.toDouble(), notes)
+            onAdd = { weight, notes, date ->
+                viewModel.addWeightEntry(weight.toDouble(), notes, date)
                 showAddDialog = false
             }
         )
@@ -207,18 +199,20 @@ fun CurrentWeightCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Progress to Goal
-            val progress = if (goalWeight < startingWeight) {
-                // Weight loss goal
-                val totalToLose = startingWeight - goalWeight
-                val lost = startingWeight - currentWeight
-                (lost / totalToLose).coerceIn(0f, 1f)
-            } else {
-                // Weight gain goal
-                val totalToGain = goalWeight - startingWeight
-                val gained = currentWeight - startingWeight
-                (gained / totalToGain).coerceIn(0f, 1f)
+            // Progress to Goal — guard against 0/0 (NaN) when no goal is set
+            // and against Infinity when starting == current. Both default to 0.
+            val raw = when {
+                goalWeight < startingWeight -> {
+                    val totalToLose = startingWeight - goalWeight
+                    if (totalToLose == 0f) 0f else (startingWeight - currentWeight) / totalToLose
+                }
+                goalWeight > startingWeight -> {
+                    val totalToGain = goalWeight - startingWeight
+                    if (totalToGain == 0f) 0f else (currentWeight - startingWeight) / totalToGain
+                }
+                else -> 0f // No goal set yet (goalWeight == startingWeight, often both 0)
             }
+            val progress = if (raw.isNaN() || raw.isInfinite()) 0f else raw.coerceIn(0f, 1f)
 
             Column(
                 modifier = Modifier.fillMaxWidth()
@@ -623,30 +617,28 @@ fun WeightEntryCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddWeightDialog(
     onDismiss: () -> Unit,
-    onAdd: (Float, String) -> Unit
+    onAdd: (Float, String, java.util.Date) -> Unit
 ) {
     var weight by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
+    var selectedDate by remember { mutableStateOf(java.util.Date()) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    val dateFmt = remember { java.text.SimpleDateFormat("MMM d, yyyy", java.util.Locale.getDefault()) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = {
-            Text("Log Weight")
-        },
+        title = { Text("Log Weight") },
         text = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = weight,
                     onValueChange = { weight = it },
                     label = { Text("Weight (lbs)") },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Decimal
-                    ),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -656,23 +648,58 @@ fun AddWeightDialog(
                     label = { Text("Notes (optional)") },
                     modifier = Modifier.fillMaxWidth()
                 )
+
+                OutlinedTextField(
+                    value = dateFmt.format(selectedDate),
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Date") },
+                    trailingIcon = {
+                        IconButton(onClick = { showDatePicker = true }) {
+                            Icon(Icons.Default.CalendarMonth, contentDescription = "Pick date")
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showDatePicker = true }
+                )
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    weight.toFloatOrNull()?.let {
-                        onAdd(it, notes)
-                    }
+                    weight.toFloatOrNull()?.let { onAdd(it, notes, selectedDate) }
                 }
             ) {
                 Text("Add", color = MochaBrown)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
+            TextButton(onClick = onDismiss) { Text("Cancel") }
         }
     )
+
+    if (showDatePicker) {
+        // Material3 1.1.2 doesn't have SelectableDates yet; future dates are
+        // selectable here, but a stale future weight is harmless.
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = selectedDate.time
+        )
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let {
+                        selectedDate = java.util.Date(it)
+                    }
+                    showDatePicker = false
+                }) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
 }

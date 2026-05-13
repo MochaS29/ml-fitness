@@ -25,9 +25,11 @@ class WaterRepository @Inject constructor(
         waterDao.delete(waterEntry)
     }
 
-    fun getTodayWaterEntries(): Flow<List<WaterEntry>> = flow {
-        val today = Date()
-        emit(waterDao.getEntriesForDate(today))
+    fun getTodayWaterEntries(): Flow<List<WaterEntry>> {
+        // Use Room's native Flow so the UI auto-updates on insert/delete.
+        // The previous `flow { emit(...) }` builder emitted once and completed,
+        // so adds via Glass/Bottle/Custom never refreshed the screen.
+        return waterDao.getEntriesForDateFlow(Date())
     }
 
     suspend fun getTodayWaterIntakeOz(): Float {

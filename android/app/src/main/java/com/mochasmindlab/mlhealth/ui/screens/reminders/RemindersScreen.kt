@@ -149,7 +149,23 @@ fun RemindersScreen(
                 }
             )
 
-            // Exercise + step nudges deferred — TODO mirror iOS step nudge logic in a later phase
+            ReminderCard(
+                icon = Icons.Default.DirectionsRun,
+                accent = Color(0xFFE67E22),
+                title = "Exercise",
+                subtitle = if (settings.exerciseEnabled)
+                    "Daily at ${formatHourMinute(settings.exerciseHour, settings.exerciseMinute)}"
+                else "Daily nudge to move",
+                checked = settings.exerciseEnabled,
+                onCheckedChange = viewModel::setExerciseEnabled,
+                expandedContent = {
+                    HourRow(
+                        label = "Time",
+                        hour = settings.exerciseHour,
+                        onChange = { h -> viewModel.setExerciseTime(h, settings.exerciseMinute) }
+                    )
+                }
+            )
         }
     }
 }

@@ -221,7 +221,7 @@ fun WaterTrackingScreen(
                                 WaterDroplet(
                                     isFilled = index < uiState.glassesConsumed,
                                     onClick = {
-                                        if (index == uiState.glassesConsumed) {
+                                        if (index >= uiState.glassesConsumed) {
                                             viewModel.addGlass()
                                         }
                                     }

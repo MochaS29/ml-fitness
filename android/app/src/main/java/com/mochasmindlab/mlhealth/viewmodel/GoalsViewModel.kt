@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mochasmindlab.mlhealth.data.models.Goal
 import com.mochasmindlab.mlhealth.data.models.GoalType
 import com.mochasmindlab.mlhealth.data.repository.GoalsRepository
+import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GoalsViewModel @Inject constructor(
-    private val goalsRepository: GoalsRepository
+    private val goalsRepository: GoalsRepository,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
     private val _goals = MutableStateFlow<List<Goal>>(emptyList())
@@ -35,15 +37,25 @@ class GoalsViewModel @Inject constructor(
 
     fun addGoal(type: GoalType, target: String, durationDays: Int) {
         viewModelScope.launch {
+            val targetValue = target.toFloatOrNull() ?: 0f
             val goal = Goal(
                 type = type,
                 title = type.displayName,
                 description = getGoalDescription(type, target),
-                targetValue = target.toFloatOrNull() ?: 0f,
+                targetValue = targetValue,
                 deadline = java.util.Date(System.currentTimeMillis() + (durationDays.toLong() * 24 * 60 * 60 * 1000)),
                 isActive = true
             )
             goalsRepository.insertGoal(goal)
+
+            // Mirror daily targets to PreferencesManager so the dashboard / reminders
+            // pick up the new goal without re-querying the goals table on every read.
+            when (type) {
+                GoalType.CALORIES -> preferencesManager.updateDailyCalorieGoal(targetValue.toInt())
+                GoalType.WATER -> preferencesManager.updateDailyWaterGoal(targetValue.toInt())
+                GoalType.EXERCISE -> preferencesManager.updateDailyExerciseGoal(targetValue.toInt())
+                else -> Unit
+            }
         }
     }
 

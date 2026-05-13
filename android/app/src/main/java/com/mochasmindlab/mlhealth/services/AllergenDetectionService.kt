@@ -85,39 +85,10 @@ class AllergenDetectionService @Inject constructor() {
         FoodAllergy.LUPIN to listOf(
             "lupin", "lupine", "lupini", "lupin flour", "lupin seed",
             "lupin bean"
-        ),
-        FoodAllergy.MOLLUSKS to listOf(
-            "squid", "octopus", "snail", "escargot", "abalone",
-            "mollusk", "mollusc", "whelk", "periwinkle"
-        ),
-        FoodAllergy.LATEX to listOf(
-            "latex", "natural rubber", "rubber latex"
-        ),
-        FoodAllergy.RED_MEAT to listOf(
-            "beef", "pork", "lamb", "venison", "bison", "buffalo",
-            "veal", "goat", "mutton", "bacon", "ham", "sausage",
-            "salami", "chorizo", "pepperoni", "lard"
-        ),
-        FoodAllergy.POULTRY to listOf(
-            "chicken", "turkey", "duck", "goose", "quail", "pheasant",
-            "poultry", "hen", "fowl"
-        ),
-        FoodAllergy.CITRUS to listOf(
-            "lemon", "lime", "orange", "grapefruit", "tangerine",
-            "clementine", "mandarin", "citrus", "citric acid"
-        ),
-        FoodAllergy.TOMATO to listOf(
-            "tomato", "tomatoes", "tomato sauce", "ketchup", "marinara",
-            "pizza sauce", "tomato paste", "sun-dried tomato"
-        ),
-        FoodAllergy.CHOCOLATE to listOf(
-            "chocolate", "cocoa", "cacao", "dark chocolate",
-            "milk chocolate", "white chocolate", "cocoa butter",
-            "cocoa powder", "fudge", "truffle"
-        ),
-        FoodAllergy.STRAWBERRY to listOf(
-            "strawberry", "strawberries"
         )
+        // Android-only allergens (mollusks/latex/red meat/poultry/citrus/tomato/
+        // chocolate/strawberry) were dropped to match the iOS FoodAllergy enum.
+        // If they need to come back, also add them to iOS FoodPreferences.swift.
     )
 
     // ── Public API ────────────────────────────────────────────────────────────

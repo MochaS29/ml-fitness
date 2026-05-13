@@ -8,10 +8,12 @@ import com.mochasmindlab.mlhealth.data.models.Achievement
 import com.mochasmindlab.mlhealth.data.models.AchievementType
 import com.mochasmindlab.mlhealth.services.HealthConnectManager
 import com.mochasmindlab.mlhealth.services.LoggingStreakManager
+import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val database: MLFitnessDatabase,
     private val healthConnectManager: HealthConnectManager,
+    private val preferencesManager: PreferencesManager,
     val streakManager: LoggingStreakManager
 ) : ViewModel() {
     
@@ -108,17 +111,22 @@ class DashboardViewModel @Inject constructor(
                     0
                 }
 
+                // User-configurable goals (set via the Goals screen → mirrored to DataStore).
+                val calorieGoal = try { preferencesManager.dailyCalorieGoal.first() } catch (e: Exception) { 2200 }
+                val waterGoal = try { preferencesManager.dailyWaterGoal.first() } catch (e: Exception) { 8 }
+                val exerciseGoal = try { preferencesManager.dailyExerciseGoal.first() } catch (e: Exception) { 60 }
+
                 _uiState.value = DashboardUiState(
                     userName = "You", // Default name until loaded from preferences
                     caloriesConsumed = totalCalories.toInt(),
-                    calorieGoal = 2200,
+                    calorieGoal = calorieGoal,
                     proteinGrams = totalProtein.toFloat(),
                     carbsGrams = totalCarbs.toFloat(),
                     fatGrams = totalFat.toFloat(),
                     waterCups = (waterIntake / 8).toInt(), // Convert oz to cups
-                    waterGoal = 8,
+                    waterGoal = waterGoal,
                     exerciseMinutes = exerciseMinutes,
-                    exerciseGoal = 60,
+                    exerciseGoal = exerciseGoal,
                     exerciseCalories = exerciseCalories,
                     currentWeight = latestWeight?.weight ?: 70.0,
                     weightChange = 0f, // TODO: Calculate from previous weight

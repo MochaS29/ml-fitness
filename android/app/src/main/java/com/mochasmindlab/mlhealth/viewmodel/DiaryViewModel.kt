@@ -52,11 +52,15 @@ class DiaryViewModel @Inject constructor(
     fun addWaterCup() {
         viewModelScope.launch {
             try {
+                // Use the selected diary day's date — water added when viewing
+                // a previous day must land on that day, not on "now". WaterDao
+                // matches entries by DATE(timestamp), so any time-of-day on the
+                // selected calendar day is fine.
                 val entry = WaterEntry(
                     id = UUID.randomUUID(),
                     amount = 8.0, // 8 oz per cup
                     unit = WaterUnit.OZ,
-                    timestamp = Date()
+                    timestamp = _uiState.value.selectedDate
                 )
                 database.waterDao().insert(entry)
                 loadDiaryDataInternal()

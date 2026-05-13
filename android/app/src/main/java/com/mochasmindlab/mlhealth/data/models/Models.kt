@@ -184,11 +184,13 @@ enum class GroceryCategory {
     PRODUCE, MEAT, DAIRY, BAKERY, PANTRY, FROZEN, BEVERAGES, SNACKS, CONDIMENTS, SPICES, OTHER
 }
 
+// Mirrors iOS FoodPreferences.swift FoodAllergy enum — Top 9 FDA allergens
+// followed by additional common allergens. Keep order/values aligned with iOS so
+// users moving between platforms see consistent labels.
 @Serializable
 enum class FoodAllergy {
-    MILK, EGGS, FISH, SHELLFISH, TREE_NUTS, PEANUTS, WHEAT, SOYBEANS, SESAME, GLUTEN,
-    CORN, SULFITES, MUSTARD, CELERY, LUPIN, MOLLUSKS, LATEX, RED_MEAT, POULTRY,
-    CITRUS, TOMATO, CHOCOLATE, STRAWBERRY
+    MILK, EGGS, FISH, SHELLFISH, TREE_NUTS, PEANUTS, WHEAT, SOYBEANS, SESAME,
+    GLUTEN, CORN, SULFITES, MUSTARD, CELERY, LUPIN
 }
 
 @Serializable
@@ -201,11 +203,20 @@ enum class FoodIntolerance {
     LACTOSE, FRUCTOSE, HISTAMINE, FODMAP, NIGHTSHADES, CAFFEINE, ALCOHOL, MSG
 }
 
+// Mirrors iOS FoodPreferences.swift DietaryPreference enum — vegetarian/vegan
+// styles, religious, health-based, and other categories. Keep order/values
+// aligned with iOS so labels and analytics stay consistent.
 @Serializable
 enum class DietaryPreference {
-    VEGETARIAN, VEGAN, PESCATARIAN, FLEXITARIAN, KOSHER, HALAL, LOW_CARB, KETO,
-    PALEO, MEDITERRANEAN, WHOLE30, DASH, FODMAP, GLUTEN_FREE, DAIRY_FREE,
-    RAW_FOOD, MACROBIOTIC, ZONE, ATKINS, SOUTH_BEACH, WEIGHT_WATCHERS
+    // Vegetarian / Vegan
+    VEGETARIAN, VEGAN, PESCATARIAN, FLEXITARIAN,
+    // Religious
+    KOSHER, HALAL, HINDU, JAIN,
+    // Health-based
+    LOW_CARB, KETO, PALEO, WHOLE30, MEDITERRANEAN,
+    LOW_FAT, LOW_SODIUM, DIABETIC_FRIENDLY, HEART_HEALTHY, ANTI_INFLAMMATORY,
+    // Other
+    ORGANIC, NON_GMO, LOCAL, SUSTAINABLE
 }
 
 @Serializable

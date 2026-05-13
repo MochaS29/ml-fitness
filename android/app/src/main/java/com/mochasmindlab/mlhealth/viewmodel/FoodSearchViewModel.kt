@@ -137,4 +137,43 @@ class FoodSearchViewModel @Inject constructor(
             _logged.tryEmit(food.name)
         }
     }
+
+    /**
+     * Log a generic calorie-only entry without picking a specific food. Useful when
+     * the user knows roughly what they ate but doesn't want to search the database.
+     */
+    fun logQuickCalories(
+        calories: Int,
+        mealType: String,
+        protein: Int = 0,
+        carbs: Int = 0,
+        fat: Int = 0
+    ) {
+        appScope.launch {
+            withContext(Dispatchers.IO) {
+                val cal = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                val entry = FoodEntry(
+                    id = UUID.randomUUID(),
+                    name = "Quick calories",
+                    date = cal.time,
+                    timestamp = Date(),
+                    mealType = mealType.lowercase(),
+                    servingSize = "1",
+                    servingUnit = "entry",
+                    servingCount = 1.0,
+                    calories = calories.toDouble(),
+                    protein = protein.toDouble(),
+                    carbs = carbs.toDouble(),
+                    fat = fat.toDouble()
+                )
+                database.foodDao().insert(entry)
+            }
+            _logged.tryEmit("Quick calories")
+        }
+    }
 }

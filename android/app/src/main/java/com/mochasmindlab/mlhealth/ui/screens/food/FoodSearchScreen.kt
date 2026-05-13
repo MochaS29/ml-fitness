@@ -36,6 +36,7 @@ fun FoodSearchScreen(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var showBarcodeScanner by remember { mutableStateOf(false) }
+    var showQuickCalories by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableStateOf(0) }
     var pendingFood by remember { mutableStateOf<FoodItem?>(null) }
     val searchResults by viewModel.searchResults.collectAsState()
@@ -146,9 +147,7 @@ fun FoodSearchScreen(
                         if (searchQuery.isEmpty()) {
                             item {
                                 QuickAddSection(
-                                    onQuickCaloriesClick = {
-                                        navController.navigate("quick_calories_entry")
-                                    }
+                                    onQuickCaloriesClick = { showQuickCalories = true }
                                 )
                             }
 
@@ -278,6 +277,98 @@ fun FoodSearchScreen(
             onDismiss = { pendingFood = null }
         )
     }
+
+    if (showQuickCalories) {
+        QuickCaloriesDialog(
+            mealType = mealType,
+            onDismiss = { showQuickCalories = false },
+            onSave = { calories, protein, carbs, fat ->
+                viewModel.logQuickCalories(calories, mealType.name, protein, carbs, fat)
+                showQuickCalories = false
+                navController.popBackStack()
+            }
+        )
+    }
+}
+
+@Composable
+fun QuickCaloriesDialog(
+    mealType: MealType,
+    onDismiss: () -> Unit,
+    onSave: (calories: Int, protein: Int, carbs: Int, fat: Int) -> Unit
+) {
+    var calories by remember { mutableStateOf("") }
+    var protein by remember { mutableStateOf("") }
+    var carbs by remember { mutableStateOf("") }
+    var fat by remember { mutableStateOf("") }
+    val canSave = calories.toIntOrNull()?.let { it > 0 } ?: false
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Quick Calories") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    "Log calories without picking a specific food. Macros are optional.",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                OutlinedTextField(
+                    value = calories,
+                    onValueChange = { calories = it.filter(Char::isDigit).take(5) },
+                    label = { Text("Calories (kcal)") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = protein,
+                        onValueChange = { protein = it.filter(Char::isDigit).take(4) },
+                        label = { Text("Protein (g)") },
+                        singleLine = true,
+                        modifier = Modifier.weight(1f)
+                    )
+                    OutlinedTextField(
+                        value = carbs,
+                        onValueChange = { carbs = it.filter(Char::isDigit).take(4) },
+                        label = { Text("Carbs (g)") },
+                        singleLine = true,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                OutlinedTextField(
+                    value = fat,
+                    onValueChange = { fat = it.filter(Char::isDigit).take(4) },
+                    label = { Text("Fat (g)") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text(
+                    "Will be added to ${mealType.displayName}.",
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onSave(
+                        calories.toIntOrNull() ?: 0,
+                        protein.toIntOrNull() ?: 0,
+                        carbs.toIntOrNull() ?: 0,
+                        fat.toIntOrNull() ?: 0
+                    )
+                },
+                enabled = canSave
+            ) {
+                Text("Save")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
+        }
+    )
 }
 
 @Composable

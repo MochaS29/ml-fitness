@@ -96,18 +96,6 @@ fun DiaryScreen(
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddClick,
-                containerColor = MochaBrown
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Add Entry",
-                    tint = Color.White
-                )
-            }
         }
     ) { paddingValues ->
         LazyColumn(
@@ -164,7 +152,7 @@ fun DiaryScreen(
                 ExerciseSection(
                     exercises = uiState.exerciseEntries,
                     onAddClick = {
-                        navController.navigate("exercise_search")
+                        navController.navigate("exercise")
                     }
                 )
             }

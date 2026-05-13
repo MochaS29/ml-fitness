@@ -294,6 +294,19 @@ private fun PlanRecipeDetailSheet(
                 }
             }
 
+            // Log to Diary at the top so the user can add a known recipe in one
+            // tap without scrolling past ingredients & instructions.
+            item {
+                Spacer(Modifier.height(12.dp))
+                Button(
+                    onClick = onLog,
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(vertical = 14.dp)
+                ) {
+                    Text("Log to Diary", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                }
+            }
+
             item {
                 Spacer(Modifier.height(12.dp))
                 Row(
@@ -364,16 +377,6 @@ private fun PlanRecipeDetailSheet(
                 }
             }
 
-            item {
-                Spacer(Modifier.height(20.dp))
-                Button(
-                    onClick = onLog,
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(vertical = 14.dp)
-                ) {
-                    Text("Log to Diary", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                }
-            }
         }
     }
 }

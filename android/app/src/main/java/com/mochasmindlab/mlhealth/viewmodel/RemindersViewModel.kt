@@ -27,7 +27,7 @@ class RemindersViewModel @Inject constructor(
                 waterEnabled = false, waterIntervalMinutes = 120,
                 waterStartHour = 8, waterEndHour = 20,
                 mealsEnabled = false, breakfastHour = 8, lunchHour = 12, dinnerHour = 18,
-                exerciseEnabled = false,
+                exerciseEnabled = false, exerciseHour = 18, exerciseMinute = 0,
                 weightEnabled = false, weightHour = 8, weightMinute = 0
             )
         )
@@ -65,6 +65,16 @@ class RemindersViewModel @Inject constructor(
     fun setWeightTime(hour: Int, minute: Int) = viewModelScope.launch {
         prefs.setWeightReminder(settings.value.weightEnabled, hour, minute)
         if (settings.value.weightEnabled) scheduler.apply(prefs.reminderSettingsValue())
+    }
+
+    fun setExerciseEnabled(enabled: Boolean) = viewModelScope.launch {
+        prefs.setExerciseReminderEnabled(enabled)
+        scheduler.apply(prefs.reminderSettingsValue())
+    }
+
+    fun setExerciseTime(hour: Int, minute: Int) = viewModelScope.launch {
+        prefs.setExerciseReminderTime(hour, minute)
+        if (settings.value.exerciseEnabled) scheduler.apply(prefs.reminderSettingsValue())
     }
 }
 

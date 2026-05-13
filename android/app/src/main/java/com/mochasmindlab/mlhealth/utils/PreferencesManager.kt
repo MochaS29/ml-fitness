@@ -38,6 +38,7 @@ class PreferencesManager @Inject constructor(
         val DAILY_WATER_GOAL = intPreferencesKey("daily_water_goal")
         val DAILY_EXERCISE_GOAL = intPreferencesKey("daily_exercise_goal")
         val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
+        val MEAL_SCAN_COUNT = intPreferencesKey("meal_scan_count")
         val WATER_REMINDER_ENABLED = booleanPreferencesKey("water_reminder_enabled")
         val MEAL_REMINDER_ENABLED = booleanPreferencesKey("meal_reminder_enabled")
         val EXERCISE_REMINDER_ENABLED = booleanPreferencesKey("exercise_reminder_enabled")
@@ -53,6 +54,10 @@ class PreferencesManager @Inject constructor(
         val WEIGHT_REMINDER_ENABLED = booleanPreferencesKey("reminder_weight_enabled")
         val WEIGHT_REMINDER_HOUR = intPreferencesKey("reminder_weight_hour")
         val WEIGHT_REMINDER_MINUTE = intPreferencesKey("reminder_weight_minute")
+        // Exercise reminder time — paired with EXERCISE_REMINDER_ENABLED above.
+        // Mirrors the iOS Smart Reminders schema (single daily nudge).
+        val EXERCISE_REMINDER_HOUR = intPreferencesKey("reminder_exercise_hour")
+        val EXERCISE_REMINDER_MINUTE = intPreferencesKey("reminder_exercise_minute")
         val DARK_MODE_ENABLED = booleanPreferencesKey("dark_mode_enabled")
         val IS_PRO_USER = booleanPreferencesKey("is_pro_user")
     }
@@ -151,6 +156,58 @@ class PreferencesManager @Inject constructor(
             }
         }
     
+    // Individual field setters — used when Profile screen edits a single field.
+    // Without these, post-onboarding edits stay in the Room UserProfile entity and
+    // any screen reading PreferencesManager.userProfile (Dashboard, WeightVM,
+    // RDAViewModel) gets stale data.
+
+    suspend fun setUserHeight(height: Float) {
+        dataStore.edit { it[PreferenceKeys.USER_HEIGHT] = height }
+    }
+
+    suspend fun setUserWeight(weight: Float) {
+        dataStore.edit { it[PreferenceKeys.USER_WEIGHT] = weight }
+    }
+
+    suspend fun setUserTargetWeight(target: Float) {
+        dataStore.edit { it[PreferenceKeys.USER_TARGET_WEIGHT] = target }
+    }
+
+    suspend fun setUserAge(age: Int) {
+        dataStore.edit { it[PreferenceKeys.USER_AGE] = age }
+    }
+
+    suspend fun setUserGender(gender: Gender) {
+        dataStore.edit { it[PreferenceKeys.USER_GENDER] = gender.name }
+    }
+
+    suspend fun setUserActivityLevel(level: ActivityLevel) {
+        dataStore.edit { it[PreferenceKeys.USER_ACTIVITY_LEVEL] = level.name }
+    }
+
+    // Dietary preferences — multi-select set persisted as enum names. Mirrors
+    // iOS UserFoodPreferences.dietaryPreferences. Allergens use AllergenKeys
+    // further below; intentionally separate so allergens (food safety) can be
+    // edited independently from dietary lifestyle choices.
+    private object DietaryKeys {
+        val DIETARY_PREFERENCES = stringSetPreferencesKey("dietary_preferences")
+    }
+
+    val dietaryPreferences: Flow<Set<String>> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[DietaryKeys.DIETARY_PREFERENCES] ?: emptySet() }
+
+    suspend fun setDietaryPreferences(set: Set<String>) {
+        dataStore.edit { it[DietaryKeys.DIETARY_PREFERENCES] = set }
+    }
+
+    suspend fun setExerciseReminderTime(hour: Int, minute: Int) {
+        dataStore.edit {
+            it[PreferenceKeys.EXERCISE_REMINDER_HOUR] = hour
+            it[PreferenceKeys.EXERCISE_REMINDER_MINUTE] = minute
+        }
+    }
+
     // Goals
     suspend fun updateDailyCalorieGoal(calories: Int) {
         dataStore.edit { preferences ->
@@ -214,7 +271,19 @@ class PreferencesManager @Inject constructor(
         .map { preferences ->
             preferences[PreferenceKeys.NOTIFICATIONS_ENABLED] ?: true
         }
-    
+
+    /** Number of AI meal scans the user has performed. Used to gate the free trial. */
+    val mealScanCount: Flow<Int> = dataStore.data
+        .map { it[PreferenceKeys.MEAL_SCAN_COUNT] ?: 0 }
+
+    suspend fun incrementMealScanCount() {
+        dataStore.edit { preferences ->
+            val current = preferences[PreferenceKeys.MEAL_SCAN_COUNT] ?: 0
+            preferences[PreferenceKeys.MEAL_SCAN_COUNT] = current + 1
+        }
+    }
+
+
     val waterReminderEnabled: Flow<Boolean> = dataStore.data
         .map { preferences ->
             preferences[PreferenceKeys.WATER_REMINDER_ENABLED] ?: true
@@ -305,6 +374,8 @@ class PreferencesManager @Inject constructor(
                 lunchHour = p[PreferenceKeys.MEAL_LUNCH_HOUR] ?: 12,
                 dinnerHour = p[PreferenceKeys.MEAL_DINNER_HOUR] ?: 18,
                 exerciseEnabled = p[PreferenceKeys.EXERCISE_REMINDER_ENABLED] ?: false,
+                exerciseHour = p[PreferenceKeys.EXERCISE_REMINDER_HOUR] ?: 18,
+                exerciseMinute = p[PreferenceKeys.EXERCISE_REMINDER_MINUTE] ?: 0,
                 weightEnabled = p[PreferenceKeys.WEIGHT_REMINDER_ENABLED] ?: false,
                 weightHour = p[PreferenceKeys.WEIGHT_REMINDER_HOUR] ?: 8,
                 weightMinute = p[PreferenceKeys.WEIGHT_REMINDER_MINUTE] ?: 0
@@ -416,6 +487,8 @@ data class ReminderSettings(
     val lunchHour: Int,
     val dinnerHour: Int,
     val exerciseEnabled: Boolean,
+    val exerciseHour: Int,
+    val exerciseMinute: Int,
     val weightEnabled: Boolean,
     val weightHour: Int,
     val weightMinute: Int

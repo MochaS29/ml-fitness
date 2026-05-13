@@ -6,6 +6,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
     id("kotlinx-serialization")
+    id("kotlin-parcelize")
 }
 
 val localProperties = Properties().apply {
@@ -35,8 +36,8 @@ android {
         applicationId = "com.mochasmindlab.mlhealth"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -74,7 +75,9 @@ android {
             isMinifyEnabled = false
             buildConfigField("String", "BASE_URL", "\"https://api-dev.mochasmindlab.com/\"")
             buildConfigField("Boolean", "ENABLE_LOGGING", "true")
-            buildConfigField("Boolean", "ENABLE_DEMO_DATA", "true")
+            // Off by default — sample data confuses real-user testing. Flip to true
+            // only when validating UI states with a populated database.
+            buildConfigField("Boolean", "ENABLE_DEMO_DATA", "false")
         }
 
         getByName("release") {

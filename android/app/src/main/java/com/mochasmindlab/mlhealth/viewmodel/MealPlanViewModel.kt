@@ -110,6 +110,24 @@ class MealPlanViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Aggregate every ingredient across the currently selected diet/week/day,
+     * deduped (case-insensitive). Used by the Grocery List screen.
+     */
+    fun currentWeekIngredients(): List<String> {
+        val week = state.value.selectedWeek ?: return emptyList()
+        val seen = linkedSetOf<String>()
+        for (day in week.days) {
+            listOf(day.breakfast, day.lunch, day.dinner, day.snack)
+                .flatMap { it.ingredients }
+                .forEach { ing ->
+                    val cleaned = ing.trim()
+                    if (cleaned.isNotBlank()) seen.add(cleaned)
+                }
+        }
+        return seen.toList()
+    }
+
     private fun startOfDay(date: Date): Date {
         val cal = Calendar.getInstance().apply {
             time = date

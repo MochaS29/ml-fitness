@@ -80,67 +80,72 @@ fun MLFitnessNavigation(
         Screen.More
     )
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    // Show the bottom bar (and its centred FAB) only on the four main tabs.
+    // Detail screens use their own top-bar "+" actions, otherwise the centred
+    // FAB overlaps their content. currentRoute is null during initial
+    // composition — treat that like "show" so the bar isn't blank on startup.
+    val mainRoutes = items.map { it.route }.toSet()
+    val showBottomBar = currentRoute == null || currentRoute in mainRoutes
+
     Scaffold(
         bottomBar = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
-
-            // Don't show bottom bar on onboarding or detail screens.
-            // currentRoute is null during initial composition — treat that like "show".
-            val isDetailRoute = currentRoute?.contains("/") == true
-            if (currentRoute != "onboarding" && !isDetailRoute) {
-                NavigationBar(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ) {
-                    items.forEach { screen ->
-                        NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    screen.icon,
-                                    contentDescription = screen.title
-                                )
-                            },
-                            label = { Text(screen.title) },
-                            selected = currentRoute == screen.route,
-                            onClick = {
-                                navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = MochaBrown,
-                                selectedTextColor = MochaBrown,
-                                indicatorColor = MochaBrown.copy(alpha = 0.1f),
-                                unselectedIconColor = Color.Gray,
-                                unselectedTextColor = Color.Gray
-                            )
-                        )
-                    }
-
-                    // Add button in the middle (matching iOS)
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center
+            if (showBottomBar) {
+                // Stack the FAB on top of the NavigationBar so it sits in-line
+                // with the four tabs (the iOS-style centred + button), instead
+                // of floating above the bar.
+                Box(contentAlignment = Alignment.Center) {
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface
                     ) {
-                        FloatingActionButton(
-                            onClick = { showAddMenu = true },
-                            containerColor = MochaBrown,
-                            contentColor = Color.White,
-                            modifier = Modifier
-                                .size(56.dp)
-                                .offset(y = (-8).dp)
-                        ) {
-                            Icon(
-                                Icons.Default.Add,
-                                contentDescription = "Add",
-                                modifier = Modifier.size(28.dp)
+                        // Layout: [Dashboard] [Diary] [spacer] [Plan] [More] —
+                        // the empty middle slot is where the overlay FAB sits.
+                        items.forEachIndexed { index, screen ->
+                            if (index == 2) {
+                                Spacer(Modifier.weight(1f))
+                            }
+                            NavigationBarItem(
+                                icon = {
+                                    Icon(
+                                        screen.icon,
+                                        contentDescription = screen.title
+                                    )
+                                },
+                                label = { Text(screen.title) },
+                                selected = currentRoute == screen.route,
+                                onClick = {
+                                    navController.navigate(screen.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = MochaBrown,
+                                    selectedTextColor = MochaBrown,
+                                    indicatorColor = MochaBrown.copy(alpha = 0.1f),
+                                    unselectedIconColor = Color.Gray,
+                                    unselectedTextColor = Color.Gray
+                                )
                             )
                         }
+                    }
+                    FloatingActionButton(
+                        onClick = { showAddMenu = true },
+                        containerColor = MochaBrown,
+                        contentColor = Color.White,
+                        modifier = Modifier.size(52.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Add",
+                            modifier = Modifier.size(26.dp)
+                        )
                     }
                 }
             }
@@ -195,12 +200,9 @@ fun MLFitnessNavigation(
                 )
             }
 
+            // Food preferences = allergens + dietary restrictions (same screen).
             composable("food_preferences") {
-                ComingSoonScreen(
-                    title = "Food Preferences",
-                    message = "Manage your dietary preferences and restrictions",
-                    navController = navController
-                )
+                com.mochasmindlab.mlhealth.ui.screens.preferences.AllergenPreferencesScreen(navController)
             }
 
             composable("reminders") {
@@ -230,11 +232,12 @@ fun MLFitnessNavigation(
                 )
             }
 
+            // "Food Database" entry just opens search for snacks — same UX as
+            // tapping the + sheet's Food row.
             composable("food_database") {
-                ComingSoonScreen(
-                    title = "Food Database",
-                    message = "Browse and search our extensive food database",
-                    navController = navController
+                FoodSearchScreen(
+                    navController = navController,
+                    mealType = MealType.SNACK
                 )
             }
 
@@ -311,12 +314,9 @@ fun MLFitnessNavigation(
                 ExerciseTrackingScreen(navController = navController)
             }
 
+            // Legacy alias — both routes go to the real exercise screen.
             composable("exercise_search") {
-                ComingSoonScreen(
-                    title = "Exercise Search",
-                    message = "Find and log exercises",
-                    navController = navController
-                )
+                ExerciseTrackingScreen(navController = navController)
             }
 
             // Weight & Measurements
@@ -336,70 +336,61 @@ fun MLFitnessNavigation(
             }
 
             composable("water_entry") {
-                ComingSoonScreen(
-                    title = "Water Entry",
-                    message = "Log your water consumption",
+                com.mochasmindlab.mlhealth.ui.screens.water.WaterTrackingScreen(
                     navController = navController
                 )
             }
 
             // Supplements
             composable("supplements") {
-                ComingSoonScreen(
-                    title = "Supplements",
-                    message = "Track your supplements and vitamins",
-                    navController = navController
-                )
+                com.mochasmindlab.mlhealth.ui.screens.supplements.SupplementsScreen(navController)
             }
 
             composable("supplement_entry") {
-                ComingSoonScreen(
-                    title = "Supplement Entry",
-                    message = "Log your supplements",
-                    navController = navController
-                )
+                com.mochasmindlab.mlhealth.ui.screens.supplements.SupplementsScreen(navController)
             }
 
             // Progress & Reports
             composable("progress") {
-                ComingSoonScreen(
-                    title = "Progress Charts",
-                    message = "View your fitness progress over time",
-                    navController = navController
-                )
+                com.mochasmindlab.mlhealth.ui.screens.reports.ProgressScreen(navController)
             }
 
             composable("export") {
-                ComingSoonScreen(
-                    title = "Export Data",
-                    message = "Export your health data",
-                    navController = navController
-                )
+                com.mochasmindlab.mlhealth.ui.screens.reports.ExportScreen(navController)
             }
 
             // Help & Support
             composable("help") {
-                ComingSoonScreen(
-                    title = "Help & Support",
-                    message = "Get help with using the app",
-                    navController = navController
-                )
+                com.mochasmindlab.mlhealth.ui.screens.about.HelpScreen(navController)
             }
 
             composable("about") {
-                ComingSoonScreen(
-                    title = "About",
-                    message = "Learn more about ML Fitness",
-                    navController = navController
-                )
+                com.mochasmindlab.mlhealth.ui.screens.about.AboutScreen(navController)
             }
 
             composable("privacy") {
-                ComingSoonScreen(
-                    title = "Privacy Policy",
-                    message = "Review our privacy policy",
-                    navController = navController
-                )
+                com.mochasmindlab.mlhealth.ui.screens.about.PrivacyScreen(navController)
+            }
+
+            // ───── Orphaned-but-built screens, now reachable ─────
+            composable("meal_scanner") {
+                com.mochasmindlab.mlhealth.ui.screens.scanner.MealScannerScreen(navController)
+            }
+
+            composable("paywall") {
+                com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallScreen(navController)
+            }
+
+            composable("achievements") {
+                com.mochasmindlab.mlhealth.ui.screens.achievements.AchievementsScreen(navController)
+            }
+
+            composable("health_connect") {
+                com.mochasmindlab.mlhealth.ui.screens.healthconnect.HealthConnectScreen(navController)
+            }
+
+            composable("grocery_list") {
+                com.mochasmindlab.mlhealth.ui.screens.grocery.GroceryListScreen(navController)
             }
         }
     }
@@ -459,6 +450,19 @@ fun AddMenuContent(
                 onClick = {
                     onDismiss()
                     navController.navigate("food_search/SNACK")
+                }
+            )
+        }
+
+        item {
+            AddMenuItem(
+                icon = Icons.Default.CameraAlt,
+                title = "Scan a Meal",
+                subtitle = "Identify food from a photo (AI)",
+                color = NutritionGreen,
+                onClick = {
+                    onDismiss()
+                    navController.navigate("meal_scanner")
                 }
             )
         }
