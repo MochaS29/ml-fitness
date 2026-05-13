@@ -88,6 +88,9 @@ class MealAnalysisService: ObservableObject {
         request.httpMethod = "POST"
         request.setValue(appSharedSecret, forHTTPHeaderField: "X-App-Secret")
         request.setValue(SecretsManager.installId, forHTTPHeaderField: "X-Install-Id")
+        // Platform header — proxy uses this to pick the right Anthropic key
+        // (when ANTHROPIC_API_KEY_IOS is set) and for per-platform usage logs.
+        request.setValue("ios", forHTTPHeaderField: "X-Platform")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody)
 
