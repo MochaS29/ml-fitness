@@ -27,6 +27,7 @@ import com.mochasmindlab.mlhealth.data.models.MealType
 import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.viewmodel.DiaryViewModel
 import com.mochasmindlab.mlhealth.viewmodel.ExerciseEntryDisplay
+import com.mochasmindlab.mlhealth.viewmodel.SupplementEntryDisplay
 import com.mochasmindlab.mlhealth.utils.DateConverter
 import com.mochasmindlab.mlhealth.utils.DiaryShareFormatter
 import java.time.LocalDate
@@ -42,6 +43,13 @@ fun DiaryScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+    // Editing dialog state — non-null shows the edit dialog for that entry.
+    // Tapping a food row in any meal section sets this; saving / dismissing
+    // clears it. Lives at the screen top level so dialogs render over the
+    // full Scaffold rather than inside a meal card's clipping bounds.
+    var editingFoodEntry by remember { mutableStateOf<FoodEntryDisplay?>(null) }
+    var editingExerciseEntry by remember { mutableStateOf<ExerciseEntryDisplay?>(null) }
+    var editingSupplementEntry by remember { mutableStateOf<SupplementEntryDisplay?>(null) }
 
     // Refresh diary contents whenever the screen comes back into the foreground —
     // e.g. after the user logs a food in FoodSearchScreen and pops back here.
@@ -142,6 +150,9 @@ fun DiaryScreen(
                         },
                         onDeleteEntry = { entry ->
                             viewModel.deleteFoodEntry(entry)
+                        },
+                        onEditEntry = { entry ->
+                            editingFoodEntry = entry
                         }
                     )
                 }
@@ -153,6 +164,9 @@ fun DiaryScreen(
                     exercises = uiState.exerciseEntries,
                     onAddClick = {
                         navController.navigate("exercise")
+                    },
+                    onEditEntry = { exercise ->
+                        editingExerciseEntry = exercise
                     }
                 )
             }
@@ -172,11 +186,213 @@ fun DiaryScreen(
                     supplements = uiState.supplementEntries,
                     onAddClick = {
                         navController.navigate("supplement_entry")
+                    },
+                    onEditEntry = { supplement ->
+                        editingSupplementEntry = supplement
                     }
                 )
             }
         }
     }
+
+    // Edit dialog — overlays the Scaffold so it can dim the background. Saving
+    // calls back into the ViewModel which updates the Room row and refreshes
+    // the diary list automatically through loadDiaryDataInternal.
+    editingFoodEntry?.let { entry ->
+        EditFoodEntryDialog(
+            entry = entry,
+            onDismiss = { editingFoodEntry = null },
+            onSave = { servings, cal, protein, carbs, fat ->
+                viewModel.updateFoodEntry(entry, servings, cal, protein, carbs, fat)
+                editingFoodEntry = null
+            }
+        )
+    }
+
+    editingExerciseEntry?.let { entry ->
+        EditExerciseEntryDialog(
+            entry = entry,
+            onDismiss = { editingExerciseEntry = null },
+            onSave = { duration, calories ->
+                viewModel.updateExerciseEntry(entry, duration, calories)
+                editingExerciseEntry = null
+            }
+        )
+    }
+
+    editingSupplementEntry?.let { entry ->
+        EditSupplementEntryDialog(
+            entry = entry,
+            onDismiss = { editingSupplementEntry = null },
+            onSave = { name, amount ->
+                viewModel.updateSupplementEntry(entry, name, amount)
+                editingSupplementEntry = null
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditSupplementEntryDialog(
+    entry: SupplementEntryDisplay,
+    onDismiss: () -> Unit,
+    onSave: (name: String, amount: String) -> Unit
+) {
+    var name by remember { mutableStateOf(entry.name) }
+    var amount by remember { mutableStateOf(entry.amount) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Edit Supplement") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Name") },
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = amount,
+                    onValueChange = { amount = it },
+                    label = { Text("Amount (e.g. 1 capsule, 500 mg)") },
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                onSave(
+                    name.ifBlank { entry.name },
+                    amount
+                )
+            }) { Text("Save") }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditExerciseEntryDialog(
+    entry: ExerciseEntryDisplay,
+    onDismiss: () -> Unit,
+    onSave: (duration: Int, caloriesBurned: Int) -> Unit
+) {
+    // Mirrors EditFoodEntryDialog: text fields for the editable numbers,
+    // parsed back to Int at save with fall-back to the original values if
+    // someone clears a field before tapping Save.
+    var duration by remember { mutableStateOf(entry.duration.toString()) }
+    var calories by remember { mutableStateOf(entry.caloriesBurned.toString()) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Edit ${entry.name}") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = duration,
+                    onValueChange = { duration = it },
+                    label = { Text("Duration (minutes)") },
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = calories,
+                    onValueChange = { calories = it },
+                    label = { Text("Calories burned") },
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                onSave(
+                    duration.toIntOrNull() ?: entry.duration,
+                    calories.toIntOrNull() ?: entry.caloriesBurned
+                )
+            }) { Text("Save") }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditFoodEntryDialog(
+    entry: FoodEntryDisplay,
+    onDismiss: () -> Unit,
+    onSave: (servings: Float, calories: Int, protein: Float, carbs: Float, fat: Float) -> Unit
+) {
+    // String state to allow partial typing ("12" → "12." → "12.5"); we parse
+    // back to numbers at save. Defaults are the current entry's values so the
+    // dialog opens "edit-ready" without needing to retype anything.
+    var servings by remember { mutableStateOf(entry.quantity.toString()) }
+    var calories by remember { mutableStateOf(entry.calories.toString()) }
+    var protein by remember { mutableStateOf(entry.protein.toString()) }
+    var carbs by remember { mutableStateOf(entry.carbs.toString()) }
+    var fat by remember { mutableStateOf(entry.fat.toString()) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Edit ${entry.name}") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = servings,
+                    onValueChange = { servings = it },
+                    label = { Text("Servings (${entry.unit})") },
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = calories,
+                    onValueChange = { calories = it },
+                    label = { Text("Calories") },
+                    singleLine = true
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = protein,
+                        onValueChange = { protein = it },
+                        label = { Text("Protein (g)") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = carbs,
+                        onValueChange = { carbs = it },
+                        label = { Text("Carbs (g)") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                }
+                OutlinedTextField(
+                    value = fat,
+                    onValueChange = { fat = it },
+                    label = { Text("Fat (g)") },
+                    singleLine = true
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                onSave(
+                    servings.toFloatOrNull() ?: entry.quantity,
+                    calories.toIntOrNull() ?: entry.calories,
+                    protein.toFloatOrNull() ?: entry.protein,
+                    carbs.toFloatOrNull() ?: entry.carbs,
+                    fat.toFloatOrNull() ?: entry.fat
+                )
+            }) { Text("Save") }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
+        }
+    )
 }
 
 @Composable
@@ -341,7 +557,8 @@ fun MealSection(
     mealType: MealType,
     entries: List<FoodEntryDisplay>,
     onAddClick: () -> Unit,
-    onDeleteEntry: (FoodEntryDisplay) -> Unit
+    onDeleteEntry: (FoodEntryDisplay) -> Unit,
+    onEditEntry: (FoodEntryDisplay) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth()
@@ -396,7 +613,8 @@ fun MealSection(
                 entries.forEach { entry ->
                     FoodEntryItem(
                         entry = entry,
-                        onDelete = { onDeleteEntry(entry) }
+                        onDelete = { onDeleteEntry(entry) },
+                        onEdit = { onEditEntry(entry) }
                     )
                 }
             } else {
@@ -420,11 +638,13 @@ fun MealSection(
 @Composable
 fun FoodEntryItem(
     entry: FoodEntryDisplay,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onEdit: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onEdit)
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -469,7 +689,8 @@ fun FoodEntryItem(
 @Composable
 fun ExerciseSection(
     exercises: List<ExerciseEntryDisplay>,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    onEditEntry: (ExerciseEntryDisplay) -> Unit = {}
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -513,7 +734,10 @@ fun ExerciseSection(
                 Spacer(modifier = Modifier.height(8.dp))
                 exercises.forEach { exercise ->
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onEditEntry(exercise) }
+                            .padding(vertical = 4.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
@@ -605,8 +829,9 @@ fun WaterSection(
 
 @Composable
 fun SupplementsSection(
-    supplements: List<Any>, // Replace with SupplementEntry model
-    onAddClick: () -> Unit
+    supplements: List<SupplementEntryDisplay>,
+    onAddClick: () -> Unit,
+    onEditEntry: (SupplementEntryDisplay) -> Unit = {}
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -614,32 +839,65 @@ fun SupplementsSection(
             containerColor = SupplementPurple.copy(alpha = 0.1f)
         )
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(16.dp)
         ) {
-            Row {
-                Text("💊", fontSize = 20.sp)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    "Supplements",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row {
+                    Text("💊", fontSize = 20.sp)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        "Supplements",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                IconButton(
+                    onClick = onAddClick,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = "Add Supplement",
+                        tint = SupplementPurple
+                    )
+                }
             }
 
-            IconButton(
-                onClick = onAddClick,
-                modifier = Modifier.size(24.dp)
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Add Supplement",
-                    tint = SupplementPurple
-                )
+            if (supplements.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                supplements.forEach { supplement ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onEditEntry(supplement) }
+                            .padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(supplement.name, fontSize = 14.sp)
+                            if (supplement.amount.isNotBlank()) {
+                                Text(
+                                    supplement.amount,
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        Text(
+                            supplement.time,
+                            fontSize = 13.sp,
+                            color = SupplementPurple
+                        )
+                    }
+                }
             }
         }
     }

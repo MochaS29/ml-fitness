@@ -103,6 +103,99 @@ class DiaryViewModel @Inject constructor(
             }
         }
     }
+
+    /**
+     * Update a logged supplement entry. Display shows name + amount + time;
+     * those are the editable fields here. Date/timestamp stay intact.
+     */
+    fun updateSupplementEntry(
+        entry: SupplementEntryDisplay,
+        newName: String,
+        newAmount: String
+    ) {
+        viewModelScope.launch {
+            try {
+                val supplements = database.supplementDao().getEntriesForDate(_uiState.value.selectedDate)
+                val target = supplements.find { it.id.toString() == entry.id } ?: return@launch
+                // SupplementEntry stores serving as size+unit pair, but the
+                // display joins them as one "amount" string for editing.
+                // Split on the first space so "500 mg" → size=500, unit="mg";
+                // free-form input like "1 capsule" round-trips as a single token.
+                val trimmed = newAmount.trim()
+                val sep = trimmed.indexOf(' ')
+                val newSize = if (sep > 0) trimmed.substring(0, sep) else trimmed
+                val newUnit = if (sep > 0) trimmed.substring(sep + 1).trim() else ""
+                val updated = target.copy(
+                    name = newName,
+                    servingSize = newSize,
+                    servingUnit = newUnit
+                )
+                database.supplementDao().update(updated)
+                loadDiaryDataInternal()
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
+    }
+
+    /**
+     * Update a logged exercise entry. Same pattern as food edit — look up the
+     * row by display ID, rewrite duration + caloriesBurned, keep date/category.
+     */
+    fun updateExerciseEntry(
+        entry: ExerciseEntryDisplay,
+        newDuration: Int,
+        newCaloriesBurned: Int
+    ) {
+        viewModelScope.launch {
+            try {
+                val exercises = database.exerciseDao().getExercisesForDateOnce(_uiState.value.selectedDate)
+                val target = exercises.find { it.id.toString() == entry.id } ?: return@launch
+                val updated = target.copy(
+                    duration = newDuration,
+                    caloriesBurned = newCaloriesBurned.toDouble()
+                )
+                database.exerciseDao().updateExercise(updated)
+                loadDiaryDataInternal()
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
+    }
+
+    /**
+     * Update a logged food entry with new values. UI passes the display model
+     * (which is what it has on hand); we look up the actual Room row by ID and
+     * rewrite the editable fields. Servings + macros + calories are all set
+     * here. The original meal type, timestamp, and food source stay intact —
+     * editing is not a re-log.
+     */
+    fun updateFoodEntry(
+        entry: FoodEntryDisplay,
+        newServings: Float,
+        newCalories: Int,
+        newProtein: Float,
+        newCarbs: Float,
+        newFat: Float
+    ) {
+        viewModelScope.launch {
+            try {
+                val foodEntries = database.foodDao().getEntriesForDate(_uiState.value.selectedDate)
+                val target = foodEntries.find { it.id.toString() == entry.id } ?: return@launch
+                val updated = target.copy(
+                    servingCount = newServings.toDouble(),
+                    calories = newCalories.toDouble(),
+                    protein = newProtein.toDouble(),
+                    carbs = newCarbs.toDouble(),
+                    fat = newFat.toDouble()
+                )
+                database.foodDao().update(updated)
+                loadDiaryDataInternal()
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
+    }
     
     fun loadDiaryData(date: Date = _uiState.value.selectedDate) {
         _uiState.value = _uiState.value.copy(selectedDate = date)
