@@ -13,7 +13,14 @@ val localProperties = Properties().apply {
     val f = rootProject.file("local.properties")
     if (f.exists()) load(f.inputStream())
 }
-val anthropicApiKey: String = localProperties.getProperty("anthropic.api.key", "")
+// Anthropic key is NO LONGER embedded in the app. AI meal-scan requests go
+// through the Vercel proxy at mochasmindlab.com/api/v1/meal-scan, which holds
+// the real key server-side. The app only carries the shared secret below.
+val appSharedSecret: String = localProperties.getProperty("app.shared.secret", "")
+val mealScanEndpoint: String = localProperties.getProperty(
+    "meal.scan.endpoint",
+    "https://mochasmindlab.com/api/v1/meal-scan"
+)
 val usdaApiKey: String = localProperties.getProperty("usda.api.key", "")
 val spoonacularApiKey: String = localProperties.getProperty("spoonacular.api.key", "")
 val nutritionixAppId: String = localProperties.getProperty("nutritionix.app.id", "")
@@ -43,7 +50,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "ANTHROPIC_API_KEY", "\"$anthropicApiKey\"")
+        buildConfigField("String", "APP_SHARED_SECRET", "\"$appSharedSecret\"")
+        buildConfigField("String", "MEAL_SCAN_ENDPOINT", "\"$mealScanEndpoint\"")
         buildConfigField("String", "USDA_API_KEY", "\"$usdaApiKey\"")
         buildConfigField("String", "SPOONACULAR_API_KEY", "\"$spoonacularApiKey\"")
         buildConfigField("String", "NUTRITIONIX_APP_ID", "\"$nutritionixAppId\"")

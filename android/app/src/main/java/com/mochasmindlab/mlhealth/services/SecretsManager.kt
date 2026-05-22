@@ -9,8 +9,14 @@ import com.mochasmindlab.mlhealth.BuildConfig
  * cleanly rather than make API calls with a blank header.
  */
 object SecretsManager {
-    val anthropicApiKey: String?
-        get() = BuildConfig.ANTHROPIC_API_KEY.takeIf { it.isNotBlank() }
+    // Anthropic access goes through the proxy at MEAL_SCAN_ENDPOINT — no key
+    // is bundled in the APK any more. Apps authenticate to the proxy with
+    // APP_SHARED_SECRET + a per-install UUID generated client-side.
+    val appSharedSecret: String?
+        get() = BuildConfig.APP_SHARED_SECRET.takeIf { it.isNotBlank() }
+
+    val mealScanEndpoint: String
+        get() = BuildConfig.MEAL_SCAN_ENDPOINT
 
     val usdaApiKey: String?
         get() = BuildConfig.USDA_API_KEY.takeIf { it.isNotBlank() }

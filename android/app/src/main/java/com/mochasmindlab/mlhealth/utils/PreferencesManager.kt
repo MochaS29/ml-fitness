@@ -8,6 +8,7 @@ import com.mochasmindlab.mlhealth.data.models.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
@@ -397,6 +398,22 @@ class PreferencesManager @Inject constructor(
 
     val isProUser: Flow<Boolean> = dataStore.data
         .map { it[PreferenceKeys.IS_PRO_USER] ?: false }
+
+    // Per-install UUID used to rate-limit meal-scan proxy calls. Generated on
+    // first read and cached for the install's lifetime — wiped only by Settings
+    // → Clear Data (which clears all preferences). Not personally identifying;
+    // pairs with APP_SHARED_SECRET to authenticate proxy requests.
+    private object InstallKeys {
+        val INSTALL_ID = stringPreferencesKey("install_id")
+    }
+
+    suspend fun getOrCreateInstallId(): String {
+        val existing = dataStore.data.first()[InstallKeys.INSTALL_ID]
+        if (!existing.isNullOrBlank()) return existing
+        val fresh = java.util.UUID.randomUUID().toString()
+        dataStore.edit { it[InstallKeys.INSTALL_ID] = fresh }
+        return fresh
+    }
 
     // ===== Allergens =====
 

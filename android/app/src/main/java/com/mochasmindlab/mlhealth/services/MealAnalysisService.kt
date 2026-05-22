@@ -5,6 +5,7 @@ import android.util.Base64
 import com.mochasmindlab.mlhealth.data.database.FoodDao
 import com.mochasmindlab.mlhealth.data.entities.FoodEntry
 import com.mochasmindlab.mlhealth.data.models.MealAnalysis
+import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.*
@@ -22,12 +23,15 @@ sealed class AnalysisError(message: String) : Exception(message) {
     object ImageProcessingFailed : AnalysisError("Failed to process image")
     object NoData : AnalysisError("No data received from server")
     object InvalidResponse : AnalysisError("Invalid response format")
-    object ApiKeyMissing : AnalysisError("API key not configured")
+    object ApiKeyMissing : AnalysisError("App is misconfigured. Please update.")
     object NetworkError : AnalysisError("Network connection error")
+    object RateLimited : AnalysisError("Too many scans this hour. Try again later.")
 }
 
 @Singleton
-class MealAnalysisService @Inject constructor() {
+class MealAnalysisService @Inject constructor(
+    private val preferencesManager: PreferencesManager
+) {
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -41,8 +45,12 @@ class MealAnalysisService @Inject constructor() {
 
     suspend fun analyzeMealPhoto(bitmap: Bitmap): Result<MealAnalysis> =
         withContext(Dispatchers.IO) {
-            val apiKey = SecretsManager.anthropicApiKey
+            // Auth: shared secret identifies us as the genuine app to the proxy.
+            // Without it the proxy returns 401. (We don't carry an Anthropic key.)
+            val sharedSecret = SecretsManager.appSharedSecret
                 ?: return@withContext Result.failure(AnalysisError.ApiKeyMissing)
+
+            val installId = preferencesManager.getOrCreateInstallId()
 
             val base64Image = try {
                 encodeImage(bitmap)
@@ -51,7 +59,7 @@ class MealAnalysisService @Inject constructor() {
             }
 
             try {
-                val rawJson = callClaudeApi(base64Image, apiKey)
+                val rawJson = callMealScanProxy(base64Image, sharedSecret, installId)
                 val analysis = parseResponse(rawJson)
                 Result.success(analysis)
             } catch (e: AnalysisError) {
@@ -107,80 +115,33 @@ class MealAnalysisService @Inject constructor() {
         return Bitmap.createScaledBitmap(src, (w * scale).toInt(), (h * scale).toInt(), true)
     }
 
-    private fun callClaudeApi(base64Image: String, apiKey: String): String {
-        val requestBody = buildRequestBody(base64Image)
+    private fun callMealScanProxy(
+        base64Image: String,
+        sharedSecret: String,
+        installId: String
+    ): String {
+        // Body matches the proxy contract — see Web-Projects/mochamindlabs-website/api/v1/meal-scan.js.
+        // The proxy builds the actual Anthropic request server-side so we never
+        // ship the Anthropic API key. Prompt + model selection are server-owned too.
+        val requestBody = JsonObject(mapOf("image" to JsonPrimitive(base64Image))).toString()
         val request = Request.Builder()
-            .url("https://api.anthropic.com/v1/messages")
-            .addHeader("x-api-key", apiKey)
-            .addHeader("anthropic-version", "2023-06-01")
+            .url(SecretsManager.mealScanEndpoint)
+            .addHeader("X-App-Secret", sharedSecret)
+            .addHeader("X-Install-Id", installId)
+            // Platform header — proxy uses this to pick the right Anthropic key
+            // (when ANTHROPIC_API_KEY_ANDROID is set) and for per-platform logs.
+            .addHeader("X-Platform", "android")
             .post(requestBody.toRequestBody("application/json".toMediaType()))
             .build()
 
         val response = client.newCall(request).execute()
         val body = response.body?.string() ?: throw AnalysisError.NoData
-        return body
-    }
-
-    private fun buildRequestBody(base64Image: String): String {
-        val prompt = """
-            Analyze this food image and identify all food items. For each item provide:
-            1. Food name
-            2. Estimated quantity/portion size
-            3. Estimated calories
-            4. Estimated macros (protein, carbs, fat in grams)
-            5. Confidence level (0-1)
-
-            Return ONLY valid JSON with no other text, in this exact format:
-            {
-                "items": [
-                    {
-                        "name": "food name",
-                        "quantity": "portion description",
-                        "calories": 0,
-                        "protein": 0,
-                        "carbs": 0,
-                        "fat": 0,
-                        "fiber": 0,
-                        "confidence": 0.0
-                    }
-                ],
-                "totalCalories": 0,
-                "confidence": 0.0
-            }
-        """.trimIndent()
-
-        // Build the Anthropic request JSON. The base64 image string is injected directly;
-        // the prompt is escaped so it is safe inside a JSON string literal.
-        val escapedPrompt = prompt
-            .replace("\\", "\\\\")
-            .replace("\"", "\\\"")
-            .replace("\n", "\\n")
-
-        return """
-            {
-              "model": "claude-sonnet-4-6",
-              "max_tokens": 1024,
-              "messages": [
-                {
-                  "role": "user",
-                  "content": [
-                    {
-                      "type": "image",
-                      "source": {
-                        "type": "base64",
-                        "media_type": "image/jpeg",
-                        "data": "$base64Image"
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "text": "$escapedPrompt"
-                    }
-                  ]
-                }
-              ]
-            }
-        """.trimIndent()
+        when (response.code) {
+            in 200..299 -> return body
+            401 -> throw AnalysisError.ApiKeyMissing
+            429 -> throw AnalysisError.RateLimited
+            else -> throw AnalysisError.InvalidResponse
+        }
     }
 
     private fun parseResponse(rawJson: String): MealAnalysis {
