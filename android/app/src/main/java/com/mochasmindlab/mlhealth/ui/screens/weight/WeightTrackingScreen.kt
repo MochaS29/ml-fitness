@@ -267,13 +267,24 @@ fun CurrentWeightCard(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        // Three label states: no goal yet, still losing, still
+                        // gaining. Without the goalWeight<=0 guard the column
+                        // showed "To Gain 167 lbs" simply because 0 < 167.
+                        val (centerLabel, centerValue) = when {
+                            goalWeight <= 0f -> "No Goal" to "—"
+                            currentWeight > goalWeight ->
+                                "To Lose" to "${kotlin.math.abs(currentWeight - goalWeight).roundToInt()} lbs"
+                            currentWeight < goalWeight ->
+                                "To Gain" to "${kotlin.math.abs(goalWeight - currentWeight).roundToInt()} lbs"
+                            else -> "On Goal" to "🎉"
+                        }
                         Text(
-                            if (goalWeight < startingWeight) "To Lose" else "To Gain",
+                            centerLabel,
                             fontSize = 10.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            "${kotlin.math.abs(goalWeight - currentWeight).roundToInt()} lbs",
+                            centerValue,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
                             color = MochaBrown
@@ -289,7 +300,7 @@ fun CurrentWeightCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            "${goalWeight.roundToInt()} lbs",
+                            if (goalWeight > 0f) "${goalWeight.roundToInt()} lbs" else "—",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -420,6 +431,11 @@ fun WeightProgressChart(
             Spacer(modifier = Modifier.height(16.dp))
 
             if (weightHistory.size >= 2) {
+                // Chart needs oldest-to-newest left→right so a real weight loss
+                // reads as a downward slope. weightHistory comes in newest-first
+                // (matches the Recent Entries list below); reverse for plotting.
+                val chartHistory = weightHistory.sortedBy { it.date }
+
                 Canvas(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -429,7 +445,7 @@ fun WeightProgressChart(
                     val chartWidth = size.width - (padding * 2)
                     val chartHeight = size.height - padding
 
-                    val weights = weightHistory.map { it.weight.toFloat() }
+                    val weights = chartHistory.map { it.weight.toFloat() }
                     val minWeight = (weights.minOrNull() ?: 0f) - 5
                     val maxWeight = (weights.maxOrNull() ?: 100f) + 5
                     val weightRange = maxWeight - minWeight
@@ -443,11 +459,12 @@ fun WeightProgressChart(
                         strokeWidth = 2.dp.toPx()
                     )
 
-                    // Draw weight line
-                    if (weightHistory.isNotEmpty()) {
+                    // Draw weight line — use chronological list, not the
+                    // newest-first weightHistory used by the entry list.
+                    if (chartHistory.isNotEmpty()) {
                         val path = Path()
-                        weightHistory.forEachIndexed { index, entry ->
-                            val x = padding + (index.toFloat() / (weightHistory.size - 1)) * chartWidth
+                        chartHistory.forEachIndexed { index, entry ->
+                            val x = padding + (index.toFloat() / (chartHistory.size - 1)) * chartWidth
                             val y = chartHeight - ((entry.weight.toFloat() - minWeight) / weightRange * chartHeight)
 
                             if (index == 0) {

@@ -63,6 +63,15 @@ class WeightViewModel @Inject constructor(
 
                 if (entries.isNotEmpty()) {
                     _currentWeight.value = entries.first().weight
+                    // Fall back to the oldest logged weight as the "starting"
+                    // value when onboarding's USER_WEIGHT is missing. Without
+                    // this, the Weight Tracking summary shows Start: 0 lbs and
+                    // the "To Lose / To Gain" calc inverts (167 → 0 reads as
+                    // gain). loadGoals() may override with a real onboarding
+                    // value if one exists.
+                    if (_startingWeight.value <= 0.0) {
+                        _startingWeight.value = entries.last().weight
+                    }
 
                     // Calculate weekly average
                     val weekAgo = Date.from(LocalDate.now().minusWeeks(1).atStartOfDay(ZoneId.systemDefault()).toInstant())
@@ -83,37 +92,49 @@ class WeightViewModel @Inject constructor(
             }
         }
 
-        // Load BMI
+        // Auto-calculate BMI from current weight + stored height. Read height
+        // via the individual flow so we don't depend on the full userProfile
+        // aggregate (which only emits when USER_NAME is set). Weight stored in
+        // pounds → convert to kg before applying the standard BMI formula
+        // (kg / m²). When height isn't set, leave BMI at 0 and let the UI hide
+        // it rather than show nonsense.
         viewModelScope.launch {
             combine(
                 _currentWeight,
-                preferencesManager.userProfile
-            ) { weight, profile ->
-                profile?.let {
-                    val height = it.height
-                    if (height > 0) {
-                        val heightInMeters = height / 100
-                        val bmiValue = weight / (heightInMeters * heightInMeters)
-                        _bmi.value = bmiValue
-                        _bmiCategory.value = when {
-                            bmiValue < 18.5 -> "Underweight"
-                            bmiValue < 25 -> "Normal"
-                            bmiValue < 30 -> "Overweight"
-                            else -> "Obese"
-                        }
+                preferencesManager.userHeight
+            ) { weightLbs, heightCm ->
+                if (heightCm > 0 && weightLbs > 0) {
+                    val weightKg = weightLbs * 0.453592
+                    val heightM = heightCm / 100.0
+                    val bmiValue = weightKg / (heightM * heightM)
+                    _bmi.value = bmiValue
+                    _bmiCategory.value = when {
+                        bmiValue < 18.5 -> "Underweight"
+                        bmiValue < 25 -> "Normal"
+                        bmiValue < 30 -> "Overweight"
+                        else -> "Obese"
                     }
+                } else {
+                    _bmi.value = 0.0
+                    _bmiCategory.value = ""
                 }
             }.collect()
         }
     }
 
     private fun loadGoals() {
+        // Read body-metric fields individually instead of via the userProfile
+        // aggregate flow — that flow only emits when USER_NAME is set, which
+        // would silently break this screen for anyone who hasn't completed
+        // onboarding even after they set a goal weight from the Goals page.
         viewModelScope.launch {
-            preferencesManager.userProfile.collect { profile ->
-                profile?.let {
-                    _goalWeight.value = it.targetWeight.toDouble()
-                    _startingWeight.value = it.weight.toDouble()
-                }
+            preferencesManager.userTargetWeight.collect { target ->
+                _goalWeight.value = target.toDouble()
+            }
+        }
+        viewModelScope.launch {
+            preferencesManager.userWeight.collect { starting ->
+                _startingWeight.value = starting.toDouble()
             }
         }
     }

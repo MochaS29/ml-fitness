@@ -1,17 +1,23 @@
 package com.mochasmindlab.mlhealth.ui.screens.dashboard
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -84,19 +90,12 @@ fun DashboardScreen(
                 DailySummaryCards(uiState, navController)
             }
 
-            // Calories Card
+            // Calorie + macro donut — mirrors iOS DashboardView SectorMark chart
+            // with calorie count in the center and macro legend below.
             item {
-                CaloriesCard(
+                CalorieMacroDonut(
                     consumed = uiState.caloriesConsumed,
                     goal = uiState.calorieGoal,
-                    remaining = uiState.calorieGoal - uiState.caloriesConsumed,
-                    onClick = { navController.navigate("nutrition_detail") }
-                )
-            }
-
-            // Macros Card
-            item {
-                MacrosCard(
                     protein = uiState.proteinGrams,
                     carbs = uiState.carbsGrams,
                     fat = uiState.fatGrams,
@@ -305,62 +304,153 @@ fun SummaryCard(
     }
 }
 
+// Combined calorie + macro donut. Mirrors iOS DashboardView SectorMark chart:
+// a ring split into protein / carbs / fat segments with the calorie count
+// rendered in the center. Falls back to a single empty ring when no macros
+// have been logged yet so the layout doesn't collapse.
 @Composable
-fun CaloriesCard(
+fun CalorieMacroDonut(
     consumed: Int,
     goal: Int,
-    remaining: Int,
+    protein: Float,
+    carbs: Float,
+    fat: Float,
     onClick: () -> Unit
 ) {
+    val proteinColor = Color(0xFF3B82F6)  // blue — matches Macros card text below
+    val carbsColor = Color(0xFF22C55E)    // green
+    val fatColor = Color(0xFFF59E0B)      // amber
+    val emptyColor = MaterialTheme.colorScheme.surfaceVariant
+
+    // Each macro contributes calories: protein 4/g, carbs 4/g, fat 9/g.
+    // Use these for the segment angles rather than gram count so the ring
+    // visually represents energy contribution (matches iOS behavior).
+    val proteinCals = protein * 4f
+    val carbsCals = carbs * 4f
+    val fatCals = fat * 9f
+    val totalMacroCals = proteinCals + carbsCals + fatCals
+    val hasMacros = totalMacroCals > 0f
+
+    val remaining = goal - consumed
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text(
-                        text = "Calories",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "$consumed / $goal kcal",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                Text("Calories", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 Text(
-                    text = "$remaining remaining",
-                    fontSize = 14.sp,
-                    color = if (remaining > 0) Color(0xFF4CAF50) else Color(0xFFFF5722)
+                    text = if (remaining >= 0) "$remaining left" else "${-remaining} over",
+                    fontSize = 13.sp,
+                    color = if (remaining >= 0) Color(0xFF4CAF50) else Color(0xFFFF5722)
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
-            // Progress bar
-            LinearProgressIndicator(
-                progress = (consumed.toFloat() / goal.toFloat()).coerceIn(0f, 1f),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(8.dp),
-                color = MochaBrown,
-                trackColor = MochaBrown.copy(alpha = 0.2f)
-            )
+            // Donut + center label
+            Box(
+                modifier = Modifier.size(180.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    val stroke = 22.dp.toPx()
+                    val arcSize = Size(size.width - stroke, size.height - stroke)
+                    val topLeft = Offset(stroke / 2f, stroke / 2f)
+
+                    if (!hasMacros) {
+                        drawArc(
+                            color = emptyColor,
+                            startAngle = 0f,
+                            sweepAngle = 360f,
+                            useCenter = false,
+                            topLeft = topLeft,
+                            size = arcSize,
+                            style = Stroke(width = stroke)
+                        )
+                    } else {
+                        var start = -90f  // Start at 12 o'clock like iOS
+                        val proteinSweep = (proteinCals / totalMacroCals) * 360f
+                        val carbsSweep = (carbsCals / totalMacroCals) * 360f
+                        val fatSweep = (fatCals / totalMacroCals) * 360f
+                        listOf(
+                            proteinColor to proteinSweep,
+                            carbsColor to carbsSweep,
+                            fatColor to fatSweep
+                        ).forEach { (color, sweep) ->
+                            if (sweep > 0f) {
+                                drawArc(
+                                    color = color,
+                                    startAngle = start,
+                                    sweepAngle = sweep,
+                                    useCenter = false,
+                                    topLeft = topLeft,
+                                    size = arcSize,
+                                    style = Stroke(width = stroke)
+                                )
+                                start += sweep
+                            }
+                        }
+                    }
+                }
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "$consumed",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "of $goal cal",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            // Macro legend with %s — small dot + label + percent of energy.
+            // Hidden when nothing logged so the card doesn't show "0% / 0% / 0%".
+            if (hasMacros) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    MacroLegendItem("Protein", proteinColor, (proteinCals / totalMacroCals * 100).toInt())
+                    MacroLegendItem("Carbs", carbsColor, (carbsCals / totalMacroCals * 100).toInt())
+                    MacroLegendItem("Fat", fatColor, (fatCals / totalMacroCals * 100).toInt())
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun MacroLegendItem(label: String, color: Color, percent: Int) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(10.dp)
+                .clip(CircleShape)
+                .background(color)
+        )
+        Spacer(Modifier.width(6.dp))
+        Text(label, fontSize = 12.sp)
+        Spacer(Modifier.width(4.dp))
+        Text("$percent%", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
     }
 }
 

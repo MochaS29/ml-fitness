@@ -30,13 +30,18 @@ class BundledFoodDatabase @Inject constructor(
             .filter { it.isNotEmpty() }
             .joinToString(" ") { "\"${it.replace("\"", "\"\"")}\"*" }
 
+        // Match iOS LocalFoodDatabase ordering: unbranded foods first ("egg"
+        // before "Egg Whisk Brand Eggs"), then common items, then FTS rank.
+        // Without the brand-IS-NULL guard, branded entries like "Just Egg" or
+        // "Eggo Waffles" bubble above the plain ingredient. (Bug reported by
+        // tester searching "eggs" 2026-05-22.)
         val sql = """
             SELECT f.fdcId, f.name, f.brand, f.servingSize, f.servingUnit,
                    f.calories, f.protein, f.carbs, f.fat, f.fiber, f.sugar, f.sodium
             FROM foods f
             JOIN foods_fts fts ON f.fdcId = fts.rowid
             WHERE foods_fts MATCH ?
-            ORDER BY f.isCommon DESC, rank
+            ORDER BY (f.brand IS NULL OR f.brand = '') DESC, f.isCommon DESC, rank
             LIMIT ?
         """.trimIndent()
 
@@ -57,12 +62,13 @@ class BundledFoodDatabase @Inject constructor(
     }
 
     private fun searchLike(query: String, limit: Int): List<FoodItem> {
+        // Same unbranded-first rule as the FTS path above — see comment there.
         val sql = """
             SELECT fdcId, name, brand, servingSize, servingUnit,
                    calories, protein, carbs, fat, fiber, sugar, sodium
             FROM foods
             WHERE name LIKE ? OR brand LIKE ?
-            ORDER BY isCommon DESC,
+            ORDER BY (brand IS NULL OR brand = '') DESC, isCommon DESC,
                      CASE WHEN LOWER(name) = LOWER(?) THEN 0
                           WHEN LOWER(name) LIKE LOWER(? || '%') THEN 1
                           ELSE 2 END,

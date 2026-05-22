@@ -186,6 +186,21 @@ class PreferencesManager @Inject constructor(
         dataStore.edit { it[PreferenceKeys.USER_ACTIVITY_LEVEL] = level.name }
     }
 
+    // Individual field flows — let screens read body metrics + goals without
+    // depending on the full userProfile aggregate (which only emits when
+    // USER_NAME is set, breaking screens for users who skipped onboarding).
+    val userTargetWeight: Flow<Float> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[PreferenceKeys.USER_TARGET_WEIGHT] ?: 0f }
+
+    val userWeight: Flow<Float> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[PreferenceKeys.USER_WEIGHT] ?: 0f }
+
+    val userHeight: Flow<Float> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[PreferenceKeys.USER_HEIGHT] ?: 0f }
+
     // Dietary preferences — multi-select set persisted as enum names. Mirrors
     // iOS UserFoodPreferences.dietaryPreferences. Allergens use AllergenKeys
     // further below; intentionally separate so allergens (food safety) can be

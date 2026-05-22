@@ -50,10 +50,13 @@ class GoalsViewModel @Inject constructor(
 
             // Mirror daily targets to PreferencesManager so the dashboard / reminders
             // pick up the new goal without re-querying the goals table on every read.
+            // Weight goals also mirror to USER_TARGET_WEIGHT so the Weight Tracking
+            // screen's "Goal" stat reflects the goal you just set on the Goals page.
             when (type) {
                 GoalType.CALORIES -> preferencesManager.updateDailyCalorieGoal(targetValue.toInt())
                 GoalType.WATER -> preferencesManager.updateDailyWaterGoal(targetValue.toInt())
                 GoalType.EXERCISE -> preferencesManager.updateDailyExerciseGoal(targetValue.toInt())
+                GoalType.WEIGHT_LOSS -> preferencesManager.setUserTargetWeight(targetValue)
                 else -> Unit
             }
         }
