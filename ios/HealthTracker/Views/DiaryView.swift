@@ -16,6 +16,12 @@ struct DiaryView: View {
     @State private var showingGoalsSetup = false
     @State private var showingShareSheet = false
     @State private var shareText = ""
+
+    // Read goals reactively from UserDefaults so Day's Nutrition stays in sync
+    // with SimpleGoalsView edits without depending on viewModel.dailySummary
+    // refresh timing (which is tied to onAppear / entry-count changes).
+    @AppStorage("dailyCalorieGoal") private var savedCalorieGoal: Int = 0
+    @AppStorage("proteinGoal") private var savedProteinGoal: Int = 0
     
     // Fetch requests for selected date
     @FetchRequest private var foodEntries: FetchedResults<FoodEntry>
@@ -469,8 +475,12 @@ struct DiaryView: View {
     // MARK: - Diary Nutrition Analytics
 
     private var diaryNutritionSection: some View {
-        let calorieGoal = viewModel.dailySummary.calorieGoal
-        let proteinGoal = viewModel.dailySummary.proteinGoal
+        let calorieGoal = savedCalorieGoal > 0
+            ? Double(savedCalorieGoal)
+            : Double(AppConstants.Defaults.dailyCalorieGoal)
+        let proteinGoal = savedProteinGoal > 0
+            ? Double(savedProteinGoal)
+            : Double(AppConstants.Defaults.dailyProteinGrams)
         let suppNutrients = viewModel.supplementNutrients(from: supplementEntries)
         let foodNutrients = viewModel.foodAdditionalNutrients(from: foodEntries)
         let combinedNutrients = foodNutrients + suppNutrients
@@ -752,10 +762,14 @@ struct FoodEntryRow: View {
             showingEdit = true
         }
         .sheet(isPresented: $showingEdit) {
+            // Only wire onViewRecipe when this entry maps to a real recipe; for
+            // free-form foods (USDA imports, manual entries) there's nothing to
+            // show, and EditFoodEntrySheet hides the button when this is nil.
+            let matchedRecipe = entry.name.flatMap { findRecipe(named: $0) }
             EditFoodEntrySheet(
                 entry: entry,
-                onViewRecipe: {
-                    if let name = entry.name, let recipe = findRecipe(named: name) {
+                onViewRecipe: matchedRecipe.map { recipe in
+                    {
                         showingEdit = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
                             selectedRecipe = recipe

@@ -198,7 +198,18 @@ struct MealPhotoAnalyzerView: View {
     /// "Add to Food Diary" button anchored to the screen, not the sheet — stays
     /// visible at the bottom regardless of sheet drag position.
     private func addToDiaryButton(result: MealAnalysis, geo: GeometryProxy) -> some View {
-        Button(action: { saveToFoodDiary(items: result.items) }) {
+        // The outer ZStack uses .ignoresSafeArea(edges: .bottom) so the meal
+        // image can run under the home indicator. Inside that container,
+        // geo.safeAreaInsets.bottom reports 0 — so reading it for the button's
+        // bottom padding was clipping the text on home-indicator devices.
+        // Read the live inset off the key window instead.
+        let bottomInset = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap(\.windows)
+            .first(where: { $0.isKeyWindow })?
+            .safeAreaInsets.bottom ?? 0
+
+        return Button(action: { saveToFoodDiary(items: result.items) }) {
             Text("Add to Food Diary")
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -208,7 +219,7 @@ struct MealPhotoAnalyzerView: View {
                 .shadow(color: .black.opacity(0.18), radius: 8, x: 0, y: 2)
         }
         .padding(.horizontal)
-        .padding(.bottom, max(geo.safeAreaInsets.bottom, 16) + 8)
+        .padding(.bottom, max(bottomInset, 16) + 8)
     }
 
     private var expanded: CGFloat { expandedOffset }

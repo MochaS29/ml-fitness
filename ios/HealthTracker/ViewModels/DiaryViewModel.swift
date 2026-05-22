@@ -34,20 +34,55 @@ class DiaryViewModel: ObservableObject {
             : Double(AppConstants.Defaults.dailyProteinGrams)
     }
 
-    /// Asks HealthKit for the day's active energy burned and uses it if it exceeds
-    /// the manually-logged exercise total. Apple Watch/iPhone-tracked activity (steps,
-    /// workouts) writes to `activeEnergyBurned`, so this surfaces real-world burn even
-    /// when the user hasn't manually logged exercise.
+    /// Surfaces real-world calorie burn into the Diary's "Burned" tile.
+    /// Uses the higher of: HealthKit's activeEnergyBurned (Apple Watch / iPhone
+    /// motion coprocessor) or a step-derived estimate. The fallback matters for
+    /// iPhone-only users — HealthKit often has no activeEnergyBurned samples
+    /// even with thousands of steps logged, so without the step estimate the
+    /// Burned tile sits at 0 all day.
     func refreshActiveEnergy(for date: Date) {
         let calendar = Calendar.current
         let start = calendar.startOfDay(for: date)
         guard let end = calendar.date(byAdding: .day, value: 1, to: start) else { return }
-        HealthKitManager.shared.fetchActiveEnergy(from: start, to: end) { [weak self] kcal in
+
+        let group = DispatchGroup()
+        var active: Double = 0
+        var steps: Double = 0
+
+        group.enter()
+        HealthKitManager.shared.fetchActiveEnergy(from: start, to: end) { kcal in
+            active = kcal
+            group.leave()
+        }
+
+        group.enter()
+        HealthKitManager.shared.fetchSteps(from: start, to: end) { stepCount in
+            steps = stepCount
+            group.leave()
+        }
+
+        group.notify(queue: .main) { [weak self] in
             guard let self = self else { return }
-            if kcal > self.dailySummary.caloriesBurned {
-                self.dailySummary.caloriesBurned = kcal
+            let stepEstimate = steps * self.caloriesPerStep()
+            let burned = max(active, stepEstimate)
+            if burned > self.dailySummary.caloriesBurned {
+                self.dailySummary.caloriesBurned = burned
             }
         }
+    }
+
+    /// Calories per step, weighted by the user's most recent logged weight.
+    /// Derived from the standard walking formula (0.57 cal/mile/lb at ~2112
+    /// steps/mile → weight_lbs × 0.00027). Falls back to 0.04 (≈ 148 lb adult)
+    /// when no WeightEntry exists yet.
+    private func caloriesPerStep() -> Double {
+        let request: NSFetchRequest<WeightEntry> = WeightEntry.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        request.fetchLimit = 1
+        if let latest = try? viewContext.fetch(request).first, latest.weight > 0 {
+            return latest.weight * 0.00027
+        }
+        return 0.04
     }
 
     // MARK: - Water

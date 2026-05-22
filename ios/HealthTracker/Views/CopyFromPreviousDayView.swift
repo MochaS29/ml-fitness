@@ -215,6 +215,10 @@ struct CopyFromPreviousDayView: View {
                 sourceDate = date
             }
         }
+        // Without .borderless, Form rows merge sibling Buttons' tap areas and
+        // every tap fires the last-defined action (so all three quick buttons
+        // were jumping to "Last Week").
+        .buttonStyle(.borderless)
         .font(.caption)
         .padding(.horizontal, 10)
         .padding(.vertical, 6)

@@ -10,9 +10,15 @@ struct StepGoalView: View {
     @State private var viewMode: ViewMode = .today
     @State private var isEditingGoal = false
 
-    @State private var todaySteps = 0
-    @State private var hourlySteps: [Int] = Array(repeating: 0, count: 24)
+    // Use the same source of truth as the Dashboard tile so the two screens
+    // never disagree. CMPedometer (live) typically runs ahead of HealthKit by
+    // a small amount and StepCounterService merges the two; reading directly
+    // from HealthKit here was producing a lower number.
+    @ObservedObject private var stepCounter = StepCounterService.shared
     @State private var weeklyData: [(label: String, steps: Int, isToday: Bool)] = []
+
+    private var todaySteps: Int { stepCounter.todaySteps }
+    private var hourlySteps: [Int] { stepCounter.hourlySteps }
 
     enum ViewMode: String, CaseIterable {
         case today = "Today"
@@ -338,17 +344,11 @@ struct StepGoalView: View {
     }
 
     private func loadData() {
-        // Today's steps
-        HealthKitManager.shared.fetchTodaySteps { steps in
-            todaySteps = Int(steps ?? 0)
-        }
+        // Today's total + hourly breakdown both come from StepCounterService now;
+        // make sure it's running (idempotent — Dashboard normally starts it first).
+        stepCounter.startStepCounting()
 
-        // Hourly steps
         let calendar = Calendar.current
-        let startOfDay = calendar.startOfDay(for: Date())
-        HealthKitManager.shared.fetchHourlySteps(from: startOfDay, to: Date()) { hkHourly in
-            hourlySteps = (0..<24).map { i in i < hkHourly.count ? Int(hkHourly[i]) : 0 }
-        }
 
         // Rolling 7 days ending today — today is rightmost
         let today = calendar.startOfDay(for: Date())

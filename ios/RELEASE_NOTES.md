@@ -1,5 +1,65 @@
 # ML Fitness iOS - Release Notes 📱
 
+## Version 2.4.1 - Security Hardening + Bug Fixes 🔒🐛
+**Status:** In development on `secure-api-key`
+**Build:** 2.4.1 (14)
+
+The Meal Scanner now routes through our own server-side proxy instead of calling Anthropic directly, removing the embedded API key from the app binary. Bundled with a round of Diary, Step, and Recipe-button fixes from user reports.
+
+---
+
+### 🔒 Meal Scanner API Key Removed from App
+- **CHANGED**: Meal Scanner now calls a Vercel-hosted proxy at `mochasmindlab.com/api/v1/meal-scan` instead of `api.anthropic.com` directly
+- The Anthropic API key now lives **only** in the proxy's Vercel env vars — it is no longer shipped inside the app and can no longer be extracted from a downloaded IPA
+- The prompt template and model selection are owned by the proxy too, so we can tune them without an App Store update
+- App-side request body shrinks to just `{ "image": base64 }`
+
+### 🛡️ Proxy Authentication
+- App authenticates to the proxy with two headers:
+  - `X-App-Secret`: a shared secret stored in `Secrets.plist` (gitignored). Rotated on major releases.
+  - `X-Install-Id`: a per-install UUID generated on first launch and persisted in UserDefaults — used by the proxy for per-install rate limiting. Not personally identifying; resets on uninstall.
+- New error mapping: `401` → `apiKeyMissing` (proxy rejected our credentials), `429` → `quotaExceeded` (rate-limited). Other non-2xx → `invalidResponse`. Previously we'd attempt to parse Anthropic's error body and surface a misleading message.
+
+### 🏷️ Per-Platform Key Routing (Forward-Compat)
+- **NEW**: Every proxy request now carries an `X-Platform: ios` header
+- Proxy can read this and pick `ANTHROPIC_API_KEY_IOS` when set, falling back to `ANTHROPIC_API_KEY` — letting us split iOS vs. Android usage onto separate keys later without shipping an app update
+- Single-key setup continues to work today; multi-key setup becomes a Vercel-only change
+
+---
+
+### 🍽️ Diary Fixes
+- **FIXED**: Day's Nutrition card was showing `/ 2000 kcal` regardless of your saved calorie goal — the top "Eaten" tile already reflected the real number (e.g. 1600), but the macro-bar section below it was stale. Now reads the goal directly from UserDefaults via `@AppStorage`, so it stays in sync with Set Goals immediately.
+- **FIXED**: Copy Previous Day's "Yesterday / 2 Days Ago / Last Week" quick-select buttons all jumped to "Last Week" (7 days ago) no matter which one you tapped. Classic SwiftUI Form gotcha — sibling `Button`s in a single row collapse their tap targets onto the last action without an explicit `.buttonStyle(.borderless)`. Now each button picks the right offset.
+- **FIXED**: "View Recipe Details" button on Edit Entry did nothing for free-form foods (USDA imports, manual entries). It was always rendered but the underlying recipe lookup silently returned nil. Now we look up the matching recipe before showing the button — it appears only for entries that actually map to a recipe.
+
+### 🔥 Burned Calories from Steps
+- **FIXED**: The Diary's "Burned" tile sat at 0 all day for iPhone-only users (no Apple Watch). HealthKit's `activeEnergyBurned` is often empty even with thousands of steps, so the tile had nothing to show.
+- **NEW**: Step-derived fallback. `refreshActiveEnergy` now fetches both HealthKit active energy and step count, then takes `max(activeEnergy, steps × caloriesPerStep)`. Apple Watch users get the (typically higher) HealthKit value as before; iPhone-only users finally see their steps reflected.
+- **NEW**: The per-step coefficient is weighted by the user's most recent `WeightEntry` (`weight_lbs × 0.00027`, derived from the standard 0.57 cal/mile/lb walking formula at ~2112 steps/mile). Falls back to a flat 0.04 cal/step (≈ 148-lb adult) if no weight has ever been logged.
+
+### 📷 Meal Scanner
+- **FIXED (for real this time)**: "Add to Food Diary" button was still getting clipped behind the home indicator. The v2.4.0 attempt used `geo.safeAreaInsets.bottom`, but the parent container does `.ignoresSafeArea(edges: .bottom)` so the meal image can run edge-to-edge — and inside that container the reported inset is 0. Switched to reading the inset off the key window directly, which is unaffected by the parent's ignore-safe-area state.
+
+### 👟 Step Count Consistency
+- **FIXED**: The Step Goal detail page (the big circle screen reached by tapping the Steps card) was showing ~50–100 fewer steps than the Dashboard tile, because it queried HealthKit directly while the Dashboard read CMPedometer-fed `StepCounterService.todaySteps`. Now `StepGoalView` subscribes to the same `StepCounterService.shared` so both screens always match.
+- Side benefit: the hourly chart, Morning/Afternoon/Evening breakdown, and big number now all update live as you walk instead of waiting on `onAppear`.
+
+---
+
+### 🔧 Technical Notes
+- New `Secrets.plist` keys: `APP_SHARED_SECRET`, `MEAL_SCAN_ENDPOINT` (optional — defaults to `https://mochasmindlab.com/api/v1/meal-scan`)
+- New UserDefaults key: `install_id` (UUID string, generated on first read)
+- `SecretsManager` gains `appSharedSecret`, `mealScanEndpoint`, `installId` accessors. Legacy `anthropicAPIKey` accessor is retained for debug-build fallback but should be blank in release `Secrets.plist`.
+- `MealAnalysisService.analyzeWithClaude(...)` was rewritten to target the proxy: smaller request body, new auth headers, explicit HTTP-status handling before JSON parse.
+- Pair branch: `Web-Projects/mochamindlabs-website#secure-api-key` adds the matching `api/v1/meal-scan.js` endpoint.
+- `DiaryViewModel.caloriesPerStep()` reads the latest `WeightEntry` via Core Data; `refreshActiveEnergy` now uses `DispatchGroup` to fan-out the two HealthKit queries and combine on `.main`.
+- `HealthKitManager.fetchSteps(from:to:)` is the shared date-range step query used by both the Burned-calories fallback and `StepCounterService.queryHourlySteps`.
+- `StepGoalView` swapped its `@State todaySteps / hourlySteps` for computed properties off `@ObservedObject StepCounterService.shared` — eliminates the per-`onAppear` HealthKit round-trip.
+- `CopyFromPreviousDayView.quickDateButton` now applies `.buttonStyle(.borderless)` (no behavioural change outside Form rows).
+- `DiaryView.FoodEntryRow` computes `findRecipe(named:)` at sheet-presentation time rather than inside the action closure, letting the existing `if onViewRecipe != nil` guard in `EditFoodEntrySheet` hide the button when there's no match.
+
+---
+
 ## Version 2.3.1 - Polish Release ✨
 **Submitted for Review:** April 28, 2026
 **Build:** 2.3.1 (12)
