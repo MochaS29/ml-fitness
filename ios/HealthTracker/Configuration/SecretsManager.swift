@@ -25,11 +25,6 @@ enum SecretsManager {
 
     // Convenience accessors
 
-    // Legacy direct-Anthropic access. Kept here only as a fallback for debug
-    // builds that haven't been updated; release builds should leave this blank
-    // in Secrets.plist so the proxy path is forced.
-    static var anthropicAPIKey: String { value(for: "ANTHROPIC_API_KEY") }
-
     static var usdaAPIKey: String { value(for: "USDA_API_KEY").isEmpty ? "DEMO_KEY" : value(for: "USDA_API_KEY") }
 
     // Proxy auth — paired with a per-install UUID (see `installId`). The shared

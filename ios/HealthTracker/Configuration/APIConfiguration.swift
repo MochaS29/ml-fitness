@@ -1,20 +1,10 @@
 import Foundation
 
 struct APIConfiguration {
-    // MARK: - AI Vision API (Meal Scanner)
-
-    struct Anthropic {
-        static let baseURL = "https://api.anthropic.com/v1"
-        static var apiKey: String { SecretsManager.anthropicAPIKey }
-
-        struct Endpoints {
-            static let messages = "/messages"
-        }
-
-        static var isConfigured: Bool {
-            !apiKey.isEmpty
-        }
-    }
+    // AI Vision (Meal Scanner) goes through the Vercel proxy as of v2.4.1 —
+    // see SecretsManager.mealScanEndpoint / appSharedSecret. The direct
+    // Anthropic config block was removed so the key cannot be extracted
+    // from the .ipa bundle.
 
     // MARK: - Food Recognition APIs (Image Analysis)
 

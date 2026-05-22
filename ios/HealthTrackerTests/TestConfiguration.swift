@@ -70,25 +70,30 @@ struct TestConfiguration {
     }
     
     struct MockExercises {
+        // Fixtures updated to match the post-refactor ExerciseTemplateModel
+        // signature (met + sfSymbol, with caloriesPerMinute now computed).
         static let running = ExerciseTemplateModel(
             name: "Running",
             type: .cardio,
-            caloriesPerMinute: 10,
-            category: "Outdoor"
+            met: 9.8,
+            category: "Outdoor",
+            sfSymbol: "figure.run"
         )
 
         static let weightLifting = ExerciseTemplateModel(
             name: "Weight Lifting",
             type: .strength,
-            caloriesPerMinute: 6,
-            category: "Gym"
+            met: 5.0,
+            category: "Gym",
+            sfSymbol: "dumbbell.fill"
         )
 
         static let yoga = ExerciseTemplateModel(
             name: "Yoga",
             type: .flexibility,
-            caloriesPerMinute: 3,
-            category: "Home"
+            met: 3.0,
+            category: "Home",
+            sfSymbol: "figure.yoga"
         )
     }
     
