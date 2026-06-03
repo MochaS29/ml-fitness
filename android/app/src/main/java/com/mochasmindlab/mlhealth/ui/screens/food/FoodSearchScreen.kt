@@ -25,6 +25,7 @@ import com.mochasmindlab.mlhealth.data.models.MealType
 import com.mochasmindlab.mlhealth.ui.components.ServingSizeSheet
 import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.viewmodel.FoodSearchViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,6 +45,21 @@ fun FoodSearchScreen(
     val favoriteFoods by viewModel.favoriteFoods.collectAsState()
     val customFoods by viewModel.customFoods.collectAsState()
     val scope = rememberCoroutineScope()
+
+    // A scanned barcode result is handed back via savedStateHandle from the
+    // barcode scanner. Previously this value was set but never read, so scanned
+    // foods silently vanished. Pick it up and open the serving sheet so the user
+    // can log it (and star it as a favourite).
+    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
+    val scannedFood by (savedStateHandle
+        ?.getStateFlow<FoodItem?>("scanned_food", null)
+        ?: MutableStateFlow(null)).collectAsState()
+    LaunchedEffect(scannedFood) {
+        scannedFood?.let {
+            pendingFood = it
+            savedStateHandle?.set("scanned_food", null)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -103,7 +119,7 @@ fun FoodSearchScreen(
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = MochaBrown,
-                    unfocusedBorderColor = Color.Gray.copy(alpha = 0.3f)
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
                 )
             )
 
@@ -269,6 +285,10 @@ fun FoodSearchScreen(
             perServingFat = food.fat.toDouble(),
             servingLabel = food.servingUnit.ifBlank { "serving" },
             initialMealType = mealType.name.lowercase(),
+            // Scanned foods carry a barcode — offer to save them as a favourite.
+            showFavorite = !food.barcode.isNullOrBlank(),
+            isFavorite = food.isFavorite,
+            onToggleFavorite = { favorite -> viewModel.setFavorite(food, favorite) },
             onConfirm = { servings, mt ->
                 viewModel.logFoodToDiary(food, mt, servings)
                 pendingFood = null

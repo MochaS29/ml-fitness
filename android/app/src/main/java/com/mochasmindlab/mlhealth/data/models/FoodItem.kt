@@ -3,6 +3,8 @@ package com.mochasmindlab.mlhealth.data.models
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.mochasmindlab.mlhealth.data.entities.NutrientMapConverter
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 
@@ -24,6 +26,12 @@ data class FoodItem(
     val fiber: Float = 0f,
     val sugar: Float = 0f,
     val sodium: Float = 0f,
+    val cholesterol: Float? = null,
+    val saturatedFat: Float? = null,
+    // Vitamins/minerals carried from the bundled USDA DB, e.g. {"iron":2.1}.
+    // Persisted via NutrientMapConverter (key:value;… string form).
+    @TypeConverters(NutrientMapConverter::class)
+    val additionalNutrients: Map<String, Double> = emptyMap(),
     val servingSize: String = "1",
     val servingUnit: String = "serving",
     val emoji: String? = null,

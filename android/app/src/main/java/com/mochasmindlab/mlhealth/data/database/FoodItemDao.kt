@@ -45,6 +45,9 @@ interface FoodItemDao {
     
     @Query("SELECT * FROM food_items WHERE barcode = :barcode")
     fun getFoodItemsByBarcode(barcode: String): Flow<List<FoodItem>>
+
+    @Query("SELECT * FROM food_items WHERE barcode = :barcode LIMIT 1")
+    suspend fun getFoodItemByBarcodeDirect(barcode: String): FoodItem?
     
     @Query("DELETE FROM food_items")
     suspend fun deleteAllFoodItems()

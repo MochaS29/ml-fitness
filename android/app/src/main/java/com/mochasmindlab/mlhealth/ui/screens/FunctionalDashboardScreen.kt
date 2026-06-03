@@ -159,7 +159,7 @@ fun FunctionalDashboardScreen(
                                         Text(
                                             insight.description,
                                             fontSize = 12.sp,
-                                            color = Color.Gray
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
                                 }
@@ -307,7 +307,7 @@ private fun StreakCard(streak: Int) {
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text(label, fontSize = 13.sp, color = Color.Gray)
+                Text(label, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
@@ -358,7 +358,7 @@ private fun MetricCard(
             Text(
                 text = subtitle,
                 fontSize = 11.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             
             Spacer(modifier = Modifier.height(8.dp))
@@ -401,7 +401,7 @@ private fun QuickActionButton(
         Text(
             label,
             fontSize = 12.sp,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

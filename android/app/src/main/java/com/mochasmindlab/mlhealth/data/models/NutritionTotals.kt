@@ -36,6 +36,11 @@ data class NutritionDailyTotals(
     val fiber: Double = 0.0,
     val sugar: Double = 0.0,
     val sodium: Double = 0.0,
+    val cholesterol: Double = 0.0,
+    val saturatedFat: Double = 0.0,
+    // Vitamins/minerals aggregated across the day's foods + supplements
+    // (key → summed amount), carried from the bundled USDA DB.
+    val micronutrients: Map<String, Double> = emptyMap(),
     val mealBreakdown: List<MealTotals> = emptyList()
 )
 

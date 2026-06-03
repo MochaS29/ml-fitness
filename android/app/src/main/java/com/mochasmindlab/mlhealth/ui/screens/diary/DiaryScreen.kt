@@ -806,7 +806,7 @@ fun WaterSection(
                     Icon(
                         Icons.Default.Remove,
                         contentDescription = "Remove Cup",
-                        tint = if (cups > 0) WaterBlue else Color.Gray
+                        tint = if (cups > 0) WaterBlue else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 Text(

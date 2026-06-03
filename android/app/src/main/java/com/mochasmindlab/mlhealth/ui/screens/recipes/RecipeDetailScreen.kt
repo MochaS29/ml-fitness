@@ -318,7 +318,7 @@ private fun RecipeContent(
                 description,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                 fontSize = 13.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
@@ -400,7 +400,7 @@ private fun NutritionTab(
 ) {
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
-            Text("Per Serving", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = Color.Gray)
+            Text("Per Serving", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.height(8.dp))
         }
         item { NutritionRow("Calories", "$calories kcal") }
@@ -455,7 +455,7 @@ private fun StatChip(icon: androidx.compose.ui.graphics.vector.ImageVector, labe
 @Composable
 private fun EmptyTabMessage(msg: String) {
     Box(modifier = Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
-        Text(msg, color = Color.Gray)
+        Text(msg, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -470,9 +470,9 @@ private fun LoadingContent(modifier: Modifier = Modifier) {
 private fun ErrorContent(message: String, modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(Icons.Default.ErrorOutline, contentDescription = null, modifier = Modifier.size(48.dp), tint = Color.Gray)
+            Icon(Icons.Default.ErrorOutline, contentDescription = null, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
             Spacer(Modifier.height(8.dp))
-            Text(message, color = Color.Gray)
+            Text(message, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

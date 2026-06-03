@@ -391,7 +391,7 @@ private fun RecipeCard(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(name, fontWeight = FontWeight.SemiBold, maxLines = 1)
-                Text(subtitle, fontSize = 12.sp, color = Color.Gray)
+                Text(subtitle, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
 
             if (showFavoriteButton) {
@@ -399,12 +399,12 @@ private fun RecipeCard(
                     Icon(
                         imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = "Favorite",
-                        tint = if (isFavorite) Color.Red else Color.Gray
+                        tint = if (isFavorite) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Color.Gray)
+            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -426,11 +426,11 @@ private fun EmptyState(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        CompositionLocalProvider(LocalContentColor provides Color.Gray) { icon() }
+        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) { icon() }
         Spacer(Modifier.height(16.dp))
-        Text(title, fontWeight = FontWeight.SemiBold, color = Color.Gray)
+        Text(title, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Spacer(Modifier.height(4.dp))
-        Text(subtitle, fontSize = 13.sp, color = Color.Gray)
+        Text(subtitle, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -446,14 +446,14 @@ private fun EmptyMyRecipes(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(Icons.Default.Book, contentDescription = null, modifier = Modifier.size(64.dp), tint = Color.Gray)
+        Icon(Icons.Default.Book, contentDescription = null, modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         Spacer(Modifier.height(16.dp))
-        Text("No Personal Recipes Yet", fontWeight = FontWeight.SemiBold, color = Color.Gray)
+        Text("No Personal Recipes Yet", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurfaceVariant)
         Spacer(Modifier.height(8.dp))
         Text(
             "Import a recipe from a URL or create your own.",
             fontSize = 13.sp,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(Modifier.height(24.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -503,7 +503,7 @@ private fun ImportRecipeDialog(
                     Spacer(Modifier.height(12.dp))
                     LinearProgressIndicator(progress = 0f, modifier = Modifier.fillMaxWidth())
                     Spacer(Modifier.height(4.dp))
-                    Text("Importing…", fontSize = 12.sp, color = Color.Gray)
+                    Text("Importing…", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         },

@@ -55,7 +55,7 @@ fun MetricCard(
             Text(
                 text = subtitle,
                 fontSize = 11.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             
             Spacer(modifier = Modifier.height(8.dp))
@@ -118,7 +118,7 @@ fun AIInsightCard(
                 Text(
                     text = description,
                     fontSize = 12.sp,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2
                 )
             }

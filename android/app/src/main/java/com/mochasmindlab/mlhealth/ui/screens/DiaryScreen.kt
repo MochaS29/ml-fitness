@@ -182,7 +182,7 @@ private fun DailySummaryCard(
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 color = if (caloriesConsumed <= caloriesGoal) ExerciseGreen else Color.Red,
-                trackColor = Color.Gray.copy(alpha = 0.2f)
+                trackColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
             )
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -216,7 +216,7 @@ private fun MacroDisplay(
         Text(
             label,
             fontSize = 12.sp,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -265,7 +265,7 @@ private fun MealSection(
             if (entries.isEmpty()) {
                 Text(
                     "No items added",
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
@@ -318,7 +318,7 @@ private fun FoodEntryItem(
             Text(
                 "${entry.quantity} ${entry.unit}",
                 fontSize = 12.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         
@@ -399,7 +399,7 @@ private fun WaterTrackingCard(
                     Text(
                         "$cupsConsumed of $cupsGoal cups",
                         fontSize = 14.sp,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 
@@ -417,7 +417,7 @@ private fun WaterTrackingCard(
                         Icon(
                             Icons.Default.Remove,
                             contentDescription = "Remove Water",
-                            tint = if (cupsConsumed > 0) HydrationBlue else Color.Gray
+                            tint = if (cupsConsumed > 0) HydrationBlue else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     
@@ -450,7 +450,7 @@ private fun WaterTrackingCard(
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 color = HydrationBlue,
-                trackColor = Color.Gray.copy(alpha = 0.2f)
+                trackColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f)
             )
         }
     }

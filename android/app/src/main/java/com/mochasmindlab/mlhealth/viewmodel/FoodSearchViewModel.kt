@@ -95,6 +95,17 @@ class FoodSearchViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Save/unsave a food as a favourite. Used by the barcode-scan result sheet
+     * (the scanned FoodItem has id=0, so the repository de-dupes by barcode).
+     * appScope so it survives the sheet/screen popping.
+     */
+    fun setFavorite(food: FoodItem, favorite: Boolean) {
+        appScope.launch {
+            foodRepository.setFavorite(food, favorite)
+        }
+    }
+
     private val _logged = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val logged: SharedFlow<String> = _logged.asSharedFlow()
 
@@ -130,7 +141,10 @@ class FoodSearchViewModel @Inject constructor(
                     fat = food.fat.toDouble(),
                     fiber = food.fiber.toDouble(),
                     sugar = food.sugar.toDouble(),
-                    sodium = food.sodium.toDouble()
+                    sodium = food.sodium.toDouble(),
+                    cholesterol = food.cholesterol?.toDouble(),
+                    saturatedFat = food.saturatedFat?.toDouble(),
+                    additionalNutrients = food.additionalNutrients
                 )
                 database.foodDao().insert(entry)
             }

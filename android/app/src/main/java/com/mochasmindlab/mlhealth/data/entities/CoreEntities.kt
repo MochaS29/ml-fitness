@@ -36,7 +36,12 @@ data class FoodEntry(
     val fat: Double,
     val fiber: Double? = null,
     val sugar: Double? = null,
-    val sodium: Double? = null
+    val sodium: Double? = null,
+    val cholesterol: Double? = null,
+    val saturatedFat: Double? = null,
+    // Vitamins/minerals carried from the logged food (USDA bundled DB).
+    @TypeConverters(NutrientMapConverter::class)
+    val additionalNutrients: Map<String, Double> = emptyMap()
 )
 
 // ===== SUPPLEMENT ENTRY =====

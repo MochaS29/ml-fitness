@@ -185,7 +185,7 @@ fun MoreScreen(
                     icon = Icons.Default.Notifications,
                     title = "Notifications",
                     subtitle = "Manage reminders and alerts",
-                    iconColor = Color.Gray,
+                    iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     onClick = { navController.navigate("notifications") }
                 )
             }
@@ -195,7 +195,7 @@ fun MoreScreen(
                     icon = Icons.Default.SetMeal,
                     title = "Food Preferences",
                     subtitle = "Dietary restrictions and allergies",
-                    iconColor = Color.Gray,
+                    iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     onClick = { navController.navigate("food_preferences") }
                 )
             }
@@ -205,7 +205,7 @@ fun MoreScreen(
                     icon = Icons.Default.Download,
                     title = "Export Data",
                     subtitle = "Download your health data",
-                    iconColor = Color.Gray,
+                    iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     onClick = { navController.navigate("export") }
                 )
             }
@@ -215,7 +215,7 @@ fun MoreScreen(
                     icon = Icons.Default.Info,
                     title = "About",
                     subtitle = "App version and info",
-                    iconColor = Color.Gray,
+                    iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     onClick = { navController.navigate("about") }
                 )
             }
@@ -265,7 +265,7 @@ fun MoreScreen(
                 Text(
                     "Version 1.0.0",
                     fontSize = 12.sp,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
@@ -338,7 +338,7 @@ private fun SectionTitle(title: String) {
         title,
         fontSize = 14.sp,
         fontWeight = FontWeight.Bold,
-        color = Color.Gray,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
     )
 }
@@ -388,14 +388,14 @@ private fun MenuItemCard(
                 Text(
                     subtitle,
                     fontSize = 14.sp,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             
             Icon(
                 Icons.Default.ChevronRight,
                 contentDescription = null,
-                tint = Color.Gray.copy(alpha = 0.5f),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                 modifier = Modifier.size(20.dp)
             )
         }

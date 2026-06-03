@@ -61,7 +61,7 @@ fun WaterTrackingScreen(
                         Icon(
                             Icons.Default.Notifications,
                             contentDescription = "Reminder Settings",
-                            tint = if (uiState.remindersEnabled) WaterBlue else Color.Gray
+                            tint = if (uiState.remindersEnabled) WaterBlue else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                     IconButton(onClick = { showGoalSettingDialog = true }) {

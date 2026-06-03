@@ -55,7 +55,22 @@ class FoodRepository @Inject constructor(
     }
     
     fun getFoodItemsByBarcode(barcode: String): Flow<List<FoodItem>> = foodDao.getFoodItemsByBarcode(barcode)
-    
+
+    suspend fun getFoodItemByBarcode(barcode: String): FoodItem? = foodDao.getFoodItemByBarcodeDirect(barcode)
+
+    /**
+     * Marks a food (e.g. a freshly scanned barcode result with id=0) as a
+     * favourite. De-dupes by barcode so toggling the star doesn't litter the
+     * food_items table with copies; otherwise inserts a fresh favourite row.
+     */
+    suspend fun setFavorite(food: FoodItem, favorite: Boolean) {
+        val existing = food.barcode?.takeIf { it.isNotBlank() }?.let { foodDao.getFoodItemByBarcodeDirect(it) }
+        when {
+            existing != null -> foodDao.updateFoodItem(existing.copy(isFavorite = favorite))
+            favorite -> foodDao.insertFoodItem(food.copy(id = 0, isFavorite = true))
+        }
+    }
+
     suspend fun toggleFavorite(foodId: Long) {
         val foodItem = foodDao.getFoodItemByIdDirect(foodId)
         foodItem?.let {

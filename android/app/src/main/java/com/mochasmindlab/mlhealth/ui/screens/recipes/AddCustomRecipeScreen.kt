@@ -178,7 +178,7 @@ fun AddCustomRecipeScreen(
                         placeholder = { Text("e.g. 1 cup flour") }
                     )
                     IconButton(onClick = { viewModel.removeIngredient(index) }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Remove", tint = Color.Gray)
+                        Icon(Icons.Default.Delete, contentDescription = "Remove", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }
@@ -231,7 +231,7 @@ fun AddCustomRecipeScreen(
                         onClick = { viewModel.removeInstruction(index) },
                         modifier = Modifier.padding(top = 4.dp)
                     ) {
-                        Icon(Icons.Default.Delete, contentDescription = "Remove", tint = Color.Gray)
+                        Icon(Icons.Default.Delete, contentDescription = "Remove", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }
@@ -371,7 +371,7 @@ private fun TimeStepperField(
             modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(label, fontSize = 11.sp, color = Color.Gray)
+            Text(label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onDecrement, modifier = Modifier.size(28.dp)) {
                     Icon(Icons.Default.Remove, contentDescription = "Decrease", modifier = Modifier.size(16.dp))

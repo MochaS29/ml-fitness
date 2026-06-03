@@ -4,21 +4,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mochasmindlab.mlhealth.data.database.MLFitnessDatabase
 import com.mochasmindlab.mlhealth.data.entities.FoodEntry
+import com.mochasmindlab.mlhealth.data.entities.SupplementEntry
 import com.mochasmindlab.mlhealth.data.entities.WaterEntry
 import com.mochasmindlab.mlhealth.data.entities.WaterUnit
 import com.mochasmindlab.mlhealth.data.models.MealType
 import com.mochasmindlab.mlhealth.ui.screens.FoodEntryDisplay
+import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class DiaryViewModel @Inject constructor(
-    private val database: MLFitnessDatabase
+    private val database: MLFitnessDatabase,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(DiaryUiState())
@@ -202,6 +206,21 @@ class DiaryViewModel @Inject constructor(
         loadDiaryDataInternal()
     }
 
+    /**
+     * Sums a single macro across supplement entries. Supplement nutrient maps
+     * key off USDA/Nutritionix names, which vary ("Energy" vs "calories",
+     * "Total lipid (fat)" vs "fat"), so we match any of the supplied aliases
+     * case-insensitively. Mirrors iOS DiaryViewModel.suppSum.
+     */
+    private fun suppMacro(supplements: List<SupplementEntry>, vararg aliases: String): Double {
+        val wanted = aliases.map { it.lowercase() }.toSet()
+        return supplements.sumOf { sup ->
+            sup.nutrients.entries
+                .filter { it.key.trim().lowercase() in wanted }
+                .sumOf { it.value }
+        }
+    }
+
     private fun loadDiaryDataInternal() {
         viewModelScope.launch {
             try {
@@ -229,12 +248,22 @@ class DiaryViewModel @Inject constructor(
                     mealEntries[mealType] = entries
                 }
                 
-                // Calculate totals
-                val totalCalories = foodEntries.sumOf { it.calories * it.servingCount }.toInt()
-                val totalProtein = foodEntries.sumOf { it.protein * it.servingCount }.toFloat()
-                val totalCarbs = foodEntries.sumOf { it.carbs * it.servingCount }.toFloat()
-                val totalFat = foodEntries.sumOf { it.fat * it.servingCount }.toFloat()
-                
+                // Load supplement entries — needed before totals so supplements
+                // that record macros (collagen, whey, fibre powders) contribute
+                // to the day's calorie/macro totals, mirroring iOS
+                // DiaryViewModel.totalX(from:supplements:).
+                val supplements = database.supplementDao().getEntriesForDay(date)
+
+                // Calculate totals (food + supplement macros)
+                val totalCalories = (foodEntries.sumOf { it.calories * it.servingCount } +
+                    suppMacro(supplements, "calories", "energy")).toInt()
+                val totalProtein = (foodEntries.sumOf { it.protein * it.servingCount } +
+                    suppMacro(supplements, "protein")).toFloat()
+                val totalCarbs = (foodEntries.sumOf { it.carbs * it.servingCount } +
+                    suppMacro(supplements, "carbs", "carbohydrate", "carbohydrate, by difference", "total carbohydrate")).toFloat()
+                val totalFat = (foodEntries.sumOf { it.fat * it.servingCount } +
+                    suppMacro(supplements, "fat", "total fat", "total lipid (fat)")).toFloat()
+
                 // Load water intake
                 val waterIntake = database.waterDao().getTotalForDate(date) ?: 0.0
                 val waterCups = (waterIntake / 8).toInt() // Convert oz to cups
@@ -249,9 +278,9 @@ class DiaryViewModel @Inject constructor(
                     )
                 }
 
-                // Load supplement entries
+                // Map supplement entries for display
                 val timeFormatter = java.text.SimpleDateFormat("h:mm a", Locale.getDefault())
-                val supplementEntries = database.supplementDao().getEntriesForDate(date).map { sup ->
+                val supplementEntries = supplements.map { sup ->
                     SupplementEntryDisplay(
                         id = sup.id.toString(),
                         name = sup.name,
@@ -260,7 +289,15 @@ class DiaryViewModel @Inject constructor(
                     )
                 }
 
+                // User-configurable goals (mirrors iOS Day's Nutrition @AppStorage
+                // goals). Without this the diary summary card showed a hardcoded
+                // 2200 kcal / 8 cups regardless of what the user set in Goals.
+                val calorieGoal = try { preferencesManager.dailyCalorieGoal.first() } catch (e: Exception) { 2200 }
+                val waterGoal = try { preferencesManager.dailyWaterGoal.first() } catch (e: Exception) { 8 }
+
                 _uiState.value = _uiState.value.copy(
+                    caloriesGoal = calorieGoal,
+                    waterGoal = waterGoal,
                     mealEntries = mealEntries,
                     breakfastEntries = mealEntries[MealType.BREAKFAST] ?: emptyList(),
                     lunchEntries = mealEntries[MealType.LUNCH] ?: emptyList(),

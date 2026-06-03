@@ -61,6 +61,11 @@ class PreferencesManager @Inject constructor(
         val EXERCISE_REMINDER_MINUTE = intPreferencesKey("reminder_exercise_minute")
         val DARK_MODE_ENABLED = booleanPreferencesKey("dark_mode_enabled")
         val IS_PRO_USER = booleanPreferencesKey("is_pro_user")
+        // Meal plan selection — restored on launch so the user's chosen diet +
+        // week don't reset to the first plan every time. Mirrors iOS
+        // MealPlanManager selectedPlanIdKey / currentWeekKey.
+        val SELECTED_DIET_ID = stringPreferencesKey("selected_diet_id")
+        val SELECTED_WEEK_INDEX = intPreferencesKey("selected_week_index")
     }
     
     // Onboarding
@@ -405,6 +410,23 @@ class PreferencesManager @Inject constructor(
 
     val darkModeEnabled: Flow<Boolean> = dataStore.data
         .map { it[PreferenceKeys.DARK_MODE_ENABLED] ?: false }
+
+    // Meal plan selection
+    suspend fun setSelectedMealPlan(dietId: String, weekIndex: Int) {
+        dataStore.edit {
+            it[PreferenceKeys.SELECTED_DIET_ID] = dietId
+            it[PreferenceKeys.SELECTED_WEEK_INDEX] = weekIndex
+        }
+    }
+
+    /** Selected diet id, or null if the user hasn't chosen one yet. */
+    val selectedDietId: Flow<String?> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[PreferenceKeys.SELECTED_DIET_ID] }
+
+    val selectedWeekIndex: Flow<Int> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[PreferenceKeys.SELECTED_WEEK_INDEX] ?: 0 }
 
     // Pro user state (Play Billing-driven)
     suspend fun setProUser(isPro: Boolean) {

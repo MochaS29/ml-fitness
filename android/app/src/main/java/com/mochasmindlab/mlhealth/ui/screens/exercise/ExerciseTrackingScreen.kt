@@ -473,7 +473,7 @@ fun WeeklyBar(
                     .fillMaxWidth()
                     .fillMaxHeight(height / 100)
                     .background(
-                        if (minutes > 0) ExerciseOrange else Color.Gray.copy(alpha = 0.3f),
+                        if (minutes > 0) ExerciseOrange else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
                         RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)
                     )
             )

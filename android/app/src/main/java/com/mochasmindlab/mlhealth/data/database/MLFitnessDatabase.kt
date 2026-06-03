@@ -2,6 +2,8 @@ package com.mochasmindlab.mlhealth.data.database
 
 import android.content.Context
 import androidx.room.*
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mochasmindlab.mlhealth.data.entities.*
 import com.mochasmindlab.mlhealth.data.models.Goal
 // Sleep tracking import — added by sleep-tracking agent
@@ -31,7 +33,10 @@ import java.util.UUID
         // fallbackToDestructiveMigration() in DatabaseModule handles it safely.
         com.mochasmindlab.mlhealth.data.entities.FastingSession::class
     ],
-    version = 5,
+    // v6: cholesterol / saturatedFat / additionalNutrients columns added to
+    // food_entries + food_items so USDA vitamins/minerals reach the diary.
+    // MIGRATION_5_6 preserves existing tester data (no destructive wipe).
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(Converters::class, NutrientMapConverter::class, StringListConverter::class)
@@ -55,9 +60,26 @@ abstract class MLFitnessDatabase : RoomDatabase() {
     abstract fun fastingDao(): FastingDao
 
     companion object {
+        /**
+         * v5 → v6: add extended-nutrient columns to food_entries + food_items so
+         * vitamins/minerals (and cholesterol / saturated fat) from the bundled
+         * USDA DB flow through to the diary. Additive, nullable/defaulted columns
+         * → no data loss for existing testers. additionalNutrients is NOT NULL
+         * with a '' default to match the Room entity (Map persisted as a string).
+         */
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                listOf("food_entries", "food_items").forEach { table ->
+                    db.execSQL("ALTER TABLE $table ADD COLUMN cholesterol REAL")
+                    db.execSQL("ALTER TABLE $table ADD COLUMN saturatedFat REAL")
+                    db.execSQL("ALTER TABLE $table ADD COLUMN additionalNutrients TEXT NOT NULL DEFAULT ''")
+                }
+            }
+        }
+
         @Volatile
         private var INSTANCE: MLFitnessDatabase? = null
-        
+
         fun getDatabase(context: Context): MLFitnessDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -125,6 +147,15 @@ interface FoodDao {
 interface SupplementDao {
     @Query("SELECT * FROM supplement_entries WHERE date = :date ORDER BY timestamp DESC")
     suspend fun getEntriesForDate(date: Date): List<SupplementEntry>
+
+    /**
+     * Calendar-day match via SQL DATE() — robust to a time-of-day component on
+     * either the stored or query date (unlike the exact `date = :date` above,
+     * which silently returns nothing when the diary's selectedDate is "now").
+     * Used for daily totals on the Diary and Dashboard.
+     */
+    @Query("SELECT * FROM supplement_entries WHERE DATE(date/1000, 'unixepoch') = DATE(:date/1000, 'unixepoch') ORDER BY timestamp DESC")
+    suspend fun getEntriesForDay(date: Date): List<SupplementEntry>
     
     @Insert
     suspend fun insert(entry: SupplementEntry)

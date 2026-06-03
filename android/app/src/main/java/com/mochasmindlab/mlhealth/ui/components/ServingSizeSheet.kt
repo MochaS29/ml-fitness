@@ -3,6 +3,8 @@ package com.mochasmindlab.mlhealth.ui.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,11 +36,18 @@ fun ServingSizeSheet(
     initialServings: Double = 1.0,
     allowMealTypeSelect: Boolean = true,
     initialMealType: String = "breakfast",
+    // When [showFavorite] is true a star toggle appears in the header — used by
+    // the barcode-scan result so the user can save the scanned food to
+    // favourites (mirrors iOS barcode-result star). No-op when false.
+    showFavorite: Boolean = false,
+    isFavorite: Boolean = false,
+    onToggleFavorite: (Boolean) -> Unit = {},
     onConfirm: (servings: Double, mealType: String) -> Unit,
     onDismiss: () -> Unit
 ) {
     var servings by remember { mutableStateOf(initialServings) }
     var mealType by remember { mutableStateOf(initialMealType) }
+    var favorited by remember(isFavorite) { mutableStateOf(isFavorite) }
 
     val totalCalories = (perServingCalories * servings).roundToInt()
     val totalProtein = (perServingProtein * servings)
@@ -62,7 +71,19 @@ fun ServingSizeSheet(
                     Text(title, fontSize = 20.sp, fontWeight = FontWeight.Bold, maxLines = 2)
                     subtitle?.takeIf { it.isNotBlank() }?.let {
                         Spacer(Modifier.height(2.dp))
-                        Text(it, fontSize = 13.sp, color = Color.Gray)
+                        Text(it, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+                if (showFavorite) {
+                    IconButton(onClick = {
+                        favorited = !favorited
+                        onToggleFavorite(favorited)
+                    }) {
+                        Icon(
+                            if (favorited) Icons.Default.Star else Icons.Default.StarBorder,
+                            contentDescription = if (favorited) "Remove from favourites" else "Add to favourites",
+                            tint = if (favorited) Color(0xFFFFC107) else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
                 IconButton(onClick = onDismiss) {
@@ -158,7 +179,7 @@ fun ServingSizeSheet(
 private fun MacroBlock(value: String, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(value, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-        Text(label, fontSize = 11.sp, color = Color.Gray)
+        Text(label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 

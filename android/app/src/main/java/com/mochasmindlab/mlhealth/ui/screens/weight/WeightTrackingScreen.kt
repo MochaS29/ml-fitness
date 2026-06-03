@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mochasmindlab.mlhealth.data.entities.WeightEntry
 import com.mochasmindlab.mlhealth.ui.theme.*
+import com.mochasmindlab.mlhealth.viewmodel.WeightRange
 import com.mochasmindlab.mlhealth.viewmodel.WeightViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -45,6 +46,8 @@ fun WeightTrackingScreen(
     val goalWeight by viewModel.goalWeight.collectAsState()
     val startingWeight by viewModel.startingWeight.collectAsState()
     val weightHistory by viewModel.weightHistory.collectAsState()
+    val rangedHistory by viewModel.rangedHistory.collectAsState()
+    val selectedRange by viewModel.selectedRange.collectAsState()
     val weeklyAverage by viewModel.weeklyAverage.collectAsState()
     val monthlyProgress by viewModel.monthlyProgress.collectAsState()
     val bmi by viewModel.bmi.collectAsState()
@@ -101,10 +104,15 @@ fun WeightTrackingScreen(
                 )
             }
 
-            // Progress Chart
+            // Progress Chart with a rolling time-range selector
             item {
+                WeightRangeSelector(
+                    selected = selectedRange,
+                    onSelect = { viewModel.setRange(it) }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 WeightProgressChart(
-                    weightHistory = weightHistory,
+                    weightHistory = rangedHistory,
                     goalWeight = goalWeight.toFloat()
                 )
             }
@@ -382,7 +390,7 @@ fun BMIRangeIndicator(bmi: Float) {
             .width(120.dp)
             .height(8.dp)
             .clip(RoundedCornerShape(4.dp))
-            .background(Color.Gray.copy(alpha = 0.2f))
+            .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f))
     ) {
         // BMI ranges: < 18.5 (underweight), 18.5-24.9 (normal), 25-29.9 (overweight), 30+ (obese)
         val position = when {
@@ -406,6 +414,27 @@ fun BMIRangeIndicator(bmi: Float) {
                     RoundedCornerShape(4.dp)
                 )
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WeightRangeSelector(
+    selected: WeightRange,
+    onSelect: (WeightRange) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        WeightRange.values().forEach { range ->
+            FilterChip(
+                selected = selected == range,
+                onClick = { onSelect(range) },
+                label = { Text(range.label, fontSize = 12.sp) },
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 

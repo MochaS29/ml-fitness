@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mochasmindlab.mlhealth.data.models.Period
@@ -103,6 +104,9 @@ fun NutritionDetailScreen(
                                 meals        = today.mealBreakdown,
                                 calorieGoal  = goals.calories.toDouble()
                             )
+                        }
+                        if (today.micronutrients.isNotEmpty()) {
+                            item { MicronutrientsCard(today.micronutrients) }
                         }
                     }
 
@@ -242,6 +246,39 @@ private fun MacrosProgressCard(
         }
     }
 }
+
+@Composable
+private fun MicronutrientsCard(micros: Map<String, Double>) {
+    NutritionCard(title = "Vitamins & Minerals") {
+        // Stable alphabetical order so the list doesn't jump around between loads.
+        micros.entries.sortedBy { it.key }.forEach { (key, value) ->
+            Row(
+                Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    prettyNutrientName(key),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    "%.1f".format(value),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+private fun prettyNutrientName(key: String): String =
+    key.split('_', ' ').filter { it.isNotBlank() }.joinToString(" ") { part ->
+        when (part.lowercase()) {
+            "a", "c", "d", "e", "k", "b1", "b2", "b3", "b6", "b12" -> part.uppercase()
+            else -> part.replaceFirstChar { it.uppercase() }
+        }
+    }
 
 @Composable
 private fun MealBarChartCard(

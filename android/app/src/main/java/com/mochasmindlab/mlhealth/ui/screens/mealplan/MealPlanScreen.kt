@@ -161,7 +161,7 @@ private fun DietHeader(diet: DietPlan) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(diet.name, fontSize = 22.sp, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(6.dp))
-            Text(diet.description, fontSize = 14.sp, color = Color.Gray)
+            Text(diet.description, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -230,7 +230,7 @@ private fun DailyTotals(calories: Int, protein: Double, carbs: Double, fat: Doub
 private fun StatBlock(value: String, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(value, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        Text(label, fontSize = 12.sp, color = Color.Gray)
+        Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -240,7 +240,7 @@ private fun MealRow(label: String, recipe: PlanRecipe, onClick: () -> Unit) {
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).clickable { onClick() }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(label.uppercase(), fontSize = 11.sp, color = Color.Gray, fontWeight = FontWeight.SemiBold)
+            Text(label.uppercase(), fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(4.dp))
             Text(recipe.name, fontSize = 17.sp, fontWeight = FontWeight.Medium)
             if (recipe.description.isNotBlank()) {
@@ -248,7 +248,7 @@ private fun MealRow(label: String, recipe: PlanRecipe, onClick: () -> Unit) {
                 Text(
                     recipe.description,
                     fontSize = 13.sp,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2
                 )
             }
@@ -290,7 +290,7 @@ private fun PlanRecipeDetailSheet(
             if (recipe.description.isNotBlank()) {
                 item {
                     Spacer(Modifier.height(4.dp))
-                    Text(recipe.description, color = Color.Gray, fontSize = 14.sp)
+                    Text(recipe.description, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 }
             }
 
@@ -324,7 +324,7 @@ private fun PlanRecipeDetailSheet(
                 Spacer(Modifier.height(12.dp))
                 Text(
                     "Prep ${recipe.prepTime} min • Cook ${recipe.cookTime} min",
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 13.sp
                 )
             }
@@ -372,7 +372,7 @@ private fun PlanRecipeDetailSheet(
                     Text(
                         recipe.tags.joinToString(" • "),
                         fontSize = 12.sp,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }

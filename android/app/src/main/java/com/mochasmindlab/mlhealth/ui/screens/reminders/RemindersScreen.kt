@@ -202,7 +202,7 @@ private fun ReminderCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     Spacer(Modifier.height(2.dp))
-                    Text(subtitle, fontSize = 13.sp, color = Color.Gray)
+                    Text(subtitle, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Switch(checked = checked, onCheckedChange = onCheckedChange)
             }

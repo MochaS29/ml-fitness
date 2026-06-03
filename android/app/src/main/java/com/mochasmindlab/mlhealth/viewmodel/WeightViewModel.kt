@@ -38,6 +38,26 @@ class WeightViewModel @Inject constructor(
     private val _weightHistory = MutableStateFlow<List<WeightEntry>>(emptyList())
     val weightHistory: StateFlow<List<WeightEntry>> = _weightHistory.asStateFlow()
 
+    // Rolling time-range selector for the progress chart (mirrors iOS weight
+    // range picker). ALL shows the full history.
+    private val _selectedRange = MutableStateFlow(WeightRange.MONTH)
+    val selectedRange: StateFlow<WeightRange> = _selectedRange.asStateFlow()
+
+    /** History filtered to the selected rolling window, newest-first. */
+    val rangedHistory: StateFlow<List<WeightEntry>> =
+        combine(_weightHistory, _selectedRange) { history, range ->
+            val days = range.days ?: return@combine history
+            val cutoff = Date.from(
+                LocalDate.now().minusDays(days.toLong())
+                    .atStartOfDay(ZoneId.systemDefault()).toInstant()
+            )
+            history.filter { it.date >= cutoff }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun setRange(range: WeightRange) {
+        _selectedRange.value = range
+    }
+
     private val _weeklyAverage = MutableStateFlow(0.0)
     val weeklyAverage: StateFlow<Double> = _weeklyAverage.asStateFlow()
 
@@ -175,4 +195,12 @@ class WeightViewModel @Inject constructor(
             weightRepository.deleteWeightEntry(id)
         }
     }
+}
+
+/** Rolling windows for the weight progress chart. [days] = null means all time. */
+enum class WeightRange(val label: String, val days: Int?) {
+    WEEK("7D", 7),
+    MONTH("30D", 30),
+    QUARTER("90D", 90),
+    ALL("All", null)
 }

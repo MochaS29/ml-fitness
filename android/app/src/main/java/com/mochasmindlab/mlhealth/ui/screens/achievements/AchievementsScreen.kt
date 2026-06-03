@@ -249,8 +249,8 @@ private fun AchievementRow(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    val iconTint = if (isUnlocked) categoryColor else Color.Gray.copy(alpha = 0.4f)
-    val titleColor = if (isUnlocked) MaterialTheme.colorScheme.onSurface else Color.Gray
+    val iconTint = if (isUnlocked) categoryColor else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+    val titleColor = if (isUnlocked) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
 
     Card(
         modifier = Modifier
@@ -304,7 +304,7 @@ private fun AchievementRow(
                         Text(
                             text = if (isUnlocked) "Unlocked" else "Locked",
                             fontSize = 12.sp,
-                            color = if (isUnlocked) categoryColor else Color.Gray
+                            color = if (isUnlocked) categoryColor else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -333,7 +333,7 @@ private fun AchievementRow(
                     text = if (isUnlocked) "✓ Achieved" else "Not yet achieved",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    color = if (isUnlocked) categoryColor else Color.Gray
+                    color = if (isUnlocked) categoryColor else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

@@ -135,7 +135,7 @@ fun DashboardScreen(
                                 Text(
                                     "You're 40% below your daily water goal",
                                     fontSize = 12.sp,
-                                    color = Color.Gray
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -274,7 +274,7 @@ private fun QuickActionButton(
         Text(
             label,
             fontSize = 12.sp,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

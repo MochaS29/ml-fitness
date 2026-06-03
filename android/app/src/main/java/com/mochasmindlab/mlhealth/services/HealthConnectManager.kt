@@ -3,6 +3,7 @@ package com.mochasmindlab.mlhealth.services
 import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.permission.HealthPermission
+import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.SleepSessionRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.WeightRecord
@@ -49,7 +50,11 @@ class HealthConnectManager @Inject constructor(
         HealthPermission.getReadPermission(WeightRecord::class),
         HealthPermission.getWritePermission(WeightRecord::class),
         // Sleep tracking — added by sleep-tracking agent (gap #10)
-        HealthPermission.getReadPermission(SleepSessionRecord::class)
+        HealthPermission.getReadPermission(SleepSessionRecord::class),
+        // Active energy — surfaces real-world calorie burn in the dashboard
+        // Burned tile (mirrors iOS HealthKit activeEnergyBurned). Read-only;
+        // falls back to a step-derived estimate when no samples exist.
+        HealthPermission.getReadPermission(ActiveCaloriesBurnedRecord::class)
     )
 
     /**
@@ -134,6 +139,36 @@ class HealthConnectManager @Inject constructor(
             0L
         }
     }
+
+    /**
+     * Reads total active energy burned (kcal) for a given [date] (full calendar
+     * day in the device's default zone). Returns 0 if Health Connect is
+     * unavailable, the permission isn't granted, or no samples exist — callers
+     * fall back to a step-derived estimate. Mirrors iOS
+     * HealthKitManager.fetchActiveEnergy.
+     */
+    suspend fun readActiveCaloriesForDate(date: LocalDate): Double {
+        val client = getClientOrNull() ?: return 0.0
+        return try {
+            val zone = ZoneId.systemDefault()
+            val startOfDay = date.atStartOfDay(zone).toInstant()
+            val endOfDay = date.atTime(LocalTime.MAX).atZone(zone).toInstant()
+                .let { if (it.isAfter(Instant.now())) Instant.now() else it }
+
+            val response = client.aggregate(
+                AggregateRequest(
+                    metrics = setOf(ActiveCaloriesBurnedRecord.ACTIVE_CALORIES_TOTAL),
+                    timeRangeFilter = TimeRangeFilter.between(startOfDay, endOfDay)
+                )
+            )
+            response[ActiveCaloriesBurnedRecord.ACTIVE_CALORIES_TOTAL]?.inKilocalories ?: 0.0
+        } catch (e: Exception) {
+            0.0
+        }
+    }
+
+    /** Convenience: active energy burned (kcal) for today. */
+    suspend fun readActiveCaloriesToday(): Double = readActiveCaloriesForDate(LocalDate.now())
 
     /**
      * Reads the most recent [WeightRecord] and returns the value in kilograms.

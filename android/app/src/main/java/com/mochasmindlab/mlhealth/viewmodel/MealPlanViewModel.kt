@@ -8,6 +8,7 @@ import com.mochasmindlab.mlhealth.data.models.DietPlan
 import com.mochasmindlab.mlhealth.data.models.PlanRecipe
 import com.mochasmindlab.mlhealth.di.ApplicationScope
 import com.mochasmindlab.mlhealth.services.MealPlanLoader
+import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
@@ -28,6 +30,7 @@ import javax.inject.Inject
 class MealPlanViewModel @Inject constructor(
     private val loader: MealPlanLoader,
     private val database: MLFitnessDatabase,
+    private val preferencesManager: PreferencesManager,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
@@ -45,10 +48,19 @@ class MealPlanViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
             val diets = loader.loadAll()
+
+            // Restore the user's last-selected diet + week, falling back to the
+            // first plan. Without this the plan reset to the default every launch.
+            val savedDietId = try { preferencesManager.selectedDietId.first() } catch (e: Exception) { null }
+            val savedWeek = try { preferencesManager.selectedWeekIndex.first() } catch (e: Exception) { 0 }
+            val restoredDiet = diets.firstOrNull { it.id == savedDietId } ?: diets.firstOrNull()
+            val weekCount = restoredDiet?.weeks?.size ?: 0
+            val restoredWeek = savedWeek.coerceIn(0, (weekCount - 1).coerceAtLeast(0))
+
             _state.value = _state.value.copy(
                 diets = diets,
-                selectedDiet = diets.firstOrNull(),
-                selectedWeekIndex = 0,
+                selectedDiet = restoredDiet,
+                selectedWeekIndex = restoredWeek,
                 selectedDayIndex = 0,
                 isLoading = false
             )
@@ -62,10 +74,16 @@ class MealPlanViewModel @Inject constructor(
             selectedWeekIndex = 0,
             selectedDayIndex = 0
         )
+        persistSelection(dietId, 0)
     }
 
     fun selectWeek(index: Int) {
         _state.value = _state.value.copy(selectedWeekIndex = index, selectedDayIndex = 0)
+        _state.value.selectedDiet?.id?.let { persistSelection(it, index) }
+    }
+
+    private fun persistSelection(dietId: String, weekIndex: Int) {
+        appScope.launch { preferencesManager.setSelectedMealPlan(dietId, weekIndex) }
     }
 
     fun selectDay(index: Int) {

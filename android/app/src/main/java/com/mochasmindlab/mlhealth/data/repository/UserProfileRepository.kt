@@ -14,8 +14,12 @@ class UserProfileRepository @Inject constructor(
     private val userProfileDao: UserProfileDao
 ) {
     suspend fun insertUserProfile(profile: UserProfile) = userProfileDao.insertUserProfile(profile)
-    
-    suspend fun updateUserProfile(profile: UserProfile) = userProfileDao.updateUserProfile(profile)
+
+    // Upsert, not update. UserProfile.id is a singleton PK (= 1); for first-time
+    // users the row doesn't exist yet, and Room's @Update silently no-ops on a
+    // missing row — which made profile edits vanish on app restart. insertUserProfile
+    // uses OnConflictStrategy.REPLACE, so it inserts or overwrites as needed.
+    suspend fun updateUserProfile(profile: UserProfile) = userProfileDao.insertUserProfile(profile)
     
     fun getUserProfile(): Flow<UserProfile?> = userProfileDao.getUserProfile()
     

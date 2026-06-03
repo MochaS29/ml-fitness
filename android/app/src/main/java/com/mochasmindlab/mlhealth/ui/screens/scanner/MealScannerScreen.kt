@@ -169,7 +169,7 @@ private fun PaywallGate(onUpgrade: () -> Unit, onCancel: () -> Unit) {
         Text(
             "Upgrade to Pro for unlimited AI meal scans, advanced charts, and full Health Connect sync.",
             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = onUpgrade, modifier = Modifier.fillMaxWidth()) {
@@ -278,9 +278,19 @@ private fun ResultsContent(
 ) {
     val mealTypes = listOf("breakfast", "lunch", "dinner", "snack")
 
+    // Add the gesture-nav bar inset to the bottom padding so the Save/Discard
+    // buttons (the last list item) are never clipped behind the system nav bar
+    // on devices using gesture navigation. Mirrors the iOS safe-area fix.
+    val navBarBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
+        contentPadding = PaddingValues(
+            start = 16.dp,
+            top = 16.dp,
+            end = 16.dp,
+            bottom = 16.dp + navBarBottom
+        ),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {

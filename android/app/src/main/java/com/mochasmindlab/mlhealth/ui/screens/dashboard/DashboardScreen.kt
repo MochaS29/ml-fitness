@@ -127,6 +127,7 @@ fun DashboardScreen(
                 ExerciseCard(
                     minutes = uiState.exerciseMinutes,
                     caloriesBurned = uiState.exerciseCalories,
+                    trend = uiState.burnedTrend,
                     onClick = { navController.navigate("exercise") }
                 )
             }
@@ -136,6 +137,7 @@ fun DashboardScreen(
                 StepsCard(
                     steps = uiState.steps,
                     goal = 10000,
+                    trend = uiState.stepsTrend,
                     onClick = { navController.navigate("exercise") }
                 )
             }
@@ -622,10 +624,30 @@ fun WeightCard(
     }
 }
 
+/**
+ * Small signed day-over-day percent badge ("▲ 12%" / "▼ 8%"). [upIsGood]
+ * controls colour: for steps/burn, more is green; flip for metrics where less
+ * is better. Renders nothing when [trend] is null (no prior data).
+ */
+@Composable
+fun TrendBadge(trend: Float?, upIsGood: Boolean = true) {
+    if (trend == null) return
+    val up = trend >= 0f
+    val good = if (up) upIsGood else !upIsGood
+    val arrow = if (up) "▲" else "▼"
+    Text(
+        text = "$arrow ${kotlin.math.abs(trend).toInt()}%",
+        fontSize = 12.sp,
+        fontWeight = FontWeight.SemiBold,
+        color = if (good) Color(0xFF4CAF50) else Color(0xFFFF5722)
+    )
+}
+
 @Composable
 fun ExerciseCard(
     minutes: Int,
     caloriesBurned: Int,
+    trend: Float? = null,
     onClick: () -> Unit
 ) {
     Card(
@@ -653,12 +675,15 @@ fun ExerciseCard(
                 )
             }
 
-            Text(
-                text = "$caloriesBurned kcal burned",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFFF5722)
-            )
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = "$caloriesBurned kcal burned",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFF5722)
+                )
+                TrendBadge(trend = trend, upIsGood = true)
+            }
         }
     }
 }
@@ -667,6 +692,7 @@ fun ExerciseCard(
 fun StepsCard(
     steps: Int,
     goal: Int,
+    trend: Float? = null,
     onClick: () -> Unit
 ) {
     Card(
@@ -700,10 +726,13 @@ fun StepsCard(
                     )
                 }
 
-                Text(
-                    text = "👟",
-                    fontSize = 32.sp
-                )
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "👟",
+                        fontSize = 32.sp
+                    )
+                    TrendBadge(trend = trend, upIsGood = true)
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))

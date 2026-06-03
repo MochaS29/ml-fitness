@@ -25,6 +25,9 @@ object DatabaseModule {
             MLFitnessDatabase::class.java,
             "mlfitness_database"
         )
+        // Real migration for v5→v6 (extended nutrients) so existing testers keep
+        // their data. Destructive fallback remains a backstop for any other path.
+        .addMigrations(MLFitnessDatabase.MIGRATION_5_6)
         .fallbackToDestructiveMigration()
         .build()
     }

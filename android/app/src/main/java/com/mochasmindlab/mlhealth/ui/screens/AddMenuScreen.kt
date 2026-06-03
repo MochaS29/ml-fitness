@@ -196,14 +196,14 @@ private fun AddMenuItem(
             Text(
                 subtitle,
                 fontSize = 14.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         
         Icon(
             Icons.Default.ChevronRight,
             contentDescription = null,
-            tint = Color.Gray.copy(alpha = 0.5f)
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
         )
     }
 }

@@ -101,10 +101,13 @@ class NutritionDetailViewModel @Inject constructor(
 
     private suspend fun loadTodayTotals(today: Date) {
         val entries = database.foodDao().getEntriesForDate(today)
+        val supplements = database.supplementDao().getEntriesForDay(today)
 
         // Aggregate totals, respecting servingCount for nullable fields
         var cal = 0.0; var pro = 0.0; var carb = 0.0; var fat = 0.0
         var fib = 0.0; var sug = 0.0; var sod = 0.0
+        var chol = 0.0; var satFat = 0.0
+        val micros = mutableMapOf<String, Double>()
         val mealMap = mutableMapOf<String, Double>()
 
         for (e in entries) {
@@ -116,8 +119,21 @@ class NutritionDetailViewModel @Inject constructor(
             fib  += (e.fiber  ?: 0.0) * sc
             sug  += (e.sugar  ?: 0.0) * sc
             sod  += (e.sodium ?: 0.0) * sc
+            chol += (e.cholesterol ?: 0.0) * sc
+            satFat += (e.saturatedFat ?: 0.0) * sc
+            // Vitamins/minerals carried from the USDA bundled DB.
+            for ((k, v) in e.additionalNutrients) {
+                micros[k] = (micros[k] ?: 0.0) + v * sc
+            }
             val key = e.mealType.replaceFirstChar { it.uppercaseChar() }
             mealMap[key] = (mealMap[key] ?: 0.0) + e.calories * sc
+        }
+
+        // Supplements contribute their vitamins/minerals too (mirrors iOS).
+        for (s in supplements) {
+            for ((k, v) in s.nutrients) {
+                micros[k] = (micros[k] ?: 0.0) + v
+            }
         }
 
         val mealOrder = listOf("Breakfast", "Lunch", "Dinner", "Snack")
@@ -133,6 +149,9 @@ class NutritionDetailViewModel @Inject constructor(
             fiber = fib,
             sugar = sug,
             sodium = sod,
+            cholesterol = chol,
+            saturatedFat = satFat,
+            micronutrients = micros.filterValues { it > 0.0 },
             mealBreakdown = mealBreakdown
         )
     }

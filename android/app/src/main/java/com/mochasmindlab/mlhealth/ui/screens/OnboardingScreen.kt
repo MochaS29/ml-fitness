@@ -193,7 +193,7 @@ private fun WelcomeStep(onNext: () -> Unit) {
             "Let's personalize ML Health for you.\nThis will only take a minute!",
             fontSize = 16.sp,
             textAlign = TextAlign.Center,
-            color = androidx.compose.ui.graphics.Color.Gray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         
         Spacer(modifier = Modifier.height(48.dp))
@@ -333,7 +333,7 @@ private fun BodyMetricsStep(
         Text(
             "This helps us calculate your nutritional needs",
             fontSize = 14.sp,
-            color = androidx.compose.ui.graphics.Color.Gray
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         
         Spacer(modifier = Modifier.height(24.dp))
@@ -526,7 +526,7 @@ private fun ActivityLevelStep(
                                 ActivityLevel.VERY_ACTIVE -> "Very hard exercise daily"
                             },
                             fontSize = 12.sp,
-                            color = androidx.compose.ui.graphics.Color.Gray
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }

@@ -129,8 +129,8 @@ fun MLFitnessNavigation(
                                     selectedIconColor = MochaBrown,
                                     selectedTextColor = MochaBrown,
                                     indicatorColor = MochaBrown.copy(alpha = 0.1f),
-                                    unselectedIconColor = Color.Gray,
-                                    unselectedTextColor = Color.Gray
+                                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             )
                         }

@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
 
@@ -50,39 +51,51 @@ class DashboardViewModel @Inject constructor(
                     set(Calendar.SECOND, 0)
                     set(Calendar.MILLISECOND, 0)
                 }.time
-                
+                val yesterday = Calendar.getInstance().apply {
+                    time = today
+                    add(Calendar.DAY_OF_YEAR, -1)
+                }.time
+
+                // Supplements that record macros (collagen, whey, fibre powders)
+                // contribute to today's totals, mirroring iOS DiaryViewModel.
+                val supplementsToday = try {
+                    database.supplementDao().getEntriesForDay(today)
+                } catch (e: Exception) {
+                    emptyList()
+                }
+
                 // Load calories and macros - these might be null initially
-                val totalCalories = try {
+                val totalCalories = (try {
                     database.foodDao().getTotalCaloriesForDate(today) ?: 0.0
                 } catch (e: Exception) {
                     0.0
-                }
+                }) + suppMacro(supplementsToday, "calories", "energy")
 
-                val totalProtein = try {
+                val totalProtein = (try {
                     database.foodDao().getTotalProteinForDate(today) ?: 0.0
                 } catch (e: Exception) {
                     0.0
-                }
+                }) + suppMacro(supplementsToday, "protein")
 
-                val totalCarbs = try {
+                val totalCarbs = (try {
                     database.foodDao().getTotalCarbsForDate(today) ?: 0.0
                 } catch (e: Exception) {
                     0.0
-                }
+                }) + suppMacro(supplementsToday, "carbs", "carbohydrate", "carbohydrate, by difference", "total carbohydrate")
 
-                val totalFat = try {
+                val totalFat = (try {
                     database.foodDao().getTotalFatForDate(today) ?: 0.0
                 } catch (e: Exception) {
                     0.0
-                }
-                
+                }) + suppMacro(supplementsToday, "fat", "total fat", "total lipid (fat)")
+
                 // Load water
                 val waterIntake = try {
                     database.waterDao().getTotalForDate(today) ?: 0.0
                 } catch (e: Exception) {
                     0.0
                 }
-                
+
                 // Load exercise
                 val exerciseMinutes = try {
                     database.exerciseDao().getTotalMinutesForDate(today) ?: 0
@@ -90,12 +103,12 @@ class DashboardViewModel @Inject constructor(
                     0
                 }
 
-                val exerciseCalories = try {
-                    database.exerciseDao().getTotalCaloriesBurnedForDate(today)?.toInt() ?: 0
+                val manualBurn = try {
+                    database.exerciseDao().getTotalCaloriesBurnedForDate(today) ?: 0.0
                 } catch (e: Exception) {
-                    0
+                    0.0
                 }
-                
+
                 // Load weight
                 val latestWeight = try {
                     database.weightDao().getLatestEntry()
@@ -110,6 +123,40 @@ class DashboardViewModel @Inject constructor(
                 } catch (e: Exception) {
                     0
                 }
+
+                // Burned tile: prefer the highest of manual exercise logging,
+                // Health Connect active energy, and a weight-adjusted step
+                // estimate. Mirrors iOS DiaryViewModel.refreshActiveEnergy — the
+                // step fallback matters because HC often has no active-energy
+                // samples even with thousands of steps logged.
+                val activeEnergy = try {
+                    healthConnectManager.readActiveCaloriesToday()
+                } catch (e: Exception) {
+                    0.0
+                }
+                val stepEstimate = todaySteps * caloriesPerStep(latestWeight?.weight ?: 0.0)
+                val exerciseCalories = maxOf(manualBurn, activeEnergy, stepEstimate).toInt()
+
+                // Weight trend: signed delta vs the previous logged entry.
+                val recentWeights = try {
+                    database.weightDao().getRecentEntries(2)
+                } catch (e: Exception) {
+                    emptyList()
+                }
+                val weightChange = if (recentWeights.size >= 2) {
+                    (recentWeights[0].weight - recentWeights[1].weight).toFloat()
+                } else 0f
+
+                // Day-over-day signed-percent trends (real historical data).
+                val yesterdayCalories = try {
+                    database.foodDao().getTotalCaloriesForDate(yesterday) ?: 0.0
+                } catch (e: Exception) { 0.0 }
+                val yesterdaySteps = try {
+                    healthConnectManager.readStepsForDate(LocalDate.now().minusDays(1)).toInt()
+                } catch (e: Exception) { 0 }
+                val yesterdayBurn = try {
+                    database.exerciseDao().getTotalCaloriesBurnedForDate(yesterday) ?: 0.0
+                } catch (e: Exception) { 0.0 }
 
                 // User-configurable goals (set via the Goals screen → mirrored to DataStore).
                 val calorieGoal = try { preferencesManager.dailyCalorieGoal.first() } catch (e: Exception) { 2200 }
@@ -129,9 +176,12 @@ class DashboardViewModel @Inject constructor(
                     exerciseGoal = exerciseGoal,
                     exerciseCalories = exerciseCalories,
                     currentWeight = latestWeight?.weight ?: 70.0,
-                    weightChange = 0f, // TODO: Calculate from previous weight
+                    weightChange = weightChange,
                     lastWeightDate = "Today",
                     steps = todaySteps,
+                    caloriesTrend = trendPercent(totalCalories, yesterdayCalories),
+                    stepsTrend = trendPercent(todaySteps.toDouble(), yesterdaySteps.toDouble()),
+                    burnedTrend = trendPercent(exerciseCalories.toDouble(), yesterdayBurn),
                     selectedPeriod = DashboardPeriod.DAY
                 )
             } catch (e: Exception) {
@@ -248,6 +298,36 @@ class DashboardViewModel @Inject constructor(
         loadDashboardData()
         generateAIInsights()
     }
+
+    /**
+     * Sums a single macro across supplement entries, matching any alias
+     * case-insensitively (USDA/Nutritionix names vary). Mirrors iOS suppSum.
+     */
+    private fun suppMacro(supplements: List<SupplementEntry>, vararg aliases: String): Double {
+        val wanted = aliases.map { it.lowercase() }.toSet()
+        return supplements.sumOf { sup ->
+            sup.nutrients.entries
+                .filter { it.key.trim().lowercase() in wanted }
+                .sumOf { it.value }
+        }
+    }
+
+    /**
+     * Calories per step, weighted by the user's most recent logged weight.
+     * Derived from the standard walking formula (≈ weight_lbs × 0.00027).
+     * Falls back to 0.04 (≈ 148 lb adult) when no weight has been logged.
+     * Mirrors iOS DiaryViewModel.caloriesPerStep.
+     */
+    private fun caloriesPerStep(weightLbs: Double): Double =
+        if (weightLbs > 0) weightLbs * 0.00027 else 0.04
+
+    /**
+     * Signed day-over-day percent change. Returns null when there's no prior
+     * value to compare against (so the card hides the trend rather than showing
+     * a meaningless +100%).
+     */
+    private fun trendPercent(today: Double, previous: Double): Float? =
+        if (previous > 0.0) (((today - previous) / previous) * 100.0).toFloat() else null
 }
 
 data class DashboardUiState(
@@ -266,6 +346,10 @@ data class DashboardUiState(
     val weightChange: Float = 0f,
     val lastWeightDate: String = "Today",
     val steps: Int = 0,
+    // Signed day-over-day percent trends (null = no prior data, hide the trend).
+    val caloriesTrend: Float? = null,
+    val stepsTrend: Float? = null,
+    val burnedTrend: Float? = null,
     val selectedPeriod: DashboardPeriod = DashboardPeriod.DAY,
     val isLoading: Boolean = false
 )
