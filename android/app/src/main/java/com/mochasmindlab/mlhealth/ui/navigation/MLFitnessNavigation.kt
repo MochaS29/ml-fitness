@@ -1,0 +1,602 @@
+package com.mochasmindlab.mlhealth.ui.navigation
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.mochasmindlab.mlhealth.data.models.MealType
+import com.mochasmindlab.mlhealth.ui.screens.OnboardingScreen
+import com.mochasmindlab.mlhealth.ui.screens.dashboard.DashboardScreen
+import com.mochasmindlab.mlhealth.ui.screens.diary.DiaryScreen
+import com.mochasmindlab.mlhealth.ui.screens.exercise.ExerciseTrackingScreen
+import com.mochasmindlab.mlhealth.ui.screens.food.FoodSearchScreen
+import com.mochasmindlab.mlhealth.ui.screens.goals.GoalsScreen
+import com.mochasmindlab.mlhealth.ui.screens.mealplan.MealPlanScreen
+import com.mochasmindlab.mlhealth.ui.screens.more.MoreScreen
+import com.mochasmindlab.mlhealth.ui.screens.profile.ProfileScreen
+import com.mochasmindlab.mlhealth.ui.screens.weight.WeightTrackingScreen
+import com.mochasmindlab.mlhealth.ui.screens.ComingSoonScreen
+import com.mochasmindlab.mlhealth.ui.theme.*
+import com.mochasmindlab.mlhealth.utils.PreferencesManager
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
+
+// Navigation destinations matching iOS tabs
+sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
+    object Dashboard : Screen("dashboard", "Dashboard", Icons.Default.Home)
+    object Diary : Screen("diary", "Diary", Icons.Default.MenuBook)
+    object MealPlan : Screen("mealplan", "Plan", Icons.Default.CalendarMonth)
+    object More : Screen("more", "More", Icons.Default.MoreHoriz)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MLFitnessNavigation(
+    preferencesManager: PreferencesManager? = null
+) {
+    val navController = rememberNavController()
+    var showAddMenu by remember { mutableStateOf(false) }
+
+    // Check if onboarding is completed
+    val startDestination = if (preferencesManager != null) {
+        runBlocking {
+            if (preferencesManager.isOnboardingCompleted.first()) {
+                Screen.Dashboard.route
+            } else {
+                "onboarding"
+            }
+        }
+    } else {
+        Screen.Dashboard.route
+    }
+
+    val items = listOf(
+        Screen.Dashboard,
+        Screen.Diary,
+        Screen.MealPlan,
+        Screen.More
+    )
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    // Show the bottom bar (and its centred FAB) only on the four main tabs.
+    // Detail screens use their own top-bar "+" actions, otherwise the centred
+    // FAB overlaps their content. currentRoute is null during initial
+    // composition — treat that like "show" so the bar isn't blank on startup.
+    val mainRoutes = items.map { it.route }.toSet()
+    val showBottomBar = currentRoute == null || currentRoute in mainRoutes
+
+    Scaffold(
+        bottomBar = {
+            if (showBottomBar) {
+                // Stack the FAB on top of the NavigationBar so it sits in-line
+                // with the four tabs (the iOS-style centred + button), instead
+                // of floating above the bar.
+                Box(contentAlignment = Alignment.Center) {
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    ) {
+                        // Layout: [Dashboard] [Diary] [spacer] [Plan] [More] —
+                        // the empty middle slot is where the overlay FAB sits.
+                        items.forEachIndexed { index, screen ->
+                            if (index == 2) {
+                                Spacer(Modifier.weight(1f))
+                            }
+                            NavigationBarItem(
+                                icon = {
+                                    Icon(
+                                        screen.icon,
+                                        contentDescription = screen.title
+                                    )
+                                },
+                                label = { Text(screen.title) },
+                                selected = currentRoute == screen.route,
+                                onClick = {
+                                    navController.navigate(screen.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = MochaBrown,
+                                    selectedTextColor = MochaBrown,
+                                    indicatorColor = MochaBrown.copy(alpha = 0.1f),
+                                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            )
+                        }
+                    }
+                    FloatingActionButton(
+                        onClick = { showAddMenu = true },
+                        containerColor = MochaBrown,
+                        contentColor = Color.White,
+                        modifier = Modifier.size(52.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Add",
+                            modifier = Modifier.size(26.dp)
+                        )
+                    }
+                }
+            }
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = startDestination,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("onboarding") {
+                preferencesManager?.let {
+                    OnboardingScreen(
+                        navController = navController,
+                        preferencesManager = it
+                    )
+                }
+            }
+
+            composable(Screen.Dashboard.route) {
+                DashboardScreen(navController)
+            }
+
+            composable(Screen.Diary.route) {
+                DiaryScreen(
+                    navController = navController,
+                    onAddClick = { showAddMenu = true }
+                )
+            }
+
+            composable(Screen.MealPlan.route) {
+                MealPlanScreen(navController)
+            }
+
+            composable(Screen.More.route) {
+                MoreScreen(navController, preferencesManager)
+            }
+
+            // Profile & Settings
+            composable("profile") {
+                ProfileScreen(navController = navController)
+            }
+
+            composable("goals") {
+                GoalsScreen(navController = navController)
+            }
+
+            composable("settings") {
+                com.mochasmindlab.mlhealth.ui.screens.settings.SettingsScreen(
+                    navController = navController,
+                    preferencesManager = preferencesManager
+                )
+            }
+
+            // Food preferences = allergens + dietary restrictions (same screen).
+            composable("food_preferences") {
+                com.mochasmindlab.mlhealth.ui.screens.preferences.AllergenPreferencesScreen(navController)
+            }
+
+            composable("reminders") {
+                com.mochasmindlab.mlhealth.ui.screens.reminders.RemindersScreen(navController)
+            }
+
+            composable("copy_from_previous") {
+                com.mochasmindlab.mlhealth.ui.screens.copy.CopyFromPreviousDayScreen(navController)
+            }
+
+            composable("nutrition_detail") {
+                com.mochasmindlab.mlhealth.ui.screens.nutrition.NutritionDetailScreen(navController)
+            }
+
+            // Food & Nutrition
+            composable("food_search/{mealType}") { backStackEntry ->
+                val mealType = try {
+                    MealType.valueOf(
+                        backStackEntry.arguments?.getString("mealType") ?: "BREAKFAST"
+                    )
+                } catch (e: Exception) {
+                    MealType.BREAKFAST
+                }
+                FoodSearchScreen(
+                    navController = navController,
+                    mealType = mealType
+                )
+            }
+
+            // "Food Database" entry just opens search for snacks — same UX as
+            // tapping the + sheet's Food row.
+            composable("food_database") {
+                FoodSearchScreen(
+                    navController = navController,
+                    mealType = MealType.SNACK
+                )
+            }
+
+            composable("recipes") {
+                com.mochasmindlab.mlhealth.ui.screens.recipes.RecipeLibraryScreen(navController)
+            }
+
+            composable("add_custom_recipe") {
+                com.mochasmindlab.mlhealth.ui.screens.recipes.AddCustomRecipeScreen(navController)
+            }
+
+            composable("recipe_detail/{recipeId}") { entry ->
+                val id = entry.arguments?.getString("recipeId").orEmpty()
+                com.mochasmindlab.mlhealth.ui.screens.recipes.RecipeDetailScreen(
+                    navController = navController,
+                    recipeId = id
+                )
+            }
+
+            composable("body_measurements") {
+                com.mochasmindlab.mlhealth.ui.screens.measurements.BodyMeasurementsScreen(navController)
+            }
+
+            composable("sleep") {
+                com.mochasmindlab.mlhealth.ui.screens.sleep.SleepTrackingScreen(navController)
+            }
+
+            composable("allergen_preferences") {
+                com.mochasmindlab.mlhealth.ui.screens.preferences.AllergenPreferencesScreen(navController)
+            }
+
+            composable("rda") {
+                com.mochasmindlab.mlhealth.ui.screens.rda.RDAScreen(navController)
+            }
+
+            composable("fasting") {
+                com.mochasmindlab.mlhealth.ui.screens.fasting.FastingScreen(
+                    onBack = { navController.navigateUp() }
+                )
+            }
+
+            composable("add_custom_food") {
+                com.mochasmindlab.mlhealth.ui.screens.customfood.AddCustomFoodScreen(navController)
+            }
+
+            composable("barcode_scanner/{mealType}") { backStackEntry ->
+                val mealType = try {
+                    MealType.valueOf(
+                        backStackEntry.arguments?.getString("mealType") ?: "SNACK"
+                    )
+                } catch (e: Exception) {
+                    MealType.SNACK
+                }
+
+                com.mochasmindlab.mlhealth.services.FoodBarcodeScannerScreen(
+                    onFoodFound = { foodItem ->
+                        // Navigate back to diary or food entry with the scanned food
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("scanned_food", foodItem)
+                        navController.popBackStack()
+                    },
+                    onManualEntry = {
+                        navController.navigate("food_search/$mealType")
+                    },
+                    onDismiss = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            // Exercise & Activity
+            composable("exercise") {
+                ExerciseTrackingScreen(navController = navController)
+            }
+
+            // Legacy alias — both routes go to the real exercise screen.
+            composable("exercise_search") {
+                ExerciseTrackingScreen(navController = navController)
+            }
+
+            // Weight & Measurements
+            composable("weight") {
+                WeightTrackingScreen(navController = navController)
+            }
+
+            composable("weight_entry") {
+                WeightTrackingScreen(navController = navController)
+            }
+
+            // Water & Hydration
+            composable("water") {
+                com.mochasmindlab.mlhealth.ui.screens.water.WaterTrackingScreen(
+                    navController = navController
+                )
+            }
+
+            composable("water_entry") {
+                com.mochasmindlab.mlhealth.ui.screens.water.WaterTrackingScreen(
+                    navController = navController
+                )
+            }
+
+            // Supplements
+            composable("supplements") {
+                com.mochasmindlab.mlhealth.ui.screens.supplements.SupplementsScreen(navController)
+            }
+
+            composable("supplement_entry") {
+                com.mochasmindlab.mlhealth.ui.screens.supplements.SupplementsScreen(navController)
+            }
+
+            // Progress & Reports
+            composable("progress") {
+                com.mochasmindlab.mlhealth.ui.screens.reports.ProgressScreen(navController)
+            }
+
+            composable("export") {
+                com.mochasmindlab.mlhealth.ui.screens.reports.ExportScreen(navController)
+            }
+
+            // Help & Support
+            composable("help") {
+                com.mochasmindlab.mlhealth.ui.screens.about.HelpScreen(navController)
+            }
+
+            composable("about") {
+                com.mochasmindlab.mlhealth.ui.screens.about.AboutScreen(navController)
+            }
+
+            composable("privacy") {
+                com.mochasmindlab.mlhealth.ui.screens.about.PrivacyScreen(navController)
+            }
+
+            // ───── Orphaned-but-built screens, now reachable ─────
+            composable("meal_scanner") {
+                com.mochasmindlab.mlhealth.ui.screens.scanner.MealScannerScreen(navController)
+            }
+
+            composable("paywall") {
+                com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallScreen(navController)
+            }
+
+            composable("achievements") {
+                com.mochasmindlab.mlhealth.ui.screens.achievements.AchievementsScreen(navController)
+            }
+
+            composable("health_connect") {
+                com.mochasmindlab.mlhealth.ui.screens.healthconnect.HealthConnectScreen(navController)
+            }
+
+            composable("grocery_list") {
+                com.mochasmindlab.mlhealth.ui.screens.grocery.GroceryListScreen(navController)
+            }
+        }
+    }
+
+    // Add menu bottom sheet (matching iOS sheet)
+    if (showAddMenu) {
+        AddMenuBottomSheet(
+            onDismiss = { showAddMenu = false },
+            navController = navController
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddMenuBottomSheet(
+    onDismiss: () -> Unit,
+    navController: androidx.navigation.NavController
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surface
+    ) {
+        AddMenuContent(
+            onDismiss = onDismiss,
+            navController = navController
+        )
+    }
+}
+
+@Composable
+fun AddMenuContent(
+    onDismiss: () -> Unit,
+    navController: androidx.navigation.NavController
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        item {
+            Text(
+                "Quick Add",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
+        item {
+            AddMenuItem(
+                icon = Icons.Default.Restaurant,
+                title = "Food",
+                subtitle = "Log meals and snacks",
+                color = MochaBrown,
+                onClick = {
+                    onDismiss()
+                    navController.navigate("food_search/SNACK")
+                }
+            )
+        }
+
+        item {
+            AddMenuItem(
+                icon = Icons.Default.CameraAlt,
+                title = "Scan a Meal",
+                subtitle = "Identify food from a photo (AI)",
+                color = NutritionGreen,
+                onClick = {
+                    onDismiss()
+                    navController.navigate("meal_scanner")
+                }
+            )
+        }
+
+        item {
+            AddMenuItem(
+                icon = Icons.Default.FitnessCenter,
+                title = "Exercise",
+                subtitle = "Track your workouts",
+                color = ExerciseOrange,
+                onClick = {
+                    onDismiss()
+                    navController.navigate("exercise")
+                }
+            )
+        }
+
+        item {
+            AddMenuItem(
+                icon = Icons.Default.MonitorWeight,
+                title = "Weight",
+                subtitle = "Log your weight",
+                color = MochaBrown,
+                onClick = {
+                    onDismiss()
+                    navController.navigate("weight")
+                }
+            )
+        }
+
+        item {
+            AddMenuItem(
+                icon = Icons.Default.LocalDrink,
+                title = "Water",
+                subtitle = "Track hydration",
+                color = WaterBlue,
+                onClick = {
+                    onDismiss()
+                    navController.navigate("water")
+                }
+            )
+        }
+
+        item {
+            AddMenuItem(
+                icon = Icons.Default.Medication,
+                title = "Supplements",
+                subtitle = "Log vitamins and supplements",
+                color = SupplementPurple,
+                onClick = {
+                    onDismiss()
+                    navController.navigate("supplements")
+                }
+            )
+        }
+
+        item {
+            AddMenuItem(
+                icon = Icons.Default.QrCodeScanner,
+                title = "Barcode Scanner",
+                subtitle = "Scan food barcodes",
+                color = WarningOrange,
+                onClick = {
+                    onDismiss()
+                    navController.navigate("barcode_scanner/SNACK")
+                }
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
+fun AddMenuItem(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    color: Color,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = color.copy(alpha = 0.1f)
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(color.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = title,
+                    tint = color,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    title,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    subtitle,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            Icon(
+                Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}

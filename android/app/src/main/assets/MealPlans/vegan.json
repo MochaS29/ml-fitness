@@ -1,0 +1,1779 @@
+{
+  "dietType": "vegan",
+  "displayName": "Vegan",
+  "description": "100% plant-based diet with no animal products, rich in whole foods, legumes, and diverse plant proteins",
+  "benefits": [
+    "Lower environmental impact",
+    "Reduced heart disease risk",
+    "High fiber intake",
+    "Weight management",
+    "Improved gut health",
+    "Rich in antioxidants"
+  ],
+  "restrictions": [
+    "No meat or poultry",
+    "No fish or seafood",
+    "No dairy products",
+    "No eggs",
+    "No honey",
+    "No animal-derived ingredients"
+  ],
+  "meals": {
+    "vgn_tofu_scramble": {
+      "name": "Tofu Scramble with Vegetables",
+      "description": "Savory turmeric-spiced tofu scramble loaded with bell peppers, spinach, and nutritional yeast for a cheesy flavor",
+      "calories": 340,
+      "protein": 22.0,
+      "carbs": 18.0,
+      "fat": 21.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "200g extra-firm tofu, drained and crumbled",
+        "1 tbsp olive oil",
+        "1/2 red bell pepper, diced",
+        "1 cup fresh spinach",
+        "2 tbsp nutritional yeast",
+        "1/2 tsp turmeric",
+        "1/4 tsp black salt (kala namak)",
+        "1/4 tsp garlic powder",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Press tofu for 10 minutes, then crumble into bite-sized pieces.",
+        "Heat olive oil in a skillet over medium heat. Sauté bell pepper for 3 minutes until slightly softened.",
+        "Add crumbled tofu, turmeric, garlic powder, and black salt. Cook for 5-6 minutes, stirring occasionally.",
+        "Add spinach and cook until wilted, about 2 minutes.",
+        "Remove from heat, sprinkle with nutritional yeast, and season with salt and pepper."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "gluten-free"]
+    },
+    "vgn_overnight_oats": {
+      "name": "Peanut Butter Banana Overnight Oats",
+      "description": "Creamy overnight oats with peanut butter, banana, chia seeds, and a drizzle of maple syrup",
+      "calories": 420,
+      "protein": 15.0,
+      "carbs": 58.0,
+      "fat": 16.0,
+      "fiber": 9.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "3/4 cup rolled oats",
+        "1 cup oat milk",
+        "2 tbsp peanut butter",
+        "1 medium banana, sliced",
+        "1 tbsp chia seeds",
+        "1 tbsp maple syrup",
+        "1/4 tsp cinnamon"
+      ],
+      "instructions": [
+        "Combine rolled oats, oat milk, chia seeds, and cinnamon in a jar or container.",
+        "Stir in peanut butter and maple syrup until evenly mixed.",
+        "Top with half the banana slices and press gently into the oat mixture.",
+        "Cover and refrigerate overnight or for at least 4 hours.",
+        "In the morning, top with remaining banana slices and an extra drizzle of maple syrup if desired."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "soy-free"]
+    },
+    "vgn_acai_bowl": {
+      "name": "Acai Berry Smoothie Bowl",
+      "description": "Thick and vibrant acai bowl topped with granola, fresh berries, coconut flakes, and hemp seeds",
+      "calories": 385,
+      "protein": 10.0,
+      "carbs": 62.0,
+      "fat": 13.0,
+      "fiber": 11.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "2 frozen acai packets (200g total)",
+        "1 frozen banana",
+        "1/2 cup frozen mixed berries",
+        "1/4 cup almond milk",
+        "1/4 cup granola",
+        "2 tbsp hemp seeds",
+        "2 tbsp coconut flakes",
+        "1/4 cup fresh blueberries"
+      ],
+      "instructions": [
+        "Blend acai packets, frozen banana, frozen berries, and almond milk until thick and smooth. Add more milk only if needed — the consistency should be thicker than a smoothie.",
+        "Pour into a bowl and smooth the surface.",
+        "Arrange granola, hemp seeds, coconut flakes, and fresh blueberries on top in rows.",
+        "Serve immediately before it melts."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_chickpea_pancakes": {
+      "name": "Savory Chickpea Flour Pancakes",
+      "description": "Protein-packed chickpea flour pancakes with sun-dried tomatoes, fresh herbs, and a lemon-tahini drizzle",
+      "calories": 370,
+      "protein": 18.0,
+      "carbs": 40.0,
+      "fat": 16.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 15,
+      "ingredients": [
+        "1 cup chickpea flour (besan)",
+        "3/4 cup water",
+        "2 tbsp chopped sun-dried tomatoes",
+        "1 tbsp fresh parsley, chopped",
+        "1/2 tsp onion powder",
+        "1/4 tsp baking powder",
+        "1 tbsp olive oil",
+        "1 tbsp tahini",
+        "1 tsp lemon juice",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Whisk chickpea flour, water, onion powder, baking powder, salt, and pepper until smooth. Let batter rest 5 minutes.",
+        "Fold in sun-dried tomatoes and parsley.",
+        "Heat olive oil in a non-stick pan over medium heat. Pour 1/4 cup batter per pancake and cook 3 minutes per side until golden.",
+        "Mix tahini with lemon juice and a splash of water to make a drizzle.",
+        "Serve pancakes with tahini-lemon drizzle on top."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "gluten-free", "soy-free"]
+    },
+    "vgn_berry_smoothie": {
+      "name": "Triple Berry Protein Smoothie",
+      "description": "Thick and creamy smoothie packed with mixed berries, silken tofu for protein, spinach, and almond butter",
+      "calories": 350,
+      "protein": 18.0,
+      "carbs": 42.0,
+      "fat": 13.0,
+      "fiber": 8.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1/2 cup frozen strawberries",
+        "1/2 cup frozen blueberries",
+        "1/4 cup frozen raspberries",
+        "150g silken tofu",
+        "1 cup soy milk",
+        "1 tbsp almond butter",
+        "1 handful baby spinach",
+        "1 tbsp maple syrup"
+      ],
+      "instructions": [
+        "Add soy milk and silken tofu to a blender first.",
+        "Add frozen berries, spinach, almond butter, and maple syrup.",
+        "Blend on high for 60-90 seconds until completely smooth and creamy.",
+        "Pour into a glass and serve immediately."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "gluten-free"]
+    },
+    "vgn_avocado_toast": {
+      "name": "Loaded Avocado Toast with White Beans",
+      "description": "Sourdough toast topped with mashed avocado, seasoned white beans, cherry tomatoes, and everything bagel seasoning",
+      "calories": 395,
+      "protein": 16.0,
+      "carbs": 44.0,
+      "fat": 18.0,
+      "fiber": 12.0,
+      "prepTime": 10,
+      "cookTime": 3,
+      "ingredients": [
+        "2 slices sourdough bread",
+        "1 large ripe avocado",
+        "1/2 cup canned white beans, drained and rinsed",
+        "6 cherry tomatoes, halved",
+        "1 tbsp lemon juice",
+        "1 tsp everything bagel seasoning",
+        "Pinch of red pepper flakes",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Toast sourdough slices until golden and crisp.",
+        "Mash avocado with lemon juice, salt, and pepper in a bowl. Lightly mash the white beans separately with a fork, leaving some texture.",
+        "Spread mashed avocado on each toast, then top with mashed white beans.",
+        "Arrange cherry tomato halves on top and sprinkle with everything bagel seasoning and red pepper flakes."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "soy-free"]
+    },
+    "vgn_granola_bowl": {
+      "name": "Coconut Yogurt Granola Bowl",
+      "description": "Thick coconut yogurt layered with crunchy homemade granola, fresh mango, passion fruit, and toasted almonds",
+      "calories": 410,
+      "protein": 11.0,
+      "carbs": 54.0,
+      "fat": 19.0,
+      "fiber": 7.0,
+      "prepTime": 8,
+      "cookTime": 0,
+      "ingredients": [
+        "200g coconut yogurt (unsweetened)",
+        "1/2 cup granola",
+        "1/2 mango, diced",
+        "1 passion fruit, halved",
+        "2 tbsp toasted slivered almonds",
+        "1 tbsp pumpkin seeds",
+        "1 tsp maple syrup"
+      ],
+      "instructions": [
+        "Spoon coconut yogurt into a bowl.",
+        "Top with granola on one side and fresh mango on the other.",
+        "Scoop passion fruit pulp over the top.",
+        "Scatter toasted almonds and pumpkin seeds over everything and drizzle with maple syrup."
+      ],
+      "tags": ["vegan", "plant-based", "soy-free", "gluten-free"]
+    },
+    "vgn_sweet_potato_hash": {
+      "name": "Sweet Potato Breakfast Hash",
+      "description": "Crispy sweet potato cubes with black beans, corn, peppers, and smoked paprika, served with sliced avocado",
+      "calories": 380,
+      "protein": 14.0,
+      "carbs": 52.0,
+      "fat": 15.0,
+      "fiber": 13.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "1 large sweet potato, peeled and diced into 1cm cubes",
+        "1/2 cup canned black beans, drained and rinsed",
+        "1/2 cup corn kernels (frozen or canned)",
+        "1/2 red bell pepper, diced",
+        "1/2 small red onion, diced",
+        "1 tbsp olive oil",
+        "1 tsp smoked paprika",
+        "1/2 avocado, sliced",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a large skillet over medium-high heat. Add sweet potato cubes and cook for 12-15 minutes, stirring occasionally, until golden and tender.",
+        "Add red onion and bell pepper. Cook for 3-4 minutes until softened.",
+        "Stir in black beans, corn, smoked paprika, salt, and pepper. Cook 2-3 more minutes until heated through.",
+        "Transfer to a plate and top with sliced avocado."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_banana_walnut_oatmeal": {
+      "name": "Banana Walnut Oatmeal",
+      "description": "Warm and hearty oatmeal with caramelized banana, toasted walnuts, cinnamon, and a swirl of almond butter",
+      "calories": 395,
+      "protein": 12.0,
+      "carbs": 56.0,
+      "fat": 16.0,
+      "fiber": 7.0,
+      "prepTime": 5,
+      "cookTime": 10,
+      "ingredients": [
+        "3/4 cup rolled oats",
+        "1.5 cups oat milk",
+        "1 medium banana",
+        "2 tbsp chopped walnuts",
+        "1 tbsp almond butter",
+        "1/2 tsp cinnamon",
+        "1 tsp maple syrup",
+        "Pinch of salt"
+      ],
+      "instructions": [
+        "Combine oats, oat milk, cinnamon, and a pinch of salt in a saucepan. Bring to a simmer over medium heat.",
+        "Cook for 5-6 minutes, stirring occasionally, until oats are creamy and thick.",
+        "While oats cook, slice banana in half lengthwise. Toast walnuts in a dry pan for 2 minutes.",
+        "Pour oatmeal into a bowl. Top with banana, toasted walnuts, a swirl of almond butter, and a drizzle of maple syrup."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "soy-free"]
+    },
+    "vgn_chia_pudding": {
+      "name": "Mango Coconut Chia Pudding",
+      "description": "Luxurious chia pudding made with coconut milk and topped with fresh mango, toasted coconut, and lime zest",
+      "calories": 330,
+      "protein": 8.0,
+      "carbs": 38.0,
+      "fat": 18.0,
+      "fiber": 12.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "3 tbsp chia seeds",
+        "1 cup full-fat coconut milk",
+        "1 tbsp maple syrup",
+        "1/2 tsp vanilla extract",
+        "1/2 mango, diced",
+        "1 tbsp toasted coconut flakes",
+        "Zest of 1/2 lime"
+      ],
+      "instructions": [
+        "Mix chia seeds, coconut milk, maple syrup, and vanilla extract in a jar. Stir well to prevent clumping.",
+        "Refrigerate for at least 4 hours or overnight, stirring once after 30 minutes.",
+        "When ready to serve, stir the pudding and spoon into a bowl.",
+        "Top with diced mango, toasted coconut flakes, and fresh lime zest."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_blueberry_muffin_oats": {
+      "name": "Blueberry Muffin Baked Oats",
+      "description": "Baked oatmeal that tastes like a blueberry muffin, made with flax eggs, oat milk, and bursting with fresh blueberries",
+      "calories": 365,
+      "protein": 11.0,
+      "carbs": 60.0,
+      "fat": 10.0,
+      "fiber": 7.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "1 cup rolled oats",
+        "1 tbsp ground flaxseed mixed with 3 tbsp water (flax egg)",
+        "3/4 cup oat milk",
+        "1/2 cup fresh blueberries",
+        "2 tbsp maple syrup",
+        "1 tsp baking powder",
+        "1/2 tsp vanilla extract",
+        "1/4 tsp cinnamon",
+        "Pinch of salt"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F (190°C). Prepare flax egg by mixing ground flaxseed with water; let sit 5 minutes.",
+        "Combine oats, baking powder, cinnamon, and salt in a bowl. In a separate bowl, mix flax egg, oat milk, maple syrup, and vanilla.",
+        "Pour wet ingredients into dry and stir to combine. Gently fold in most of the blueberries.",
+        "Pour into a greased ramekin or small baking dish. Top with remaining blueberries.",
+        "Bake for 22-25 minutes until golden and set in the center. Let cool 5 minutes before eating."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "soy-free"]
+    },
+    "vgn_tempeh_breakfast_wrap": {
+      "name": "Smoky Tempeh Breakfast Wrap",
+      "description": "Warm whole wheat tortilla filled with crispy smoky tempeh, sautéed kale, avocado, and sriracha mayo",
+      "calories": 445,
+      "protein": 24.0,
+      "carbs": 38.0,
+      "fat": 24.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "150g tempeh, thinly sliced",
+        "1 large whole wheat tortilla",
+        "1 cup chopped kale",
+        "1/2 avocado, sliced",
+        "1 tbsp soy sauce",
+        "1 tsp smoked paprika",
+        "1 tbsp olive oil",
+        "1 tbsp vegan mayo",
+        "1 tsp sriracha"
+      ],
+      "instructions": [
+        "Marinate tempeh slices in soy sauce and smoked paprika for 5 minutes.",
+        "Heat olive oil in a skillet over medium-high heat. Cook tempeh for 3-4 minutes per side until crispy and golden.",
+        "In the same pan, quickly sauté kale for 2 minutes until wilted.",
+        "Mix vegan mayo with sriracha and spread on the tortilla.",
+        "Layer tempeh, kale, and avocado slices on the tortilla. Fold and serve."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich"]
+    },
+    "vgn_chickpea_buddha_bowl": {
+      "name": "Roasted Chickpea Buddha Bowl",
+      "description": "Crispy roasted chickpeas over quinoa with roasted sweet potato, massaged kale, pickled onion, and tahini dressing",
+      "calories": 520,
+      "protein": 21.0,
+      "carbs": 68.0,
+      "fat": 19.0,
+      "fiber": 15.0,
+      "prepTime": 15,
+      "cookTime": 30,
+      "ingredients": [
+        "1 can (400g) chickpeas, drained and rinsed",
+        "1 medium sweet potato, cubed",
+        "3/4 cup cooked quinoa",
+        "2 cups chopped kale",
+        "1/4 red onion, thinly sliced",
+        "2 tbsp apple cider vinegar",
+        "2 tbsp tahini",
+        "1 tbsp lemon juice",
+        "2 tbsp olive oil",
+        "1 tsp cumin",
+        "1 tsp smoked paprika",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F (220°C). Toss chickpeas and sweet potato cubes with olive oil, cumin, smoked paprika, salt, and pepper. Spread on a baking sheet.",
+        "Roast for 25-30 minutes, tossing halfway, until chickpeas are crispy and sweet potato is tender.",
+        "Meanwhile, massage kale with a pinch of salt and half the lemon juice until softened. Quick-pickle onion slices in apple cider vinegar.",
+        "Whisk tahini with remaining lemon juice and 2 tbsp water to make dressing.",
+        "Assemble bowl with quinoa as the base, topped with kale, roasted chickpeas, sweet potato, and pickled onion. Drizzle with tahini dressing."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_lentil_soup": {
+      "name": "Red Lentil Coconut Soup",
+      "description": "Warming red lentil soup with coconut milk, ginger, turmeric, and a squeeze of lime, served with crusty bread",
+      "calories": 420,
+      "protein": 20.0,
+      "carbs": 52.0,
+      "fat": 14.0,
+      "fiber": 12.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "1 cup dried red lentils, rinsed",
+        "1 can (400ml) light coconut milk",
+        "1 cup vegetable broth",
+        "1 medium carrot, diced",
+        "1 small onion, diced",
+        "2 cloves garlic, minced",
+        "1 tbsp fresh ginger, grated",
+        "1 tsp turmeric",
+        "1 tsp cumin",
+        "1 tbsp olive oil",
+        "Juice of 1 lime",
+        "Fresh cilantro for garnish",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a large pot over medium heat. Sauté onion and carrot for 5 minutes until softened.",
+        "Add garlic, ginger, turmeric, and cumin. Cook 1 minute until fragrant.",
+        "Add red lentils, coconut milk, and vegetable broth. Bring to a boil, then reduce to a simmer.",
+        "Cook for 18-20 minutes until lentils are completely soft and broken down.",
+        "Stir in lime juice, season with salt and pepper. Serve garnished with fresh cilantro."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_black_bean_tacos": {
+      "name": "Spicy Black Bean Tacos",
+      "description": "Seasoned black beans in corn tortillas with mango salsa, pickled jalapeños, cashew crema, and fresh cilantro",
+      "calories": 470,
+      "protein": 18.0,
+      "carbs": 62.0,
+      "fat": 17.0,
+      "fiber": 16.0,
+      "prepTime": 15,
+      "cookTime": 10,
+      "ingredients": [
+        "1 can (400g) black beans, drained and rinsed",
+        "4 small corn tortillas",
+        "1/2 mango, diced",
+        "1/4 red onion, finely diced",
+        "1 jalapeño, sliced",
+        "2 tbsp raw cashews, soaked and blended with 2 tbsp water and 1 tsp lime juice",
+        "1 tsp cumin",
+        "1 tsp chili powder",
+        "1 tbsp olive oil",
+        "Fresh cilantro",
+        "Lime wedges",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Heat olive oil in a skillet. Add black beans, cumin, chili powder, and salt. Cook 5-7 minutes, mashing some beans for texture.",
+        "Make mango salsa by combining diced mango, half the red onion, a squeeze of lime, and chopped cilantro.",
+        "Blend soaked cashews with water and lime juice until smooth for the crema.",
+        "Warm corn tortillas in a dry pan for 30 seconds per side.",
+        "Fill tortillas with black beans, top with mango salsa, jalapeño slices, cashew crema, and remaining cilantro."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_pad_thai": {
+      "name": "Tofu Pad Thai",
+      "description": "Classic pad Thai with crispy tofu, rice noodles, bean sprouts, crushed peanuts, and tangy tamarind sauce",
+      "calories": 510,
+      "protein": 22.0,
+      "carbs": 64.0,
+      "fat": 19.0,
+      "fiber": 5.0,
+      "prepTime": 15,
+      "cookTime": 15,
+      "ingredients": [
+        "200g rice noodles",
+        "200g extra-firm tofu, pressed and cubed",
+        "1 cup bean sprouts",
+        "2 green onions, sliced",
+        "2 tbsp crushed peanuts",
+        "2 tbsp tamarind paste",
+        "1 tbsp soy sauce",
+        "1 tbsp maple syrup",
+        "1 tbsp rice vinegar",
+        "2 tbsp vegetable oil",
+        "1 clove garlic, minced",
+        "Lime wedges",
+        "Fresh cilantro"
+      ],
+      "instructions": [
+        "Soak rice noodles in hot water for 8-10 minutes until pliable. Drain and set aside.",
+        "Mix tamarind paste, soy sauce, maple syrup, and rice vinegar for the sauce.",
+        "Heat 1 tbsp oil in a wok over high heat. Fry tofu cubes for 5-6 minutes until golden on all sides. Remove and set aside.",
+        "Add remaining oil to the wok. Sauté garlic for 30 seconds, add drained noodles and sauce. Toss for 2-3 minutes.",
+        "Add tofu and bean sprouts, toss to combine. Serve topped with crushed peanuts, green onions, cilantro, and lime wedges."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "gluten-free"]
+    },
+    "vgn_mediterranean_wrap": {
+      "name": "Mediterranean Hummus Wrap",
+      "description": "Whole wheat wrap packed with creamy hummus, falafel, cucumber, tomato, Kalamata olives, and a drizzle of herb oil",
+      "calories": 480,
+      "protein": 17.0,
+      "carbs": 54.0,
+      "fat": 22.0,
+      "fiber": 11.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 large whole wheat tortilla",
+        "4 tbsp hummus",
+        "4 store-bought or homemade falafel patties",
+        "1/2 cucumber, sliced",
+        "1 medium tomato, sliced",
+        "6 Kalamata olives, halved",
+        "2 tbsp fresh parsley, chopped",
+        "1 tbsp olive oil",
+        "1 tsp dried oregano",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "If falafel are cold, warm them in the oven at 350°F for 8 minutes or microwave for 1 minute.",
+        "Spread hummus generously down the center of the tortilla.",
+        "Layer cucumber, tomato slices, olives, and falafel on top of the hummus.",
+        "Drizzle with olive oil mixed with oregano, sprinkle with parsley, salt, and pepper.",
+        "Fold the sides in and roll tightly into a wrap. Cut in half diagonally."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "soy-free"]
+    },
+    "vgn_teriyaki_tempeh_bowl": {
+      "name": "Teriyaki Tempeh Rice Bowl",
+      "description": "Glazed teriyaki tempeh over brown rice with steamed broccoli, edamame, pickled ginger, and sesame seeds",
+      "calories": 530,
+      "protein": 28.0,
+      "carbs": 62.0,
+      "fat": 18.0,
+      "fiber": 10.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "200g tempeh, sliced into strips",
+        "1 cup cooked brown rice",
+        "1 cup broccoli florets",
+        "1/2 cup shelled edamame",
+        "2 tbsp soy sauce",
+        "1 tbsp maple syrup",
+        "1 tsp rice vinegar",
+        "1 tsp sesame oil",
+        "1 clove garlic, minced",
+        "1 tsp fresh ginger, grated",
+        "1 tbsp vegetable oil",
+        "1 tsp sesame seeds",
+        "Pickled ginger for garnish"
+      ],
+      "instructions": [
+        "Mix soy sauce, maple syrup, rice vinegar, sesame oil, garlic, and ginger for the teriyaki sauce.",
+        "Steam broccoli and edamame for 4-5 minutes until bright green and tender-crisp.",
+        "Heat vegetable oil in a skillet over medium-high heat. Cook tempeh strips for 3-4 minutes per side until browned.",
+        "Pour teriyaki sauce over tempeh and cook 2 more minutes until glazed and caramelized.",
+        "Serve brown rice in a bowl, topped with teriyaki tempeh, steamed broccoli, edamame, sesame seeds, and pickled ginger."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich"]
+    },
+    "vgn_quinoa_stuffed_peppers": {
+      "name": "Quinoa-Stuffed Bell Peppers",
+      "description": "Colorful bell peppers stuffed with seasoned quinoa, black beans, corn, tomatoes, and topped with avocado crema",
+      "calories": 440,
+      "protein": 18.0,
+      "carbs": 58.0,
+      "fat": 16.0,
+      "fiber": 14.0,
+      "prepTime": 15,
+      "cookTime": 30,
+      "ingredients": [
+        "2 large bell peppers, halved and seeded",
+        "3/4 cup cooked quinoa",
+        "1/2 cup black beans, drained and rinsed",
+        "1/2 cup corn kernels",
+        "1/2 cup diced tomatoes",
+        "1 tsp cumin",
+        "1 tsp chili powder",
+        "2 tbsp nutritional yeast",
+        "1/2 avocado",
+        "1 tbsp lime juice",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F (200°C). Place bell pepper halves cut-side up in a baking dish.",
+        "Mix quinoa, black beans, corn, diced tomatoes, cumin, chili powder, 1 tbsp nutritional yeast, salt, and pepper in a bowl.",
+        "Stuff each pepper half generously with the quinoa mixture. Sprinkle remaining nutritional yeast on top.",
+        "Cover with foil and bake for 25 minutes. Remove foil and bake 5 more minutes.",
+        "Blend avocado with lime juice, a pinch of salt, and 1 tbsp water for the crema. Drizzle over stuffed peppers before serving."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_thai_peanut_noodles": {
+      "name": "Thai Peanut Noodle Salad",
+      "description": "Chilled rice noodles tossed in a creamy peanut-lime dressing with shredded cabbage, carrots, edamame, and fresh mint",
+      "calories": 490,
+      "protein": 19.0,
+      "carbs": 58.0,
+      "fat": 22.0,
+      "fiber": 7.0,
+      "prepTime": 15,
+      "cookTime": 8,
+      "ingredients": [
+        "150g rice noodles",
+        "3 tbsp peanut butter",
+        "2 tbsp soy sauce",
+        "1 tbsp lime juice",
+        "1 tbsp rice vinegar",
+        "1 tsp sriracha",
+        "1 tsp maple syrup",
+        "1 cup shredded purple cabbage",
+        "1 medium carrot, julienned",
+        "1/2 cup shelled edamame",
+        "2 tbsp chopped roasted peanuts",
+        "Fresh mint and cilantro"
+      ],
+      "instructions": [
+        "Cook rice noodles according to package directions. Drain, rinse with cold water, and set aside.",
+        "Whisk peanut butter, soy sauce, lime juice, rice vinegar, sriracha, and maple syrup until smooth. Add 1-2 tbsp warm water to thin.",
+        "Toss cooled noodles with peanut sauce until evenly coated.",
+        "Add shredded cabbage, julienned carrot, and edamame. Toss to combine.",
+        "Serve topped with chopped peanuts, fresh mint, and cilantro."
+      ],
+      "tags": ["vegan", "plant-based", "gluten-free"]
+    },
+    "vgn_mushroom_risotto": {
+      "name": "Creamy Mushroom Risotto",
+      "description": "Rich and creamy risotto with mixed wild mushrooms, white wine, nutritional yeast, and fresh thyme",
+      "calories": 460,
+      "protein": 14.0,
+      "carbs": 66.0,
+      "fat": 14.0,
+      "fiber": 5.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "1 cup arborio rice",
+        "250g mixed mushrooms (cremini, shiitake, oyster), sliced",
+        "3 cups vegetable broth, kept warm",
+        "1/4 cup dry white wine",
+        "1 small onion, finely diced",
+        "2 cloves garlic, minced",
+        "2 tbsp nutritional yeast",
+        "2 tbsp olive oil",
+        "1 tbsp fresh thyme leaves",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Heat 1 tbsp olive oil in a large pan. Sauté mushrooms with thyme for 5-6 minutes until golden. Remove and set aside.",
+        "In the same pan, heat remaining olive oil. Sauté onion for 3 minutes, add garlic and cook 1 minute more.",
+        "Add arborio rice and stir for 1-2 minutes until edges are translucent. Pour in white wine and stir until absorbed.",
+        "Add warm broth one ladle at a time, stirring frequently and waiting until each addition is absorbed before adding the next. This takes about 18-20 minutes.",
+        "Stir in nutritional yeast and sautéed mushrooms. Season with salt and pepper. The risotto should be creamy and flowing. Serve immediately."
+      ],
+      "tags": ["vegan", "plant-based", "gluten-free", "soy-free"]
+    },
+    "vgn_cauliflower_tikka": {
+      "name": "Cauliflower Tikka Masala",
+      "description": "Roasted cauliflower in a rich, spiced tomato-coconut sauce served over basmati rice with fresh cilantro and naan",
+      "calories": 480,
+      "protein": 15.0,
+      "carbs": 62.0,
+      "fat": 20.0,
+      "fiber": 9.0,
+      "prepTime": 15,
+      "cookTime": 35,
+      "ingredients": [
+        "1 large head cauliflower, cut into florets",
+        "1 can (400ml) coconut milk",
+        "1 can (400g) crushed tomatoes",
+        "1 small onion, diced",
+        "3 cloves garlic, minced",
+        "1 tbsp fresh ginger, grated",
+        "2 tbsp tikka masala spice blend",
+        "1 cup cooked basmati rice",
+        "2 tbsp olive oil",
+        "Fresh cilantro",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 425°F (220°C). Toss cauliflower florets with 1 tbsp olive oil, 1 tbsp tikka masala spice, and salt. Roast for 20-25 minutes until charred at edges.",
+        "Meanwhile, heat remaining olive oil in a large pan. Sauté onion for 5 minutes, add garlic and ginger, cook 1 minute.",
+        "Add remaining tikka masala spice and stir for 30 seconds. Pour in crushed tomatoes and coconut milk. Simmer for 15 minutes.",
+        "Add roasted cauliflower to the sauce and simmer 5 more minutes to meld flavors.",
+        "Serve over basmati rice, garnished with fresh cilantro."
+      ],
+      "tags": ["vegan", "plant-based", "gluten-free", "soy-free"]
+    },
+    "vgn_black_bean_burger": {
+      "name": "Smoky Black Bean Burger",
+      "description": "Hearty black bean patty with oats and smoked paprika on a toasted bun with avocado, lettuce, tomato, and chipotle mayo",
+      "calories": 520,
+      "protein": 21.0,
+      "carbs": 64.0,
+      "fat": 20.0,
+      "fiber": 14.0,
+      "prepTime": 15,
+      "cookTime": 12,
+      "ingredients": [
+        "1 can (400g) black beans, drained and rinsed",
+        "1/3 cup rolled oats",
+        "1/4 red onion, finely diced",
+        "1 clove garlic, minced",
+        "1 tsp smoked paprika",
+        "1 tsp cumin",
+        "2 tbsp ground flaxseed mixed with 3 tbsp water",
+        "1 whole wheat burger bun",
+        "1/2 avocado, sliced",
+        "Lettuce and tomato slices",
+        "1 tbsp vegan mayo mixed with 1/2 tsp chipotle in adobo",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Prepare flax egg by mixing ground flaxseed with water; let sit 5 minutes. Mash black beans in a bowl, leaving some chunks for texture.",
+        "Add oats, onion, garlic, smoked paprika, cumin, flax egg, salt, and pepper. Mix until combined. Form into 2 patties.",
+        "Heat olive oil in a skillet over medium heat. Cook patties for 5-6 minutes per side until a firm crust forms.",
+        "Toast burger bun and spread chipotle mayo on both halves.",
+        "Layer patty, avocado slices, lettuce, and tomato on the bun."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "soy-free"]
+    },
+    "vgn_miso_ramen": {
+      "name": "Veggie Miso Ramen",
+      "description": "Umami-rich miso broth with ramen noodles, marinated tofu, bok choy, corn, nori, and a soft swirl of chili oil",
+      "calories": 490,
+      "protein": 24.0,
+      "carbs": 58.0,
+      "fat": 18.0,
+      "fiber": 7.0,
+      "prepTime": 15,
+      "cookTime": 20,
+      "ingredients": [
+        "2 packs ramen noodles (discard seasoning packet)",
+        "200g firm tofu, sliced",
+        "3 cups vegetable broth",
+        "2 tbsp white miso paste",
+        "2 baby bok choy, halved",
+        "1/2 cup corn kernels",
+        "1 sheet nori, cut into strips",
+        "2 green onions, sliced",
+        "1 tbsp soy sauce",
+        "1 tsp sesame oil",
+        "1 tsp chili oil",
+        "1 clove garlic, minced",
+        "1 tsp fresh ginger, grated"
+      ],
+      "instructions": [
+        "Marinate tofu slices in soy sauce for 10 minutes. Pan-fry in sesame oil for 3 minutes per side until golden.",
+        "Heat vegetable broth in a pot. Add garlic and ginger, simmer for 5 minutes.",
+        "Dissolve miso paste in a small amount of warm broth, then stir back into the pot. Do not boil after adding miso.",
+        "Cook ramen noodles according to package directions. Add bok choy to the broth for the last 2 minutes of simmering.",
+        "Divide noodles between bowls. Ladle miso broth and bok choy over noodles. Top with tofu, corn, nori strips, green onions, and a drizzle of chili oil."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich"]
+    },
+    "vgn_greek_salad_bowl": {
+      "name": "Greek-Inspired Power Bowl",
+      "description": "Marinated chickpeas, cucumber, tomatoes, Kalamata olives, and tofu feta over orzo with lemon-herb dressing",
+      "calories": 470,
+      "protein": 20.0,
+      "carbs": 52.0,
+      "fat": 21.0,
+      "fiber": 10.0,
+      "prepTime": 15,
+      "cookTime": 12,
+      "ingredients": [
+        "3/4 cup cooked orzo pasta",
+        "1 cup canned chickpeas, drained and rinsed",
+        "100g extra-firm tofu, cubed small (for feta)",
+        "1/2 cucumber, diced",
+        "1 cup cherry tomatoes, halved",
+        "8 Kalamata olives, halved",
+        "1/4 red onion, thinly sliced",
+        "2 tbsp olive oil",
+        "2 tbsp lemon juice",
+        "1 tsp dried oregano",
+        "1 tbsp apple cider vinegar",
+        "1 tsp garlic powder",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Marinate tofu cubes in apple cider vinegar, 1 tbsp lemon juice, garlic powder, oregano, and a pinch of salt for at least 15 minutes to mimic feta.",
+        "Cook orzo according to package directions. Drain, rinse with cold water, and toss with a drizzle of olive oil.",
+        "Season chickpeas with a pinch of oregano, salt, and pepper.",
+        "Make dressing by whisking remaining olive oil, lemon juice, oregano, salt, and pepper.",
+        "Assemble bowl with orzo, top with chickpeas, cucumber, tomatoes, olives, red onion, and marinated tofu. Drizzle with dressing."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber"]
+    },
+    "vgn_sweet_potato_curry": {
+      "name": "Thai Sweet Potato Curry",
+      "description": "Creamy Thai-style curry with sweet potato, chickpeas, spinach, and red curry paste in coconut milk over jasmine rice",
+      "calories": 510,
+      "protein": 16.0,
+      "carbs": 70.0,
+      "fat": 18.0,
+      "fiber": 11.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "1 large sweet potato, peeled and cubed",
+        "1 can (400ml) coconut milk",
+        "1 cup canned chickpeas, drained",
+        "2 cups fresh spinach",
+        "2 tbsp red curry paste (check vegan — no shrimp paste)",
+        "1 cup cooked jasmine rice",
+        "1 tbsp coconut oil",
+        "1 clove garlic, minced",
+        "1 tsp fresh ginger, grated",
+        "1 tbsp soy sauce",
+        "1 tsp maple syrup",
+        "Fresh basil leaves"
+      ],
+      "instructions": [
+        "Heat coconut oil in a large pot over medium heat. Sauté garlic and ginger for 1 minute.",
+        "Add red curry paste and stir for 30 seconds until fragrant.",
+        "Pour in coconut milk, add sweet potato cubes, and bring to a simmer. Cook for 15 minutes until sweet potato is tender.",
+        "Add chickpeas, soy sauce, and maple syrup. Simmer 5 more minutes. Stir in spinach until wilted.",
+        "Serve over jasmine rice, garnished with fresh basil leaves."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "gluten-free"]
+    },
+    "vgn_seitan_stir_fry": {
+      "name": "Seitan and Vegetable Stir-Fry",
+      "description": "Tender seitan strips stir-fried with snap peas, bell peppers, and mushrooms in a savory ginger-garlic sauce over rice",
+      "calories": 500,
+      "protein": 30.0,
+      "carbs": 56.0,
+      "fat": 16.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "200g seitan, sliced into strips",
+        "1 cup snap peas",
+        "1 red bell pepper, sliced",
+        "1 cup sliced mushrooms",
+        "1 cup cooked brown rice",
+        "2 tbsp soy sauce",
+        "1 tbsp hoisin sauce",
+        "1 tsp rice vinegar",
+        "2 cloves garlic, minced",
+        "1 tbsp fresh ginger, grated",
+        "2 tbsp vegetable oil",
+        "1 tsp sesame seeds",
+        "1 green onion, sliced"
+      ],
+      "instructions": [
+        "Mix soy sauce, hoisin sauce, and rice vinegar for the stir-fry sauce.",
+        "Heat 1 tbsp oil in a wok over high heat. Stir-fry seitan strips for 3-4 minutes until browned. Remove and set aside.",
+        "Add remaining oil. Stir-fry garlic and ginger for 30 seconds, then add bell pepper, snap peas, and mushrooms. Cook 3-4 minutes until tender-crisp.",
+        "Return seitan to the wok, pour in sauce, and toss everything together for 1-2 minutes.",
+        "Serve over brown rice, topped with sesame seeds and sliced green onion."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich"]
+    },
+    "vgn_lentil_bolognese": {
+      "name": "Lentil Bolognese with Spaghetti",
+      "description": "Rich and hearty lentil-based Bolognese sauce with mushrooms and walnuts, served over whole wheat spaghetti",
+      "calories": 520,
+      "protein": 24.0,
+      "carbs": 72.0,
+      "fat": 14.0,
+      "fiber": 16.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "200g whole wheat spaghetti",
+        "1 cup brown or green lentils, cooked",
+        "1 cup cremini mushrooms, finely diced",
+        "1/3 cup walnuts, finely chopped",
+        "1 can (400g) crushed tomatoes",
+        "1 small onion, finely diced",
+        "2 cloves garlic, minced",
+        "1 medium carrot, grated",
+        "1 stalk celery, finely diced",
+        "2 tbsp tomato paste",
+        "1 tsp dried oregano",
+        "1 tsp dried basil",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste",
+        "Fresh basil for garnish"
+      ],
+      "instructions": [
+        "Heat olive oil in a large pot. Sauté onion, carrot, and celery for 5 minutes until softened.",
+        "Add garlic, mushrooms, and walnuts. Cook 4-5 minutes until mushrooms release their liquid.",
+        "Stir in tomato paste, oregano, and dried basil. Cook 1 minute.",
+        "Add crushed tomatoes and cooked lentils. Simmer for 20 minutes, stirring occasionally, until thick and rich.",
+        "Cook spaghetti according to package directions. Serve sauce over spaghetti, garnished with fresh basil."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "soy-free"]
+    },
+    "vgn_falafel_bowl": {
+      "name": "Baked Falafel Bowl",
+      "description": "Crispy baked falafel over a bed of tabbouleh with hummus, pickled turnips, and garlic-tahini sauce",
+      "calories": 510,
+      "protein": 20.0,
+      "carbs": 60.0,
+      "fat": 22.0,
+      "fiber": 14.0,
+      "prepTime": 20,
+      "cookTime": 25,
+      "ingredients": [
+        "1 can (400g) chickpeas, drained and rinsed",
+        "1/4 cup fresh parsley",
+        "1/4 cup fresh cilantro",
+        "2 cloves garlic",
+        "1 tsp cumin",
+        "1/2 tsp coriander",
+        "2 tbsp chickpea flour",
+        "1/2 cup bulgur wheat, cooked",
+        "1 medium tomato, diced",
+        "1/2 cucumber, diced",
+        "3 tbsp hummus",
+        "2 tbsp tahini",
+        "1 tbsp lemon juice",
+        "2 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 375°F (190°C). Pulse chickpeas, parsley, cilantro, garlic, cumin, coriander, chickpea flour, salt, and pepper in a food processor until a coarse mixture forms (not a paste).",
+        "Form mixture into 8-10 small balls. Place on an oiled baking sheet and brush tops with olive oil.",
+        "Bake for 20-25 minutes, flipping halfway, until golden and crispy.",
+        "Make tabbouleh by mixing cooked bulgur with diced tomato, cucumber, lemon juice, remaining parsley, olive oil, salt, and pepper.",
+        "Assemble bowl with tabbouleh, baked falafel, hummus, and tahini drizzle."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "soy-free"]
+    },
+    "vgn_jackfruit_tacos": {
+      "name": "BBQ Jackfruit Tacos",
+      "description": "Pulled BBQ jackfruit in corn tortillas with tangy coleslaw, pickled red onion, and creamy avocado",
+      "calories": 430,
+      "protein": 12.0,
+      "carbs": 64.0,
+      "fat": 16.0,
+      "fiber": 10.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "1 can (400g) young green jackfruit in brine, drained and shredded",
+        "1/3 cup BBQ sauce (check vegan)",
+        "4 small corn tortillas",
+        "1 cup shredded cabbage",
+        "1 tbsp apple cider vinegar",
+        "1/2 avocado, sliced",
+        "1/4 red onion, thinly sliced and pickled",
+        "1 tbsp olive oil",
+        "1 tsp smoked paprika",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Drain and rinse jackfruit. Shred with two forks to create a pulled texture.",
+        "Heat olive oil in a skillet. Cook jackfruit with smoked paprika for 5 minutes, then add BBQ sauce and 2 tbsp water. Simmer 10-15 minutes until saucy and caramelized.",
+        "Make quick coleslaw by tossing cabbage with apple cider vinegar, a pinch of salt, and pepper.",
+        "Warm corn tortillas in a dry pan.",
+        "Fill tortillas with BBQ jackfruit, top with coleslaw, pickled red onion, and avocado slices."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_coconut_daal": {
+      "name": "Coconut Dal with Naan",
+      "description": "Comforting yellow dal with coconut milk, warming spices, and a tarka topping of mustard seeds and curry leaves",
+      "calories": 480,
+      "protein": 22.0,
+      "carbs": 64.0,
+      "fat": 16.0,
+      "fiber": 13.0,
+      "prepTime": 10,
+      "cookTime": 30,
+      "ingredients": [
+        "1 cup yellow lentils (toor dal), rinsed",
+        "1/2 can (200ml) coconut milk",
+        "2 cups water",
+        "1 small onion, diced",
+        "2 cloves garlic, minced",
+        "1 tbsp fresh ginger, grated",
+        "1 tsp turmeric",
+        "1 tsp cumin seeds",
+        "1/2 tsp mustard seeds",
+        "5-6 curry leaves (optional)",
+        "1 medium tomato, diced",
+        "1 tbsp coconut oil",
+        "1 vegan naan bread",
+        "Fresh cilantro",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Cook lentils with water and turmeric in a pot, simmering for 20 minutes until soft and broken down.",
+        "Add coconut milk and diced tomato. Simmer 5 more minutes, mashing lentils slightly for a creamy texture. Season with salt.",
+        "For the tarka, heat coconut oil in a small pan. Add cumin seeds and mustard seeds. When they start to pop, add curry leaves and garlic. Cook 30 seconds.",
+        "Pour the tarka over the dal and stir to combine.",
+        "Warm the naan and serve alongside the dal, garnished with fresh cilantro."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "gluten-free"]
+    },
+    "vgn_burrito_bowl": {
+      "name": "Vegan Burrito Bowl",
+      "description": "Loaded burrito bowl with cilantro-lime rice, seasoned black beans, roasted corn, pico de gallo, guacamole, and cashew crema",
+      "calories": 540,
+      "protein": 19.0,
+      "carbs": 74.0,
+      "fat": 20.0,
+      "fiber": 16.0,
+      "prepTime": 15,
+      "cookTime": 15,
+      "ingredients": [
+        "1 cup cooked white rice",
+        "1 cup canned black beans, drained",
+        "1/2 cup corn kernels",
+        "1/2 avocado, mashed with lime and salt",
+        "1 medium tomato, diced",
+        "1/4 red onion, finely diced",
+        "1 tbsp fresh cilantro, chopped",
+        "1 tbsp lime juice",
+        "1 tsp cumin",
+        "1 tsp chili powder",
+        "2 tbsp cashew crema (blended cashews, water, lime)",
+        "1 tbsp olive oil",
+        "Salt to taste",
+        "Lettuce for base"
+      ],
+      "instructions": [
+        "Stir lime juice and cilantro into cooked rice for cilantro-lime rice.",
+        "Heat olive oil in a skillet. Season black beans with cumin and chili powder, cook 5 minutes. In the same pan, char corn kernels for 3-4 minutes.",
+        "Make pico de gallo by combining diced tomato, red onion, cilantro, a squeeze of lime, and salt.",
+        "Mash avocado with lime juice and salt for guacamole.",
+        "Assemble bowl: lettuce base, cilantro-lime rice, black beans, charred corn, pico de gallo, guacamole, and cashew crema drizzle."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_stuffed_sweet_potato": {
+      "name": "Loaded Stuffed Sweet Potato",
+      "description": "Baked sweet potato stuffed with spiced lentils, sautéed greens, tahini dressing, and toasted pepitas",
+      "calories": 460,
+      "protein": 20.0,
+      "carbs": 64.0,
+      "fat": 14.0,
+      "fiber": 16.0,
+      "prepTime": 10,
+      "cookTime": 45,
+      "ingredients": [
+        "1 large sweet potato",
+        "1/2 cup cooked green lentils",
+        "2 cups mixed greens (kale and spinach)",
+        "2 tbsp tahini",
+        "1 tbsp lemon juice",
+        "1 tbsp pepitas (pumpkin seeds)",
+        "1 tsp cumin",
+        "1/2 tsp smoked paprika",
+        "1 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F (200°C). Pierce sweet potato several times with a fork. Bake for 40-45 minutes until soft throughout.",
+        "Season cooked lentils with cumin, smoked paprika, salt, and pepper. Warm in a small saucepan.",
+        "Sauté greens in olive oil with a pinch of salt until wilted, about 2-3 minutes.",
+        "Whisk tahini with lemon juice and 1-2 tbsp water for a pourable dressing.",
+        "Split sweet potato open, stuff with lentils and greens. Drizzle with tahini dressing and top with toasted pepitas."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_mushroom_stroganoff": {
+      "name": "Mushroom Stroganoff",
+      "description": "Tender sliced mushrooms in a rich cashew cream sauce with smoked paprika, served over egg-free pappardelle",
+      "calories": 490,
+      "protein": 16.0,
+      "carbs": 58.0,
+      "fat": 22.0,
+      "fiber": 6.0,
+      "prepTime": 15,
+      "cookTime": 20,
+      "ingredients": [
+        "200g egg-free pappardelle or fettuccine pasta",
+        "300g mixed mushrooms (cremini, button, shiitake), sliced",
+        "1/3 cup raw cashews, soaked 2 hours",
+        "3/4 cup vegetable broth",
+        "1 small onion, diced",
+        "2 cloves garlic, minced",
+        "1 tbsp soy sauce",
+        "1 tsp smoked paprika",
+        "1 tsp Dijon mustard",
+        "2 tbsp olive oil",
+        "Fresh parsley for garnish",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Blend soaked cashews with vegetable broth until completely smooth to make cashew cream.",
+        "Cook pasta according to package directions. Drain and set aside.",
+        "Heat olive oil in a large skillet. Sauté onion for 3 minutes, add mushrooms, and cook 6-7 minutes until deeply browned.",
+        "Add garlic, cook 1 minute. Stir in soy sauce, smoked paprika, and Dijon mustard. Pour in cashew cream and simmer 3-4 minutes until thickened.",
+        "Toss pasta with the stroganoff sauce. Serve garnished with fresh parsley and cracked black pepper."
+      ],
+      "tags": ["vegan", "plant-based"]
+    },
+    "vgn_edamame_grain_bowl": {
+      "name": "Edamame Grain Bowl with Miso Dressing",
+      "description": "Warm farro topped with edamame, roasted beets, avocado, pickled radish, and a white miso-ginger dressing",
+      "calories": 470,
+      "protein": 19.0,
+      "carbs": 58.0,
+      "fat": 18.0,
+      "fiber": 12.0,
+      "prepTime": 10,
+      "cookTime": 20,
+      "ingredients": [
+        "3/4 cup cooked farro",
+        "1 cup shelled edamame",
+        "1 medium beet, peeled and cubed",
+        "1/2 avocado, sliced",
+        "3 radishes, thinly sliced and quick-pickled in rice vinegar",
+        "1 tbsp white miso paste",
+        "1 tsp fresh ginger, grated",
+        "1 tbsp rice vinegar",
+        "1 tbsp sesame oil",
+        "1 tbsp olive oil",
+        "1 tsp sesame seeds",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F (200°C). Toss beet cubes with olive oil and salt. Roast for 20 minutes until tender.",
+        "Cook edamame according to package directions (boil or steam 3-4 minutes).",
+        "Quick-pickle radish slices in rice vinegar with a pinch of salt for at least 10 minutes.",
+        "Whisk miso paste, ginger, rice vinegar, and sesame oil together for the dressing.",
+        "Assemble bowl with farro, top with edamame, roasted beets, avocado, pickled radish, and drizzle with miso-ginger dressing. Sprinkle with sesame seeds."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber"]
+    },
+    "vgn_energy_balls": {
+      "name": "Peanut Butter Chocolate Energy Balls",
+      "description": "No-bake energy balls packed with oats, peanut butter, dark chocolate chips, flaxseed, and a touch of maple",
+      "calories": 210,
+      "protein": 7.0,
+      "carbs": 24.0,
+      "fat": 11.0,
+      "fiber": 3.0,
+      "prepTime": 15,
+      "cookTime": 0,
+      "ingredients": [
+        "1 cup rolled oats",
+        "1/3 cup peanut butter",
+        "2 tbsp maple syrup",
+        "2 tbsp ground flaxseed",
+        "3 tbsp vegan dark chocolate chips",
+        "1 tbsp coconut oil, melted",
+        "Pinch of salt"
+      ],
+      "instructions": [
+        "Combine all ingredients in a bowl and mix until a sticky dough forms.",
+        "Refrigerate for 15-20 minutes to make the mixture easier to handle.",
+        "Roll into 10 balls (about 1 tablespoon each).",
+        "Store in an airtight container in the fridge for up to 1 week."
+      ],
+      "tags": ["vegan", "plant-based", "soy-free"]
+    },
+    "vgn_roasted_chickpeas": {
+      "name": "Spiced Roasted Chickpeas",
+      "description": "Crunchy oven-roasted chickpeas seasoned with smoked paprika, garlic powder, and a hint of cayenne",
+      "calories": 180,
+      "protein": 9.0,
+      "carbs": 26.0,
+      "fat": 5.0,
+      "fiber": 7.0,
+      "prepTime": 5,
+      "cookTime": 30,
+      "ingredients": [
+        "1 can (400g) chickpeas, drained, rinsed, and patted very dry",
+        "1 tbsp olive oil",
+        "1 tsp smoked paprika",
+        "1/2 tsp garlic powder",
+        "1/4 tsp cayenne pepper",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Preheat oven to 400°F (200°C). Pat chickpeas very dry with a kitchen towel — this is key for crispiness.",
+        "Toss chickpeas with olive oil, smoked paprika, garlic powder, cayenne, and salt.",
+        "Spread in a single layer on a baking sheet. Roast for 25-30 minutes, shaking the pan halfway, until golden and crunchy.",
+        "Let cool on the baking sheet for 5 minutes — they will crisp up further as they cool."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "gluten-free", "soy-free"]
+    },
+    "vgn_hummus_veggie_plate": {
+      "name": "Hummus and Crudité Plate",
+      "description": "Creamy homemade hummus served with crisp carrot sticks, cucumber, bell pepper, cherry tomatoes, and pita chips",
+      "calories": 250,
+      "protein": 10.0,
+      "carbs": 30.0,
+      "fat": 12.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "4 tbsp hummus",
+        "1 medium carrot, cut into sticks",
+        "1/2 cucumber, cut into sticks",
+        "1/2 red bell pepper, sliced",
+        "6 cherry tomatoes",
+        "10 pita chips",
+        "Sprinkle of paprika and olive oil on hummus"
+      ],
+      "instructions": [
+        "Spoon hummus into a small bowl or onto a plate. Drizzle with olive oil and sprinkle with paprika.",
+        "Wash and cut carrot, cucumber, and bell pepper into sticks.",
+        "Arrange vegetables and pita chips around the hummus for dipping.",
+        "Serve immediately."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "soy-free"]
+    },
+    "vgn_trail_mix": {
+      "name": "Tropical Trail Mix",
+      "description": "Custom blend of roasted almonds, cashews, pumpkin seeds, dried mango, coconut chips, and dark chocolate chunks",
+      "calories": 240,
+      "protein": 7.0,
+      "carbs": 22.0,
+      "fat": 16.0,
+      "fiber": 3.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "2 tbsp roasted almonds",
+        "2 tbsp roasted cashews",
+        "1 tbsp pumpkin seeds",
+        "2 tbsp dried mango chunks",
+        "1 tbsp coconut chips",
+        "1 tbsp vegan dark chocolate chunks"
+      ],
+      "instructions": [
+        "Combine all ingredients in a small bowl or jar.",
+        "Toss gently to distribute evenly.",
+        "Store in an airtight container for up to 2 weeks. Perfect for on-the-go snacking."
+      ],
+      "tags": ["vegan", "plant-based", "gluten-free", "soy-free"]
+    },
+    "vgn_guacamole_chips": {
+      "name": "Fresh Guacamole with Tortilla Chips",
+      "description": "Chunky guacamole made with ripe avocados, fresh lime, cilantro, tomato, and jalapeño, served with crispy corn chips",
+      "calories": 280,
+      "protein": 4.0,
+      "carbs": 28.0,
+      "fat": 18.0,
+      "fiber": 8.0,
+      "prepTime": 10,
+      "cookTime": 0,
+      "ingredients": [
+        "1 large ripe avocado",
+        "1 tbsp lime juice",
+        "1 small tomato, diced",
+        "2 tbsp red onion, finely diced",
+        "1 tbsp fresh cilantro, chopped",
+        "1/2 jalapeño, seeded and minced",
+        "1 oz (28g) corn tortilla chips",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Halve and pit the avocado. Scoop into a bowl and mash with a fork, leaving some chunks.",
+        "Add lime juice, tomato, red onion, cilantro, jalapeño, and salt. Stir gently to combine.",
+        "Taste and adjust salt and lime. Serve immediately with tortilla chips."
+      ],
+      "tags": ["vegan", "plant-based", "gluten-free", "soy-free"]
+    },
+    "vgn_apple_almond_butter": {
+      "name": "Apple Slices with Almond Butter",
+      "description": "Crisp apple slices with creamy almond butter, drizzled with cinnamon and topped with hemp seeds",
+      "calories": 220,
+      "protein": 6.0,
+      "carbs": 28.0,
+      "fat": 11.0,
+      "fiber": 5.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "1 large apple (Honeycrisp or Fuji), cored and sliced",
+        "2 tbsp almond butter",
+        "1 tsp hemp seeds",
+        "Pinch of cinnamon"
+      ],
+      "instructions": [
+        "Core and slice the apple into wedges.",
+        "Arrange on a plate and serve with almond butter for dipping.",
+        "Sprinkle hemp seeds and cinnamon over the almond butter."
+      ],
+      "tags": ["vegan", "plant-based", "gluten-free", "soy-free"]
+    },
+    "vgn_edamame_snack": {
+      "name": "Steamed Edamame with Sea Salt",
+      "description": "Perfectly steamed edamame pods sprinkled with flaky sea salt and a squeeze of fresh lemon",
+      "calories": 190,
+      "protein": 17.0,
+      "carbs": 14.0,
+      "fat": 8.0,
+      "fiber": 8.0,
+      "prepTime": 2,
+      "cookTime": 5,
+      "ingredients": [
+        "2 cups frozen edamame in pods",
+        "1 tsp flaky sea salt",
+        "1 lemon wedge"
+      ],
+      "instructions": [
+        "Bring a pot of water to a boil. Add edamame and cook for 4-5 minutes until tender.",
+        "Drain and transfer to a bowl.",
+        "Sprinkle with flaky sea salt and a squeeze of lemon. Eat by popping beans from pods."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "gluten-free"]
+    },
+    "vgn_banana_nice_cream": {
+      "name": "Chocolate Banana Nice Cream",
+      "description": "Creamy frozen banana soft-serve blended with cocoa powder, a swirl of peanut butter, and cacao nibs",
+      "calories": 230,
+      "protein": 6.0,
+      "carbs": 38.0,
+      "fat": 8.0,
+      "fiber": 5.0,
+      "prepTime": 5,
+      "cookTime": 0,
+      "ingredients": [
+        "2 frozen bananas, sliced before freezing",
+        "2 tbsp cocoa powder",
+        "1 tbsp peanut butter",
+        "2 tbsp almond milk",
+        "1 tbsp cacao nibs"
+      ],
+      "instructions": [
+        "Add frozen banana slices, cocoa powder, and almond milk to a food processor or high-speed blender.",
+        "Blend until thick and creamy, scraping down sides as needed. It should have the consistency of soft-serve ice cream.",
+        "Scoop into a bowl, swirl in peanut butter, and top with cacao nibs. Serve immediately."
+      ],
+      "tags": ["vegan", "plant-based", "gluten-free", "soy-free"]
+    },
+    "vgn_date_walnut_bites": {
+      "name": "Stuffed Medjool Dates with Walnuts",
+      "description": "Plump Medjool dates stuffed with walnut halves and drizzled with a thin layer of melted dark chocolate",
+      "calories": 200,
+      "protein": 3.0,
+      "carbs": 32.0,
+      "fat": 9.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 2,
+      "ingredients": [
+        "4 large Medjool dates, pitted",
+        "4 walnut halves",
+        "20g vegan dark chocolate",
+        "Pinch of flaky sea salt"
+      ],
+      "instructions": [
+        "Slit each date open lengthwise and remove the pit.",
+        "Press a walnut half into each date.",
+        "Melt dark chocolate in a small bowl (microwave in 15-second intervals or use a double boiler).",
+        "Drizzle melted chocolate over the stuffed dates and sprinkle with flaky sea salt. Let set for 10 minutes before eating."
+      ],
+      "tags": ["vegan", "plant-based", "gluten-free", "soy-free"]
+    },
+    "vgn_tofu_lettuce_wraps": {
+      "name": "Asian Tofu Lettuce Wraps",
+      "description": "Crispy crumbled tofu with water chestnuts, ginger, and hoisin sauce served in crisp butter lettuce cups",
+      "calories": 260,
+      "protein": 18.0,
+      "carbs": 20.0,
+      "fat": 13.0,
+      "fiber": 4.0,
+      "prepTime": 10,
+      "cookTime": 10,
+      "ingredients": [
+        "200g extra-firm tofu, pressed and crumbled",
+        "1 head butter lettuce, leaves separated",
+        "1/4 cup water chestnuts, diced",
+        "2 green onions, sliced",
+        "1 tbsp hoisin sauce",
+        "1 tbsp soy sauce",
+        "1 tsp sesame oil",
+        "1 tsp fresh ginger, grated",
+        "1 clove garlic, minced",
+        "1 tbsp vegetable oil",
+        "Sriracha for serving"
+      ],
+      "instructions": [
+        "Heat vegetable oil in a skillet over medium-high heat. Add crumbled tofu and cook 5-6 minutes until golden and slightly crispy.",
+        "Add garlic, ginger, and water chestnuts. Cook 2 minutes.",
+        "Stir in hoisin sauce, soy sauce, and sesame oil. Cook 1 more minute until glazed.",
+        "Spoon mixture into butter lettuce cups. Top with green onions and a drizzle of sriracha."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "gluten-free"]
+    },
+    "vgn_tempeh_chili": {
+      "name": "Smoky Tempeh Chili",
+      "description": "Hearty three-bean chili with crumbled tempeh, fire-roasted tomatoes, chipotle peppers, and warm spices",
+      "calories": 480,
+      "protein": 28.0,
+      "carbs": 54.0,
+      "fat": 16.0,
+      "fiber": 18.0,
+      "prepTime": 15,
+      "cookTime": 35,
+      "ingredients": [
+        "200g tempeh, crumbled",
+        "1 can (400g) kidney beans, drained",
+        "1 can (400g) black beans, drained",
+        "1 can (400g) pinto beans, drained",
+        "1 can (400g) fire-roasted diced tomatoes",
+        "1 small onion, diced",
+        "2 cloves garlic, minced",
+        "1 chipotle pepper in adobo, chopped",
+        "1 tbsp chili powder",
+        "1 tsp cumin",
+        "1 tsp smoked paprika",
+        "1 tbsp olive oil",
+        "1 cup vegetable broth",
+        "Salt to taste",
+        "Fresh cilantro and avocado for garnish"
+      ],
+      "instructions": [
+        "Heat olive oil in a large pot. Sauté onion for 5 minutes, add garlic and crumbled tempeh. Cook 5 minutes until tempeh is lightly browned.",
+        "Add chili powder, cumin, smoked paprika, and chopped chipotle pepper. Stir for 1 minute.",
+        "Pour in fire-roasted tomatoes, all three beans, and vegetable broth. Stir to combine.",
+        "Bring to a boil, then reduce to a simmer. Cook for 25-30 minutes, stirring occasionally, until thick and flavorful.",
+        "Season with salt. Serve topped with fresh cilantro and sliced avocado."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "gluten-free"]
+    },
+    "vgn_pesto_pasta": {
+      "name": "Basil Pesto Pasta with Cherry Tomatoes",
+      "description": "Al dente penne tossed in a vibrant walnut-basil pesto with burst cherry tomatoes and toasted pine nuts",
+      "calories": 500,
+      "protein": 16.0,
+      "carbs": 60.0,
+      "fat": 22.0,
+      "fiber": 6.0,
+      "prepTime": 10,
+      "cookTime": 12,
+      "ingredients": [
+        "200g penne pasta",
+        "2 cups fresh basil leaves",
+        "1/4 cup walnuts",
+        "2 tbsp nutritional yeast",
+        "2 cloves garlic",
+        "3 tbsp olive oil",
+        "1 tbsp lemon juice",
+        "1 cup cherry tomatoes, halved",
+        "1 tbsp pine nuts, toasted",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Cook penne according to package directions until al dente. Reserve 1/4 cup pasta water before draining.",
+        "Make pesto: blend basil, walnuts, nutritional yeast, garlic, olive oil, lemon juice, salt, and pepper until smooth.",
+        "In a large pan, sauté cherry tomatoes for 3-4 minutes until they start to burst.",
+        "Add drained pasta and pesto to the pan. Toss to combine, adding pasta water as needed for a silky consistency.",
+        "Serve topped with toasted pine nuts and extra nutritional yeast."
+      ],
+      "tags": ["vegan", "plant-based", "soy-free"]
+    },
+    "vgn_shepherd_pie": {
+      "name": "Lentil Shepherd's Pie",
+      "description": "Savory lentil and vegetable filling topped with creamy mashed potatoes and baked until golden",
+      "calories": 480,
+      "protein": 22.0,
+      "carbs": 68.0,
+      "fat": 14.0,
+      "fiber": 14.0,
+      "prepTime": 20,
+      "cookTime": 35,
+      "ingredients": [
+        "1 cup cooked green lentils",
+        "3 large potatoes, peeled and cubed",
+        "1 medium carrot, diced",
+        "1 stalk celery, diced",
+        "1 small onion, diced",
+        "1 cup frozen peas",
+        "2 tbsp tomato paste",
+        "1 cup vegetable broth",
+        "1 tsp dried thyme",
+        "1 tsp dried rosemary",
+        "3 tbsp plant butter",
+        "1/4 cup oat milk",
+        "2 tbsp olive oil",
+        "Salt and pepper to taste"
+      ],
+      "instructions": [
+        "Boil potatoes until tender, about 15 minutes. Drain and mash with plant butter, oat milk, salt, and pepper until smooth.",
+        "Heat olive oil in a large oven-safe skillet. Sauté onion, carrot, and celery for 5 minutes.",
+        "Add lentils, frozen peas, tomato paste, vegetable broth, thyme, and rosemary. Simmer 10 minutes until thick.",
+        "Spread mashed potatoes evenly over the lentil filling. Score the top with a fork for texture.",
+        "Broil for 5-7 minutes until potato topping is golden brown. Let cool 5 minutes before serving."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich", "high-fiber", "soy-free"]
+    },
+    "vgn_coconut_chickpea_stew": {
+      "name": "Coconut Chickpea Spinach Stew",
+      "description": "One-pot stew with chickpeas, tomatoes, and spinach in a spiced coconut broth with warm naan",
+      "calories": 450,
+      "protein": 18.0,
+      "carbs": 56.0,
+      "fat": 18.0,
+      "fiber": 12.0,
+      "prepTime": 10,
+      "cookTime": 25,
+      "ingredients": [
+        "1 can (400g) chickpeas, drained and rinsed",
+        "1 can (400ml) coconut milk",
+        "1 can (400g) diced tomatoes",
+        "3 cups fresh spinach",
+        "1 small onion, diced",
+        "3 cloves garlic, minced",
+        "1 tbsp fresh ginger, grated",
+        "1 tsp cumin",
+        "1 tsp coriander",
+        "1/2 tsp turmeric",
+        "1 tbsp olive oil",
+        "1 vegan naan bread",
+        "Salt and pepper to taste",
+        "Fresh cilantro"
+      ],
+      "instructions": [
+        "Heat olive oil in a large pot. Sauté onion for 4 minutes, add garlic and ginger, cook 1 minute.",
+        "Add cumin, coriander, and turmeric. Stir for 30 seconds until fragrant.",
+        "Pour in diced tomatoes, coconut milk, and chickpeas. Bring to a simmer and cook for 18-20 minutes.",
+        "Stir in spinach and cook until wilted, about 2 minutes. Season with salt and pepper.",
+        "Serve in bowls with warm naan and garnish with fresh cilantro."
+      ],
+      "tags": ["vegan", "plant-based", "high-fiber", "gluten-free"]
+    },
+    "vgn_tempeh_bibimbap": {
+      "name": "Tempeh Bibimbap Bowl",
+      "description": "Korean-inspired bowl with marinated tempeh, sautéed vegetables, kimchi, and spicy gochujang sauce over rice",
+      "calories": 520,
+      "protein": 26.0,
+      "carbs": 64.0,
+      "fat": 18.0,
+      "fiber": 10.0,
+      "prepTime": 20,
+      "cookTime": 15,
+      "ingredients": [
+        "200g tempeh, thinly sliced",
+        "1 cup cooked short-grain rice",
+        "1 cup spinach",
+        "1 medium carrot, julienned",
+        "1 cup bean sprouts",
+        "1/4 cup vegan kimchi",
+        "2 tbsp gochujang paste",
+        "1 tbsp soy sauce",
+        "1 tbsp sesame oil",
+        "1 tsp maple syrup",
+        "1 tbsp vegetable oil",
+        "1 tsp sesame seeds",
+        "1 green onion, sliced"
+      ],
+      "instructions": [
+        "Marinate tempeh in soy sauce and 1 tsp sesame oil for 10 minutes. Pan-fry in vegetable oil until crispy, 3-4 minutes per side.",
+        "Quickly sauté spinach with a drizzle of sesame oil until wilted. Blanch bean sprouts for 1 minute. Julienne carrots and lightly sauté.",
+        "Make bibimbap sauce: mix gochujang with maple syrup, 1 tsp sesame oil, and 1 tbsp water.",
+        "Arrange rice in a bowl. Top with tempeh, spinach, carrots, bean sprouts, and kimchi in sections.",
+        "Drizzle with gochujang sauce, sprinkle with sesame seeds and green onion. Mix everything together before eating."
+      ],
+      "tags": ["vegan", "plant-based", "protein-rich"]
+    }
+  },
+  "weeks": [
+    {
+      "weekNumber": 1,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "vgn_tofu_scramble",
+          "lunch": "vgn_chickpea_buddha_bowl",
+          "dinner": "vgn_sweet_potato_curry",
+          "snack": "vgn_energy_balls"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "vgn_overnight_oats",
+          "lunch": "vgn_mediterranean_wrap",
+          "dinner": "vgn_lentil_bolognese",
+          "snack": "vgn_hummus_veggie_plate"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "vgn_acai_bowl",
+          "lunch": "vgn_teriyaki_tempeh_bowl",
+          "dinner": "vgn_mushroom_risotto",
+          "snack": "vgn_roasted_chickpeas"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "vgn_chickpea_pancakes",
+          "lunch": "vgn_black_bean_tacos",
+          "dinner": "vgn_cauliflower_tikka",
+          "snack": "vgn_trail_mix"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "vgn_berry_smoothie",
+          "lunch": "vgn_pad_thai",
+          "dinner": "vgn_seitan_stir_fry",
+          "snack": "vgn_guacamole_chips"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "vgn_sweet_potato_hash",
+          "lunch": "vgn_greek_salad_bowl",
+          "dinner": "vgn_coconut_daal",
+          "snack": "vgn_apple_almond_butter"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "vgn_tempeh_breakfast_wrap",
+          "lunch": "vgn_quinoa_stuffed_peppers",
+          "dinner": "vgn_miso_ramen",
+          "snack": "vgn_banana_nice_cream"
+        }
+      ]
+    },
+    {
+      "weekNumber": 2,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "vgn_banana_walnut_oatmeal",
+          "lunch": "vgn_falafel_bowl",
+          "dinner": "vgn_tempeh_chili",
+          "snack": "vgn_edamame_snack"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "vgn_chia_pudding",
+          "lunch": "vgn_thai_peanut_noodles",
+          "dinner": "vgn_mushroom_stroganoff",
+          "snack": "vgn_date_walnut_bites"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "vgn_blueberry_muffin_oats",
+          "lunch": "vgn_burrito_bowl",
+          "dinner": "vgn_shepherd_pie",
+          "snack": "vgn_guacamole_chips"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "vgn_avocado_toast",
+          "lunch": "vgn_lentil_soup",
+          "dinner": "vgn_pesto_pasta",
+          "snack": "vgn_tofu_lettuce_wraps"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "vgn_granola_bowl",
+          "lunch": "vgn_jackfruit_tacos",
+          "dinner": "vgn_coconut_chickpea_stew",
+          "snack": "vgn_trail_mix"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "vgn_tofu_scramble",
+          "lunch": "vgn_edamame_grain_bowl",
+          "dinner": "vgn_black_bean_burger",
+          "snack": "vgn_energy_balls"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "vgn_tempeh_breakfast_wrap",
+          "lunch": "vgn_stuffed_sweet_potato",
+          "dinner": "vgn_tempeh_bibimbap",
+          "snack": "vgn_banana_nice_cream"
+        }
+      ]
+    },
+    {
+      "weekNumber": 3,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "vgn_berry_smoothie",
+          "lunch": "vgn_mediterranean_wrap",
+          "dinner": "vgn_cauliflower_tikka",
+          "snack": "vgn_roasted_chickpeas"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "vgn_overnight_oats",
+          "lunch": "vgn_chickpea_buddha_bowl",
+          "dinner": "vgn_miso_ramen",
+          "snack": "vgn_hummus_veggie_plate"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "vgn_chickpea_pancakes",
+          "lunch": "vgn_teriyaki_tempeh_bowl",
+          "dinner": "vgn_lentil_bolognese",
+          "snack": "vgn_apple_almond_butter"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "vgn_sweet_potato_hash",
+          "lunch": "vgn_pad_thai",
+          "dinner": "vgn_coconut_daal",
+          "snack": "vgn_guacamole_chips"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "vgn_acai_bowl",
+          "lunch": "vgn_black_bean_tacos",
+          "dinner": "vgn_seitan_stir_fry",
+          "snack": "vgn_edamame_snack"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "vgn_blueberry_muffin_oats",
+          "lunch": "vgn_quinoa_stuffed_peppers",
+          "dinner": "vgn_mushroom_stroganoff",
+          "snack": "vgn_date_walnut_bites"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "vgn_banana_walnut_oatmeal",
+          "lunch": "vgn_greek_salad_bowl",
+          "dinner": "vgn_sweet_potato_curry",
+          "snack": "vgn_energy_balls"
+        }
+      ]
+    },
+    {
+      "weekNumber": 4,
+      "days": [
+        {
+          "day": "Monday",
+          "breakfast": "vgn_chia_pudding",
+          "lunch": "vgn_falafel_bowl",
+          "dinner": "vgn_tempeh_chili",
+          "snack": "vgn_tofu_lettuce_wraps"
+        },
+        {
+          "day": "Tuesday",
+          "breakfast": "vgn_granola_bowl",
+          "lunch": "vgn_lentil_soup",
+          "dinner": "vgn_pesto_pasta",
+          "snack": "vgn_tofu_lettuce_wraps"
+        },
+        {
+          "day": "Wednesday",
+          "breakfast": "vgn_avocado_toast",
+          "lunch": "vgn_burrito_bowl",
+          "dinner": "vgn_coconut_chickpea_stew",
+          "snack": "vgn_trail_mix"
+        },
+        {
+          "day": "Thursday",
+          "breakfast": "vgn_tempeh_breakfast_wrap",
+          "lunch": "vgn_thai_peanut_noodles",
+          "dinner": "vgn_shepherd_pie",
+          "snack": "vgn_roasted_chickpeas"
+        },
+        {
+          "day": "Friday",
+          "breakfast": "vgn_tofu_scramble",
+          "lunch": "vgn_jackfruit_tacos",
+          "dinner": "vgn_mushroom_risotto",
+          "snack": "vgn_banana_nice_cream"
+        },
+        {
+          "day": "Saturday",
+          "breakfast": "vgn_overnight_oats",
+          "lunch": "vgn_stuffed_sweet_potato",
+          "dinner": "vgn_black_bean_burger",
+          "snack": "vgn_hummus_veggie_plate"
+        },
+        {
+          "day": "Sunday",
+          "breakfast": "vgn_acai_bowl",
+          "lunch": "vgn_edamame_grain_bowl",
+          "dinner": "vgn_tempeh_bibimbap",
+          "snack": "vgn_date_walnut_bites"
+        }
+      ]
+    }
+  ]
+}
