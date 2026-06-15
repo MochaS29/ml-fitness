@@ -43,8 +43,8 @@ android {
         applicationId = "com.mochasmindlab.mlhealth"
         minSdk = 26
         targetSdk = 35
-        versionCode = 5
-        versionName = "1.1.3"
+        versionCode = 6
+        versionName = "1.1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -199,16 +199,17 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.20.0")
     implementation("com.google.accompanist:accompanist-permissions:0.20.0")
 
-    // Camera
-    implementation("androidx.camera:camera-camera2:1.1.0-beta01")
-    implementation("androidx.camera:camera-lifecycle:1.1.0-beta01")
-    implementation("androidx.camera:camera-view:1.1.0-beta01")
+    // Camera (1.4.0+ ships 16 KB page-size-aligned native libs; 1.4.x stays on
+    // Kotlin 1.9 metadata + compileSdk 35, unlike 1.6.x which needs Kotlin 2)
+    implementation("androidx.camera:camera-camera2:1.4.2")
+    implementation("androidx.camera:camera-lifecycle:1.4.2")
+    implementation("androidx.camera:camera-view:1.4.2")
 
-    // ML Kit
-    implementation("com.google.mlkit:barcode-scanning:17.0.2")
+    // ML Kit (17.3.0+ ships 16 KB page-size-aligned libbarhopper)
+    implementation("com.google.mlkit:barcode-scanning:17.3.0")
 
-    // Google Play Billing
-    implementation("com.android.billingclient:billing-ktx:6.2.1")
+    // Google Play Billing (7.0.0+ required by Play policy)
+    implementation("com.android.billingclient:billing-ktx:7.1.1")
 
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.7.1")
