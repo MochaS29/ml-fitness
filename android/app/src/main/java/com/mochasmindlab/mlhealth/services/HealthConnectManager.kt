@@ -4,14 +4,12 @@ import android.content.Context
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
-import androidx.health.connect.client.records.SleepSessionRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.health.connect.client.units.Mass
-import com.mochasmindlab.mlhealth.data.entities.SleepEntry
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.Instant
 import java.time.LocalDate
@@ -49,8 +47,6 @@ class HealthConnectManager @Inject constructor(
         HealthPermission.getReadPermission(StepsRecord::class),
         HealthPermission.getReadPermission(WeightRecord::class),
         HealthPermission.getWritePermission(WeightRecord::class),
-        // Sleep tracking — added by sleep-tracking agent (gap #10)
-        HealthPermission.getReadPermission(SleepSessionRecord::class),
         // Active energy — surfaces real-world calorie burn in the dashboard
         // Burned tile (mirrors iOS HealthKit activeEnergyBurned). Read-only;
         // falls back to a step-derived estimate when no samples exist.
@@ -191,42 +187,6 @@ class HealthConnectManager @Inject constructor(
             response.records.firstOrNull()?.weight?.inKilograms
         } catch (e: Exception) {
             null
-        }
-    }
-
-    /**
-     * Reads [SleepSessionRecord] entries for a given [date] (full calendar day in the device's
-     * default time zone) and maps them to [SleepEntry] with source = "health_connect".
-     *
-     * Returns an empty list if Health Connect is unavailable, the permission is not granted,
-     * or no sessions were recorded for the day.
-     */
-    suspend fun readSleepSessions(date: LocalDate): List<SleepEntry> {
-        val client = getClientOrNull() ?: return emptyList()
-        return try {
-            val zone = ZoneId.systemDefault()
-            val startOfDay = date.atStartOfDay(zone).toInstant()
-            val endOfDay = date.atTime(LocalTime.MAX).atZone(zone).toInstant()
-                .let { if (it.isAfter(Instant.now())) Instant.now() else it }
-
-            val response = client.readRecords(
-                ReadRecordsRequest(
-                    recordType = SleepSessionRecord::class,
-                    timeRangeFilter = TimeRangeFilter.between(startOfDay, endOfDay)
-                )
-            )
-            response.records.map { record ->
-                SleepEntry(
-                    id = UUID.randomUUID(),
-                    bedTime = Date.from(record.startTime),
-                    wakeTime = Date.from(record.endTime),
-                    notes = record.title?.takeIf { it.isNotBlank() },
-                    quality = null, // SleepSessionRecord has no direct quality field
-                    source = "health_connect"
-                )
-            }
-        } catch (e: Exception) {
-            emptyList()
         }
     }
 

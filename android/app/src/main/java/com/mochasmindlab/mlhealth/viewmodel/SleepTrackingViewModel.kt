@@ -4,11 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mochasmindlab.mlhealth.data.database.SleepDao
 import com.mochasmindlab.mlhealth.data.entities.SleepEntry
-import com.mochasmindlab.mlhealth.services.HealthConnectManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.UUID
@@ -17,8 +15,7 @@ import kotlin.math.abs
 
 @HiltViewModel
 class SleepTrackingViewModel @Inject constructor(
-    private val dao: SleepDao,
-    private val healthConnect: HealthConnectManager
+    private val dao: SleepDao
 ) : ViewModel() {
 
     // ── All entries live list ─────────────────────────────────────────────────
@@ -60,9 +57,6 @@ class SleepTrackingViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
-    private val _isSyncing = MutableStateFlow(false)
-    val isSyncing: StateFlow<Boolean> = _isSyncing.asStateFlow()
-
     // ── Mutations ─────────────────────────────────────────────────────────────
 
     fun addEntry(
@@ -95,40 +89,6 @@ class SleepTrackingViewModel @Inject constructor(
                 dao.delete(entry)
             } catch (e: Exception) {
                 _errorMessage.value = "Failed to delete entry: ${e.message}"
-            }
-        }
-    }
-
-    /**
-     * Reads SleepSessionRecord from Health Connect for the last 7 days and inserts any
-     * sessions that don't already have a manual entry within ±30 minutes of the bed-time.
-     */
-    fun syncFromHealthConnect() {
-        viewModelScope.launch {
-            _isSyncing.value = true
-            try {
-                val existingEntries = dao.getInRange(
-                    start = Date(sevenDaysAgoMidnight()),
-                    end = Date()
-                )
-                val thirtyMinMs = 30 * 60 * 1000L
-
-                for (daysBack in 0..6) {
-                    val date = LocalDate.now().minusDays(daysBack.toLong())
-                    val sessions = healthConnect.readSleepSessions(date)
-                    for (session in sessions) {
-                        val isDuplicate = existingEntries.any { existing ->
-                            abs(existing.bedTime.time - session.bedTime.time) <= thirtyMinMs
-                        }
-                        if (!isDuplicate) {
-                            dao.insert(session)
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                _errorMessage.value = "Sync failed: ${e.message}"
-            } finally {
-                _isSyncing.value = false
             }
         }
     }

@@ -15,8 +15,6 @@
     <uses-permission android:name="android.permission.health.READ_STEPS" />
     <uses-permission android:name="android.permission.health.READ_WEIGHT" />
     <uses-permission android:name="android.permission.health.WRITE_WEIGHT" />
-    <!-- Sleep tracking — added by sleep-tracking agent (gap #10) -->
-    <uses-permission android:name="android.permission.health.READ_SLEEP" />
     <!-- Active energy — real-world calorie burn for the dashboard Burned tile -->
     <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
 

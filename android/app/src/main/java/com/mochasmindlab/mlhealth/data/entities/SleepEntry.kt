@@ -8,8 +8,7 @@ import java.util.UUID
 /**
  * Room entity for sleep log entries.
  *
- * Manual entries (source = "manual") are created via the in-app form.
- * Health Connect entries (source = "health_connect") are synced from SleepSessionRecord.
+ * Entries (source = "manual") are created via the in-app form.
  *
  * [quality] is nullable so manual entries that skip the star rating still persist cleanly.
  * [durationMinutes] is a computed property — NOT stored in the DB column.

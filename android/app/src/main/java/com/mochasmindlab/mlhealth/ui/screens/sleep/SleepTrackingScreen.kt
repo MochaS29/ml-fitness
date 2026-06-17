@@ -33,7 +33,6 @@ fun SleepTrackingScreen(
     val entries by viewModel.entries.collectAsState()
     val last7Days by viewModel.last7Days.collectAsState()
     val avgHours by viewModel.avgHoursLast7.collectAsState()
-    val isSyncing by viewModel.isSyncing.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
     var showAddDialog by remember { mutableStateOf(false) }
@@ -58,19 +57,6 @@ fun SleepTrackingScreen(
                     }
                 },
                 actions = {
-                    TextButton(
-                        onClick = { viewModel.syncFromHealthConnect() },
-                        enabled = !isSyncing
-                    ) {
-                        if (isSyncing) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(16.dp),
-                                strokeWidth = 2.dp
-                            )
-                            Spacer(Modifier.width(4.dp))
-                        }
-                        Text("Sync HC")
-                    }
                     IconButton(onClick = { showAddDialog = true }) {
                         Icon(Icons.Default.Add, contentDescription = "Add Sleep Entry")
                     }
@@ -187,7 +173,7 @@ private fun EmptySleepState() {
             tint = MaterialTheme.colorScheme.outlineVariant
         )
         Text(
-            text = "No sleep entries yet.\nTap '+' or sync from Health Connect.",
+            text = "No sleep entries yet.\nTap '+' to add your first entry.",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.outline,
             textAlign = TextAlign.Center
