@@ -13,11 +13,19 @@ These standards govern monorepo layout (`apps/` + `platforms/`), Linear task tra
 
 Project-specific instructions below **override** the shared standards where they conflict; note any deliberate deviation with a one-line reason.
 
-One product, two native apps. Marketed as **ML Fitness** (App Store name: "Fitness & Calorie Tracker", home-screen name "MindLab Fitness"). Free + one-time Pro IAP ($8.99 CAD), product ID `com.mochasmindlab.HealthTracker.pro`.
+### Deliberate deviations from the standards
+
+- **Layout (std 01):** uses flat `ios/ + android/ + shared/`, not `apps/ + platforms/`. Reason: two pure-native apps that share no code and no backend; std 01's own note grandfathers this layout as a reference "in this style." No `platforms/` because there is no Supabase/web/infra here.
+- **Local testing & payments (std 03, 08):** N/A. No Supabase and no Stripe — the app is native-only; Pro is an App Store / Play **IAP**, and meal-scan calls the existing Vercel proxy (key server-side per std 09).
+- **Branching (std 04):** uses `main` as the develop-equivalent (allowed by std 04's note). There is no Vercel `production` branch — "production" here means a store release (App Store / Play), gated by their review, not a git branch.
+- **Task tracking (std 02):** Linear is not yet wired for this repo; release-ops history lives in commits + Claude memory for now.
+- **Status line (std 06):** a custom global status line is configured in `~/.claude/settings.json`, not the shared `best-practices/templates/statusline.sh`.
+
+One product, two native apps. Marketed as **ML Fitness** (App Store name: "Fitness & Calorie Tracker", home-screen name "MindLab Fitness"). Free + one-time Pro IAP ($8.99 CAD). Product IDs differ per store (each platform manages its own SKU): iOS `com.mochasmindlab.HealthTracker.pro`, Android `com.mochasmindlab.mlhealth.pro`.
 
 ```
 ios/        SwiftUI app (iOS 17+), Xcode project HealthTracker.xcodeproj — live on App Store (v2.4.1 / build 14)
-android/    Kotlin / Jetpack Compose app, Gradle — Play Internal Testing (v1.1.3 / build 5), Production pending
+android/    Kotlin / Jetpack Compose app, Gradle — Play Internal Testing (v1.1.5 / build 7), Production promotion pending
 shared/     Cross-platform docs: parity checklist, meal-scan proxy API contract
 ```
 
