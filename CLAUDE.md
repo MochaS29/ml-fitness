@@ -1,5 +1,18 @@
 # ML Fitness Monorepo
 
+## Best practices (read on init)
+
+This project follows the shared **MindLab Best Practices**. On starting a session, read them:
+
+1. Read the local copy at `~/Development/best-practices/` — start with `README.md`, then `standards/`.
+2. If that path doesn't exist, pull it first:
+   `git clone https://github.com/MochaS29/best-practices ~/Development/best-practices`
+   (or run `~/Development/best-practices/scripts/sync-best-practices.sh` to refresh it).
+
+These standards govern monorepo layout (`apps/` + `platforms/`), Linear task tracking with image capture, local Supabase Docker testing with seed data, `develop`/`production` branching + Vercel deploys, documentation, the agent workflow (`/cpg`, `/pup`, `/verify-ui` + guardrail hooks), payments, stack gotchas, and the terminal status line.
+
+Project-specific instructions below **override** the shared standards where they conflict; note any deliberate deviation with a one-line reason.
+
 One product, two native apps. Marketed as **ML Fitness** (App Store name: "Fitness & Calorie Tracker", home-screen name "MindLab Fitness"). Free + one-time Pro IAP ($8.99 CAD), product ID `com.mochasmindlab.HealthTracker.pro`.
 
 ```
