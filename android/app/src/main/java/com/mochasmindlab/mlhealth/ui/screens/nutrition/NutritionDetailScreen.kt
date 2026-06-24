@@ -234,11 +234,9 @@ private fun MacrosProgressCard(
         Spacer(Modifier.height(8.dp))
         MacroBar("Fat", totals.fat, goals.fat, "g",
                  com.mochasmindlab.mlhealth.ui.theme.FatYellow)
-        if (totals.fiber > 0) {
-            Spacer(Modifier.height(8.dp))
-            MacroBar("Fiber", totals.fiber, goals.fiber, "g",
-                     com.mochasmindlab.mlhealth.ui.theme.NutritionGreen)
-        }
+        Spacer(Modifier.height(8.dp))
+        MacroBar("Fiber", totals.fiber, goals.fiber, "g",
+                 com.mochasmindlab.mlhealth.ui.theme.NutritionGreen)
         if (totals.sodium > 0) {
             Spacer(Modifier.height(8.dp))
             MacroBar("Sodium", totals.sodium, goals.sodium, "mg",

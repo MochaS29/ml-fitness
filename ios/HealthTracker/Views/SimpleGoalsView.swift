@@ -8,6 +8,7 @@ struct SimpleGoalsView: View {
     @State private var waterGoalText = ""
     @State private var exerciseGoalText = ""
     @State private var proteinGoalText = ""
+    @State private var fiberGoalText = ""
     @State private var weightGoalText = ""
 
     // Load current goals from UserDefaults
@@ -34,6 +35,11 @@ struct SimpleGoalsView: View {
     private var currentProteinGoal: Int {
         UserDefaults.standard.integer(forKey: "proteinGoal") > 0 ?
         UserDefaults.standard.integer(forKey: "proteinGoal") : AppConstants.Defaults.dailyProteinGrams
+    }
+
+    private var currentFiberGoal: Int {
+        UserDefaults.standard.integer(forKey: "fiberGoal") > 0 ?
+        UserDefaults.standard.integer(forKey: "fiberGoal") : AppConstants.Defaults.dailyFiberGrams
     }
 
     private var currentWeightGoal: Double {
@@ -93,6 +99,16 @@ struct SimpleGoalsView: View {
                         Text("g")
                             .foregroundColor(.secondary)
                     }
+
+                    HStack {
+                        Label("Fiber", systemImage: "leaf")
+                            .frame(width: 120, alignment: .leading)
+                        TextField("Fiber Goal", text: $fiberGoalText)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                        Text("g")
+                            .foregroundColor(.secondary)
+                    }
                 }
 
                 Section("Target Weight") {
@@ -138,6 +154,7 @@ struct SimpleGoalsView: View {
             waterGoalText = String(currentWaterGoal)
             exerciseGoalText = String(currentExerciseGoal)
             proteinGoalText = String(currentProteinGoal)
+            fiberGoalText = String(currentFiberGoal)
             if currentWeightGoal > 0 {
                 weightGoalText = String(format: "%.1f", currentWeightGoal)
             }
@@ -173,6 +190,12 @@ struct SimpleGoalsView: View {
         if let proteinGoal = Int(proteinGoalText), proteinGoal > 0 {
             UserDefaults.standard.set(proteinGoal, forKey: "proteinGoal")
             print("Saved protein goal: \(proteinGoal)")
+        }
+
+        // Save fiber goal
+        if let fiberGoal = Int(fiberGoalText), fiberGoal > 0 {
+            UserDefaults.standard.set(fiberGoal, forKey: "fiberGoal")
+            print("Saved fiber goal: \(fiberGoal)")
         }
 
         // Save weight goal

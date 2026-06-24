@@ -22,6 +22,7 @@ struct DiaryView: View {
     // refresh timing (which is tied to onAppear / entry-count changes).
     @AppStorage("dailyCalorieGoal") private var savedCalorieGoal: Int = 0
     @AppStorage("proteinGoal") private var savedProteinGoal: Int = 0
+    @AppStorage("fiberGoal") private var savedFiberGoal: Int = 0
     
     // Fetch requests for selected date
     @FetchRequest private var foodEntries: FetchedResults<FoodEntry>
@@ -481,6 +482,9 @@ struct DiaryView: View {
         let proteinGoal = savedProteinGoal > 0
             ? Double(savedProteinGoal)
             : Double(AppConstants.Defaults.dailyProteinGrams)
+        let fiberGoal = savedFiberGoal > 0
+            ? Double(savedFiberGoal)
+            : Double(AppConstants.Defaults.dailyFiberGrams)
         let suppNutrients = viewModel.supplementNutrients(from: supplementEntries)
         let foodNutrients = viewModel.foodAdditionalNutrients(from: foodEntries)
         let combinedNutrients = foodNutrients + suppNutrients
@@ -531,7 +535,7 @@ struct DiaryView: View {
 
                         // Additional nutrients from food
                         VStack(spacing: 0) {
-                            DiaryNutrientRow(name: "Fiber",  value: viewModel.totalFiber(from: foodEntries, supplements: supplementEntries),  unit: "g",  goal: 28,   goalPrefix: "", color: .brown)
+                            DiaryNutrientRow(name: "Fiber",  value: viewModel.totalFiber(from: foodEntries, supplements: supplementEntries),  unit: "g",  goal: fiberGoal,   goalPrefix: "", color: .brown)
                             Divider().padding(.leading)
                             DiaryNutrientRow(name: "Sugar",  value: viewModel.totalSugar(from: foodEntries, supplements: supplementEntries),  unit: "g",  goal: 50,   goalPrefix: "< ", color: .pink)
                             Divider().padding(.leading)

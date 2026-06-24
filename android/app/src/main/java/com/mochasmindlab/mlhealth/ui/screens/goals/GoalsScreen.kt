@@ -287,7 +287,8 @@ fun QuickGoalsSection(
         Triple(GoalType.EXERCISE, "Exercise More", "💪"),
         Triple(GoalType.WATER, "Drink Water", "💧"),
         Triple(GoalType.STEPS, "Daily Steps", "🚶"),
-        Triple(GoalType.NUTRITION, "Eat Healthy", "🥗")
+        Triple(GoalType.NUTRITION, "Eat Healthy", "🥗"),
+        Triple(GoalType.FIBER, "Fiber Goal", "🌾")
     )
 
     LazyRow(
@@ -644,6 +645,7 @@ fun getTargetLabel(type: GoalType): String {
         GoalType.WATER -> "Cups per Day"
         GoalType.STEPS -> "Steps per Day"
         GoalType.NUTRITION -> "Healthy Meals per Week"
+        GoalType.FIBER -> "Grams per Day"
     }
 }
 
@@ -655,6 +657,7 @@ fun Goal.getColor(): Color {
         GoalType.WATER -> WaterBlue
         GoalType.STEPS -> StepsGreen
         GoalType.NUTRITION -> CarbsGreen
+        GoalType.FIBER -> NutritionGreen
     }
 }
 
@@ -666,6 +669,7 @@ fun Goal.getEmoji(): String {
         GoalType.WATER -> "💧"
         GoalType.STEPS -> "🚶"
         GoalType.NUTRITION -> "🥗"
+        GoalType.FIBER -> "🌾"
     }
 }
 

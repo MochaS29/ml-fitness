@@ -765,7 +765,7 @@ class DashboardViewModel: ObservableObject {
             let proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0 ? Double(defaults.integer(forKey: "proteinGoal")) : 50.0
             let carbGoal = 275.0   // Standard daily value
             let fatGoal = 78.0     // Standard daily value
-            let fiberGoal = 28.0   // Standard daily value
+            let fiberGoal = Double(defaults.integer(forKey: "fiberGoal")) > 0 ? Double(defaults.integer(forKey: "fiberGoal")) : Double(AppConstants.Defaults.dailyFiberGrams)
             let sugarLimit = 50.0  // Standard daily value
             let sodiumLimit = 2300.0 // Standard daily value
 
@@ -797,15 +797,13 @@ class DashboardViewModel: ObservableObject {
                 percentage: (todayFat / fatGoal) * 100,
                 color: .yellow
             ))
-            if todayFiber > 0 {
-                nutrients.append(NutrientBreakdown(
-                    name: "Fiber",
-                    current: String(format: "%.1f g", todayFiber),
-                    goal: "\(Int(fiberGoal)) g",
-                    percentage: (todayFiber / fiberGoal) * 100,
-                    color: .brown
-                ))
-            }
+            nutrients.append(NutrientBreakdown(
+                name: "Fiber",
+                current: String(format: "%.1f g", todayFiber),
+                goal: "\(Int(fiberGoal)) g",
+                percentage: (todayFiber / fiberGoal) * 100,
+                color: .brown
+            ))
             if todaySugar > 0 {
                 nutrients.append(NutrientBreakdown(
                     name: "Sugar",

@@ -170,13 +170,13 @@ struct NutritionDetailView: View {
                 let defaults = UserDefaults.standard
                 let proteinGoal = Double(defaults.integer(forKey: "proteinGoal")) > 0
                     ? Double(defaults.integer(forKey: "proteinGoal")) : 50.0
+                let fiberGoal = Double(defaults.integer(forKey: "fiberGoal")) > 0
+                    ? Double(defaults.integer(forKey: "fiberGoal")) : Double(AppConstants.Defaults.dailyFiberGrams)
 
                 MacroProgressBar(label: "Protein", value: totalProtein, goal: proteinGoal, unit: "g", color: .blue)
                 MacroProgressBar(label: "Carbs",   value: totalCarbs,   goal: 275,         unit: "g", color: .green)
                 MacroProgressBar(label: "Fat",     value: totalFat,     goal: 78,           unit: "g", color: .yellow)
-                if totalFiber > 0 {
-                    MacroProgressBar(label: "Fiber", value: totalFiber, goal: 28, unit: "g", color: .brown)
-                }
+                MacroProgressBar(label: "Fiber",   value: totalFiber,   goal: fiberGoal,    unit: "g", color: .brown)
                 if totalSodium > 0 {
                     MacroProgressBar(label: "Sodium", value: totalSodium, goal: 2300, unit: "mg", color: .gray)
                 }

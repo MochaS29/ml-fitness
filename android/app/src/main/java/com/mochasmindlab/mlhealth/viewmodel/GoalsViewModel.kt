@@ -56,6 +56,7 @@ class GoalsViewModel @Inject constructor(
                 GoalType.CALORIES -> preferencesManager.updateDailyCalorieGoal(targetValue.toInt())
                 GoalType.WATER -> preferencesManager.updateDailyWaterGoal(targetValue.toInt())
                 GoalType.EXERCISE -> preferencesManager.updateDailyExerciseGoal(targetValue.toInt())
+                GoalType.FIBER -> preferencesManager.updateDailyFiberGoal(targetValue.toInt())
                 GoalType.WEIGHT_LOSS -> preferencesManager.setUserTargetWeight(targetValue)
                 else -> Unit
             }
@@ -107,6 +108,7 @@ class GoalsViewModel @Inject constructor(
             GoalType.WATER -> "Drink $target cups of water daily"
             GoalType.STEPS -> "Walk $target steps daily"
             GoalType.NUTRITION -> "Eat $target healthy meals per week"
+            GoalType.FIBER -> "Eat $target g of fiber daily"
         }
     }
 }

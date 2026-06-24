@@ -38,6 +38,7 @@ class PreferencesManager @Inject constructor(
         val DAILY_CALORIE_GOAL = intPreferencesKey("daily_calorie_goal")
         val DAILY_WATER_GOAL = intPreferencesKey("daily_water_goal")
         val DAILY_EXERCISE_GOAL = intPreferencesKey("daily_exercise_goal")
+        val DAILY_FIBER_GOAL = intPreferencesKey("daily_fiber_goal")
         val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
         val MEAL_SCAN_COUNT = intPreferencesKey("meal_scan_count")
         val WATER_REMINDER_ENABLED = booleanPreferencesKey("water_reminder_enabled")
@@ -247,7 +248,13 @@ class PreferencesManager @Inject constructor(
             preferences[PreferenceKeys.DAILY_EXERCISE_GOAL] = minutes
         }
     }
-    
+
+    suspend fun updateDailyFiberGoal(grams: Int) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.DAILY_FIBER_GOAL] = grams
+        }
+    }
+
     val dailyCalorieGoal: Flow<Int> = dataStore.data
         .map { preferences ->
             preferences[PreferenceKeys.DAILY_CALORIE_GOAL] ?: 2000
@@ -262,7 +269,12 @@ class PreferencesManager @Inject constructor(
         .map { preferences ->
             preferences[PreferenceKeys.DAILY_EXERCISE_GOAL] ?: 30
         }
-    
+
+    val dailyFiberGoal: Flow<Int> = dataStore.data
+        .map { preferences ->
+            preferences[PreferenceKeys.DAILY_FIBER_GOAL] ?: 28
+        }
+
     // Notifications
     suspend fun setNotificationsEnabled(enabled: Boolean) {
         dataStore.edit { preferences ->

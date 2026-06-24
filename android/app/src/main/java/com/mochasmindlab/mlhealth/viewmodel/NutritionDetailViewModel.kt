@@ -56,6 +56,12 @@ class NutritionDetailViewModel @Inject constructor(
                 _goals.value = _goals.value.copy(calories = calGoal)
             }
         }
+        // Same for the user-editable fiber goal (grams).
+        viewModelScope.launch {
+            prefs.dailyFiberGoal.collect { fiberGoal ->
+                _goals.value = _goals.value.copy(fiber = fiberGoal.toDouble())
+            }
+        }
         // Also pick up per-macro goals from the UserProfile stored in DataStore.
         viewModelScope.launch {
             prefs.userProfile.collect { profile ->

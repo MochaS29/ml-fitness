@@ -27,5 +27,6 @@ enum class GoalType(val displayName: String) {
     EXERCISE("Exercise"),
     WATER("Water Intake"),
     STEPS("Daily Steps"),
-    NUTRITION("Nutrition")
+    NUTRITION("Nutrition"),
+    FIBER("Fiber Goal")
 }
