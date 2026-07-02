@@ -174,7 +174,7 @@ private fun NotInstalledContent(onInstall: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "ML Fitness uses Google Health Connect to sync your steps and weight. " +
+            text = "ML Fitness uses Google Health Connect to sync your steps, active calories, and weight. " +
                     "Install it from the Play Store to enable this feature.",
             fontSize = 15.sp,
             textAlign = TextAlign.Center,
@@ -214,8 +214,8 @@ private fun NeedsPermissionsContent(onGrantAccess: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "ML Fitness needs permission to read your steps and weight from Health Connect, " +
-                    "and to write weight data back. Tap below to grant access.",
+            text = "ML Fitness needs permission to read your steps, active calories, and weight from " +
+                    "Health Connect, and to write weight data back. Tap below to grant access.",
             fontSize = 15.sp,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
