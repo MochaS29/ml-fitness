@@ -66,8 +66,19 @@
             android:exported="true"
             android:targetActivity=".MainActivity"
             android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <!-- Android 13 / standalone Health Connect app -->
             <intent-filter>
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+            <!--
+                Android 14+ / Health Connect built into the platform. Without this
+                filter the platform Health Connect aborts the permission-grant
+                dialog ("App should support rationale intent, finishing!"), so
+                users on Android 14+ cannot grant Health Connect access at all.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
             </intent-filter>
         </activity-alias>
 

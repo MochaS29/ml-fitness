@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      DEBUG-ONLY. These write permissions and the seeder activity exist ONLY in
+      debug builds (src/debug source set) so we can inject sample Health Connect
+      data for demo/QA recordings. They are never merged into release builds.
+    -->
+    <uses-permission android:name="android.permission.health.WRITE_STEPS" />
+    <uses-permission android:name="android.permission.health.WRITE_ACTIVE_CALORIES_BURNED" />
+
+    <application>
+        <activity
+            android:name=".DemoSeedActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+</manifest>
