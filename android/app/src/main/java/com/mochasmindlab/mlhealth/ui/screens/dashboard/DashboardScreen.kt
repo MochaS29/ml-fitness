@@ -9,6 +9,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.MonitorWeight
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,14 +22,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.mochasmindlab.mlhealth.ui.theme.MindfulTeal
 import com.mochasmindlab.mlhealth.ui.theme.MochaBrown
+import com.mochasmindlab.mlhealth.ui.theme.NutritionGreen
+import com.mochasmindlab.mlhealth.ui.theme.WaterBlue
 import com.mochasmindlab.mlhealth.viewmodel.DashboardViewModel
 import com.mochasmindlab.mlhealth.viewmodel.DashboardUiState
 import java.time.LocalDate
@@ -37,6 +48,13 @@ fun DashboardScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val aiInsights by viewModel.aiInsights.collectAsState()
+
+    // Drives the friendly empty state so a brand-new user sees an inviting
+    // quick-start instead of a wall of zeros (mirrors iOS DashboardView).
+    val hasDataToday = uiState.caloriesConsumed > 0 ||
+        uiState.steps > 0 ||
+        uiState.waterCups > 0 ||
+        uiState.exerciseMinutes > 0
 
     // Refresh totals whenever we return to the dashboard — picks up entries logged
     // (or deleted) on other screens since the VM doesn't observe DAO Flows.
@@ -85,6 +103,7 @@ fun DashboardScreen(
                 }
             }
 
+            if (hasDataToday) {
             // Daily Summary Cards (matching iOS)
             item {
                 DailySummaryCards(uiState, navController)
@@ -141,6 +160,164 @@ fun DashboardScreen(
                     onClick = { navController.navigate("exercise") }
                 )
             }
+            } else {
+                // Brand-new / empty day — an inviting quick-start instead of a wall of zeros
+                item { GettingStartedSection(navController) }
+            }
+        }
+    }
+}
+
+// MARK: - Getting Started (empty-state) Section
+
+@Composable
+fun GettingStartedSection(navController: NavController) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        // Welcoming hero banner
+        Card(
+            shape = RoundedCornerShape(18.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(
+                                NutritionGreen.copy(alpha = 0.12f),
+                                MindfulTeal.copy(alpha = 0.08f)
+                            )
+                        )
+                    )
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(
+                            Brush.linearGradient(
+                                listOf(
+                                    NutritionGreen.copy(alpha = 0.22f),
+                                    MindfulTeal.copy(alpha = 0.16f)
+                                )
+                            )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Default.AutoAwesome,
+                        contentDescription = null,
+                        tint = MindfulTeal,
+                        modifier = Modifier.size(26.dp)
+                    )
+                }
+                Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                    Text(
+                        "Let's start your day",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        "Log your first meal, water, or weight — your dashboard fills in as you go.",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+
+        Text(
+            "Quick start",
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(start = 4.dp)
+        )
+
+        // 2x2 grid of quick-start actions (two Rows to avoid nesting scrollables)
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            QuickStartCard(
+                icon = Icons.Default.CameraAlt,
+                title = "Scan a Meal",
+                subtitle = "AI reads the nutrition",
+                tint = MochaBrown,
+                modifier = Modifier.weight(1f)
+            ) { navController.navigate("meal_scanner") }
+            QuickStartCard(
+                icon = Icons.Default.Restaurant,
+                title = "Log Food",
+                subtitle = "Search 53k+ foods",
+                tint = NutritionGreen,
+                modifier = Modifier.weight(1f)
+            ) { navController.navigate("nutrition_detail") }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            QuickStartCard(
+                icon = Icons.Default.WaterDrop,
+                title = "Log Water",
+                subtitle = "Stay hydrated",
+                tint = WaterBlue,
+                modifier = Modifier.weight(1f)
+            ) { navController.navigate("water") }
+            QuickStartCard(
+                icon = Icons.Default.MonitorWeight,
+                title = "Add Weight",
+                subtitle = "Track your trend",
+                tint = Color(0xFFF59E0B),
+                modifier = Modifier.weight(1f)
+            ) { navController.navigate("weight") }
+        }
+    }
+}
+
+@Composable
+fun QuickStartCard(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    tint: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = modifier.clickable { onClick() },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 132.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(46.dp)
+                    .clip(CircleShape)
+                    .background(tint.copy(alpha = 0.15f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(22.dp))
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                title,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                subtitle,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
