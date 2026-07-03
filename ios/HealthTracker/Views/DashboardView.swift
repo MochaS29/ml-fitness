@@ -65,13 +65,15 @@ struct DashboardView: View {
                 // Header with Time Range Selector
                 headerSection
 
-                // AI Meal Scanner teaser (free users only)
-                if !storeManager.isPro && !TrialManager.shared.isTrialActive {
+                // AI Meal Scanner teaser (free users only) — hidden on an empty day since
+                // the Getting Started section already offers a scan action.
+                if !storeManager.isPro && !TrialManager.shared.isTrialActive && hasDataToday {
                     MealScannerTeaserCard(onTap: { activeSheet = .quickLog })
                 }
 
                 // Delay loading heavy widgets
                 if widgetsEnabled {
+                  if hasDataToday {
                     // Nutrition Distribution + Calories Left (under goal section per user feedback)
                     nutritionDistributionCard
 
@@ -104,6 +106,10 @@ struct DashboardView: View {
 
                     // Detailed Analytics
                     detailedAnalyticsSection
+                  } else {
+                    // Brand-new / empty day — an inviting quick-start instead of a wall of zeros
+                    gettingStartedSection
+                  }
                 } else {
                     // Show loading placeholder
                     VStack(spacing: 20) {
@@ -219,6 +225,104 @@ struct DashboardView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Getting Started (empty-state) Section
+
+    /// True once the user has logged anything today. Drives the friendly empty state
+    /// so a brand-new user sees an inviting quick-start instead of a wall of zeros.
+    private var hasDataToday: Bool {
+        viewModel.todayCalories > 0
+            || viewModel.todaySteps > 0
+            || viewModel.todayWater > 0
+            || viewModel.todayExercise > 0
+    }
+
+    private var gettingStartedSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // Welcoming hero banner
+            HStack(spacing: 14) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.wellnessGreen.opacity(0.22), Color.mindfulTeal.opacity(0.16)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 56, height: 56)
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundColor(.mindfulTeal)
+                }
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Let's start your day")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    Text("Log your first meal, water, or weight — your dashboard fills in as you go.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                LinearGradient(
+                    colors: [Color.wellnessGreen.opacity(0.10), Color.mindfulTeal.opacity(0.06)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .cornerRadius(18)
+
+            Text("Quick start")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundColor(.secondary)
+                .padding(.leading, 4)
+
+            LazyVGrid(
+                columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
+                spacing: 12
+            ) {
+                quickStartCard(icon: "camera.viewfinder", title: "Scan a Meal", subtitle: "AI reads the nutrition", tint: .accentColor) { activeSheet = .quickLog }
+                quickStartCard(icon: "fork.knife", title: "Log Food", subtitle: "Search 53k+ foods", tint: .wellnessGreen) { activeSheet = .calorieDetail }
+                quickStartCard(icon: "drop.fill", title: "Log Water", subtitle: "Stay hydrated", tint: .mindfulTeal) { activeSheet = .waterDetail }
+                quickStartCard(icon: "scalemass.fill", title: "Add Weight", subtitle: "Track your trend", tint: .orange) { activeSheet = .weightDetail }
+            }
+        }
+    }
+
+    private func quickStartCard(icon: String, title: String, subtitle: String, tint: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 10) {
+                ZStack {
+                    Circle()
+                        .fill(tint.opacity(0.15))
+                        .frame(width: 46, height: 46)
+                    Image(systemName: icon)
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(tint)
+                }
+                Spacer(minLength: 8)
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.primary)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .frame(maxWidth: .infinity, minHeight: 132, alignment: .leading)
             .padding()
             .background(Color(UIColor.secondarySystemGroupedBackground))
             .cornerRadius(16)
