@@ -84,14 +84,25 @@ API keys live in `local.properties` (gitignored from new entries — but the fil
 
 To enable the AI meal scanner (gap #3 / Phase 2.C):
 
+The Anthropic key is **not** in the app. Meal-scan requests go to the Vercel proxy at
+`https://mochasmindlab.com/api/v1/meal-scan`, which holds the real key server-side. The app only
+carries a shared secret used to authenticate against that proxy.
+
 1. Open `local.properties` at the project root.
 2. Add this line (uncomment if it's already there as a comment):
    ```
-   anthropic.api.key=sk-ant-api03-...your-real-key...
+   app.shared.secret=...the proxy's shared secret...
    ```
-3. Rebuild — `./gradlew :app:assembleDevelopmentDebug` — the key gets baked into `BuildConfig.ANTHROPIC_API_KEY`.
-4. Run the app, open the meal scanner from the bottom-bar FAB or the AddMenu, take a photo. `MealAnalysisService` will POST to `https://api.anthropic.com/v1/messages` with `claude-sonnet-4-6` and vision.
-5. Without a key, `SecretsManager.anthropicAPIKey` returns `null` and `MealAnalysisService` short-circuits with an `apiKeyMissing` error — the scanner UI shows a friendly "API key not configured" message rather than crashing.
+   `app/build.gradle.kts` reads `app.shared.secret` into `BuildConfig.APP_SHARED_SECRET`. The
+   endpoint defaults to the production proxy URL; override it only for local testing by adding
+   `meal.scan.endpoint=...` (baked into `BuildConfig.MEAL_SCAN_ENDPOINT`).
+3. Rebuild — `./gradlew :app:assembleDevelopmentDebug`.
+4. Run the app, open the meal scanner from the bottom-bar FAB or the AddMenu, take a photo.
+   `MealAnalysisService` POSTs the image to `SecretsManager.mealScanEndpoint` with the
+   `X-App-Secret` (the shared secret), `X-Install-Id`, and `X-Platform: android` headers.
+5. Without a shared secret, `SecretsManager.appSharedSecret` returns `null` and `MealAnalysisService`
+   short-circuits with a missing-secret error — the scanner UI shows a friendly "not configured"
+   message rather than crashing.
 
 The other API keys (USDA, Spoonacular, Nutritionix, Open Food Facts) are currently hardcoded in `config/ApiConfig.kt` — security debt to clean up later (move to BuildConfig + local.properties).
 

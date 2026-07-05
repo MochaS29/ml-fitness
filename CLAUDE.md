@@ -45,8 +45,9 @@ xcodebuild -project ios/HealthTracker.xcodeproj -scheme HealthTracker \
 
 ### Android (from repo root)
 ```sh
-cd android && ./gradlew assembleDebug      # debug build
-cd android && ./gradlew bundleRelease      # Play Store AAB (signs with release.keystore)
+cd android && ./gradlew assembleDebug              # debug build
+cd android && ./gradlew testProductionDebugUnitTest # JVM unit tests (product flavor is required)
+cd android && ./gradlew bundleRelease              # Play Store AAB (signs with release.keystore)
 ```
 - `android/local.properties`, `android/keystore.properties`, `android/release.keystore` are gitignored and required for release builds — never commit them.
 

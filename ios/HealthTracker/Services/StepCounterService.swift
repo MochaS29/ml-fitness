@@ -339,24 +339,7 @@ class StepCounterService: ObservableObject {
         }
     }
 
-    func estimatedCaloriesBurned() -> Int {
-        // Rough estimate: 0.04 calories per step
-        return Int(Double(todaySteps) * 0.04)
-    }
-
     func stepGoalProgress(goal: Int = 10000) -> Double {
         return min(Double(todaySteps) / Double(goal), 1.0)
-    }
-
-    func getActivityLevel() -> String {
-        if todaySteps < 3000 {
-            return "Sedentary"
-        } else if todaySteps < 7000 {
-            return "Lightly Active"
-        } else if todaySteps < 10000 {
-            return "Active"
-        } else {
-            return "Very Active"
-        }
     }
 }

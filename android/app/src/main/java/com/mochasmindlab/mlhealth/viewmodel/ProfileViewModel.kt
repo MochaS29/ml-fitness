@@ -129,28 +129,16 @@ class ProfileViewModel @Inject constructor(
         else -> Gender.OTHER
     }
 
-    // Same idea for activity level — Room uses "Lightly Active", "Moderately Active"
-    // etc., the enum uses LIGHT/MODERATE/ACTIVE/VERY_ACTIVE.
-    private fun activityLevelStringToEnum(value: String): ActivityLevel = when (value.lowercase()) {
-        "sedentary" -> ActivityLevel.SEDENTARY
-        "lightly active", "light" -> ActivityLevel.LIGHT
-        "moderately active", "moderate" -> ActivityLevel.MODERATE
-        "very active", "active" -> ActivityLevel.ACTIVE
-        "extra active" -> ActivityLevel.VERY_ACTIVE
-        else -> ActivityLevel.MODERATE
-    }
-
     private fun recalculateCalorieGoals() {
         val profile = _userProfile.value
         val bmr = calculateBMR(profile)
-        val activityMultiplier = when (profile.activityLevel) {
-            "Sedentary" -> 1.2
-            "Lightly Active" -> 1.375
-            "Moderately Active" -> 1.55
-            "Very Active" -> 1.725
-            "Extra Active" -> 1.9
-            else -> 1.55
-        }
+        // The Room profile stores a display-label string, and the onboarding/profile
+        // screens don't all write the same labels, so normalise to the canonical
+        // ActivityLevel first and then look up the standard Mifflin-St Jeor factor.
+        // This mirrors PreferencesManager.calculateTDEE and the iOS 5-tier activity
+        // model, instead of silently defaulting unmatched labels (e.g. "Active") to
+        // the moderate multiplier.
+        val activityMultiplier = activityMultiplier(activityLevelStringToEnum(profile.activityLevel))
 
         val tdee = (bmr * activityMultiplier).toInt()
 
@@ -189,6 +177,37 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             preferencesManager.clearAllPreferences()
             // Additional sign out logic
+        }
+    }
+
+    companion object {
+        // Standard Mifflin-St Jeor activity factors. Single source of truth for the
+        // Room-profile calorie recalculation; kept in parity with
+        // PreferencesManager.calculateTDEE and the iOS 5-tier activity model
+        // (Sedentary / Light / Moderate / Active / Very Active).
+        internal fun activityMultiplier(level: ActivityLevel): Double = when (level) {
+            ActivityLevel.SEDENTARY -> 1.2
+            ActivityLevel.LIGHT -> 1.375
+            ActivityLevel.MODERATE -> 1.55
+            ActivityLevel.ACTIVE -> 1.725
+            ActivityLevel.VERY_ACTIVE -> 1.9
+        }
+
+        // Room stores friendly activity strings ("Lightly Active", "Moderately
+        // Active", etc.) written by the onboarding and profile screens, which don't
+        // all use identical labels. Normalise every known variant to the canonical
+        // enum so the multiplier lookup is exhaustive; anything unrecognised logs a
+        // warning and falls back to MODERATE rather than failing silently.
+        internal fun activityLevelStringToEnum(value: String): ActivityLevel = when (value.lowercase()) {
+            "sedentary" -> ActivityLevel.SEDENTARY
+            "lightly active", "light activity", "light" -> ActivityLevel.LIGHT
+            "moderately active", "moderate activity", "moderate" -> ActivityLevel.MODERATE
+            "very active", "active" -> ActivityLevel.ACTIVE
+            "extra active" -> ActivityLevel.VERY_ACTIVE
+            else -> {
+                android.util.Log.w("ProfileViewModel", "Unrecognized activity level '$value'; defaulting to MODERATE")
+                ActivityLevel.MODERATE
+            }
         }
     }
 }
