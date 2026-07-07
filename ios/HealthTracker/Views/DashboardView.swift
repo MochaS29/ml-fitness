@@ -237,9 +237,10 @@ struct DashboardView: View {
 
     /// True once the user has logged anything today. Drives the friendly empty state
     /// so a brand-new user sees an inviting quick-start instead of a wall of zeros.
+    /// Deliberately excludes steps: the pedometer auto-reports steps since midnight on a
+    /// real device, so counting them would hide the empty state before the user logs anything.
     private var hasDataToday: Bool {
         viewModel.todayCalories > 0
-            || viewModel.todaySteps > 0
             || viewModel.todayWater > 0
             || viewModel.todayExercise > 0
     }

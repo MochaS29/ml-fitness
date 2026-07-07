@@ -51,8 +51,9 @@ fun DashboardScreen(
 
     // Drives the friendly empty state so a brand-new user sees an inviting
     // quick-start instead of a wall of zeros (mirrors iOS DashboardView).
+    // Deliberately excludes steps: sensors report steps since midnight on a real
+    // device, so counting them would hide the empty state before anything is logged.
     val hasDataToday = uiState.caloriesConsumed > 0 ||
-        uiState.steps > 0 ||
         uiState.waterCups > 0 ||
         uiState.exerciseMinutes > 0
 
