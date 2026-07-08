@@ -43,8 +43,8 @@ android {
         applicationId = "com.mochasmindlab.mlhealth"
         minSdk = 26
         targetSdk = 35
-        versionCode = 8
-        versionName = "1.1.6"
+        versionCode = 9
+        versionName = "1.1.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -210,6 +210,9 @@ dependencies {
 
     // Google Play Billing (7.0.0+ required by Play policy)
     implementation("com.android.billingclient:billing-ktx:7.1.1")
+
+    // Play In-App Review
+    implementation("com.google.android.play:review-ktx:2.0.2")
 
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.7.1")

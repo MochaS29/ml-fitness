@@ -7,6 +7,7 @@ import com.mochasmindlab.mlhealth.data.entities.FoodEntry
 import com.mochasmindlab.mlhealth.data.models.FoodItem
 import com.mochasmindlab.mlhealth.data.repository.FoodRepository
 import com.mochasmindlab.mlhealth.di.ApplicationScope
+import com.mochasmindlab.mlhealth.services.ReviewRequestManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class FoodSearchViewModel @Inject constructor(
     private val foodRepository: FoodRepository,
     private val database: MLFitnessDatabase,
+    private val reviewRequestManager: ReviewRequestManager,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
@@ -148,6 +150,7 @@ class FoodSearchViewModel @Inject constructor(
                 )
                 database.foodDao().insert(entry)
             }
+            reviewRequestManager.recordFoodLogged()
             _logged.tryEmit(food.name)
         }
     }
@@ -187,6 +190,7 @@ class FoodSearchViewModel @Inject constructor(
                 )
                 database.foodDao().insert(entry)
             }
+            reviewRequestManager.recordFoodLogged()
             _logged.tryEmit("Quick calories")
         }
     }

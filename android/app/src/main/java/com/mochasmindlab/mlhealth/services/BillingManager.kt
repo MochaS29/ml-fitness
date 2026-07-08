@@ -35,7 +35,8 @@ enum class ConnectionState { Disconnected, Connecting, Connected, Error }
 @Singleton
 class BillingManager @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val prefs: PreferencesManager
+    private val prefs: PreferencesManager,
+    private val reviewRequestManager: ReviewRequestManager
 ) : PurchasesUpdatedListener {
 
     companion object {
@@ -255,6 +256,7 @@ class BillingManager @Inject constructor(
         prefs.setProUser(true)
         _isProUser.value = true
         Log.d(TAG, "Pro entitlement granted and cached")
+        reviewRequestManager.recordProUpgrade()
     }
 
     /** Acknowledges a verified purchase. */

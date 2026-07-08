@@ -8,6 +8,7 @@ import com.mochasmindlab.mlhealth.data.models.DetectedFood
 import com.mochasmindlab.mlhealth.data.models.MealAnalysis
 import com.mochasmindlab.mlhealth.services.BillingManager
 import com.mochasmindlab.mlhealth.services.MealAnalysisService
+import com.mochasmindlab.mlhealth.services.ReviewRequestManager
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +27,8 @@ class MealScannerViewModel @Inject constructor(
     private val mealAnalysisService: MealAnalysisService,
     private val foodDao: FoodDao,
     private val preferencesManager: PreferencesManager,
-    private val billingManager: BillingManager
+    private val billingManager: BillingManager,
+    private val reviewRequestManager: ReviewRequestManager
 ) : ViewModel() {
 
     /** Number of free scans before the paywall kicks in, matching the iOS quota. */
@@ -73,6 +75,7 @@ class MealScannerViewModel @Inject constructor(
                     _editableItems.value = result.items.toMutableList()
                     _phase.value = ScanPhase.Results
                     if (!isPro.value) preferencesManager.incrementMealScanCount()
+                    reviewRequestManager.recordMealScanned()
                 }
                 .onFailure { err ->
                     _errorMessage.value = err.message ?: "An unexpected error occurred"
@@ -104,11 +107,12 @@ class MealScannerViewModel @Inject constructor(
                 totalCalories = totalCalories,
                 confidence = _analysis.value?.confidence ?: 0.0
             )
-            mealAnalysisService.saveAnalysisToDiary(
+            val saved = mealAnalysisService.saveAnalysisToDiary(
                 analysis = syntheticAnalysis,
                 mealType = _selectedMealType.value,
                 foodDao = foodDao
             )
+            repeat(saved) { reviewRequestManager.recordFoodLogged() }
             reset()
         }
     }

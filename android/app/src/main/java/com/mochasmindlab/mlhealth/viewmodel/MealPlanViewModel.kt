@@ -8,6 +8,7 @@ import com.mochasmindlab.mlhealth.data.models.DietPlan
 import com.mochasmindlab.mlhealth.data.models.PlanRecipe
 import com.mochasmindlab.mlhealth.di.ApplicationScope
 import com.mochasmindlab.mlhealth.services.MealPlanLoader
+import com.mochasmindlab.mlhealth.services.ReviewRequestManager
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +32,7 @@ class MealPlanViewModel @Inject constructor(
     private val loader: MealPlanLoader,
     private val database: MLFitnessDatabase,
     private val preferencesManager: PreferencesManager,
+    private val reviewRequestManager: ReviewRequestManager,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
 
@@ -124,6 +126,7 @@ class MealPlanViewModel @Inject constructor(
                 )
                 database.foodDao().insert(entry)
             }
+            reviewRequestManager.recordFoodLogged()
             _toast.tryEmit("Added to ${mealType.replaceFirstChar { it.uppercase() }}")
         }
     }

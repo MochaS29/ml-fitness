@@ -34,7 +34,9 @@ import com.mochasmindlab.mlhealth.ui.navigation.MLFitnessNavigation
 import com.mochasmindlab.mlhealth.ui.components.CelebrationHost
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import com.mochasmindlab.mlhealth.utils.SampleDataGenerator
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.mochasmindlab.mlhealth.services.AchievementManager
+import com.mochasmindlab.mlhealth.services.ReviewRequestManager
 import com.mochasmindlab.mlhealth.viewmodel.DashboardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -52,7 +54,10 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var achievementManager: AchievementManager
-    
+
+    @Inject
+    lateinit var reviewRequestManager: ReviewRequestManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
@@ -76,6 +81,22 @@ class MainActivity : ComponentActivity() {
         
         setContent {
             MLFitnessTheme {
+                // Launch the Play in-app review flow when a trigger point fires
+                // (food-log milestones, Pro upgrade, first meal scan). Play decides
+                // whether the dialog actually shows, mirroring Apple's quota on iOS.
+                val launchReview by reviewRequestManager.launchReview.collectAsState()
+                LaunchedEffect(launchReview) {
+                    if (launchReview) {
+                        val manager = ReviewManagerFactory.create(this@MainActivity)
+                        manager.requestReviewFlow().addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                manager.launchReviewFlow(this@MainActivity, task.result)
+                            }
+                        }
+                        reviewRequestManager.onReviewFlowLaunched()
+                    }
+                }
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
