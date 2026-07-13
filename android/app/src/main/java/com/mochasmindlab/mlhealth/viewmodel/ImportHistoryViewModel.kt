@@ -23,7 +23,7 @@ class ImportHistoryViewModel @Inject constructor(
         object Idle : Stage()
         data class Preview(val summary: MfpImporter.Summary) : Stage()
         data class Importing(val progress: Float) : Stage()
-        data class Done(val inserted: Int) : Stage()
+        data class Done(val inserted: Int, val noun: String) : Stage()
         data class Failed(val message: String) : Stage()
     }
 
@@ -43,16 +43,16 @@ class ImportHistoryViewModel @Inject constructor(
         }
     }
 
-    fun runImport(entries: List<MfpImporter.ParsedFoodRow>) {
+    fun runImport(summary: MfpImporter.Summary, weightUnit: MfpImporter.WeightUnit) {
         viewModelScope.launch {
             _stage.value = Stage.Importing(0f)
             try {
                 val inserted = withContext(Dispatchers.IO) {
-                    MfpImporter.importEntries(entries, database.foodDao()) { progress ->
+                    MfpImporter.importSummary(summary, weightUnit, database) { progress ->
                         _stage.value = Stage.Importing(progress.toFloat())
                     }
                 }
-                _stage.value = Stage.Done(inserted)
+                _stage.value = Stage.Done(inserted, summary.noun)
             } catch (e: Exception) {
                 _stage.value = Stage.Failed("Something went wrong while importing. Please try again.")
             }

@@ -22,6 +22,10 @@ interface ExerciseDao {
     @Query("DELETE FROM exercise_entries WHERE id = :id")
     suspend fun deleteExerciseById(id: UUID)
 
+    /** One-shot fetch within a half-open date range [start, end). Used by history import to dedupe. */
+    @Query("SELECT * FROM exercise_entries WHERE date >= :start AND date < :end")
+    suspend fun getExercisesBetweenOnce(start: Date, end: Date): List<ExerciseEntry>
+
     @Query("SELECT * FROM exercise_entries ORDER BY date DESC, timestamp DESC")
     fun getAllExercises(): Flow<List<ExerciseEntry>>
 

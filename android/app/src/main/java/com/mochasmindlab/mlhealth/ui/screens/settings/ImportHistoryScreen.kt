@@ -37,17 +37,14 @@ fun ImportHistoryScreen(
     val stage by viewModel.stage.collectAsState()
     val context = LocalContext.current
     var showGuide by remember { mutableStateOf(false) }
+    var weightUnit by remember { mutableStateOf(MfpImporter.WeightUnit.POUNDS) }
 
     val picker = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument()
     ) { uri ->
         if (uri != null) {
-            try {
-                val text = context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
-                if (text != null) viewModel.preview(text)
-            } catch (e: Exception) {
-                // Surfaced by the ViewModel path on the next attempt; keep it simple here.
-            }
+            val text = context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+            if (text != null) viewModel.preview(text)
         }
     }
 
@@ -78,11 +75,13 @@ fun ImportHistoryScreen(
                 )
                 is ImportHistoryViewModel.Stage.Preview -> PreviewSection(
                     summary = s.summary,
-                    onImport = { viewModel.runImport(s.summary.entries) },
+                    weightUnit = weightUnit,
+                    onUnitChange = { weightUnit = it },
+                    onImport = { viewModel.runImport(s.summary, weightUnit) },
                     onReset = { viewModel.reset() }
                 )
                 is ImportHistoryViewModel.Stage.Importing -> ImportingSection(s.progress)
-                is ImportHistoryViewModel.Stage.Done -> DoneSection(s.inserted) { viewModel.reset() }
+                is ImportHistoryViewModel.Stage.Done -> DoneSection(s.inserted, s.noun) { viewModel.reset() }
                 is ImportHistoryViewModel.Stage.Failed -> FailedSection(s.message) { viewModel.reset() }
             }
         }
@@ -104,13 +103,13 @@ private fun IdleSection(onChooseFile: () -> Unit, onShowGuide: () -> Unit) {
             Icon(Icons.Default.Download, contentDescription = null, tint = ImportGreen, modifier = Modifier.size(40.dp))
             Column {
                 Text("Import your history", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text("MyFitnessPal food diary", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("MyFitnessPal food, exercise & weight", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
 
     Text(
-        "Switching from MyFitnessPal? Bring your food diary with you. Import your MyFitnessPal history so you don't start from scratch.",
+        "Switching from MyFitnessPal? Bring your history with you. Import your food diary, workouts, and weight so you don't start from scratch.",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
@@ -125,6 +124,12 @@ private fun IdleSection(onChooseFile: () -> Unit, onShowGuide: () -> Unit) {
         Text("Choose a MyFitnessPal CSV")
     }
 
+    Text(
+        "Works with the Nutrition, Exercise, and Measurement files. Import one at a time.",
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+
     TextButton(onClick = onShowGuide) {
         Icon(Icons.Default.HelpOutline, contentDescription = null, tint = ImportTeal)
         Spacer(Modifier.width(6.dp))
@@ -132,13 +137,20 @@ private fun IdleSection(onChooseFile: () -> Unit, onShowGuide: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PreviewSection(summary: MfpImporter.Summary, onImport: () -> Unit, onReset: () -> Unit) {
+private fun PreviewSection(
+    summary: MfpImporter.Summary,
+    weightUnit: MfpImporter.WeightUnit,
+    onUnitChange: (MfpImporter.WeightUnit) -> Unit,
+    onImport: () -> Unit,
+    onReset: () -> Unit
+) {
     Text("Ready to import", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
 
     Card(shape = RoundedCornerShape(16.dp)) {
         Column(Modifier.padding(16.dp)) {
-            StatRow("Entries found", "${summary.importableRows}")
+            StatRow("${kindLabel(summary.kind)} found", "${summary.importableRows}")
             Divider(Modifier.padding(vertical = 6.dp))
             StatRow("Date range", dateRangeText(summary))
             if (summary.skippedRows > 0) {
@@ -148,7 +160,7 @@ private fun PreviewSection(summary: MfpImporter.Summary, onImport: () -> Unit, o
         }
     }
 
-    if (summary.mealCounts.isNotEmpty()) {
+    if (summary.kind == MfpImporter.Kind.NUTRITION && summary.mealCounts.isNotEmpty()) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
             MealType.values().forEach { meal ->
                 val n = summary.mealCounts[meal] ?: 0
@@ -163,6 +175,24 @@ private fun PreviewSection(summary: MfpImporter.Summary, onImport: () -> Unit, o
                         }
                     }
                 }
+            }
+        }
+    }
+
+    if (summary.kind == MfpImporter.Kind.WEIGHT) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("These weights are in", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                FilterChip(
+                    selected = weightUnit == MfpImporter.WeightUnit.POUNDS,
+                    onClick = { onUnitChange(MfpImporter.WeightUnit.POUNDS) },
+                    label = { Text("Pounds (lb)") }
+                )
+                FilterChip(
+                    selected = weightUnit == MfpImporter.WeightUnit.KILOGRAMS,
+                    onClick = { onUnitChange(MfpImporter.WeightUnit.KILOGRAMS) },
+                    label = { Text("Kilograms (kg)") }
+                )
             }
         }
     }
@@ -188,7 +218,7 @@ private fun PreviewSection(summary: MfpImporter.Summary, onImport: () -> Unit, o
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(containerColor = ImportGreen)
     ) {
-        Text("Import ${summary.importableRows} entries")
+        Text("Import ${summary.importableRows} ${summary.noun}")
     }
     TextButton(onClick = onReset, modifier = Modifier.fillMaxWidth()) {
         Text("Choose a different file", color = ImportTeal)
@@ -208,7 +238,7 @@ private fun ImportingSection(progress: Float) {
 }
 
 @Composable
-private fun DoneSection(inserted: Int, onReset: () -> Unit) {
+private fun DoneSection(inserted: Int, noun: String, onReset: () -> Unit) {
     Column(
         Modifier.fillMaxWidth().padding(top = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -216,12 +246,12 @@ private fun DoneSection(inserted: Int, onReset: () -> Unit) {
     ) {
         Icon(Icons.Default.CheckCircle, contentDescription = null, tint = ImportGreen, modifier = Modifier.size(56.dp))
         Text(
-            if (inserted > 0) "Imported $inserted entries" else "Nothing new to import",
+            if (inserted > 0) "Imported $inserted $noun" else "Nothing new to import",
             style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold
         )
         Text(
-            if (inserted > 0) "Your MyFitnessPal history is now in your diary. Open the Diary tab to see it."
-            else "These entries were already in your diary, so nothing was duplicated.",
+            if (inserted > 0) "Your MyFitnessPal history is now in the app. Open the Diary tab to see it."
+            else "These were already in your diary, so nothing was duplicated.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -252,6 +282,12 @@ private fun StatRow(label: String, value: String) {
     }
 }
 
+private fun kindLabel(kind: MfpImporter.Kind): String = when (kind) {
+    MfpImporter.Kind.NUTRITION -> "Entries"
+    MfpImporter.Kind.EXERCISE -> "Workouts"
+    MfpImporter.Kind.WEIGHT -> "Weigh-ins"
+}
+
 private fun dateRangeText(summary: MfpImporter.Summary): String {
     val start = summary.startDate ?: return "—"
     val end = summary.endDate ?: return "—"
@@ -277,7 +313,7 @@ private fun MfpExportGuideDialog(onDismiss: () -> Unit) {
             ) {
                 Text("Getting your MyFitnessPal data", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 Text(
-                    "MyFitnessPal lets you export your food diary as a CSV file. There are two ways to get it:",
+                    "MyFitnessPal can export your food diary, exercise, and weight as CSV files. There are two ways to get them:",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -287,8 +323,8 @@ private fun MfpExportGuideDialog(onDismiss: () -> Unit) {
                     steps = listOf(
                         "On a computer, sign in at myfitnesspal.com.",
                         "Go to your account settings and open \"Export Data\".",
-                        "Request the Nutrition export. MyFitnessPal emails you a CSV file.",
-                        "Save the CSV to your phone, then come back here and choose it."
+                        "Request your data. MyFitnessPal emails you CSV files (Nutrition, Exercise, Measurements).",
+                        "Save the files to your phone, then come back here and choose one."
                     ),
                     note = "MyFitnessPal keeps the one-tap export behind their Premium plan."
                 )
@@ -298,8 +334,8 @@ private fun MfpExportGuideDialog(onDismiss: () -> Unit) {
                     steps = listOf(
                         "If you don't have Premium, you can still ask MyFitnessPal for a copy of your data.",
                         "In MyFitnessPal, go to Settings, then Privacy Center, and request a copy of your data.",
-                        "They'll email you an archive within a few days. It includes your nutrition history as CSV.",
-                        "Save that CSV to your phone and choose it here."
+                        "They'll email you an archive within a few days. It includes your nutrition, exercise, and weight history as CSV.",
+                        "Save the files to your phone and choose them here, one at a time."
                     ),
                     note = "This is your data. MyFitnessPal has to provide it on request."
                 )
