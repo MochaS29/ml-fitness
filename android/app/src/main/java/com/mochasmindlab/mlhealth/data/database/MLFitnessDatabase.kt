@@ -112,6 +112,10 @@ interface FoodDao {
     @Insert
     suspend fun insert(entry: FoodEntry)
 
+    /** Entries within a half-open date range [start, end). Used by history import to dedupe. */
+    @Query("SELECT * FROM food_entries WHERE date >= :start AND date < :end")
+    suspend fun getEntriesBetween(start: Date, end: Date): List<FoodEntry>
+
     @Update
     suspend fun update(entry: FoodEntry)
 

@@ -191,6 +191,9 @@ fun MoreScreen(
                 MoreMenuItem("Export Data", Icons.Default.Download) {
                     navController.navigate("export")
                 },
+                MoreMenuItem("Import History", Icons.Default.Upload) {
+                    navController.navigate("import_history")
+                },
                 MoreMenuItem("Privacy", Icons.Default.Lock) {
                     navController.navigate("privacy")
                 }
