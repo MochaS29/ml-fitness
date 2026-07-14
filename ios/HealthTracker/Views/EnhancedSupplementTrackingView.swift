@@ -351,27 +351,32 @@ struct PresetSupplementsView: View {
     var body: some View {
         NavigationView {
             List(presetSupplements) { supplement in
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(supplement.name)
-                        .font(.headline)
-                    
-                    if !supplement.brand.isEmpty {
-                        Text(supplement.brand)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                // A real Button, not .onTapGesture: taps on List rows via
+                // onTapGesture fire unreliably, which made this list feel like it
+                // "refused" to add anything.
+                Button(action: { addPresetSupplement(supplement) }) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(supplement.name)
+                            .font(.headline)
+                            .foregroundColor(.primary)
+
+                        if !supplement.brand.isEmpty {
+                            Text(supplement.brand)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+
+                        if !supplement.nutrients.isEmpty {
+                            Text("\(supplement.nutrients.count) nutrients")
+                                .font(.caption)
+                                .foregroundColor(.blue)
+                        }
                     }
-                    
-                    if !supplement.nutrients.isEmpty {
-                        Text("\(supplement.nutrients.count) nutrients")
-                            .font(.caption)
-                            .foregroundColor(.blue)
-                    }
+                    .padding(.vertical, 4)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
-                .padding(.vertical, 4)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    addPresetSupplement(supplement)
-                }
+                .buttonStyle(.plain)
             }
             .navigationTitle("Common Supplements")
             .navigationBarItems(

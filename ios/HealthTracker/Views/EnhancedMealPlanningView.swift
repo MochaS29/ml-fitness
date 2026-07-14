@@ -1221,24 +1221,10 @@ struct CalendarGridView: View {
             }
         }
 
-        // If no diary entries, fall back to meal plan schedule for this weekday
-        let hasDiaryEntry = mealDots.hasBreakfast || mealDots.hasLunch || mealDots.hasDinner || mealDots.hasSnack
-        if !hasDiaryEntry, let plan = manager.selectedPlanType {
-            let weekdayIndex = calendar.component(.weekday, from: date) - 1
-            let dayName = weekdayNames[weekdayIndex]
-            // Cycle through weeks using absolute week number
-            let weekOfYear = calendar.component(.weekOfYear, from: date)
-            let weekIndex = plan.monthlyPlans.isEmpty ? 0 : (weekOfYear - 1) % plan.monthlyPlans.count
-            guard weekIndex < plan.monthlyPlans.count else { return mealDots }
-            let week = plan.monthlyPlans[weekIndex]
-            if let day = week.days.first(where: { $0.dayName == dayName }) {
-                mealDots.hasBreakfast = true
-                mealDots.hasLunch = true
-                mealDots.hasDinner = true
-                mealDots.hasSnack = !day.snacks.isEmpty
-            }
-        }
-
+        // Dots represent meals actually added to the diary for this date. We do
+        // NOT fall back to the meal-plan template schedule: doing so painted dots
+        // on every day even when nothing had been logged or added yet, which read
+        // as "meals exist here" when they didn't. A day with no entries shows no dots.
         return mealDots
     }
 }

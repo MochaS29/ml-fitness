@@ -5,11 +5,21 @@ struct FoodTrackingView: View {
     @State private var showingAddFood = false
     @State private var selectedMealType = MealType.breakfast
     
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \FoodEntry.timestamp, ascending: false)],
-        animation: .default)
-    private var foods: FetchedResults<FoodEntry>
-    
+    @FetchRequest private var foods: FetchedResults<FoodEntry>
+
+    /// Scope the list + summary to a single day. Without this the view fetched
+    /// every FoodEntry ever, so once history exists (e.g. an imported diary) the
+    /// "Today's Summary" summed the whole history and every past meal showed here.
+    init() {
+        let cal = Calendar.current
+        let start = cal.startOfDay(for: Date())
+        let end = cal.date(byAdding: .day, value: 1, to: start) ?? start
+        _foods = FetchRequest(
+            sortDescriptors: [NSSortDescriptor(keyPath: \FoodEntry.timestamp, ascending: false)],
+            predicate: NSPredicate(format: "date >= %@ AND date < %@", start as NSDate, end as NSDate),
+            animation: .default)
+    }
+
     var body: some View {
         NavigationView {
             VStack {
