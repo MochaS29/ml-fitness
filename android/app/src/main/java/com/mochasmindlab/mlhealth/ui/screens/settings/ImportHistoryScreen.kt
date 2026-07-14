@@ -103,13 +103,13 @@ private fun IdleSection(onChooseFile: () -> Unit, onShowGuide: () -> Unit) {
             Icon(Icons.Default.Download, contentDescription = null, tint = ImportGreen, modifier = Modifier.size(40.dp))
             Column {
                 Text("Import your history", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Text("MyFitnessPal food, exercise & weight", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Food, exercise & weight history", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
 
     Text(
-        "Switching from MyFitnessPal? Bring your history with you. Import your food diary, workouts, and weight so you don't start from scratch.",
+        "Coming from another fitness app? Bring your history with you. Import your food diary, workouts, and weight so you don't start from scratch.",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
@@ -121,11 +121,11 @@ private fun IdleSection(onChooseFile: () -> Unit, onShowGuide: () -> Unit) {
     ) {
         Icon(Icons.Default.UploadFile, contentDescription = null)
         Spacer(Modifier.width(8.dp))
-        Text("Choose a MyFitnessPal CSV")
+        Text("Choose a CSV file")
     }
 
     Text(
-        "Works with the Nutrition, Exercise, and Measurement files. Import one at a time.",
+        "Works with exported food, exercise, and weight files. Import one at a time.",
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
@@ -133,7 +133,7 @@ private fun IdleSection(onChooseFile: () -> Unit, onShowGuide: () -> Unit) {
     TextButton(onClick = onShowGuide) {
         Icon(Icons.Default.HelpOutline, contentDescription = null, tint = ImportTeal)
         Spacer(Modifier.width(6.dp))
-        Text("How do I get my MyFitnessPal data?", color = ImportTeal)
+        Text("How do I export my data?", color = ImportTeal)
     }
 }
 
@@ -250,7 +250,7 @@ private fun DoneSection(inserted: Int, noun: String, onReset: () -> Unit) {
             style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold
         )
         Text(
-            if (inserted > 0) "Your MyFitnessPal history is now in the app. Open the Diary tab to see it."
+            if (inserted > 0) "Your history is now in the app. Open the Diary tab to see it."
             else "These were already in your diary, so nothing was duplicated.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -311,9 +311,9 @@ private fun MfpExportGuideDialog(onDismiss: () -> Unit) {
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(18.dp)
             ) {
-                Text("Getting your MyFitnessPal data", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text("Getting your data from another app", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 Text(
-                    "MyFitnessPal can export your food diary, exercise, and weight as CSV files. There are two ways to get them:",
+                    "Most fitness apps can export your food diary, exercise, and weight as CSV files. There are usually two ways to get them:",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -321,23 +321,23 @@ private fun MfpExportGuideDialog(onDismiss: () -> Unit) {
                     number = "1",
                     title = "Export from your account (fastest)",
                     steps = listOf(
-                        "On a computer, sign in at myfitnesspal.com.",
-                        "Go to your account settings and open \"Export Data\".",
-                        "Request your data. MyFitnessPal emails you CSV files (Nutrition, Exercise, Measurements).",
+                        "On a computer, sign in to your current app's website.",
+                        "Open its account or data settings and look for an Export Data option.",
+                        "Request your data. Many apps email you CSV files for food, exercise, and measurements.",
                         "Save the files to your phone, then come back here and choose one."
                     ),
-                    note = "MyFitnessPal keeps the one-tap export behind their Premium plan."
+                    note = "Some apps keep the one-tap export behind a paid plan."
                 )
                 GuideBlock(
                     number = "2",
                     title = "Request your data for free",
                     steps = listOf(
-                        "If you don't have Premium, you can still ask MyFitnessPal for a copy of your data.",
-                        "In MyFitnessPal, go to Settings, then Privacy Center, and request a copy of your data.",
-                        "They'll email you an archive within a few days. It includes your nutrition, exercise, and weight history as CSV.",
+                        "If export isn't on the free plan, you can still ask the app for a copy of your data.",
+                        "In the app, open Settings, then look for a Privacy Center or a data request option.",
+                        "They'll email you an archive within a few days. It includes your food, exercise, and weight history as CSV.",
                         "Save the files to your phone and choose them here, one at a time."
                     ),
-                    note = "This is your data. MyFitnessPal has to provide it on request."
+                    note = "This is your data. The app has to provide it on request."
                 )
                 Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(containerColor = ImportGreen)) {
                     Text("Got it")

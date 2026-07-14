@@ -57,13 +57,13 @@ struct ImportHistoryView: View {
         VStack(alignment: .leading, spacing: 18) {
             heroCard
 
-            Text("Switching from MyFitnessPal? Bring your history with you. Import your food diary, workouts, and weight so you don't start from scratch.")
+            Text("Coming from another fitness app? Bring your history with you. Import your food diary, workouts, and weight so you don't start from scratch.")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
             Button(action: { showingFileImporter = true }) {
-                Label("Choose a MyFitnessPal CSV", systemImage: "doc.badge.plus")
+                Label("Choose a CSV file", systemImage: "doc.badge.plus")
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
@@ -72,12 +72,12 @@ struct ImportHistoryView: View {
                     .cornerRadius(12)
             }
 
-            Text("Works with the Nutrition, Exercise, and Measurement files. Import one at a time.")
+            Text("Works with exported food, exercise, and weight files. Import one at a time.")
                 .font(.caption)
                 .foregroundColor(.secondary)
 
             Button(action: { showingGuide = true }) {
-                Label("How do I get my MyFitnessPal data?", systemImage: "questionmark.circle")
+                Label("How do I export my data?", systemImage: "questionmark.circle")
                     .font(.subheadline)
                     .foregroundColor(.mindfulTeal)
             }
@@ -121,7 +121,7 @@ struct ImportHistoryView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Import your history")
                     .font(.headline)
-                Text("MyFitnessPal food, exercise & weight")
+                Text("Food, exercise & weight history")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
@@ -247,7 +247,7 @@ struct ImportHistoryView: View {
                 .font(.title3).fontWeight(.bold)
                 .multilineTextAlignment(.center)
             Text(inserted > 0
-                 ? "Your MyFitnessPal history is now in the app. Open the Diary tab to see it."
+                 ? "Your history is now in the app. Open the Diary tab to see it."
                  : "These were already in your diary, so nothing was duplicated.")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
@@ -319,7 +319,7 @@ struct ImportHistoryView: View {
                 let text = try String(contentsOf: url, encoding: .utf8)
                 preview(text)
             } catch {
-                stage = .failed("We couldn't read that file. Make sure it's a CSV from your MyFitnessPal export.")
+                stage = .failed("We couldn't read that file. Make sure it's a CSV export from your other app.")
             }
         case .failure:
             stage = .failed("No file was selected.")
@@ -374,10 +374,10 @@ struct MFPExportGuideView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
-                Text("Getting your MyFitnessPal data")
+                Text("Getting your data from another app")
                     .font(.title2).fontWeight(.bold)
 
-                Text("MyFitnessPal can export your food diary, exercise, and weight as CSV files. There are two ways to get them:")
+                Text("Most fitness apps can export your food diary, exercise, and weight as CSV files. There are usually two ways to get them:")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -386,24 +386,24 @@ struct MFPExportGuideView: View {
                     number: "1",
                     title: "Export from your account (fastest)",
                     steps: [
-                        "On a computer, sign in at myfitnesspal.com.",
-                        "Go to your account settings and open \"Export Data\".",
-                        "Request your data. MyFitnessPal emails you CSV files (Nutrition, Exercise, Measurements).",
+                        "On a computer, sign in to your current app's website.",
+                        "Open its account or data settings and look for an Export Data option.",
+                        "Request your data. Many apps email you CSV files for food, exercise, and measurements.",
                         "Save the files to your phone (AirDrop, email, or your Files app), then come back here and choose one."
                     ],
-                    note: "MyFitnessPal keeps the one-tap export behind their Premium plan."
+                    note: "Some apps keep the one-tap export behind a paid plan."
                 )
 
                 guideBlock(
                     number: "2",
                     title: "Request your data for free",
                     steps: [
-                        "If you don't have Premium, you can still ask MyFitnessPal for a copy of your data.",
-                        "In MyFitnessPal, go to Settings, then Privacy Center, and request a copy of your data (a data / privacy request).",
-                        "They'll email you an archive within a few days. It includes your nutrition, exercise, and weight history as CSV.",
+                        "If export isn't on the free plan, you can still ask the app for a copy of your data.",
+                        "In the app, open Settings, then look for a Privacy Center or a data request option.",
+                        "They'll email you an archive within a few days. It includes your food, exercise, and weight history as CSV.",
                         "Save the files to your phone and choose them here, one at a time."
                     ],
-                    note: "This is your data. MyFitnessPal has to provide it on request."
+                    note: "This is your data. The app has to provide it on request."
                 )
 
                 Text("Import one file at a time. We'll detect whether it's food, exercise, or weight and show a preview before importing.")
