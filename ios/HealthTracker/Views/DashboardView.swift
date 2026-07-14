@@ -107,8 +107,14 @@ struct DashboardView: View {
                     // Detailed Analytics
                     detailedAnalyticsSection
                   } else {
-                    // Brand-new / empty day — an inviting quick-start instead of a wall of zeros
+                    // Brand-new / empty day — an inviting quick-start instead of a wall of zeros.
                     gettingStartedSection
+
+                    // Always-relevant tiles: Steps come from HealthKit passively, and
+                    // Weight/Water/Exercise show the user's goals, so surface them even
+                    // before anything is logged today. The nutrition donut and AI
+                    // insight/analytics sections stay hidden until food is logged.
+                    metricsOverview
                   }
                 } else {
                     // Show loading placeholder

@@ -200,6 +200,12 @@ fun MLFitnessNavigation(
                 )
             }
 
+            composable("import_history") {
+                com.mochasmindlab.mlhealth.ui.screens.settings.ImportHistoryScreen(
+                    navController = navController
+                )
+            }
+
             // Food preferences = allergens + dietary restrictions (same screen).
             composable("food_preferences") {
                 com.mochasmindlab.mlhealth.ui.screens.preferences.AllergenPreferencesScreen(navController)

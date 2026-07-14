@@ -13,7 +13,12 @@ struct HealthTrackerApp: App {
     @State private var showQuickSetup = false
     @State private var showReminderSetup = false
     @State private var showWhatsNew = false
-    @AppStorage("lastSeenAppVersion") private var lastSeenAppVersion = ""
+    @AppStorage("lastSeenWhatsNewID") private var lastSeenWhatsNewID = ""
+
+    // Bump this ONLY when there's a What's New worth showing, and update the
+    // `features` list in WhatsNewView to match. It is intentionally NOT tied to
+    // the app version, so routine build bumps do not pop the sheet.
+    private let whatsNewID = "2.5.0-meal-planning"
 
     // Check if running UI tests
     private var isUITesting: Bool {
@@ -30,9 +35,15 @@ struct HealthTrackerApp: App {
     }
 
     private func checkWhatsNew() {
-        let current = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-        if current != lastSeenAppVersion && !current.isEmpty {
-            lastSeenAppVersion = current
+        // First run under ID-based gating: adopt the current ID silently so the
+        // sheet doesn't fire for people already using the app (or new users who
+        // just finished onboarding). Only a future bump of `whatsNewID` shows it.
+        if lastSeenWhatsNewID.isEmpty {
+            lastSeenWhatsNewID = whatsNewID
+            return
+        }
+        if whatsNewID != lastSeenWhatsNewID {
+            lastSeenWhatsNewID = whatsNewID
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                 showWhatsNew = true
             }

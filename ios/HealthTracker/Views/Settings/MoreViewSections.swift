@@ -312,6 +312,14 @@ struct SettingsSupportSection: View {
                 )
             }
 
+            NavigationLink(destination: ImportHistoryView()) {
+                MoreMenuItem(
+                    icon: "square.and.arrow.down",
+                    title: "Import History",
+                    color: .wellnessGreen
+                )
+            }
+
             Button(action: { showingSettings = true }) {
                 MoreMenuItem(
                     icon: "gearshape.fill",
