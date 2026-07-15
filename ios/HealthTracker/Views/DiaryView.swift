@@ -16,6 +16,7 @@ struct DiaryView: View {
     @State private var showingGoalsSetup = false
     @State private var showingShareSheet = false
     @State private var shareText = ""
+    @State private var showingDatePicker = false
 
     // Read goals reactively from UserDefaults so Day's Nutrition stays in sync
     // with SimpleGoalsView edits without depending on viewModel.dailySummary
@@ -163,6 +164,28 @@ struct DiaryView: View {
             .sheet(isPresented: $showingShareSheet) {
                 ShareSheet(items: [shareText])
             }
+            .sheet(isPresented: $showingDatePicker) {
+                NavigationView {
+                    DatePicker(
+                        "Jump to date",
+                        selection: $selectedDate,
+                        displayedComponents: [.date]
+                    )
+                    .datePickerStyle(.graphical)
+                    .padding()
+                    .navigationTitle("Select a date")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button("Today") { selectedDate = Date(); showingDatePicker = false }
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Done") { showingDatePicker = false }
+                        }
+                    }
+                }
+                .presentationDetents([.medium, .large])
+            }
             .onChange(of: selectedDate) {
                 updateFetchRequests()
                 updateDailySummary()
@@ -190,10 +213,15 @@ struct DiaryView: View {
             
             Spacer()
             
-            Button(action: { /* Show date picker */ }) {
+            Button(action: { showingDatePicker = true }) {
                 VStack(spacing: 4) {
-                    Text(selectedDate, style: .date)
-                        .font(.headline)
+                    HStack(spacing: 4) {
+                        Text(selectedDate, style: .date)
+                            .font(.headline)
+                        Image(systemName: "chevron.down")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
                     if Calendar.current.isDateInToday(selectedDate) {
                         Text("Today")
                             .font(.caption)

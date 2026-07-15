@@ -58,9 +58,14 @@ struct NutritionDetailView: View {
             startDate = calendar.date(byAdding: .day, value: -29, to: calendar.startOfDay(for: now)) ?? now
         }
 
+        // Upper bound at the end of today so future-dated entries (e.g. from
+        // "Add Month to Diary", which plans meals for the rest of the month) are
+        // not counted into Today/Week/Month totals.
+        let endDate = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)) ?? now
+
         return allEntries.filter { entry in
             guard let ts = entry.timestamp else { return false }
-            return ts >= startDate
+            return ts >= startDate && ts < endDate
         }
     }
 
