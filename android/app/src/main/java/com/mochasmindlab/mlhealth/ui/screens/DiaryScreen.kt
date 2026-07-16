@@ -36,7 +36,8 @@ fun DiaryScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val dateFormatter = SimpleDateFormat("EEEE, MMMM d", Locale.getDefault())
-    
+    var showDatePicker by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -46,11 +47,22 @@ fun DiaryScreen(
                             "Food Diary",
                             fontWeight = FontWeight.Bold
                         )
-                        Text(
-                            dateFormatter.format(uiState.selectedDate),
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.clickable { showDatePicker = true }
+                        ) {
+                            Text(
+                                dateFormatter.format(uiState.selectedDate),
+                                fontSize = 14.sp,
+                                color = Color.White.copy(alpha = 0.9f)
+                            )
+                            Icon(
+                                Icons.Default.ArrowDropDown,
+                                contentDescription = "Pick a date",
+                                tint = Color.White.copy(alpha = 0.9f),
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
                     }
                 },
                 actions = {
@@ -72,6 +84,40 @@ fun DiaryScreen(
             )
         }
     ) { paddingValues ->
+        if (showDatePicker) {
+            // Open the picker highlighting the current day. DatePicker works in UTC
+            // millis, so convert the local selected day to UTC midnight for the
+            // initial value, and convert the picked UTC day back to local noon so
+            // the header label and the day-bucketed queries agree.
+            val initMillis = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+                val local = Calendar.getInstance().apply { time = uiState.selectedDate }
+                set(local.get(Calendar.YEAR), local.get(Calendar.MONTH), local.get(Calendar.DAY_OF_MONTH), 0, 0, 0)
+                set(Calendar.MILLISECOND, 0)
+            }.timeInMillis
+            val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initMillis)
+            DatePickerDialog(
+                onDismissRequest = { showDatePicker = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val utc = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply { timeInMillis = millis }
+                            val local = Calendar.getInstance().apply {
+                                set(utc.get(Calendar.YEAR), utc.get(Calendar.MONTH), utc.get(Calendar.DAY_OF_MONTH), 12, 0, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }
+                            viewModel.loadDiaryData(local.time)
+                        }
+                        showDatePicker = false
+                    }) { Text("OK") }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+                }
+            ) {
+                DatePicker(state = datePickerState)
+            }
+        }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

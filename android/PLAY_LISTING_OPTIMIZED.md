@@ -47,9 +47,9 @@ Snap a photo to count calories. Macro tracker + meal plans. Pay once, no sub.
 ## 3. Full Description — **4000 chars** (keyword-indexed; write for humans first)
 
 ```
-Counting calories shouldn't be a chore. Snap a photo of your meal and our AI food scanner identifies every item with calories, protein, carbs, fiber, and fat — instantly. No tedious manual logging. Or search 53,000+ foods and scan barcodes when you want.
+Counting calories shouldn't be a chore. Snap a photo of your meal and our AI food scanner identifies every item with calories, protein, carbs, fiber, and fat, instantly. No tedious manual logging. Or search 53,000+ foods and scan barcodes when you want.
 
-ML Fitness is the all-in-one calorie counter, macro tracker, and meal planner that respects your privacy and your wallet. Download free, unlock Pro once — no subscriptions, ever.
+ML Fitness is the all-in-one calorie counter, macro tracker, and meal planner that respects your privacy and your wallet. Download free, unlock Pro once. No subscriptions.
 
 AI MEAL SCANNER
 - Snap a photo of any meal to count calories instantly
@@ -66,9 +66,14 @@ SMART FOOD SEARCH & BARCODE SCANNER
 COMPLETE FOOD DIARY & CALORIE COUNTER
 - Track breakfast, lunch, dinner, and snacks
 - Daily totals for calories, protein, carbs, fat, and fiber
-- Set custom goals — including a high-fiber goal for heart and cholesterol health
-- Navigate between dates to review your history
+- Set custom goals, including a high-fiber goal for heart and cholesterol health
+- Tap the date to jump to any day with a calendar
 - Logging streak counter to keep you motivated
+
+IMPORT YOUR HISTORY
+- Switching from another app? Bring your food, exercise, and weight history with you
+- Import from a CSV export so you don't start over
+- Your past days land right where they belong in your diary
 
 MACRO TRACKER & NUTRITION GOALS
 - Track protein, carbs, fat, and fiber against personal targets
@@ -91,7 +96,7 @@ HYDRATION & SMART REMINDERS
 - Customizable reminder times
 
 SMART DASHBOARD
-- Every metric at a glance — calories, macros, fiber, steps, water, weight
+- Every metric at a glance: calories, macros, fiber, steps, water, weight
 - Progress charts and weekly trends
 - Achievements and logging streaks
 
@@ -117,14 +122,14 @@ Note: AI meal scanning and online food search require an internet connection. Al
 
 ---
 
-## 4. What's New (next release blurb — reuse per version)
+## 4. What's New (v1.1.8 / build 10 — import release)
 
 ```
-• Track fiber — set a daily fiber goal for heart & cholesterol health
-• Smoother nutrition dashboard
-• Bug fixes and performance improvements
+• Import your history: bring your food, exercise, and weight from another app via a CSV export, so you don't start over
+• Tap the date in your diary to jump to any day with a calendar
+• Fixes and polish
 
-Free to download. Unlock Pro once — no subscriptions, ever.
+Free to download. Unlock Pro once. No subscriptions.
 ```
 
 ---
