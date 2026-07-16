@@ -53,66 +53,47 @@ ML Fitness is the all-in-one calorie counter, macro tracker, and meal planner th
 
 AI MEAL SCANNER
 - Snap a photo of any meal to count calories instantly
-- AI identifies foods and calculates calories, protein, carbs, fat, and fiber
+- AI calculates calories, protein, carbs, fat, and fiber
 - Adjust portions and save straight to your food diary
-- Powered by Claude AI for accurate nutrition estimates
 
-SMART FOOD SEARCH & BARCODE SCANNER
-- 53,000+ foods from the USDA food database
-- Barcode scanner for fast packaged-food logging
+FOOD SEARCH & BARCODE SCANNER
+- 53,000+ foods from the USDA database, plus a barcode scanner
 - Recent foods for one-tap re-logging
 - Add custom foods for anything not in the database
 
-COMPLETE FOOD DIARY & CALORIE COUNTER
+FOOD DIARY & CALORIE COUNTER
 - Track breakfast, lunch, dinner, and snacks
 - Daily totals for calories, protein, carbs, fat, and fiber
-- Set custom goals, including a high-fiber goal for heart and cholesterol health
+- Set custom goals, including a high-fiber goal for heart health
 - Tap the date to jump to any day with a calendar
-- Logging streak counter to keep you motivated
 
 IMPORT YOUR HISTORY
 - Switching from another app? Bring your food, exercise, and weight history with you
 - Import from a CSV export so you don't start over
-- Your past days land right where they belong in your diary
 
-MACRO TRACKER & NUTRITION GOALS
+MACRO TRACKER & GOALS
 - Track protein, carbs, fat, and fiber against personal targets
-- Daily macro breakdown at a glance
-- Adjustable goals for weight loss, muscle building, or managing a health condition
+- Adjustable goals for weight loss, muscle building, or a health condition
 
 8 MEAL PLANS WITH 400+ RECIPES
 - Mediterranean, Keto, High Protein, Balanced, Low Carb, Paleo, Whole30, and Vegan
-- Full 4-week meal plans with real recipes and nutrition data
-- Ingredients, instructions, and macro breakdowns for every recipe
+- Full 4-week plans with recipes, ingredients, and macro breakdowns
 
 FITNESS & WEIGHT TRACKING
-- Log any exercise or activity with automatic calorie-burn estimates
+- Log any exercise with automatic calorie-burn estimates
 - Daily weight logging with trend graphs
-- Health Connect integration for steps and workouts
+- Health Connect for steps and workouts
 
-HYDRATION & SMART REMINDERS
-- Quick water tracking with a daily hydration goal
-- Smart reminders for water, meals, and weigh-ins
-- Customizable reminder times
-
-SMART DASHBOARD
-- Every metric at a glance: calories, macros, fiber, steps, water, weight
-- Progress charts and weekly trends
-- Achievements and logging streaks
+HYDRATION & REMINDERS
+- Water tracking with a daily goal
+- Smart, customizable reminders for water, meals, and weigh-ins
 
 WHY ML FITNESS
+NO SUBSCRIPTIONS. Pay once for Pro and it's yours. Other calorie counters charge $10-20 a month. We don't.
+PRIVACY FIRST. Your data stays on your device. No accounts, no tracking.
+WORKS OFFLINE. Everything except AI scanning and online food search works without internet.
 
-NO SUBSCRIPTIONS — Pay once for Pro and it's yours to keep. Other calorie counters charge $10–20 every month. We don't.
-
-PRIVACY FIRST — Your data stays on your device. No accounts, no cloud uploads, no tracking.
-
-WORKS OFFLINE — Full functionality without internet (except AI meal scanning and online food search).
-
-HEALTH CONNECT — Automatic step counting and weight sync via the official Android Health Connect platform.
-
-Perfect for weight loss, building muscle, meal prep, hitting a daily fiber goal, managing cholesterol or blood sugar, or simply eating better. Start counting calories the easy way today.
-
-Note: AI meal scanning and online food search require an internet connection. All other features work offline. Health Connect integration requires the Health Connect app from Google Play.
+Perfect for weight loss, building muscle, meal prep, hitting a fiber goal, or simply eating better. Start counting calories the easy way today.
 ```
 
 > **Keyword coverage** (woven naturally, not stuffed): *calorie counter, calorie tracker,
