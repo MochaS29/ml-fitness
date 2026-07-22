@@ -70,6 +70,11 @@ struct FoodScanResultsView: View {
                             .font(.title2)
                             .fontWeight(.bold)
                             .padding(.horizontal)
+
+                        Text("AI estimate · review and edit before saving")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
                         
                         ForEach(adjustedFoods.indices, id: \.self) { index in
                             IdentifiedFoodCard(

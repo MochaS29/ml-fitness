@@ -300,6 +300,11 @@ private fun ResultsContent(
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            Text(
+                "AI estimate · review and edit before saving",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             Spacer(modifier = Modifier.height(4.dp))
         }
 

@@ -483,10 +483,10 @@
 				INFOPLIST_FILE = HealthTracker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MindLab Fitness";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to scan supplement labels and food items";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app uses the camera to photograph meals for AI nutrition analysis and to scan supplement barcodes. Meal photos are sent securely for analysis and are not stored.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthTracker needs access to read your health data to track your fitness progress.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "HealthTracker needs permission to save your tracked meals, exercises, and weight to Apple Health.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs photo library access to select images of supplements and food";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs photo library access to select meal photos for AI nutrition analysis and to save and load food photos.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -521,10 +521,10 @@
 				INFOPLIST_FILE = HealthTracker/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MindLab Fitness";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to scan supplement labels and food items";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app uses the camera to photograph meals for AI nutrition analysis and to scan supplement barcodes. Meal photos are sent securely for analysis and are not stored.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthTracker needs access to read your health data to track your fitness progress.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "HealthTracker needs permission to save your tracked meals, exercises, and weight to Apple Health.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs photo library access to select images of supplements and food";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app needs photo library access to select meal photos for AI nutrition analysis and to save and load food photos.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -1407,28 +1407,33 @@ struct PrivacyPolicyView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
 
-                Text("Last updated: January 2025")
+                Text("Last updated: July 2026")
                     .font(.caption)
                     .foregroundColor(.secondary)
 
-                Text("Your privacy is important to us. This privacy policy explains how we collect, use, and protect your information when you use Health Tracker.")
+                Text("Your privacy is important to us. This privacy policy explains how we collect, use, and protect your information when you use MindLab Fitness.")
 
                 Group {
-                    Text("Information We Collect")
+                    Text("Your Data Stays on Your Device")
                         .font(.headline)
                         .padding(.top)
-                    Text("• Health and fitness data you enter")
-                    Text("• Device information for app functionality")
-                    Text("• Usage analytics to improve the app")
+                    Text("• Health and fitness data you enter is stored on your device (and in iCloud if enabled)")
+                    Text("• No account is required and we run no analytics or tracking")
+                    Text("• We never use your health data to train AI models")
                 }
 
                 Group {
-                    Text("How We Use Your Information")
+                    Text("AI Meal Scanner")
                         .font(.headline)
                         .padding(.top)
-                    Text("• To provide personalized health insights")
-                    Text("• To track your progress toward goals")
-                    Text("• To improve app features and performance")
+                    Text("When you scan a meal, the photo is sent over a secure connection to Anthropic's Claude, our AI provider, which identifies the food and estimates nutrition. Results are stored only on your device. A random install identifier (not tied to your identity) accompanies the request for rate limiting. If you don't use the scanner, no photos leave your device.")
+                }
+
+                Group {
+                    Text("Other Online Features")
+                        .font(.headline)
+                        .padding(.top)
+                    Text("Food search uses USDA FoodData Central and barcode lookup uses Open Food Facts. Only your search text or the barcode is sent, never your health data.")
                 }
 
                 Group {
@@ -1442,7 +1447,14 @@ struct PrivacyPolicyView: View {
                     Text("Your Rights")
                         .font(.headline)
                         .padding(.top)
-                    Text("You can export or delete your data at any time through the app settings. We never share your personal health information with third parties without your consent.")
+                    Text("You can export or delete your data at any time through the app settings. We never share your personal health information with third parties.")
+                    Text("Full policy: mochasmindlab.com/privacy.html")
+                        .foregroundColor(.blue)
+                        .onTapGesture {
+                            if let url = URL(string: "https://mochasmindlab.com/privacy.html") {
+                                UIApplication.shared.open(url)
+                            }
+                        }
                 }
             }
             .padding()

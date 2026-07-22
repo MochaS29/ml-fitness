@@ -67,7 +67,7 @@ struct MealPhotoAnalyzerView: View {
                     photoSelectionView
                 }
             }
-            .navigationTitle("Meal Scanner")
+            .navigationTitle("AI Meal Scanner")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -132,7 +132,7 @@ struct MealPhotoAnalyzerView: View {
                     Text("Total Calories")
                         .font(.headline)
                     Spacer()
-                    Text("\(result.items.reduce(0) { $0 + Int($1.calories) })")
+                    Text("~\(result.items.reduce(0) { $0 + Int($1.calories) })")
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(.orange)
@@ -143,7 +143,7 @@ struct MealPhotoAnalyzerView: View {
                 HStack {
                     Image(systemName: "pencil.circle")
                         .foregroundColor(.secondary)
-                    Text("Tap any item to edit")
+                    Text("AI estimate · tap any item to edit")
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Spacer()
@@ -298,6 +298,12 @@ struct MealPhotoAnalyzerView: View {
                 .font(.headline)
                 .foregroundColor(.secondary)
 
+            Text("Claude AI will identify the food and estimate nutrition.")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+
             HStack(spacing: 20) {
                 Button(action: { showingCamera = true }) {
                     Label("Camera", systemImage: "camera")
@@ -385,7 +391,7 @@ struct AnalysisItemsList: View {
             HStack {
                 Image(systemName: "info.circle")
                     .foregroundColor(.blue)
-                Text("Confidence: \(Int(result.confidence * 100))%")
+                Text("Confidence: \(Int(result.confidence * 100))% · review and edit before saving")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Spacer()

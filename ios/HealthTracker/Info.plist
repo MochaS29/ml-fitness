@@ -17,9 +17,9 @@
 		<string>remote-notification</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>This app uses the camera to scan supplement barcodes for quick entry.</string>
+	<string>This app uses the camera to photograph meals for AI nutrition analysis and to scan supplement barcodes. Meal photos are sent securely for analysis and are not stored.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to your photo library to save and load food photos.</string>
+	<string>This app needs photo library access to select meal photos for AI nutrition analysis and to save and load food photos.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>UILaunchStoryboardName</key>
