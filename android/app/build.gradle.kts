@@ -33,7 +33,7 @@ val keystoreProps = Properties().apply {
 
 android {
     namespace = "com.mochasmindlab.mlhealth"
-    compileSdk = 35
+    compileSdk = 36
 
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -42,9 +42,9 @@ android {
     defaultConfig {
         applicationId = "com.mochasmindlab.mlhealth"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 10
-        versionName = "1.1.8"
+        targetSdk = 36
+        versionCode = 11
+        versionName = "1.1.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -209,7 +209,7 @@ dependencies {
     implementation("com.google.mlkit:barcode-scanning:17.3.0")
 
     // Google Play Billing (7.0.0+ required by Play policy)
-    implementation("com.android.billingclient:billing-ktx:7.1.1")
+    implementation("com.android.billingclient:billing:8.0.0")
 
     // Play In-App Review
     implementation("com.google.android.play:review-ktx:2.0.2")

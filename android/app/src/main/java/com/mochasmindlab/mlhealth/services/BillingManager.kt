@@ -26,6 +26,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -146,13 +148,19 @@ class BillingManager @Inject constructor(
             )
             .build()
 
-        val result = billingClient.queryProductDetails(params)
-        if (result.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-            val details = result.productDetailsList?.firstOrNull()
+        // Non-ktx billing 8 uses the callback API; wrap it as a suspend call.
+        val (billingResult, productDetailsList) =
+            suspendCancellableCoroutine<Pair<BillingResult, List<ProductDetails>>> { cont ->
+                billingClient.queryProductDetailsAsync(params) { result, queryResult ->
+                    if (cont.isActive) cont.resume(result to queryResult.productDetailsList)
+                }
+            }
+        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            val details = productDetailsList.firstOrNull()
             _proProductDetails.value = details
             Log.d(TAG, "Product details loaded: ${details?.title} @ ${details?.oneTimePurchaseOfferDetails?.formattedPrice}")
         } else {
-            Log.e(TAG, "queryProductDetails failed: ${result.billingResult.debugMessage}")
+            Log.e(TAG, "queryProductDetails failed: ${billingResult.debugMessage}")
         }
     }
 
@@ -225,9 +233,14 @@ class BillingManager @Inject constructor(
             .setProductType(BillingClient.ProductType.INAPP)
             .build()
 
-        val result = billingClient.queryPurchasesAsync(params)
-        if (result.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-            val proPurchase = result.purchasesList.firstOrNull { purchase ->
+        val (billingResult, purchasesList) =
+            suspendCancellableCoroutine<Pair<BillingResult, List<Purchase>>> { cont ->
+                billingClient.queryPurchasesAsync(params) { result, purchases ->
+                    if (cont.isActive) cont.resume(result to purchases)
+                }
+            }
+        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            val proPurchase = purchasesList.firstOrNull { purchase ->
                 purchase.products.contains(PRO_PRODUCT_ID) &&
                     purchase.purchaseState == Purchase.PurchaseState.PURCHASED
             }
@@ -239,7 +252,7 @@ class BillingManager @Inject constructor(
                 Log.d(TAG, "No active Pro purchase found in Play account")
             }
         } else {
-            Log.e(TAG, "queryPurchasesAsync failed: ${result.billingResult.debugMessage}")
+            Log.e(TAG, "queryPurchasesAsync failed: ${billingResult.debugMessage}")
         }
     }
 
@@ -264,11 +277,15 @@ class BillingManager @Inject constructor(
         val params = AcknowledgePurchaseParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
             .build()
-        val result = billingClient.acknowledgePurchase(params)
-        if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+        val billingResult = suspendCancellableCoroutine<BillingResult> { cont ->
+            billingClient.acknowledgePurchase(params) { result ->
+                if (cont.isActive) cont.resume(result)
+            }
+        }
+        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
             Log.d(TAG, "Purchase acknowledged: ${purchase.orderId}")
         } else {
-            Log.e(TAG, "Acknowledge failed: ${result.debugMessage}")
+            Log.e(TAG, "Acknowledge failed: ${billingResult.debugMessage}")
         }
     }
 }
