@@ -72,77 +72,37 @@ struct PaywallView: View {
 
                     // MARK: CTA
                     VStack(spacing: 12) {
-                        // Primary CTA: free trial (if not yet started)
-                        if !TrialManager.shared.hasStartedTrial {
-                            Button(action: {
-                                TrialManager.shared.startTrial()
-                                dismiss()
-                            }) {
-                                VStack(spacing: 2) {
-                                    Text("Try Pro Free · 7 Days")
-                                        .fontWeight(.bold)
-                                    Text("No payment required · cancel anytime")
-                                        .font(.caption)
-                                        .opacity(0.85)
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
-                                .background(Color.wellnessGreen)
-                                .foregroundColor(.white)
-                                .cornerRadius(14)
-                            }
-
-                            // Secondary CTA: buy now
-                            Button(action: {
-                                Task { await storeManager.purchase() }
-                            }) {
-                                Group {
-                                    if storeManager.purchaseState == .purchasing {
-                                        ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                    } else {
+                        // Single primary CTA: buy once.
+                        // The old no-card 7-day "trial" gave full Pro away and
+                        // captured no payment (one-time IAPs can't auto-convert a
+                        // trial), so it intercepted purchase intent and converted
+                        // near zero. The free tier + 3 free scans are the
+                        // try-before-you-buy; the paywall just sells the purchase.
+                        Button(action: {
+                            FunnelAnalytics.shared.log(.buyTapped, trigger: trigger)
+                            Task { await storeManager.purchase() }
+                        }) {
+                            Group {
+                                if storeManager.purchaseState == .purchasing {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                } else {
+                                    VStack(spacing: 2) {
                                         Text("Buy Once · \(storeManager.proPriceDisplay)")
-                                            .fontWeight(.semibold)
+                                            .fontWeight(.bold)
+                                        Text("One-time purchase · no subscription")
+                                            .font(.caption)
+                                            .opacity(0.85)
                                     }
                                 }
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .background(Color(UIColor.secondarySystemBackground))
-                                .foregroundColor(.primary)
-                                .cornerRadius(14)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 14)
-                                        .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
-                                )
                             }
-                            .disabled(storeManager.purchaseState == .purchasing)
-                        } else {
-                            // Trial already used — show buy button as primary
-                            Button(action: {
-                                Task { await storeManager.purchase() }
-                            }) {
-                                Group {
-                                    if storeManager.purchaseState == .purchasing {
-                                        ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                    } else {
-                                        VStack(spacing: 2) {
-                                            Text("Upgrade to Pro · \(storeManager.proPriceDisplay)")
-                                                .fontWeight(.bold)
-                                            Text("One-time purchase · no subscription")
-                                                .font(.caption)
-                                                .opacity(0.85)
-                                        }
-                                    }
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
-                                .background(Color.wellnessGreen)
-                                .foregroundColor(.white)
-                                .cornerRadius(14)
-                            }
-                            .disabled(storeManager.purchaseState == .purchasing)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(Color.wellnessGreen)
+                            .foregroundColor(.white)
+                            .cornerRadius(14)
                         }
+                        .disabled(storeManager.purchaseState == .purchasing)
 
                         // Price anchor
                         Text("≈ \(storeManager.proWeeklyPriceDisplay)/week · yours forever")
@@ -178,6 +138,7 @@ struct PaywallView: View {
             } message: {
                 Text(alertMessage)
             }
+            .onAppear { FunnelAnalytics.shared.log(.paywallShown, trigger: trigger) }
         }
     }
 

@@ -75,6 +75,7 @@ class StoreManager: ObservableObject {
                 await transaction.finish()
                 setProStatus(true)
                 purchaseState = .purchased
+                FunnelAnalytics.shared.log(.purchaseSuccess)
 
             case .userCancelled:
                 purchaseState = .idle
@@ -88,6 +89,7 @@ class StoreManager: ObservableObject {
         } catch {
             print("Purchase failed: \(error)")
             purchaseState = .failed("Purchase failed. Please try again.")
+            FunnelAnalytics.shared.log(.purchaseFailed)
         }
     }
 
