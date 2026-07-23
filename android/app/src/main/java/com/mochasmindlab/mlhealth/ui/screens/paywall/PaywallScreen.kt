@@ -49,7 +49,7 @@ fun PaywallScreen(
     val formattedPrice = productDetails
         ?.oneTimePurchaseOfferDetails
         ?.formattedPrice
-        ?: "$6.99"
+        ?: "$8.99"
 
     Scaffold(
         topBar = {
