@@ -36,7 +36,8 @@ enum class ConnectionState { Disconnected, Connecting, Connected, Error }
 class BillingManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val prefs: PreferencesManager,
-    private val reviewRequestManager: ReviewRequestManager
+    private val reviewRequestManager: ReviewRequestManager,
+    private val funnel: FunnelAnalytics
 ) : PurchasesUpdatedListener {
 
     companion object {
@@ -194,6 +195,9 @@ class BillingManager @Inject constructor(
     override fun onPurchasesUpdated(result: BillingResult, purchases: List<Purchase>?) {
         when (result.responseCode) {
             BillingClient.BillingResponseCode.OK -> {
+                if (!purchases.isNullOrEmpty()) {
+                    funnel.log(FunnelAnalytics.Event.PURCHASE_SUCCESS)
+                }
                 purchases?.forEach { purchase ->
                     scope.launch { handlePurchase(purchase) }
                 }
@@ -203,6 +207,7 @@ class BillingManager @Inject constructor(
             }
             else -> {
                 Log.e(TAG, "Purchase error: ${result.debugMessage}")
+                funnel.log(FunnelAnalytics.Event.PURCHASE_FAILED)
             }
         }
     }
