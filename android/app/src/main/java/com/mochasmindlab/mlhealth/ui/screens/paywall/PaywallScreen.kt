@@ -43,6 +43,9 @@ fun PaywallScreen(
 
     val activity = LocalContext.current as? Activity
 
+    // Funnel: record that the paywall was shown (once per appearance).
+    LaunchedEffect(Unit) { viewModel.logPaywallShown() }
+
     val formattedPrice = productDetails
         ?.oneTimePurchaseOfferDetails
         ?.formattedPrice
@@ -220,6 +223,7 @@ fun PaywallScreen(
                 if (!isPro) {
                     Button(
                         onClick = {
+                            viewModel.logBuyTapped()
                             activity?.let { billing.launchPurchaseFlow(it) }
                         },
                         enabled = productDetails != null && activity != null,

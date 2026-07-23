@@ -3,6 +3,7 @@ package com.mochasmindlab.mlhealth.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mochasmindlab.mlhealth.services.BillingManager
+import com.mochasmindlab.mlhealth.services.FunnelAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +23,13 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class PaywallViewModel @Inject constructor(
-    val billing: BillingManager
+    val billing: BillingManager,
+    private val funnel: FunnelAnalytics
 ) : ViewModel() {
+
+    /** Funnel events: the paywall appeared, and the user tapped Buy. */
+    fun logPaywallShown() = funnel.log(FunnelAnalytics.Event.PAYWALL_SHOWN)
+    fun logBuyTapped() = funnel.log(FunnelAnalytics.Event.BUY_TAPPED)
 
     init {
         // Ensure we are connected (idempotent — no-ops if already connected).
