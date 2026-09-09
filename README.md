@@ -53,6 +53,4 @@ Per-platform and independent: iOS ships via Xcode archive → App Store Connect;
 
 ## Working in this repo
 
-See [`CLAUDE.md`](CLAUDE.md) for the full brief. Follows the shared
-[MindLab Best Practices](https://github.com/MochaS29/best-practices) (read on session init), with the
-native-only deviations documented there.
+See [`CLAUDE.md`](CLAUDE.md) for the full brief.

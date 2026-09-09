@@ -1,25 +1,11 @@
 # ML Fitness Monorepo
 
-## Best practices (read on init)
+### Repo conventions
 
-This project follows the shared **MindLab Best Practices**. On starting a session, read them:
-
-1. Read the local copy at `~/Development/best-practices/` — start with `README.md`, then `standards/`.
-2. If that path doesn't exist, pull it first:
-   `git clone https://github.com/MochaS29/best-practices ~/Development/best-practices`
-   (or run `~/Development/best-practices/scripts/sync-best-practices.sh` to refresh it).
-
-These standards govern monorepo layout (`apps/` + `platforms/`), Linear task tracking with image capture, local Supabase Docker testing with seed data, `develop`/`production` branching + Vercel deploys, documentation, the agent workflow (`/cpg`, `/pup`, `/verify-ui` + guardrail hooks), payments, stack gotchas, and the terminal status line.
-
-Project-specific instructions below **override** the shared standards where they conflict; note any deliberate deviation with a one-line reason.
-
-### Deliberate deviations from the standards
-
-- **Layout (std 01):** uses flat `ios/ + android/ + shared/`, not `apps/ + platforms/`. Reason: two pure-native apps that share no code and no backend; std 01's own note grandfathers this layout as a reference "in this style." No `platforms/` because there is no Supabase/web/infra here.
-- **Local testing & payments (std 03, 08):** N/A. No Supabase and no Stripe — the app is native-only; Pro is an App Store / Play **IAP**, and meal-scan calls the existing Vercel proxy (key server-side per std 09).
-- **Branching (std 04):** uses `main` as the develop-equivalent (allowed by std 04's note). There is no Vercel `production` branch — "production" here means a store release (App Store / Play), gated by their review, not a git branch.
-- **Task tracking (std 02):** Wired — Linear team **Mochas Mind Lab** (`MOC`), project **ML Fitness (HealthTracker)**. The build-6/7 launch work is tracked as MOC-5…MOC-10 (don't recreate it).
-- **Status line (std 06):** a custom global status line is configured in `~/.claude/settings.json`, not the shared `best-practices/templates/statusline.sh`.
+- **Layout:** uses flat `ios/ + android/ + shared/`, not `apps/ + platforms/`. Reason: two pure-native apps that share no code and no backend; this layout is intentional." No `platforms/` because there is no Supabase/web/infra here.
+- **Local testing & payments:** N/A. No Supabase and no Stripe — the app is native-only; Pro is an App Store / Play **IAP**, and meal-scan calls the existing Vercel proxy (key server-side ).
+- **Branching:** uses `main` as the develop-equivalent . There is no Vercel `production` branch — "production" here means a store release (App Store / Play), gated by their review, not a git branch.
+- **Task tracking:** Wired — Linear team **Mochas Mind Lab** (`MOC`), project **ML Fitness (HealthTracker)**. The build-6/7 launch work is tracked as MOC-5…MOC-10 (don't recreate it).
 
 One product, two native apps. Marketed as **ML Fitness** (App Store name: "Fitness & Calorie Tracker", home-screen name "MindLab Fitness"). Free + one-time Pro IAP ($8.99 CAD). Product IDs differ per store (each platform manages its own SKU): iOS `com.mochasmindlab.HealthTracker.pro`, Android `com.mochasmindlab.mlhealth.pro`.
 
