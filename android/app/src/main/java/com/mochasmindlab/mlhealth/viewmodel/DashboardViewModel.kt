@@ -9,9 +9,12 @@ import com.mochasmindlab.mlhealth.data.models.AchievementType
 import com.mochasmindlab.mlhealth.services.HealthConnectManager
 import com.mochasmindlab.mlhealth.services.LoggingStreakManager
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
+import com.mochasmindlab.mlhealth.data.models.WeightUnit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -27,6 +30,10 @@ class DashboardViewModel @Inject constructor(
     val streakManager: LoggingStreakManager
 ) : ViewModel() {
     
+    // Weights are stored in pounds; this is display only.
+    val weightUnit: StateFlow<WeightUnit> = preferencesManager.weightUnit
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WeightUnit.LBS)
+
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
     

@@ -18,6 +18,18 @@ object UnitConversions {
         }
     }
     
+    /// Weights are stored in pounds on both platforms. These two mirror the
+    /// iOS WeightUnit helpers so the apps convert identically.
+    fun fromPounds(pounds: Float, unit: WeightUnit): Float =
+        if (unit == WeightUnit.KG) lbsToKg(pounds) else pounds
+
+    fun toPounds(value: Float, unit: WeightUnit): Float =
+        if (unit == WeightUnit.KG) kgToLbs(value) else value
+
+    /// Formats a stored pounds value in the user's unit, symbol included.
+    fun formatPounds(pounds: Float, unit: WeightUnit): String =
+        String.format("%.1f %s", fromPounds(pounds, unit), unit.symbol)
+
     fun formatWeight(weight: Float, unit: WeightUnit): String {
         return when (unit) {
             WeightUnit.KG -> String.format("%.1f kg", weight)

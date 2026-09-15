@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.mochasmindlab.mlhealth.data.models.WeightUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,6 +49,20 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Appearance Section
+            item {
+                SettingsSection(title = "Units") {
+                    SettingsToggleItem(
+                        icon = Icons.Default.Scale,
+                        title = "Use Kilograms",
+                        subtitle = if (uiState.weightUnit == WeightUnit.KG) "Weights shown in kg" else "Weights shown in lbs",
+                        checked = uiState.weightUnit == WeightUnit.KG,
+                        onCheckedChange = { useKg ->
+                            viewModel.setWeightUnit(if (useKg) WeightUnit.KG else WeightUnit.LBS)
+                        }
+                    )
+                }
+            }
+
             item {
                 SettingsSection(title = "Appearance") {
                     SettingsToggleItem(

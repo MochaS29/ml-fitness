@@ -140,7 +140,13 @@ enum class Gender {
 
 @Serializable
 enum class WeightUnit {
-    KG, LBS
+    KG, LBS;
+
+    /// Short form shown next to a number. Mirrors iOS WeightUnit.symbol.
+    val symbol: String get() = when (this) {
+        KG -> "kg"
+        LBS -> "lbs"
+    }
 }
 
 @Serializable

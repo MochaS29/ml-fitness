@@ -69,6 +69,27 @@ class PreferencesManager @Inject constructor(
         val SELECTED_WEEK_INDEX = intPreferencesKey("selected_week_index")
     }
     
+    // Weight units
+    //
+    // Weights are always STORED in pounds (see MfpImporter and the iOS app);
+    // this only controls what the user is shown. Defaults to LBS so the
+    // default display matches the stored unit and matches iOS.
+    suspend fun setWeightUnit(unit: WeightUnit) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.USER_WEIGHT_UNIT] = unit.name
+        }
+    }
+
+    val weightUnit: Flow<WeightUnit> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) emit(emptyPreferences()) else throw exception
+        }
+        .map { preferences ->
+            runCatching {
+                WeightUnit.valueOf(preferences[PreferenceKeys.USER_WEIGHT_UNIT] ?: WeightUnit.LBS.name)
+            }.getOrDefault(WeightUnit.LBS)
+        }
+
     // Onboarding
     suspend fun setOnboardingCompleted(completed: Boolean) {
         dataStore.edit { preferences ->

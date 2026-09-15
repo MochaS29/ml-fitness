@@ -3,11 +3,14 @@ package com.mochasmindlab.mlhealth.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mochasmindlab.mlhealth.data.database.MLFitnessDatabase
+import com.mochasmindlab.mlhealth.data.models.WeightUnit
+import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -18,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProgressReportsViewModel @Inject constructor(
-    private val database: MLFitnessDatabase
+    private val database: MLFitnessDatabase,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
     data class DayCalories(val label: String, val calories: Double)
@@ -30,6 +34,8 @@ class ProgressReportsViewModel @Inject constructor(
         val caloriesPerDay: List<DayCalories> = emptyList(),
         val exercisePerDay: List<DayExercise> = emptyList(),
         val weightPoints: List<WeightPoint> = emptyList(),
+        // Weights are stored in pounds; this is only how they are shown.
+        val weightUnit: WeightUnit = WeightUnit.LBS,
         val errorMessage: String? = null
     )
 
@@ -41,6 +47,11 @@ class ProgressReportsViewModel @Inject constructor(
 
     init {
         loadLast7Days()
+        viewModelScope.launch {
+            preferencesManager.weightUnit.collect { unit ->
+                _uiState.update { it.copy(weightUnit = unit) }
+            }
+        }
     }
 
     fun refresh() {

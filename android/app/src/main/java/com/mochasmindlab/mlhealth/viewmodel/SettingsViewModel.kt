@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.mochasmindlab.mlhealth.data.models.WeightUnit
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -23,6 +24,7 @@ class SettingsViewModel @Inject constructor(
         val waterReminders: Boolean = true,
         val mealReminders: Boolean = true,
         val exerciseReminders: Boolean = false,
+        val weightUnit: WeightUnit = WeightUnit.LBS,
         val isGeneratingData: Boolean = false,
         val dataGenerationComplete: Boolean = false,
         val errorMessage: String? = null
@@ -62,6 +64,19 @@ class SettingsViewModel @Inject constructor(
                     _uiState.value = _uiState.value.copy(exerciseReminders = enabled)
                 }
             }
+            launch {
+                preferencesManager.weightUnit.collect { unit ->
+                    _uiState.value = _uiState.value.copy(weightUnit = unit)
+                }
+            }
+        }
+    }
+
+    /// Display only. Stored weights stay in pounds whatever this is set to.
+    fun setWeightUnit(unit: WeightUnit) {
+        _uiState.value = _uiState.value.copy(weightUnit = unit)
+        viewModelScope.launch {
+            preferencesManager.setWeightUnit(unit)
         }
     }
 

@@ -1,0 +1,5 @@
+What's new in 1.1.6
+
+• Track fiber! Set a daily fiber goal and see fiber right alongside your calories and other macros — great for heart, cholesterol, and gut health.
+• Health Connect now connects reliably on Android 14 and newer — grant access to sync your steps, active calories, and weight.
+• Nutrition dashboard polish and bug fixes.

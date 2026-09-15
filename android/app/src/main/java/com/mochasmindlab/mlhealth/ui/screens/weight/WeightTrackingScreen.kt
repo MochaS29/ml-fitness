@@ -34,6 +34,8 @@ import com.mochasmindlab.mlhealth.viewmodel.WeightViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
+import com.mochasmindlab.mlhealth.utils.UnitConversions
+import com.mochasmindlab.mlhealth.data.models.WeightUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +45,7 @@ fun WeightTrackingScreen(
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
     val currentWeight by viewModel.currentWeight.collectAsState()
+    val weightUnit by viewModel.weightUnit.collectAsState()
     val goalWeight by viewModel.goalWeight.collectAsState()
     val startingWeight by viewModel.startingWeight.collectAsState()
     val weightHistory by viewModel.weightHistory.collectAsState()
@@ -92,6 +95,7 @@ fun WeightTrackingScreen(
                     currentWeight = currentWeight.toFloat(),
                     goalWeight = goalWeight.toFloat(),
                     startingWeight = startingWeight.toFloat(),
+                    weightUnit = weightUnit,
                     onAddWeight = { showAddDialog = true }
                 )
             }
@@ -165,6 +169,7 @@ fun CurrentWeightCard(
     currentWeight: Float,
     goalWeight: Float,
     startingWeight: Float,
+    weightUnit: WeightUnit,
     onAddWeight: () -> Unit
 ) {
     Card(
@@ -191,14 +196,14 @@ fun CurrentWeightCard(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    "${String.format("%.1f", currentWeight)}",
+                    "${String.format("%.1f", UnitConversions.fromPounds(currentWeight, weightUnit))}",
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
                     color = MochaBrown
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    "lbs",
+                    weightUnit.symbol,
                     fontSize = 20.sp,
                     color = MochaBrown,
                     modifier = Modifier.padding(bottom = 8.dp)

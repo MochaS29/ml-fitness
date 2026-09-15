@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.viewmodel.ProgressReportsViewModel
+import com.mochasmindlab.mlhealth.utils.UnitConversions
 
 // TODO route name: "progress_reports"
 
@@ -114,7 +115,7 @@ fun ProgressReportsScreen(
 
                     // ---- Weight Trend Dot Chart ----
                     item {
-                        ChartCard(title = "Weight Trend", subtitle = "kg") {
+                        ChartCard(title = "Weight Trend", subtitle = uiState.weightUnit.symbol) {
                             if (uiState.weightPoints.isEmpty()) {
                                 Box(
                                     modifier = Modifier
@@ -130,7 +131,9 @@ fun ProgressReportsScreen(
                                 }
                             } else {
                                 WeightDotChart(
-                                    points = uiState.weightPoints.map { it.weight.toFloat() },
+                                    points = uiState.weightPoints.map {
+                                        UnitConversions.fromPounds(it.weight.toFloat(), uiState.weightUnit)
+                                    },
                                     labels = uiState.weightPoints.map { it.label },
                                     lineColor = ProteinBlue,
                                     modifier = Modifier

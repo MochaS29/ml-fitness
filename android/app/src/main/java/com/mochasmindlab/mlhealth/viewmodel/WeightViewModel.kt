@@ -7,6 +7,7 @@ import com.mochasmindlab.mlhealth.data.repository.WeightRepository
 import com.mochasmindlab.mlhealth.di.ApplicationScope
 import com.mochasmindlab.mlhealth.services.HealthConnectManager
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
+import com.mochasmindlab.mlhealth.data.models.WeightUnit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -25,6 +26,10 @@ class WeightViewModel @Inject constructor(
     private val healthConnectManager: HealthConnectManager,
     @ApplicationScope private val appScope: CoroutineScope
 ) : ViewModel() {
+
+    // Weights are stored in pounds; this is only how they are displayed.
+    val weightUnit: StateFlow<WeightUnit> = preferencesManager.weightUnit
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WeightUnit.LBS)
 
     private val _currentWeight = MutableStateFlow(0.0)
     val currentWeight: StateFlow<Double> = _currentWeight.asStateFlow()

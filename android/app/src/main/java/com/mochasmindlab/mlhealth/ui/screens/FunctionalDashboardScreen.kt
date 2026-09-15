@@ -20,6 +20,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.viewmodel.*
+import com.mochasmindlab.mlhealth.utils.UnitConversions
+import com.mochasmindlab.mlhealth.data.models.WeightUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +32,7 @@ fun FunctionalDashboardScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val aiInsights by viewModel.aiInsights.collectAsStateWithLifecycle()
     val streak by viewModel.streakManager.currentStreak.collectAsStateWithLifecycle()
+    val weightUnit by viewModel.weightUnit.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -221,8 +224,8 @@ fun FunctionalDashboardScreen(
                 MetricCard(
                     modifier = Modifier.weight(1f),
                     title = "Weight",
-                    value = String.format("%.1f", uiState.currentWeight),
-                    subtitle = "lbs",
+                    value = String.format("%.1f", UnitConversions.fromPounds(uiState.currentWeight.toFloat(), weightUnit)),
+                    subtitle = weightUnit.symbol,
                     icon = Icons.Default.Monitor,
                     color = BalancedPurple,
                     progress = 0.9f,
