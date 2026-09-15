@@ -196,77 +196,121 @@ struct WeightChartView: View {
     var maxWeight: Double {
         weights.map { $0.weight }.max() ?? 0
     }
-    
+
+    private let chartHeight: CGFloat = 200
+
+    /// Inset so the highest and lowest points are not drawn hard against the
+    /// top and bottom edges, where half the dot gets clipped.
+    private let verticalInset: CGFloat = 10
+
+    private var sortedWeights: [WeightDataPoint] {
+        weights.sorted { $0.date < $1.date }
+    }
+
+    /// One place that maps readings to screen points, so the line and the dots
+    /// cannot drift apart.
+    private func points(in size: CGSize) -> [CGPoint] {
+        let readings = sortedWeights
+        guard readings.count > 1 else { return [] }
+
+        let xStep = size.width / CGFloat(readings.count - 1)
+        let range = maxWeight - minWeight
+        let plotHeight = max(size.height - verticalInset * 2, 1)
+
+        return readings.enumerated().map { index, reading in
+            let x = CGFloat(index) * xStep
+            // Every reading identical: draw a flat line through the middle
+            // rather than pinning it to the bottom edge.
+            guard range > 0 else {
+                return CGPoint(x: x, y: size.height / 2)
+            }
+            let ratio = (reading.weight - minWeight) / range
+            let y = verticalInset + plotHeight - (CGFloat(ratio) * plotHeight)
+            return CGPoint(x: x, y: y)
+        }
+    }
+
+    /// Matches the one decimal place the statistics card shows. The old label
+    /// used Int(), which truncated 187.8 to "187" and disagreed with the
+    /// "Lowest" figure directly beneath it.
+    private static func weightLabel(_ value: Double) -> String {
+        String(format: "%.1f lbs", value)
+    }
+
+    private static func dateLabel(_ date: Date?) -> String {
+        guard let date else { return "" }
+        return date.formatted(.dateTime.month(.abbreviated).day())
+    }
+
     var body: some View {
         VStack(alignment: .leading) {
             Text("Weight Trend")
                 .font(.headline)
                 .padding(.horizontal)
-            
-            if weights.count > 1 {
-                // Simple line chart
-                GeometryReader { geometry in
-                    ZStack {
-                        // Grid lines
-                        Path { path in
-                            let horizontalLines = 5
-                            for i in 0...horizontalLines {
-                                let y = geometry.size.height * CGFloat(i) / CGFloat(horizontalLines)
-                                path.move(to: CGPoint(x: 0, y: y))
-                                path.addLine(to: CGPoint(x: geometry.size.width, y: y))
-                            }
-                        }
-                        .stroke(Color.lightGray.opacity(0.3), lineWidth: 1)
-                        
-                        // Line chart
-                        Path { path in
-                            let sortedWeights = weights.sorted { $0.date < $1.date }
-                            let xStep = geometry.size.width / CGFloat(sortedWeights.count - 1)
-                            let yRange = maxWeight - minWeight
-                            let yScale = yRange > 0 ? geometry.size.height / yRange : 1
-                            
-                            for (index, weight) in sortedWeights.enumerated() {
-                                let x = CGFloat(index) * xStep
-                                let y = geometry.size.height - ((weight.weight - minWeight) * yScale)
-                                
-                                if index == 0 {
-                                    path.move(to: CGPoint(x: x, y: y))
-                                } else {
-                                    path.addLine(to: CGPoint(x: x, y: y))
+
+            if sortedWeights.count > 1 {
+                HStack(alignment: .top, spacing: 8) {
+                    // Weight scale belongs on the vertical axis. It used to sit
+                    // under the chart as "min ... max" left to right, which read
+                    // as a time axis and implied weight rose when it had fallen.
+                    VStack(alignment: .trailing) {
+                        Text(Self.weightLabel(maxWeight))
+                        Spacer()
+                        Text(Self.weightLabel(minWeight))
+                    }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .frame(height: chartHeight)
+
+                    VStack(spacing: 6) {
+                        GeometryReader { geometry in
+                            ZStack {
+                                // Grid lines
+                                Path { path in
+                                    let horizontalLines = 5
+                                    for i in 0...horizontalLines {
+                                        let y = geometry.size.height * CGFloat(i) / CGFloat(horizontalLines)
+                                        path.move(to: CGPoint(x: 0, y: y))
+                                        path.addLine(to: CGPoint(x: geometry.size.width, y: y))
+                                    }
+                                }
+                                .stroke(Color.lightGray.opacity(0.3), lineWidth: 1)
+
+                                // Line chart
+                                Path { path in
+                                    for (index, point) in points(in: geometry.size).enumerated() {
+                                        if index == 0 {
+                                            path.move(to: point)
+                                        } else {
+                                            path.addLine(to: point)
+                                        }
+                                    }
+                                }
+                                .stroke(Color.mindfulTeal, lineWidth: 3)
+
+                                // Data points
+                                ForEach(Array(zip(sortedWeights, points(in: geometry.size))), id: \.0.id) { _, point in
+                                    Circle()
+                                        .fill(Color.mochaBrown)
+                                        .frame(width: 8, height: 8)
+                                        .position(point)
                                 }
                             }
                         }
-                        .stroke(Color.mindfulTeal, lineWidth: 3)
-                        
-                        // Data points
-                        ForEach(Array(weights.sorted { $0.date < $1.date }.enumerated()), id: \.element.id) { index, weight in
-                            let xStep = geometry.size.width / CGFloat(weights.count - 1)
-                            let yRange = maxWeight - minWeight
-                            let yScale = yRange > 0 ? geometry.size.height / yRange : 1
-                            let x = CGFloat(index) * xStep
-                            let y = geometry.size.height - ((weight.weight - minWeight) * yScale)
-                            
-                            Circle()
-                                .fill(Color.mochaBrown)
-                                .frame(width: 8, height: 8)
-                                .position(x: x, y: y)
+                        .frame(height: chartHeight)
+
+                        // Time runs along the horizontal axis.
+                        HStack {
+                            Text(Self.dateLabel(sortedWeights.first?.date))
+                            Spacer()
+                            Text(Self.dateLabel(sortedWeights.last?.date))
                         }
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                     }
                 }
-                .frame(height: 200)
-                .padding()
-                
-                // Weight range labels
-                HStack {
-                    Text("\(Int(minWeight)) lbs")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text("\(Int(maxWeight)) lbs")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
                 .padding(.horizontal)
+                .padding(.top, 4)
             } else {
                 Text("Not enough data for chart")
                     .foregroundColor(.secondary)
