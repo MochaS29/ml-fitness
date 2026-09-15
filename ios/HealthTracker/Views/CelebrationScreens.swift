@@ -282,7 +282,7 @@ enum CelebrationAchievement {
     var message: String {
         switch self {
         case .weightLoss(let pounds):
-            return String(format: "You've lost %.1f lbs! Keep up the amazing work!", pounds)
+            return "You've lost \(WeightUnit.current.format(pounds: pounds))! Keep up the amazing work!"
         case .exerciseGoal(let minutes, let calories):
             return "You completed \(minutes) minutes of exercise and burned \(calories) calories today!"
         case .calorieTarget(let calories, let target):

@@ -198,6 +198,8 @@ struct FeatureRow: View {
 
 // MARK: - Quick Setup View
 struct QuickSetupView: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     @EnvironmentObject var userProfileManager: UserProfileManager
     @Binding var showMainApp: Bool
     @Binding var showReminderSetup: Bool
@@ -252,7 +254,7 @@ struct QuickSetupView: View {
                         HStack {
                             TextField("Starting Weight", text: $weight)
                                 .keyboardType(.decimalPad)
-                            Text("lbs")
+                            Text(unit.symbol)
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -317,7 +319,8 @@ struct QuickSetupView: View {
 
         // Add optional fields if provided
         if let weightValue = Double(weight) {
-            profile.startingWeight = weightValue
+            // Typed in the display unit; profile stores pounds.
+            profile.startingWeight = unit.toPounds(weightValue)
         }
 
         profile.activityLevel = activityLevel

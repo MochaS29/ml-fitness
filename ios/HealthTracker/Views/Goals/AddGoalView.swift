@@ -231,7 +231,7 @@ struct AddGoalView: View {
     private func updateDefaultUnit() {
         switch selectedCategory {
         case .weightLoss, .weightGain:
-            targetUnit = "lbs"
+            targetUnit = WeightUnit.current.symbol
         case .nutrition:
             targetUnit = "calories"
         case .exercise:

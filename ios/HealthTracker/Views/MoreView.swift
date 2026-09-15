@@ -38,6 +38,8 @@ struct MoreView: View {
             DeveloperToolsSection(viewContext: viewContext)
             #endif
 
+            UnitsSection()
+
             SettingsSupportSection(
                 showingReminders: $showingReminders,
                 showingExport: $showingExport,

@@ -152,6 +152,8 @@ struct WeightDataPoint: Identifiable {
 }
 
 struct CurrentWeightCard: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     let currentWeight: Double?
     @Binding var showingAddWeight: Bool
     
@@ -162,7 +164,7 @@ struct CurrentWeightCard: View {
                 .foregroundColor(.secondary)
             
             if let weight = currentWeight {
-                Text("\(String(format: "%.1f", weight)) lbs")
+                Text(unit.format(pounds: weight))
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundColor(.mochaBrown)
                 
@@ -186,6 +188,8 @@ struct CurrentWeightCard: View {
 }
 
 struct WeightChartView: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     let weights: [WeightDataPoint]
     let timeRange: TimeRange
     
@@ -233,8 +237,8 @@ struct WeightChartView: View {
     /// Matches the one decimal place the statistics card shows. The old label
     /// used Int(), which truncated 187.8 to "187" and disagreed with the
     /// "Lowest" figure directly beneath it.
-    private static func weightLabel(_ value: Double) -> String {
-        String(format: "%.1f lbs", value)
+    private func weightLabel(_ value: Double) -> String {
+        unit.format(pounds: value)
     }
 
     private static func dateLabel(_ date: Date?) -> String {
@@ -254,9 +258,9 @@ struct WeightChartView: View {
                     // under the chart as "min ... max" left to right, which read
                     // as a time axis and implied weight rose when it had fallen.
                     VStack(alignment: .trailing) {
-                        Text(Self.weightLabel(maxWeight))
+                        Text(weightLabel(maxWeight))
                         Spacer()
-                        Text(Self.weightLabel(minWeight))
+                        Text(weightLabel(minWeight))
                     }
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -321,6 +325,8 @@ struct WeightChartView: View {
 }
 
 struct WeightStatisticsCard: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     let weights: [WeightDataPoint]
     let timeRange: TimeRange
     
@@ -352,28 +358,28 @@ struct WeightStatisticsCard: View {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 StatItem(
                     title: "Average",
-                    value: String(format: "%.1f lbs", averageWeight),
+                    value: unit.format(pounds: averageWeight),
                     icon: "chart.line.uptrend.xyaxis",
                     color: .mindfulTeal
                 )
                 
                 StatItem(
                     title: "Change",
-                    value: String(format: "%+.1f lbs", weightChange),
+                    value: unit.format(pounds: weightChange, signed: true),
                     icon: weightChange >= 0 ? "arrow.up.circle" : "arrow.down.circle",
                     color: weightChange >= 0 ? .wellnessGreen : .mindfulTeal
                 )
                 
                 StatItem(
                     title: "Lowest",
-                    value: String(format: "%.1f lbs", minWeight),
+                    value: unit.format(pounds: minWeight),
                     icon: "arrow.down.to.line",
                     color: .mindfulTeal
                 )
                 
                 StatItem(
                     title: "Highest",
-                    value: String(format: "%.1f lbs", maxWeight),
+                    value: unit.format(pounds: maxWeight),
                     icon: "arrow.up.to.line",
                     color: .mochaBrown
                 )
@@ -411,6 +417,8 @@ struct StatItem: View {
 }
 
 struct WeightHistoryCard: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     let weights: [WeightEntry]
     
     var body: some View {
@@ -427,7 +435,7 @@ struct WeightHistoryCard: View {
                 ForEach(weights) { entry in
                     HStack {
                         VStack(alignment: .leading) {
-                            Text("\(String(format: "%.1f", entry.weight)) lbs")
+                            Text(unit.format(pounds: entry.weight))
                                 .font(.headline)
                             
                             if let timestamp = entry.timestamp {
@@ -493,6 +501,9 @@ struct HealthKitCard: View {
 }
 
 struct AddWeightView: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
+
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject private var healthKitManager = HealthKitManager.shared
@@ -519,7 +530,7 @@ struct AddWeightView: View {
                             .textFieldStyle(.roundedBorder)
                             .frame(width: 100)
                             .keyboardType(.decimalPad)
-                        Text("lbs")
+                        Text(unit.symbol)
                     }
                     
                     DatePicker("Date & Time", selection: $selectedDate)
@@ -536,7 +547,8 @@ struct AddWeightView: View {
             }
             .onAppear {
                 if weight == 0 {
-                    weight = recentWeightEntries.first?.weight ?? 150
+                    let lastPounds = recentWeightEntries.first?.weight ?? 150
+                    weight = unit.fromPounds(lastPounds)
                 }
             }
             .navigationTitle("Add Weight")
@@ -558,9 +570,12 @@ struct AddWeightView: View {
     }
 
     func saveWeight() {
+        // The field is typed in the display unit; storage is always pounds.
+        let pounds = unit.toPounds(weight)
+
         let newWeight = WeightEntry(context: viewContext)
         newWeight.id = UUID()
-        newWeight.weight = weight
+        newWeight.weight = pounds
         newWeight.notes = notes.isEmpty ? nil : notes
         newWeight.timestamp = selectedDate
 
@@ -574,7 +589,7 @@ struct AddWeightView: View {
             UnifiedDataManager.shared.refreshAllData()
 
             if syncWithHealthKit {
-                healthKitManager.saveWeight(weight, date: selectedDate) { _ in
+                healthKitManager.saveWeight(pounds, date: selectedDate) { _ in
                     // Handle success/failure if needed
                 }
             }

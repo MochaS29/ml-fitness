@@ -72,6 +72,8 @@ struct OnboardingView: View {
 }
 
 struct BasicInfoView: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     @Binding var name: String
     @Binding var gender: Gender
     @Binding var birthDate: Date
@@ -133,7 +135,7 @@ struct BasicInfoView: View {
                             .keyboardType(.decimalPad)
                             .textFieldStyle(.roundedBorder)
                             .frame(maxWidth: 150)
-                        Text("lbs")
+                        Text(unit.symbol)
                             .foregroundColor(.secondary)
                     }
                     Text("This helps track your progress")
@@ -362,6 +364,8 @@ struct ConditionCard: View {
 }
 
 struct OnboardingSummaryView: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     let name: String
     let gender: Gender
     let birthDate: Date
@@ -389,7 +393,7 @@ struct OnboardingSummaryView: View {
                     ProfileSummaryRow(label: "Gender", value: gender.rawValue)
                     ProfileSummaryRow(label: "Age", value: "\(age) years")
                     if !startingWeight.isEmpty {
-                        ProfileSummaryRow(label: "Starting Weight", value: "\(startingWeight) lbs")
+                        ProfileSummaryRow(label: "Starting Weight", value: "\(startingWeight) \(unit.symbol)")
                     }
                     ProfileSummaryRow(label: "Activity Level", value: activityLevel.rawValue)
                     

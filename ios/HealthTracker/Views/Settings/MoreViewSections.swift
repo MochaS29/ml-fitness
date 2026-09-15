@@ -278,6 +278,36 @@ struct DeveloperToolsSection: View {
 
 // MARK: - Section: Settings & Support
 
+// MARK: - Section: Units
+
+struct UnitsSection: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+
+    private var weightUnit: Binding<WeightUnit> {
+        Binding(
+            get: { WeightUnit(rawValue: weightUnitRaw) ?? .pounds },
+            set: { weightUnitRaw = $0.rawValue }
+        )
+    }
+
+    var body: some View {
+        Section("Units") {
+            Picker(selection: weightUnit) {
+                ForEach(WeightUnit.allCases) { unit in
+                    Text(unit.displayName).tag(unit)
+                }
+            } label: {
+                MoreMenuItem(
+                    icon: "scalemass.fill",
+                    title: "Weight Units",
+                    color: .mindfulTeal
+                )
+            }
+            .pickerStyle(.menu)
+        }
+    }
+}
+
 struct SettingsSupportSection: View {
     @EnvironmentObject var storeManager: StoreManager
     @Binding var showingReminders: Bool

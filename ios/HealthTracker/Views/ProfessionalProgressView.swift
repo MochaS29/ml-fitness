@@ -282,7 +282,7 @@ struct ProfessionalProgressView: View {
             (date: entry.timestamp ?? Date(), value: entry.weight)
         }.sorted { $0.date < $1.date }
         
-        updateProgressData(from: data, unit: "lbs")
+        updateProgressData(from: data, unit: WeightUnit.current.symbol)
     }
     
     private func loadExerciseData(from startDate: Date, to endDate: Date) {

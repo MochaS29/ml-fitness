@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct SimpleGoalsView: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     @Environment(\.dismiss) private var dismiss
 
     @State private var stepGoalText = ""
@@ -118,7 +120,7 @@ struct SimpleGoalsView: View {
                         TextField("Target Weight", text: $weightGoalText)
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
-                        Text("lbs")
+                        Text(unit.symbol)
                             .foregroundColor(.secondary)
                     }
                 }
@@ -199,7 +201,8 @@ struct SimpleGoalsView: View {
         }
 
         // Save weight goal
-        if let weightGoal = Double(weightGoalText), weightGoal > 0 {
+        if let typedGoal = Double(weightGoalText), typedGoal > 0 {
+            let weightGoal = unit.toPounds(typedGoal)
             UserDefaults.standard.set(weightGoal, forKey: "weightGoal")
             print("Saved weight goal: \(weightGoal)")
         }

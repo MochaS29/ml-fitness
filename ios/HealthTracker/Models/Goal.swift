@@ -196,7 +196,7 @@ struct GoalTemplate {
             category: .weightLoss,
             targetType: .reachTarget,
             suggestedTarget: 10,
-            unit: "lbs",
+            unit: WeightUnit.current.symbol,
             frequency: .total,
             duration: 60
         ),
@@ -206,7 +206,7 @@ struct GoalTemplate {
             category: .weightLoss,
             targetType: .reachTarget,
             suggestedTarget: 1.5,
-            unit: "lbs",
+            unit: WeightUnit.current.symbol,
             frequency: .weekly,
             duration: 90
         ),

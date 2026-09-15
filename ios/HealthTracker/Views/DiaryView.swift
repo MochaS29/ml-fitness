@@ -1205,6 +1205,8 @@ struct WaterTrackingRow: View {
 
 
 struct WeightEntryView: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     let date: Date
     @State private var weight: String = ""
     @Environment(\.presentationMode) var presentationMode
@@ -1215,7 +1217,7 @@ struct WeightEntryView: View {
                 HStack {
                     TextField("Weight", text: $weight)
                         .keyboardType(.decimalPad)
-                    Text("lbs")
+                    Text(unit.symbol)
                 }
             }
         }

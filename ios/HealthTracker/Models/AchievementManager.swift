@@ -94,7 +94,7 @@ class AchievementManager: ObservableObject {
                 let achievement = Achievement(
                     type: .weightLoss,
                     title: "Weight Loss Milestone! 🎉",
-                    description: "You've lost \(String(format: "%.1f", weightLost)) lbs! Keep up the great work!",
+                    description: "You've lost \(WeightUnit.current.format(pounds: weightLost))! Keep up the great work!",
                     dateEarned: Date(),
                     value: weightLost,
                     target: nil

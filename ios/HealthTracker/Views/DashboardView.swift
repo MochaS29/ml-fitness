@@ -2,6 +2,8 @@ import SwiftUI
 import Charts
 
 struct DashboardView: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     @EnvironmentObject var profileManager: UserProfileManager
     @EnvironmentObject var storeManager: StoreManager
     @StateObject private var viewModel = DashboardViewModel()
@@ -544,8 +546,8 @@ struct DashboardView: View {
             
             MetricCardWithTrend(
                 title: "Weight",
-                value: String(format: "%.1f lbs", viewModel.currentWeight),
-                subtitle: String(format: "%.1f lbs to goal", viewModel.currentWeight - viewModel.targetWeight),
+                value: unit.format(pounds: viewModel.currentWeight),
+                subtitle: "\(unit.format(pounds: viewModel.currentWeight - viewModel.targetWeight)) to goal",
                 trend: viewModel.weightTrend,
                 trendValue: signedPercent(viewModel.weightTrendPercent),
                 icon: "scalemass.fill",

@@ -290,6 +290,7 @@ class UnifiedDataManager: ObservableObject {
 
     // MARK: - Weight Management
 
+    // `weight` is always pounds; `unit` is only a label recorded alongside it.
     func addWeightEntry(weight: Double, unit: String = "lbs", notes: String? = nil) {
         let entry = WeightEntry(context: context)
         entry.id = UUID()

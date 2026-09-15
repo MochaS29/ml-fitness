@@ -734,7 +734,7 @@ class DashboardViewModel: ObservableObject {
             let toGo = currentWeight - targetWeight
             recs.append(AIRecommendation(
                 title: "Stay focused on your goal",
-                description: "You're \(String(format: "%.1f", toGo)) lbs from your target weight. Keep tracking!",
+                description: "You're \(WeightUnit.current.format(pounds: toGo)) from your target weight. Keep tracking!",
                 icon: "target",
                 color: .purple,
                 actionText: "View weight trend"

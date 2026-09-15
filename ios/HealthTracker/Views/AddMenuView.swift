@@ -157,6 +157,8 @@ struct AddMenuView: View {
 
 // Quick weight add view
 struct QuickWeightAddView: View {
+    @AppStorage(WeightUnit.storageKey) private var weightUnitRaw = WeightUnit.pounds.rawValue
+    private var unit: WeightUnit { WeightUnit(rawValue: weightUnitRaw) ?? .pounds }
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) private var dismiss
 
@@ -172,7 +174,7 @@ struct QuickWeightAddView: View {
                     HStack {
                         TextField("Weight", text: $weight)
                             .keyboardType(.decimalPad)
-                        Text("lbs")
+                        Text(unit.symbol)
                             .foregroundColor(.secondary)
                     }
                     DatePicker("Date", selection: $entryDate, displayedComponents: .date)
@@ -202,7 +204,8 @@ struct QuickWeightAddView: View {
     }
     
     private func saveWeightEntry() {
-        guard let weightValue = Double(weight) else { return }
+        guard let typed = Double(weight) else { return }
+        let weightValue = unit.toPounds(typed)
 
         let entry = WeightEntry(context: viewContext)
         entry.id = UUID()
