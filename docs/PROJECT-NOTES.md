@@ -14,8 +14,8 @@ Product IDs differ per store (each platform manages its own SKU):
 ## Repo layout
 
 ```
-ios/        SwiftUI app (iOS 17+), Xcode project HealthTracker.xcodeproj. Live on the App Store (v2.4.1 / build 14)
-android/    Kotlin / Jetpack Compose app, Gradle. Play Internal Testing (v1.1.5 / build 7), Production promotion pending
+ios/        SwiftUI app (iOS 17+), Xcode project HealthTracker.xcodeproj. Live on the App Store
+android/    Kotlin / Jetpack Compose app, Gradle. Live on Google Play, production track
 shared/     Cross-platform docs: parity checklist, meal-scan proxy API contract
 ```
 
@@ -56,7 +56,7 @@ Local testing and payments: not applicable in the usual sense. The app is native
 ## Branching and release mechanics
 
 - `main` is the integration branch (the develop-equivalent). There is no Vercel `production` branch; "production" here means a store release (App Store / Play), gated by store review, not a git branch.
-- Releases are always per-platform. Versions are independent: iOS uses `MARKETING_VERSION` and the build number; Android uses `versionName` / `versionCode` in `android/app/build.gradle.kts`.
+- Releases are always per-platform. Versions are independent: iOS uses `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `ios/HealthTracker.xcodeproj`; Android uses `versionName` / `versionCode` in `android/app/build.gradle.kts`. **Those two files are the only place a shipped version number is written down** — do not restate it in README.md, CLAUDE.md or here, because that is exactly how this repo came to claim Android was still in Internal Testing at v1.1.5 while the Play listing was public at 1.1.8.
 - iOS ships via Xcode archive to App Store Connect; Android ships via `bundleRelease` to the Play Console.
 - Store metadata, screenshots and review submissions are separate per store.
 

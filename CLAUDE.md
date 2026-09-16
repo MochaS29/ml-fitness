@@ -1,7 +1,7 @@
 # ML Fitness CLAUDE.md
 
 ## What this is
-Fitness and calorie tracker for people who want simple food, meal-scan and activity logging on their phone. Marketed as MindLab Fitness (App Store name "Fitness & Calorie Tracker"). Two pure-native apps that share no code: SwiftUI in `ios/` (live on the App Store, v2.4.1 build 14) and Kotlin/Compose in `android/` (Play Internal Testing, v1.1.5 build 7). `shared/` holds cross-platform docs. No backend and no Supabase; Pro is a one-time IAP, and meal-scan calls the Vercel proxy at `mochasmindlab.com/api/v1/meal-scan`.
+Fitness and calorie tracker for people who want simple food, meal-scan and activity logging on their phone. Marketed as MindLab Fitness (App Store name "Fitness & Calorie Tracker"). Two pure-native apps that share no code: SwiftUI in `ios/` (live on the App Store) and Kotlin/Compose in `android/` (live on Google Play, production track). Neither version number is repeated here — read `MARKETING_VERSION` in the Xcode project and `versionName` in `android/app/build.gradle.kts`. `shared/` holds cross-platform docs. No backend and no Supabase; Pro is a one-time IAP, and meal-scan calls the Vercel proxy at `mochasmindlab.com/api/v1/meal-scan`.
 
 ## Run it locally
 From the repo root. No ports; both are on-device apps.
