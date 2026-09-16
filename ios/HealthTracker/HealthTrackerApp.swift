@@ -150,6 +150,7 @@ struct WelcomeScreenView: View {
                     let profile = UserProfile(name: "User", gender: .other, birthDate: Date())
                     userProfileManager.saveProfile(profile)
                     UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+                    FunnelAnalytics.shared.logOnce(.onboardingComplete, context: "skipped_welcome")
                     showMainApp = true
                 }) {
                     Text("Skip Setup")
@@ -279,6 +280,7 @@ struct QuickSetupView: View {
                     let profile = UserProfile(name: profileName, gender: .other, birthDate: Date())
                     userProfileManager.saveProfile(profile)
                     UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+                    FunnelAnalytics.shared.logOnce(.onboardingComplete, context: "skipped_quick_setup")
                     showReminderSetup = true
                 }) {
                     Text("Skip Setup")
@@ -327,6 +329,7 @@ struct QuickSetupView: View {
 
         userProfileManager.saveProfile(profile)
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+        FunnelAnalytics.shared.logOnce(.onboardingComplete, context: "quick_setup")
         showReminderSetup = true
     }
 }

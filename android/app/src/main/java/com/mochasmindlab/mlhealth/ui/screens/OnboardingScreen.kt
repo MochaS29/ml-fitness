@@ -15,18 +15,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mochasmindlab.mlhealth.data.models.*
 import com.mochasmindlab.mlhealth.ui.theme.*
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import com.mochasmindlab.mlhealth.utils.UnitConversions
+import com.mochasmindlab.mlhealth.viewmodel.OnboardingViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(
     navController: NavController,
-    preferencesManager: PreferencesManager
+    preferencesManager: PreferencesManager,
+    viewModel: OnboardingViewModel = hiltViewModel()
 ) {
     var currentStep by remember { mutableStateOf(0) }
     val scope = rememberCoroutineScope()
@@ -152,6 +155,9 @@ fun OnboardingScreen(
                                 targetWeight = targetWeight.toFloatOrNull() ?: weight.toFloatOrNull() ?: 70f
                             )
                             preferencesManager.setOnboardingCompleted(true)
+                            // Top of the funnel: this install is now activated.
+                            // Without it the paywall events have no denominator.
+                            viewModel.logOnboardingComplete()
                             navController.navigate("dashboard") {
                                 popUpTo("onboarding") { inclusive = true }
                             }

@@ -485,6 +485,20 @@ class PreferencesManager @Inject constructor(
         return fresh
     }
 
+    /**
+     * Claims the one-shot slot for a funnel event, returning true only the first
+     * time it is asked for [eventName]. Backs `FunnelAnalytics.logOnce` so the
+     * top-of-funnel milestones (onboarding_complete, first_scan) are one per
+     * install and can be used as denominators. Cleared with every other
+     * preference by Settings -> Clear Data, like the install ID above.
+     */
+    suspend fun markFunnelEventLogged(eventName: String): Boolean {
+        val key = booleanPreferencesKey("funnel_logged_$eventName")
+        if (dataStore.data.first()[key] == true) return false
+        dataStore.edit { it[key] = true }
+        return true
+    }
+
     // ===== Allergens =====
 
     private object AllergenKeys {

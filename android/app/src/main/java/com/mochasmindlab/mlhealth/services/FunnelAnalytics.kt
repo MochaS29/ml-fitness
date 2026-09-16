@@ -62,4 +62,27 @@ class FunnelAnalytics @Inject constructor(
             }
         }
     }
+
+    /**
+     * Sends [event] at most once per install.
+     *
+     * The top-of-funnel milestones are "first time" events: ONBOARDING_COMPLETE
+     * marks an activated install and FIRST_SCAN marks the first meal actually
+     * scanned, so both are denominators — one per install or they count nothing.
+     * The scanner runs many times, so the guard lives here rather than at the
+     * call site. The flag is a DataStore bool, wiped by an uninstall or Settings
+     * -> Clear Data, exactly like the anonymous install ID it is reported
+     * against. Mirrors iOS `FunnelAnalytics.logOnce`.
+     */
+    fun logOnce(event: Event, context: String? = null) {
+        scope.launch {
+            try {
+                if (prefs.markFunnelEventLogged(event.value)) {
+                    log(event, context)
+                }
+            } catch (_: Exception) {
+                // Same contract as log(): never block, retry, or crash.
+            }
+        }
+    }
 }

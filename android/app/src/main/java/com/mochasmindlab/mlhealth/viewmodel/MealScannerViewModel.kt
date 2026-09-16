@@ -7,6 +7,7 @@ import com.mochasmindlab.mlhealth.data.database.FoodDao
 import com.mochasmindlab.mlhealth.data.models.DetectedFood
 import com.mochasmindlab.mlhealth.data.models.MealAnalysis
 import com.mochasmindlab.mlhealth.services.BillingManager
+import com.mochasmindlab.mlhealth.services.FunnelAnalytics
 import com.mochasmindlab.mlhealth.services.MealAnalysisService
 import com.mochasmindlab.mlhealth.services.ReviewRequestManager
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
@@ -28,7 +29,8 @@ class MealScannerViewModel @Inject constructor(
     private val foodDao: FoodDao,
     private val preferencesManager: PreferencesManager,
     private val billingManager: BillingManager,
-    private val reviewRequestManager: ReviewRequestManager
+    private val reviewRequestManager: ReviewRequestManager,
+    private val funnel: FunnelAnalytics
 ) : ViewModel() {
 
     /** Number of free scans before the paywall kicks in, matching the iOS quota. */
@@ -76,6 +78,11 @@ class MealScannerViewModel @Inject constructor(
                     _phase.value = ScanPhase.Results
                     if (!isPro.value) preferencesManager.incrementMealScanCount()
                     reviewRequestManager.recordMealScanned()
+                    // Top of the funnel: the first meal actually scanned is the
+                    // activation step the paywall is measured against. logOnce
+                    // keeps it one per install; the free-scan counter above
+                    // cannot stand in for it because Pro users never increment.
+                    funnel.logOnce(FunnelAnalytics.Event.FIRST_SCAN)
                 }
                 .onFailure { err ->
                     _errorMessage.value = err.message ?: "An unexpected error occurred"
