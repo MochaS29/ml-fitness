@@ -55,7 +55,7 @@ final class FunnelAnalytics {
     ///
     /// The top-of-funnel milestones are "first time" events: `onboardingComplete`
     /// marks an activated install and `firstScan` marks the first meal actually
-    /// scanned, so both are denominators — one per install or they count nothing.
+    /// scanned, so both are denominators: one per install or they count nothing.
     /// Onboarding has three exits and the scanner runs many times, so the guard
     /// lives here rather than at each call site. The flag is a plain UserDefaults
     /// bool, so it is wiped by an uninstall or a Clear Data, exactly like the

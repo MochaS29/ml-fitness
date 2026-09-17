@@ -5,9 +5,9 @@ Marketed as **ML Fitness** (App Store name "Fitness & Calorie Tracker", home-scr
 Free + a one-time **Pro IAP** ($8.99 CAD).
 
 - **iOS** — SwiftUI (iOS 17+), live on the App Store
-- **Android** — Kotlin / Jetpack Compose, live on Google Play (production track)
+- **Android**: Kotlin / Jetpack Compose, live on Google Play (production track)
 
-Shipped version numbers are not repeated in prose anywhere in this repo — they go stale within a
+Shipped version numbers are not repeated in prose anywhere in this repo, they go stale within a
 release. The source of truth is the build config: `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in
 `ios/HealthTracker.xcodeproj`, and `versionName` / `versionCode` in `android/app/build.gradle.kts`.
 

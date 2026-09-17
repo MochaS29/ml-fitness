@@ -147,7 +147,7 @@ fun PrivacyScreen(navController: NavController) {
             BulletItem("Barcode lookup: barcodes you scan may be queried against Open Food Facts.")
             BulletItem("In-app purchases: handled by Google Play Billing — we never see your payment details.")
             BulletItem("Health Connect: only enabled if you grant permission. Data is read on-device.")
-            BulletItem("Anonymous usage events: so we can see where people get stuck, the app records six moments — finishing setup, your first meal scan, the upgrade screen appearing, tapping Buy, and a purchase succeeding or failing. Each sends only the event name, a timestamp and the same random install identifier the meal scanner uses, never your name or anything you logged. There is no third-party analytics SDK and no advertising tag in this app.")
+            BulletItem("Anonymous usage events: so we can see where people get stuck, the app records six moments: finishing setup, your first meal scan, the upgrade screen appearing, tapping Buy, and a purchase succeeding or failing. Each sends only the event name, a timestamp and the same random install identifier the meal scanner uses, never your name, your health data, or anything you logged. They go to our own endpoint at mochasmindlab.com. There is no third-party analytics SDK and no advertising tag in this app.")
 
             Divider()
             Text("Your rights", fontWeight = FontWeight.SemiBold)
