@@ -130,6 +130,11 @@ class MealAnalysisService: ObservableObject {
                     let result = try self?.parseClaudeResponse(data)
                     if let analysis = result {
                         self?.lastAnalysis = analysis
+                        // Top of the funnel: the first meal the user actually
+                        // scans is the activation step the paywall is measured
+                        // against. Logged here (analysis succeeded) rather than
+                        // on save, so it mirrors Android's onSuccess branch.
+                        FunnelAnalytics.shared.logOnce(.firstScan)
                         completion(.success(analysis))
                     }
                 } catch {

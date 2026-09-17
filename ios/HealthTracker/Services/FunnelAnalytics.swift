@@ -50,6 +50,23 @@ final class FunnelAnalytics {
         // Fire-and-forget: analytics must never block, retry, or crash the app.
         URLSession.shared.dataTask(with: req).resume()
     }
+
+    /// Sends `event` at most once per install.
+    ///
+    /// The top-of-funnel milestones are "first time" events: `onboardingComplete`
+    /// marks an activated install and `firstScan` marks the first meal actually
+    /// scanned, so both are denominators: one per install or they count nothing.
+    /// Onboarding has three exits and the scanner runs many times, so the guard
+    /// lives here rather than at each call site. The flag is a plain UserDefaults
+    /// bool, so it is wiped by an uninstall or a Clear Data, exactly like the
+    /// anonymous install ID it is reported against. Mirrored on Android by
+    /// `FunnelAnalytics.logOnce`.
+    func logOnce(_ event: Event, context: String? = nil) {
+        let key = "funnel_logged_\(event.rawValue)"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        log(event, context: context)
+    }
 }
 
 extension PaywallTrigger {

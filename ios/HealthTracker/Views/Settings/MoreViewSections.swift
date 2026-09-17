@@ -1437,7 +1437,7 @@ struct PrivacyPolicyView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
 
-                Text("Last updated: July 2026")
+                Text("Last updated: September 2026")
                     .font(.caption)
                     .foregroundColor(.secondary)
 
@@ -1448,8 +1448,15 @@ struct PrivacyPolicyView: View {
                         .font(.headline)
                         .padding(.top)
                     Text("• Health and fitness data you enter is stored on your device (and in iCloud if enabled)")
-                    Text("• No account is required and we run no analytics or tracking")
+                    Text("• No account is required, and we never track you across other apps or websites")
                     Text("• We never use your health data to train AI models")
+                }
+
+                Group {
+                    Text("Anonymous Usage Events")
+                        .font(.headline)
+                        .padding(.top)
+                    Text("So we can see where people get stuck, the app records six moments: finishing setup, your first meal scan, the upgrade screen appearing, tapping Buy, and a purchase succeeding or failing. Each one sends only the event name, a timestamp and the same random install identifier the meal scanner uses, never your name, your health data, or anything you logged. They go to our own endpoint at mochasmindlab.com. There is no third-party analytics SDK and no advertising tag in this app.")
                 }
 
                 Group {
