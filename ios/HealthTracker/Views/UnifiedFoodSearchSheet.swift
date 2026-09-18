@@ -403,7 +403,7 @@ struct UnifiedFoodSearchSheet: View {
             CopyFromPreviousDayView(targetDate: targetDate)
         }
         .sheet(isPresented: $showingBarcode) {
-            ProFeatureGate {
+            ProFeatureGate(trigger: .barcodeScanner) {
                 BarcodeScannerView(
                     selectedDate: Date(),
                     mealType: selectedMealType

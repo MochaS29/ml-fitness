@@ -22,12 +22,17 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.mochasmindlab.mlhealth.data.models.MealType
+import com.mochasmindlab.mlhealth.services.FunnelAnalytics
 import com.mochasmindlab.mlhealth.ui.screens.OnboardingScreen
+import com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallTrigger
+import com.mochasmindlab.mlhealth.viewmodel.FunnelViewModel
 import com.mochasmindlab.mlhealth.ui.screens.dashboard.DashboardScreen
 import com.mochasmindlab.mlhealth.ui.screens.diary.DiaryScreen
 import com.mochasmindlab.mlhealth.ui.screens.exercise.ExerciseTrackingScreen
@@ -82,6 +87,14 @@ fun MLFitnessNavigation(
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
+    // Funnel: one screen_view per route change for the tab roots and the key
+    // screens (iOS logs the same names from each view's onAppear). Onboarding
+    // steps log themselves because the step is state inside that screen.
+    val funnel: FunnelViewModel = hiltViewModel()
+    LaunchedEffect(currentRoute) {
+        screenForRoute(currentRoute)?.let { funnel.logScreen(it) }
+    }
 
     // Show the bottom bar (and its centred FAB) only on the four main tabs.
     // Detail screens use their own top-bar "+" actions, otherwise the centred
@@ -383,7 +396,17 @@ fun MLFitnessNavigation(
                 com.mochasmindlab.mlhealth.ui.screens.scanner.MealScannerScreen(navController)
             }
 
-            composable("paywall") {
+            // Navigate with paywallRoute(trigger); the trigger becomes the
+            // analytics context for paywall_shown / paywall_dismissed / buy_tapped.
+            composable(
+                PaywallTrigger.ROUTE,
+                arguments = listOf(
+                    navArgument(PaywallTrigger.ARG) {
+                        type = NavType.StringType
+                        defaultValue = PaywallTrigger.GENERAL.analyticsName
+                    }
+                )
+            ) {
                 com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallScreen(navController)
             }
 
@@ -403,11 +426,27 @@ fun MLFitnessNavigation(
 
     // Add menu bottom sheet (matching iOS sheet)
     if (showAddMenu) {
+        // Not a route, so it logs its own screen_view (iOS: AddMenuView onAppear).
+        LaunchedEffect(Unit) { funnel.logScreen(FunnelAnalytics.Screen.ADD_TO_DIARY) }
         AddMenuBottomSheet(
             onDismiss = { showAddMenu = false },
             navController = navController
         )
     }
+}
+
+/**
+ * Maps a NavHost route to the screen_view name iOS reports for the same
+ * screen. Routes not listed here are not instrumented.
+ */
+internal fun screenForRoute(route: String?): FunnelAnalytics.Screen? = when (route) {
+    Screen.Dashboard.route -> FunnelAnalytics.Screen.DASHBOARD
+    Screen.Diary.route -> FunnelAnalytics.Screen.DIARY
+    Screen.MealPlan.route -> FunnelAnalytics.Screen.MEAL_PLAN
+    Screen.More.route -> FunnelAnalytics.Screen.MORE
+    "meal_scanner" -> FunnelAnalytics.Screen.MEAL_SCANNER
+    PaywallTrigger.ROUTE -> FunnelAnalytics.Screen.PAYWALL
+    else -> null
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

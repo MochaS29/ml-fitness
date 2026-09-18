@@ -1,9 +1,18 @@
 import SwiftUI
 
+/// Where the paywall was opened from. The scanner and meal plan cases drive
+/// the hero copy; every case is reported as the `context` of the paywall
+/// funnel events, so each presentation site should pass the most specific
+/// case it can. Mirrored on Android by `PaywallTrigger`; keep the cases in step.
 enum PaywallTrigger {
     case mealScanner        // came from scanner mid-flow
-    case mealScannerLastScan // just used last free scan — show result first, then gate
-    case mealPlan           // came from meal plan lock
+    case mealScannerLastScan // just used last free scan: show result first, then gate
+    case mealPlan           // came from meal plan lock (Plan tab, plan picker)
+    case recipeBook         // "Unlock 400+ Recipes" row in My Recipe Book
+    case barcodeScanner     // Pro gate on the barcode scanner
+    case supplements        // Pro gate on supplement tracking
+    case fasting            // Pro gate on the fasting timer
+    case settings           // "Upgrade to Pro" row on the More tab
     case general            // general upgrade tap
 }
 
@@ -11,6 +20,9 @@ struct PaywallView: View {
     var trigger: PaywallTrigger = .general
     @EnvironmentObject var storeManager: StoreManager
     @Environment(\.dismiss) private var dismiss
+    // Set once a purchase or restore lands while this paywall is open, so the
+    // close can be reported as a dismissal only when nothing was bought.
+    @State private var didPurchase = false
 
     var body: some View {
         NavigationView {
@@ -138,7 +150,22 @@ struct PaywallView: View {
             } message: {
                 Text(alertMessage)
             }
-            .onAppear { FunnelAnalytics.shared.log(.paywallShown, trigger: trigger) }
+            .onAppear {
+                FunnelAnalytics.shared.logScreen(.paywall)
+                FunnelAnalytics.shared.log(.paywallShown, trigger: trigger)
+            }
+            .onChange(of: storeManager.purchaseState) { _, newValue in
+                if newValue == .purchased || newValue == .restored {
+                    didPurchase = true
+                }
+            }
+            // Fires when the sheet is swiped away, the X is tapped, or the
+            // pushed page is popped. A close after a purchase is not a drop.
+            .onDisappear {
+                if !didPurchase {
+                    FunnelAnalytics.shared.log(.paywallDismissed, trigger: trigger)
+                }
+            }
         }
     }
 
@@ -153,7 +180,9 @@ struct PaywallView: View {
             lastScanHero
         case .mealPlan:
             mealPlanHero
-        case .general:
+        // The new analytics-only triggers keep the hero the paywall showed
+        // before they existed; paywall copy changes are Mocha's call.
+        case .recipeBook, .barcodeScanner, .supplements, .fasting, .settings, .general:
             generalHero
         }
     }

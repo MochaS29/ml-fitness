@@ -168,6 +168,7 @@ struct WelcomeScreenView: View {
                 endPoint: .bottom
             )
         )
+        .onAppear { FunnelAnalytics.shared.logScreen(.onboardingWelcome) }
     }
 }
 
@@ -291,6 +292,7 @@ struct QuickSetupView: View {
             }
             .navigationTitle("Quick Setup")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear { FunnelAnalytics.shared.logScreen(.onboardingQuickSetup) }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Back") {
@@ -418,6 +420,7 @@ struct ReminderSetupView: View {
                 endPoint: .bottom
             )
         )
+        .onAppear { FunnelAnalytics.shared.logScreen(.onboardingReminders) }
     }
 
     private func enableAndContinue() {

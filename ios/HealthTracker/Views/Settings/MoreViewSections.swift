@@ -163,7 +163,7 @@ struct TrackingToolsSection: View {
             //     )
             // }
 
-            NavigationLink(destination: ProFeatureGate { IntermittentFastingView() }) {
+            NavigationLink(destination: ProFeatureGate(trigger: .fasting) { IntermittentFastingView() }) {
                 MoreMenuItem(
                     icon: "timer",
                     title: "Fasting Timer",

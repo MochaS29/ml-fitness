@@ -30,6 +30,7 @@ struct AddMenuView: View {
             listContent
                 .navigationTitle("Add to Diary")
                 .navigationBarTitleDisplayMode(.inline)
+                .onAppear { FunnelAnalytics.shared.logScreen(.addToDiary) }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Cancel") {
@@ -43,7 +44,7 @@ struct AddMenuView: View {
             case .foodSearch:
                 UnifiedFoodSearchSheet(mealType: selectedMealType, targetDate: selectedDate)
             case .barcodeScanner:
-                ProFeatureGate {
+                ProFeatureGate(trigger: .barcodeScanner) {
                     BarcodeScannerView(selectedDate: selectedDate, mealType: selectedMealType)
                 }
             case .exerciseSearch:

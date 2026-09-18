@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallTrigger
+import com.mochasmindlab.mlhealth.ui.screens.paywall.paywallRoute
 import com.mochasmindlab.mlhealth.ui.theme.MochaBrown
 
 /**
@@ -21,14 +23,18 @@ import com.mochasmindlab.mlhealth.ui.theme.MochaBrown
  *   ProFeatureGate(billing = billingManager, navController = navController) {
  *       MyProScreen()
  *   }
+ *
+ * [trigger] names the gated feature; it becomes the paywall's analytics
+ * context (mirrors the iOS ProFeatureGate `trigger`).
  */
 @Composable
 fun ProFeatureGate(
     billing: BillingManager,
     navController: NavController,
+    trigger: PaywallTrigger = PaywallTrigger.GENERAL,
     content: @Composable () -> Unit,
     lockedContent: @Composable () -> Unit = {
-        DefaultLockedOverlay(navController = navController)
+        DefaultLockedOverlay(navController = navController, trigger = trigger)
     }
 ) {
     val isPro by billing.isProUser.collectAsState()
@@ -49,7 +55,8 @@ fun ProFeatureGate(
 @Composable
 fun DefaultLockedOverlay(
     navController: NavController? = null,
-    onUnlockClick: (() -> Unit)? = null
+    onUnlockClick: (() -> Unit)? = null,
+    trigger: PaywallTrigger = PaywallTrigger.GENERAL
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -91,7 +98,7 @@ fun DefaultLockedOverlay(
                 onClick = {
                     when {
                         onUnlockClick != null -> onUnlockClick()
-                        navController != null -> navController.navigate("paywall")
+                        navController != null -> navController.navigate(paywallRoute(trigger))
                     }
                 },
                 shape = RoundedCornerShape(14.dp),

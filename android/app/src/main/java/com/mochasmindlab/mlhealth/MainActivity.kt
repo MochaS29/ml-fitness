@@ -244,7 +244,15 @@ fun MLHealthApp(
                 com.mochasmindlab.mlhealth.ui.screens.achievements.AchievementsScreen(navController = navController)
             }
 
-            composable("paywall") {
+            composable(
+                com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallTrigger.ROUTE,
+                arguments = listOf(
+                    androidx.navigation.navArgument(com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallTrigger.ARG) {
+                        type = androidx.navigation.NavType.StringType
+                        defaultValue = com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallTrigger.GENERAL.analyticsName
+                    }
+                )
+            ) {
                 com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallScreen(navController = navController)
             }
 

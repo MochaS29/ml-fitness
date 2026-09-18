@@ -151,6 +151,8 @@ struct DashboardView: View {
         .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
+            FunnelAnalytics.shared.logScreen(.dashboard)
+
             // Enable widgets after a delay to prevent initial freezing
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 withAnimation(.easeOut(duration: 0.5)) {
@@ -178,7 +180,7 @@ struct DashboardView: View {
             case .waterDetail:
                 WaterTrackingView()
             case .supplementDetail:
-                ProFeatureGate {
+                ProFeatureGate(trigger: .supplements) {
                     EnhancedSupplementTrackingView()
                 }
             case .stepDetail:

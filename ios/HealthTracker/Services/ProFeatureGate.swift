@@ -5,9 +5,12 @@ import SwiftUI
 struct ProFeatureGate<Content: View>: View {
     @EnvironmentObject var storeManager: StoreManager
     @State private var showingPaywall = false
+    /// Reported as the paywall's analytics context; name the gated feature.
+    let trigger: PaywallTrigger
     let content: () -> Content
 
-    init(@ViewBuilder content: @escaping () -> Content) {
+    init(trigger: PaywallTrigger = .general, @ViewBuilder content: @escaping () -> Content) {
+        self.trigger = trigger
         self.content = content
     }
 
@@ -19,7 +22,7 @@ struct ProFeatureGate<Content: View>: View {
         } else {
             LockedFeatureView(showingPaywall: $showingPaywall)
                 .sheet(isPresented: $showingPaywall) {
-                    PaywallView()
+                    PaywallView(trigger: trigger)
                         .environmentObject(storeManager)
                 }
         }
@@ -67,6 +70,7 @@ struct LockedFeatureView: View {
 struct ProGateModifier: ViewModifier {
     @EnvironmentObject var storeManager: StoreManager
     @State private var showingPaywall = false
+    var trigger: PaywallTrigger = .general
 
     private var isUnlocked: Bool { storeManager.isPro || TrialManager.shared.isTrialActive }
 
@@ -92,7 +96,7 @@ struct ProGateModifier: ViewModifier {
             }
             .buttonStyle(PlainButtonStyle())
             .sheet(isPresented: $showingPaywall) {
-                PaywallView()
+                PaywallView(trigger: trigger)
                     .environmentObject(storeManager)
             }
         }
@@ -101,7 +105,7 @@ struct ProGateModifier: ViewModifier {
 
 extension View {
     /// Apply an inline pro lock overlay to any view.
-    func requiresPro() -> some View {
-        modifier(ProGateModifier())
+    func requiresPro(trigger: PaywallTrigger = .general) -> some View {
+        modifier(ProGateModifier(trigger: trigger))
     }
 }

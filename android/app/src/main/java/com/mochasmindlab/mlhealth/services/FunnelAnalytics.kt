@@ -30,14 +30,38 @@ class FunnelAnalytics @Inject constructor(
         ONBOARDING_COMPLETE("onboarding_complete"),
         FIRST_SCAN("first_scan"),
         PAYWALL_SHOWN("paywall_shown"),
+        PAYWALL_DISMISSED("paywall_dismissed"),
         BUY_TAPPED("buy_tapped"),
         PURCHASE_SUCCESS("purchase_success"),
         PURCHASE_FAILED("purchase_failed"),
+        SCREEN_VIEW("screen_view"),
+    }
+
+    /**
+     * Screens reported through [logScreen]. [value] is the `context` sent with
+     * the event. Mirrors iOS `FunnelAnalytics.Screen`; keep the shared names
+     * identical on both platforms. Onboarding steps are per platform because
+     * the two onboarding flows differ (iOS: welcome, quick setup, reminders).
+     */
+    enum class Screen(val value: String) {
+        DASHBOARD("dashboard"),
+        DIARY("diary"),
+        ADD_TO_DIARY("add_to_diary"),
+        MEAL_SCANNER("meal_scanner"),
+        MEAL_PLAN("meal_plan"),
+        MORE("more"),
+        PAYWALL("paywall"),
+        ONBOARDING_WELCOME("onboarding_welcome"),
+        ONBOARDING_BASIC_INFO("onboarding_basic_info"),
+        ONBOARDING_BODY_METRICS("onboarding_body_metrics"),
+        ONBOARDING_ACTIVITY_LEVEL("onboarding_activity_level"),
+        ONBOARDING_GOALS("onboarding_goals"),
     }
 
     private val client = OkHttpClient()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val jsonMedia = "application/json".toMediaType()
+    private val screenThrottle = ScreenViewThrottle()
 
     fun log(event: Event, context: String? = null) {
         scope.launch {
@@ -84,5 +108,19 @@ class FunnelAnalytics @Inject constructor(
                 // Same contract as log(): never block, retry, or crash.
             }
         }
+    }
+
+    /**
+     * Records one SCREEN_VIEW per appearance of [screen].
+     *
+     * Compose can re-enter a screen for a single visible appearance (a
+     * configuration change recreates the composition, a bottom sheet closing
+     * over a tab), so repeats of the same screen inside a two second window are
+     * dropped. A different screen always logs. Mirrors iOS
+     * `FunnelAnalytics.logScreen`.
+     */
+    fun logScreen(screen: Screen) {
+        if (!screenThrottle.admit(screen.value)) return
+        log(Event.SCREEN_VIEW, screen.value)
     }
 }

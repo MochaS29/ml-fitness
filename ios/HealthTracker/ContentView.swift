@@ -78,7 +78,8 @@ struct ContentView: View {
                 .environmentObject(storeManager)
         }
         .sheet(isPresented: $showingPaywall) {
-            PaywallView()
+            // Only the Plan tab's Free Preview banner opens this sheet.
+            PaywallView(trigger: .mealPlan)
                 .environmentObject(storeManager)
         }
         .onAppear {

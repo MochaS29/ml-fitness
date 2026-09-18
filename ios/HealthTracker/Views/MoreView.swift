@@ -78,8 +78,9 @@ struct MoreView: View {
             AppInfoSection()
         }
         .navigationTitle("More")
+        .onAppear { FunnelAnalytics.shared.logScreen(.more) }
         .sheet(isPresented: $showingPaywall) {
-            PaywallView()
+            PaywallView(trigger: .settings)
                 .environmentObject(storeManager)
         }
         .sheet(isPresented: $showingFoodDatabase) {

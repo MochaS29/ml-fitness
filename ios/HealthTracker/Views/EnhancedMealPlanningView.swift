@@ -49,6 +49,7 @@ struct EnhancedMealPlanningView: View {
                 }
             }
             .navigationTitle("Meal Planning")
+            .onAppear { FunnelAnalytics.shared.logScreen(.mealPlan) }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
@@ -711,7 +712,7 @@ struct WeeklyMealView: View {
             }
         }
         .sheet(isPresented: $showingPaywall) {
-            PaywallView()
+            PaywallView(trigger: .mealPlan)
                 .environmentObject(storeManager)
         }
     }
@@ -2046,7 +2047,7 @@ struct MealPlanSelectorView: View {
                 }
             }
             .sheet(isPresented: $showingPaywall) {
-                PaywallView()
+                PaywallView(trigger: .mealPlan)
                     .environmentObject(storeManager)
             }
         }

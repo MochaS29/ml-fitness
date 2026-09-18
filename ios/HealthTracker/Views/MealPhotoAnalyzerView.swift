@@ -69,6 +69,7 @@ struct MealPhotoAnalyzerView: View {
             }
             .navigationTitle("AI Meal Scanner")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear { FunnelAnalytics.shared.logScreen(.mealScanner) }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") { dismiss() }

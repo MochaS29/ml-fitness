@@ -224,7 +224,7 @@ struct MyRecipeBookView: View {
 
             Spacer()
 
-            NavigationLink(destination: PaywallView().environmentObject(storeManager)) {
+            NavigationLink(destination: PaywallView(trigger: .recipeBook).environmentObject(storeManager)) {
                 Text("Upgrade")
                     .font(.caption.weight(.semibold))
                     .foregroundColor(.white)

@@ -199,6 +199,7 @@ struct DiaryView: View {
                 updateDailySummary()
             }
             .onAppear {
+                FunnelAnalytics.shared.logScreen(.diary)
                 updateDailySummary()
             }
     }

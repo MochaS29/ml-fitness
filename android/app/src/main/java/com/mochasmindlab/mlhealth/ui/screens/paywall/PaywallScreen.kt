@@ -43,8 +43,8 @@ fun PaywallScreen(
 
     val activity = LocalContext.current as? Activity
 
-    // Funnel: record that the paywall was shown (once per appearance).
-    LaunchedEffect(Unit) { viewModel.logPaywallShown() }
+    // Funnel: paywall_shown and paywall_dismissed are logged by the ViewModel,
+    // which lives exactly as long as this paywall's back-stack entry.
 
     val formattedPrice = productDetails
         ?.oneTimePurchaseOfferDetails

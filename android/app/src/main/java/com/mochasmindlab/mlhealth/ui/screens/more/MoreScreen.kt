@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallTrigger
+import com.mochasmindlab.mlhealth.ui.screens.paywall.paywallRoute
 import com.mochasmindlab.mlhealth.ui.theme.MochaBrown
 import com.mochasmindlab.mlhealth.utils.PreferencesManager
 import com.mochasmindlab.mlhealth.utils.SampleDataGenerator
@@ -160,7 +162,7 @@ fun MoreScreen(
                     navController.navigate("health_connect")
                 },
                 MoreMenuItem("Upgrade to Pro", Icons.Default.WorkspacePremium) {
-                    navController.navigate("paywall")
+                    navController.navigate(paywallRoute(PaywallTrigger.SETTINGS))
                 }
             )
 

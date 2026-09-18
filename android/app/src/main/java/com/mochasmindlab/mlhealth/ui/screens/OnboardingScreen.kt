@@ -33,7 +33,10 @@ fun OnboardingScreen(
 ) {
     var currentStep by remember { mutableStateOf(0) }
     val scope = rememberCoroutineScope()
-    
+
+    // One screen_view per step shown, so step-to-step drop-off is measurable.
+    LaunchedEffect(currentStep) { viewModel.logStep(currentStep) }
+
     // User data states
     var name by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }

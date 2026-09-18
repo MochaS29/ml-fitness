@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mochasmindlab.mlhealth.data.models.DetectedFood
+import com.mochasmindlab.mlhealth.ui.screens.paywall.PaywallTrigger
+import com.mochasmindlab.mlhealth.ui.screens.paywall.paywallRoute
 import com.mochasmindlab.mlhealth.viewmodel.MealScannerViewModel
 import com.mochasmindlab.mlhealth.viewmodel.ScanPhase
 import kotlinx.coroutines.launch
@@ -104,7 +106,7 @@ fun MealScannerScreen(
                 )
 
                 ScanPhase.Paywall -> PaywallGate(
-                    onUpgrade = { navController.navigate("paywall") },
+                    onUpgrade = { navController.navigate(paywallRoute(PaywallTrigger.MEAL_SCANNER)) },
                     onCancel = {
                         viewModel.reset()
                         navController.popBackStack()
