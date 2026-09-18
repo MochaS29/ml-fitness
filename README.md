@@ -1,7 +1,11 @@
 # ML Fitness
 
+> **New here, human or agent? Read [`PRODUCT.md`](PRODUCT.md) first.** Why the app
+> exists, what it does, who it competes with, how it is positioned, what marketing
+> has already been tried, and which decisions are settled.
+
 One product, two **native** apps: a fitness & calorie tracker with an AI meal scanner and planner.
-Marketed as **ML Fitness** (App Store name "Fitness & Calorie Tracker", home-screen "MindLab Fitness").
+Marketed as **MindLab Fitness** on the App Store, the home screen and the website. "ML Fitness" is the legacy name.
 Free + a one-time **Pro IAP** ($8.99 CAD).
 
 - **iOS** — SwiftUI (iOS 17+), live on the App Store

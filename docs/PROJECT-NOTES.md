@@ -4,7 +4,7 @@ Detailed notes for this repo. CLAUDE.md is the short brief; this is the long mem
 
 ## What the product is
 
-One product, two native apps. Marketed as ML Fitness (App Store name: "Fitness & Calorie Tracker", home-screen name "MindLab Fitness"). Free tier plus a one-time Pro IAP ($8.99 CAD). There is no backend of our own, no Supabase, no Stripe and no web app; the only server-side piece is the meal-scan proxy described below.
+One product, two native apps. Marketed as MindLab Fitness (App Store name and home-screen name both "MindLab Fitness"; "ML Fitness" is the legacy name). Free tier plus a one-time Pro IAP ($8.99 CAD). There is no backend of our own, no Supabase, no Stripe and no web app; the only server-side piece is the meal-scan proxy described below.
 
 Product IDs differ per store (each platform manages its own SKU):
 
