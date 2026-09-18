@@ -31,7 +31,7 @@ Migrations: none. No Vercel deploys.
 
 Full notes: docs/PROJECT-NOTES.md
 
-## Usage stats and logs
-- Analytics without a browser: `python3 ~/Development/Scripts-Tools/analytics/analytics.py posthog events mochasmindlab 7`, `ga4 sessions mochasmindlab 7`, `posthog funnel mochasmindlab <event> <event> ... --days 30`. Credentials live only in `~/Development/.analytics.env`; never copy them into this repo.
-- Request logs (public pages, gated app routes, admin): the Vercel plugin's `get_runtime_logs` (project id in `.vercel/project.json`; group by route or statusCode for patterns) or `vercel logs <domain>`; user agents show only in the Vercel dashboard log detail.
-- App funnel events (six events plus screen_view and paywall_dismissed) go to `mochasmindlab.com/api/v1/event` and are stored in the Meal Plans Supabase project: `select * from fitness_funnel_weekly order by week desc;`. No analytics SDK in the apps (privacy policy).
+## Usage stats (detailed analytics, no browser, no Vercel logs needed)
+- `python3 scripts/analytics.py posthog events mochasmindlab 7`, `posthog funnel mochasmindlab <event> <event> ... --days 30`, `posthog sql mochasmindlab "<HogQL>"`, `ga4 sessions|events|pages mochasmindlab 7`. Same script as `~/Development/Scripts-Tools/analytics`.
+- Credentials are already where agents run: GitHub Actions secrets and Vercel env on this project under `POSTHOG_API_KEY`, `POSTHOG_HOST`, `GA4_SERVICE_ACCOUNT_JSON`, `GA4_PROPERTIES` (cloud agents: `vercel env pull .env.local` or read the environment); local sessions fall back to `~/Development/.analytics.env`. Never commit the values.
+- App funnel events go to `mochasmindlab.com/api/v1/event` and are stored in the Meal Plans Supabase project: `select * from fitness_funnel_weekly order by week desc;`. No analytics SDK in the apps.
