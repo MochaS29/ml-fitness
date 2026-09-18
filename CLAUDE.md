@@ -30,3 +30,8 @@ Migrations: none. No Vercel deploys.
 - 2026-09: Linear project ML Fitness (HealthTracker), team MOC; launch issues MOC-5 to MOC-10 already exist, do not recreate them.
 
 Full notes: docs/PROJECT-NOTES.md
+
+## Usage stats and logs
+- Analytics without a browser: `python3 ~/Development/Scripts-Tools/analytics/analytics.py posthog events mochasmindlab 7`, `ga4 sessions mochasmindlab 7`, `posthog funnel mochasmindlab <event> <event> ... --days 30`. Credentials live only in `~/Development/.analytics.env`; never copy them into this repo.
+- Request logs (public pages, gated app routes, admin): the Vercel plugin's `get_runtime_logs` (project id in `.vercel/project.json`; group by route or statusCode for patterns) or `vercel logs <domain>`; user agents show only in the Vercel dashboard log detail.
+- App funnel events (six events plus screen_view and paywall_dismissed) go to `mochasmindlab.com/api/v1/event` and are stored in the Meal Plans Supabase project: `select * from fitness_funnel_weekly order by week desc;`. No analytics SDK in the apps (privacy policy).
